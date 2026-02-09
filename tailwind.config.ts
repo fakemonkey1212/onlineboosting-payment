@@ -57,6 +57,8 @@ export default {
           border: "hsl(var(--sidebar-border))",
           ring: "hsl(var(--sidebar-ring))",
         },
+        "pay-bar": "hsl(var(--pay-bar))",
+        "pay-text": "hsl(var(--pay-text))",
       },
       borderRadius: {
         lg: "var(--radius)",
