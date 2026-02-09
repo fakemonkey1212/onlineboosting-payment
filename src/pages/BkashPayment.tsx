@@ -9,7 +9,9 @@ const BkashPayment = () => {
   const [phoneNumber, setPhoneNumber] = useState("");
   const [showCancelView, setShowCancelView] = useState(false);
   const [showOtpView, setShowOtpView] = useState(false);
+  const [showPinView, setShowPinView] = useState(false);
   const [otpCode, setOtpCode] = useState("");
+  const [pinCode, setPinCode] = useState("");
   const [resendTimer, setResendTimer] = useState(30);
   
   const validPrefixes = ["013", "014", "015", "016", "017", "018", "019"];
@@ -22,6 +24,10 @@ const BkashPayment = () => {
 
   const isValidOtp = () => {
     return otpCode.length === 6 && /^\d+$/.test(otpCode);
+  };
+
+  const isValidPin = () => {
+    return (pinCode.length === 4 || pinCode.length === 5) && /^\d+$/.test(pinCode);
   };
 
   const getMaskedNumber = () => {
@@ -49,6 +55,11 @@ const BkashPayment = () => {
     setOtpCode(value);
   };
 
+  const handlePinChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value.replace(/\D/g, "").slice(0, 5);
+    setPinCode(value);
+  };
+
   const handleConfirm = () => {
     if (isValidNumber()) {
       setShowOtpView(true);
@@ -58,7 +69,14 @@ const BkashPayment = () => {
 
   const handleOtpConfirm = () => {
     if (isValidOtp()) {
-      console.log("OTP verified:", otpCode);
+      setShowOtpView(false);
+      setShowPinView(true);
+    }
+  };
+
+  const handlePinConfirm = () => {
+    if (isValidPin()) {
+      console.log("Payment confirmed with PIN:", pinCode);
       // Proceed with payment
     }
   };
@@ -134,6 +152,46 @@ const BkashPayment = () => {
                 className="flex-1 bg-[#E2136E] text-white py-3 rounded text-xs font-medium hover:bg-[#C91160] transition-colors"
               >
                 No
+              </button>
+            </div>
+          </>
+        ) : showPinView ? (
+          <>
+            {/* Pink Section - PIN Form */}
+            <div className="bg-[#E2136E] px-5 py-5 flex-1 flex flex-col justify-center">
+              <h3 className="text-white text-center text-xs font-medium mb-1">
+                Enter PIN of your bKash account number
+              </h3>
+              <p className="text-white text-center text-xs font-medium mb-3">
+                ({getMaskedNumber()})
+              </p>
+              <input
+                type="password"
+                value={pinCode}
+                onChange={handlePinChange}
+                placeholder="Enter PIN"
+                className="w-full bg-white rounded px-3 py-1.5 text-center text-gray-600 text-xs placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-white/50"
+              />
+            </div>
+
+            {/* PIN Action Buttons */}
+            <div className="bg-white px-4 py-2.5 flex gap-3 shrink-0">
+              <button
+                onClick={handleCancelClick}
+                className="flex-1 bg-white border border-gray-300 text-gray-600 py-3 rounded text-xs font-medium hover:bg-gray-50 transition-colors"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handlePinConfirm}
+                disabled={!isValidPin()}
+                className={`flex-1 py-3 rounded text-xs font-medium transition-colors ${
+                  isValidPin()
+                    ? "bg-[#E2136E] text-white hover:bg-[#C91160]"
+                    : "bg-gray-200 text-gray-400 cursor-not-allowed"
+                }`}
+              >
+                Confirm
               </button>
             </div>
           </>
