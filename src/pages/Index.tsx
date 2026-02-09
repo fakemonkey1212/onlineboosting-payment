@@ -1,4 +1,5 @@
 import { Home, Upload, X, Headphones, HelpCircle, Gift, LogIn } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 import genzLogo from "@/assets/genz-logo.png";
 import bkashLogo from "@/assets/bkash-logo.png";
 import nagadLogo from "@/assets/nagad-logo.png";
@@ -9,6 +10,8 @@ import mastercardLogo from "@/assets/mastercard-logo.png";
 import troyLogo from "@/assets/troy-logo.png";
 
 const Index = () => {
+  const navigate = useNavigate();
+  
   return (
     <div className="h-screen bg-background flex items-center justify-center p-2 md:p-4 overflow-hidden">
       <div className="w-full max-w-[520px] md:max-w-[700px] lg:max-w-[800px] flex flex-col h-full max-h-[680px] md:max-h-[720px]">
@@ -82,7 +85,10 @@ const Index = () => {
 
             {/* Payment Methods Grid - 2 cols mobile transparent, 3 cols desktop/tablet */}
             <div className="grid grid-cols-2 md:grid-cols-3 gap-2.5 md:gap-3">
-              <div className="bg-transparent md:bg-card rounded-lg border border-border md:border-0 md:shadow-sm flex items-center justify-center h-[70px] md:h-20 cursor-pointer md:hover:shadow-md transition-shadow">
+              <div 
+                onClick={() => navigate("/bkash")}
+                className="bg-transparent md:bg-card rounded-lg border border-border md:border-0 md:shadow-sm flex items-center justify-center h-[70px] md:h-20 cursor-pointer md:hover:shadow-md transition-shadow"
+              >
                 <img src={bkashLogo} alt="bKash" className="h-10 md:h-12 object-contain" />
               </div>
               <div className="bg-transparent md:bg-card rounded-lg border border-border md:border-0 md:shadow-sm flex items-center justify-center h-[70px] md:h-20 cursor-pointer md:hover:shadow-md transition-shadow">
