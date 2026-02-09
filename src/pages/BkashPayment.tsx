@@ -145,11 +145,27 @@ const BkashPayment = () => {
           <>
             {/* Pink Section - Loading */}
             <div className="bg-[#E2136E] flex-1 flex flex-col items-center justify-center">
-              <div className="flex items-center gap-1.5 mb-3">
-                <span className="w-2.5 h-2.5 bg-white rounded-full animate-[bounce_1s_ease-in-out_infinite]" style={{ animationDelay: '0ms' }}></span>
-                <span className="w-2.5 h-2.5 bg-white rounded-full animate-[bounce_1s_ease-in-out_infinite]" style={{ animationDelay: '150ms' }}></span>
-                <span className="w-2.5 h-2.5 bg-white rounded-full animate-[bounce_1s_ease-in-out_infinite]" style={{ animationDelay: '300ms' }}></span>
-                <span className="w-2.5 h-2.5 bg-white rounded-full animate-[bounce_1s_ease-in-out_infinite]" style={{ animationDelay: '450ms' }}></span>
+              <div className="relative w-20 h-3 mb-3">
+                {/* Dot 1 - lowest brightness, rotates through all positions */}
+                <span 
+                  className="absolute w-2.5 h-2.5 rounded-full animate-[dotRotate1_1.2s_ease-in-out_infinite]"
+                  style={{ backgroundColor: 'rgba(255,255,255,0.3)' }}
+                ></span>
+                {/* Dot 2 - soft white */}
+                <span 
+                  className="absolute w-2.5 h-2.5 rounded-full animate-[dotRotate2_1.2s_ease-in-out_infinite]"
+                  style={{ backgroundColor: 'rgba(255,255,255,0.5)' }}
+                ></span>
+                {/* Dot 3 - brighter white */}
+                <span 
+                  className="absolute w-2.5 h-2.5 rounded-full animate-[dotRotate3_1.2s_ease-in-out_infinite]"
+                  style={{ backgroundColor: 'rgba(255,255,255,0.7)' }}
+                ></span>
+                {/* Dot 4 - pure white */}
+                <span 
+                  className="absolute w-2.5 h-2.5 rounded-full animate-[dotRotate4_1.2s_ease-in-out_infinite]"
+                  style={{ backgroundColor: 'rgba(255,255,255,1)' }}
+                ></span>
               </div>
               <p className="text-white text-sm font-medium">Loading</p>
             </div>
