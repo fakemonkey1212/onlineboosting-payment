@@ -1,73 +1,66 @@
-import { Home, Languages, X } from "lucide-react";
-import PaymentMethodCard from "@/components/PaymentMethodCard";
-import BkashLogo from "@/components/logos/BkashLogo";
-import NagadLogo from "@/components/logos/NagadLogo";
-import RocketLogo from "@/components/logos/RocketLogo";
-import UpayLogo from "@/components/logos/UpayLogo";
-import VisaLogo from "@/components/logos/VisaLogo";
-import MastercardLogo from "@/components/logos/MastercardLogo";
-import AmexLogo from "@/components/logos/AmexLogo";
-import BinanceLogo from "@/components/logos/BinanceLogo";
-import TroyLogo from "@/components/logos/TroyLogo";
-import DiscoverLogo from "@/components/logos/DiscoverLogo";
+import { Home, Upload, X } from "lucide-react";
+import genzLogo from "@/assets/genz-logo.png";
+import bkashLogo from "@/assets/bkash-logo.png";
+import nagadLogo from "@/assets/nagad-logo.png";
+import visaLogo from "@/assets/visa-logo.png";
+import mastercardLogo from "@/assets/mastercard-logo.png";
 
 const Index = () => {
   return (
     <div className="min-h-screen bg-background flex items-center justify-center p-4">
-      <div className="w-full max-w-[420px] flex flex-col min-h-[90vh]">
+      <div className="w-full max-w-[520px] flex flex-col min-h-[85vh]">
         {/* White Card */}
         <div className="bg-card rounded-2xl shadow-sm flex-1 flex flex-col overflow-hidden">
           {/* Top Bar */}
-          <div className="flex items-center justify-between px-4 py-3">
-            <Home className="w-5 h-5 text-muted-foreground" />
-            <div className="flex items-center gap-3">
-              <Languages className="w-5 h-5 text-muted-foreground" />
-              <X className="w-5 h-5 text-muted-foreground" />
+          <div className="flex items-center justify-between px-5 py-4">
+            <Home className="w-6 h-6 text-foreground" strokeWidth={1.5} />
+            <div className="flex items-center gap-4">
+              <Upload className="w-5 h-5 text-foreground" strokeWidth={1.5} />
+              <X className="w-6 h-6 text-foreground" strokeWidth={1.5} />
             </div>
           </div>
 
           {/* Content */}
-          <div className="flex-1 px-5 pb-4">
-            {/* QAFPAY Logo */}
-            <div className="flex justify-center mt-2 mb-3">
-              <div className="bg-primary rounded-full px-6 py-2.5 flex flex-col items-center">
-                <span className="text-primary-foreground text-lg font-extrabold tracking-wider">QAFPAY</span>
-                <div className="flex gap-0.5 mt-0.5">
-                  {["#E2136E", "#F6921E", "#1A1F71", "#EB001B", "#006FCF", "#F3BA2F", "#8B2F8B"].map((c, i) => (
-                    <div key={i} className="w-3 h-2 rounded-sm" style={{ backgroundColor: c }} />
-                  ))}
-                </div>
-              </div>
+          <div className="flex-1 px-6 pb-6">
+            {/* GenZ Logo */}
+            <div className="flex justify-center mt-4 mb-4">
+              <img 
+                src={genzLogo} 
+                alt="GenZ" 
+                className="w-20 h-20 rounded-full object-cover"
+              />
             </div>
 
             {/* Title */}
-            <h1 className="text-center text-foreground text-xl font-medium mb-5">
+            <h1 className="text-center text-muted-foreground text-xl font-normal mb-6">
               Online Payment
             </h1>
 
             {/* Mobile Banking Button */}
-            <button className="w-full bg-primary text-primary-foreground py-3 rounded-xl font-semibold text-base mb-5">
+            <button className="w-full bg-primary text-primary-foreground py-3.5 rounded-xl font-semibold text-base mb-6">
               মোবাইল ব্যাংকিং
             </button>
 
-            {/* Payment Methods Grid */}
-            <div className="grid grid-cols-2 gap-3">
-              <PaymentMethodCard><BkashLogo /></PaymentMethodCard>
-              <PaymentMethodCard><NagadLogo /></PaymentMethodCard>
-              <PaymentMethodCard><RocketLogo /></PaymentMethodCard>
-              <PaymentMethodCard><UpayLogo /></PaymentMethodCard>
-              <PaymentMethodCard><VisaLogo /></PaymentMethodCard>
-              <PaymentMethodCard><MastercardLogo /></PaymentMethodCard>
-              <PaymentMethodCard><AmexLogo /></PaymentMethodCard>
-              <PaymentMethodCard><BinanceLogo /></PaymentMethodCard>
-              <PaymentMethodCard><TroyLogo /></PaymentMethodCard>
-              <PaymentMethodCard><DiscoverLogo /></PaymentMethodCard>
+            {/* Payment Methods Grid - 3 columns */}
+            <div className="grid grid-cols-3 gap-4">
+              <div className="bg-card rounded-xl border border-border flex items-center justify-center h-[80px] cursor-pointer hover:shadow-sm transition-shadow">
+                <img src={bkashLogo} alt="bKash" className="h-10 object-contain" />
+              </div>
+              <div className="bg-card rounded-xl border border-border flex items-center justify-center h-[80px] cursor-pointer hover:shadow-sm transition-shadow">
+                <img src={nagadLogo} alt="Nagad" className="h-10 object-contain" />
+              </div>
+              <div className="bg-card rounded-xl border border-border flex items-center justify-center h-[80px] cursor-pointer hover:shadow-sm transition-shadow">
+                <img src={visaLogo} alt="VISA" className="h-8 object-contain" />
+              </div>
+              <div className="bg-card rounded-xl border border-border flex items-center justify-center h-[80px] cursor-pointer hover:shadow-sm transition-shadow">
+                <img src={mastercardLogo} alt="Mastercard" className="h-10 object-contain" />
+              </div>
             </div>
           </div>
 
           {/* Pay Footer */}
-          <div className="bg-[hsl(var(--pay-bar))] py-3.5 text-center">
-            <span className="text-primary font-bold text-lg">Pay 40.00 BDT</span>
+          <div className="bg-[hsl(var(--pay-bar))] py-4 text-center">
+            <span className="text-primary font-bold text-lg">Pay 434 BDT</span>
           </div>
         </div>
       </div>
