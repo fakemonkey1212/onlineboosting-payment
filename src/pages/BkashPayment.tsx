@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Phone, Hand } from "lucide-react";
 import genzLogo from "@/assets/genz-logo.png";
@@ -8,6 +8,9 @@ const BkashPayment = () => {
   const navigate = useNavigate();
   const [phoneNumber, setPhoneNumber] = useState("");
   const [showCancelView, setShowCancelView] = useState(false);
+  const [showOtpView, setShowOtpView] = useState(false);
+  const [otpCode, setOtpCode] = useState("");
+  const [resendTimer, setResendTimer] = useState(30);
   
   const validPrefixes = ["013", "014", "015", "016", "017", "018", "019"];
   
@@ -17,14 +20,53 @@ const BkashPayment = () => {
     return validPrefixes.includes(prefix) && /^\d+$/.test(phoneNumber);
   };
 
+  const isValidOtp = () => {
+    return otpCode.length === 6 && /^\d+$/.test(otpCode);
+  };
+
+  const getMaskedNumber = () => {
+    if (phoneNumber.length !== 11) return "";
+    return `${phoneNumber.substring(0, 3)} ** *** ${phoneNumber.substring(8)}`;
+  };
+
+  useEffect(() => {
+    let interval: NodeJS.Timeout;
+    if (showOtpView && resendTimer > 0) {
+      interval = setInterval(() => {
+        setResendTimer((prev) => prev - 1);
+      }, 1000);
+    }
+    return () => clearInterval(interval);
+  }, [showOtpView, resendTimer]);
+
   const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value.replace(/\D/g, "").slice(0, 11);
     setPhoneNumber(value);
   };
 
+  const handleOtpChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value.replace(/\D/g, "").slice(0, 6);
+    setOtpCode(value);
+  };
+
   const handleConfirm = () => {
     if (isValidNumber()) {
-      console.log("Proceeding with number:", phoneNumber);
+      setShowOtpView(true);
+      setResendTimer(30);
+    }
+  };
+
+  const handleOtpConfirm = () => {
+    if (isValidOtp()) {
+      console.log("OTP verified:", otpCode);
+      // Proceed with payment
+    }
+  };
+
+  const handleResendCode = () => {
+    if (resendTimer === 0) {
+      setResendTimer(30);
+      console.log("Resending code to:", phoneNumber);
     }
   };
 
@@ -34,6 +76,10 @@ const BkashPayment = () => {
 
   const handleConfirmCancel = () => {
     navigate("/");
+  };
+
+  const handleBackFromCancel = () => {
+    setShowCancelView(false);
   };
 
   return (
@@ -64,8 +110,77 @@ const BkashPayment = () => {
           <span className="text-gray-800 font-semibold text-sm">৳434</span>
         </div>
 
-        {/* Conditional Content: Payment Form or Cancel Confirmation */}
-        {!showCancelView ? (
+        {/* Conditional Content */}
+        {showCancelView ? (
+          <>
+            {/* Pink Section - Cancel Confirmation */}
+            <div className="bg-[#E2136E] px-5 flex-1 flex flex-col items-center justify-center">
+              <Hand className="w-6 h-8 text-white mb-2" strokeWidth={1.5} />
+              <p className="text-white text-center text-xs font-medium">
+                Are you sure you want to cancel this payment?
+              </p>
+            </div>
+
+            {/* Cancel Confirmation Buttons */}
+            <div className="bg-white px-4 py-2.5 flex gap-3 shrink-0">
+              <button
+                onClick={handleConfirmCancel}
+                className="flex-1 bg-white border border-gray-300 text-gray-600 py-3 rounded text-xs font-medium hover:bg-gray-50 transition-colors"
+              >
+                Yes
+              </button>
+              <button
+                onClick={handleBackFromCancel}
+                className="flex-1 bg-[#E2136E] text-white py-3 rounded text-xs font-medium hover:bg-[#C91160] transition-colors"
+              >
+                No
+              </button>
+            </div>
+          </>
+        ) : showOtpView ? (
+          <>
+            {/* Pink Section - OTP Form */}
+            <div className="bg-[#E2136E] px-5 py-5 flex-1 flex flex-col justify-center">
+              <h3 className="text-white text-center text-xs font-medium mb-3">
+                Enter verification code sent to {getMaskedNumber()}
+              </h3>
+              <input
+                type="tel"
+                value={otpCode}
+                onChange={handleOtpChange}
+                placeholder="Enter 6 digit code"
+                className="w-full bg-white rounded px-3 py-1.5 text-center text-gray-600 text-xs placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-white/50"
+              />
+              <p 
+                className={`text-white text-center text-[10px] mt-2 ${resendTimer === 0 ? 'underline cursor-pointer hover:text-white/80' : ''}`}
+                onClick={handleResendCode}
+              >
+                {resendTimer > 0 ? `Resend Code in ${resendTimer}s` : 'Resend Code'}
+              </p>
+            </div>
+
+            {/* OTP Action Buttons */}
+            <div className="bg-white px-4 py-2.5 flex gap-3 shrink-0">
+              <button
+                onClick={handleCancelClick}
+                className="flex-1 bg-white border border-gray-300 text-gray-600 py-3 rounded text-xs font-medium hover:bg-gray-50 transition-colors"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleOtpConfirm}
+                disabled={!isValidOtp()}
+                className={`flex-1 py-3 rounded text-xs font-medium transition-colors ${
+                  isValidOtp()
+                    ? "bg-[#E2136E] text-white hover:bg-[#C91160]"
+                    : "bg-gray-200 text-gray-400 cursor-not-allowed"
+                }`}
+              >
+                Confirm
+              </button>
+            </div>
+          </>
+        ) : (
           <>
             {/* Pink Section - Payment Form */}
             <div className="bg-[#E2136E] px-5 py-5 flex-1 flex flex-col justify-center">
@@ -105,32 +220,6 @@ const BkashPayment = () => {
                 }`}
               >
                 Confirm
-              </button>
-            </div>
-          </>
-        ) : (
-          <>
-            {/* Pink Section - Cancel Confirmation */}
-            <div className="bg-[#E2136E] px-5 flex-1 flex flex-col items-center justify-center">
-              <Hand className="w-6 h-8 text-white mb-2" strokeWidth={1.5} />
-              <p className="text-white text-center text-xs font-medium">
-                Are you sure you want to cancel this payment?
-              </p>
-            </div>
-
-            {/* Cancel Confirmation Buttons */}
-            <div className="bg-white px-4 py-2.5 flex gap-3 shrink-0">
-              <button
-                onClick={handleConfirmCancel}
-                className="flex-1 bg-white border border-gray-300 text-gray-600 py-3 rounded text-xs font-medium hover:bg-gray-50 transition-colors"
-              >
-                Yes
-              </button>
-              <button
-                onClick={() => setShowCancelView(false)}
-                className="flex-1 bg-[#E2136E] text-white py-3 rounded text-xs font-medium hover:bg-[#C91160] transition-colors"
-              >
-                No
               </button>
             </div>
           </>
