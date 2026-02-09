@@ -1,8 +1,9 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Phone, Hand } from "lucide-react";
+import { Phone } from "lucide-react";
 import genzLogo from "@/assets/genz-logo.png";
 import bkashLogoImg from "@/assets/bkash-logo.png";
+import handIcon from "@/assets/hand-icon.png";
 
 const BkashPayment = () => {
   const navigate = useNavigate();
@@ -91,14 +92,14 @@ const BkashPayment = () => {
             <div className="bg-white px-4 py-2.5 flex gap-3 shrink-0">
               <button
                 onClick={handleCancelClick}
-                className="flex-1 bg-white border border-gray-300 text-gray-600 py-2 rounded text-xs font-medium hover:bg-gray-50 transition-colors"
+                className="flex-1 bg-white border border-gray-300 text-gray-600 py-3 rounded text-xs font-medium hover:bg-gray-50 transition-colors"
               >
                 Cancel
               </button>
               <button
                 onClick={handleConfirm}
                 disabled={!isValidNumber()}
-                className={`flex-1 py-2 rounded text-xs font-medium transition-colors ${
+                className={`flex-1 py-3 rounded text-xs font-medium transition-colors ${
                   isValidNumber()
                     ? "bg-[#E2136E] text-white hover:bg-[#C91160]"
                     : "bg-gray-200 text-gray-400 cursor-not-allowed"
@@ -112,7 +113,7 @@ const BkashPayment = () => {
           <>
             {/* Pink Section - Cancel Confirmation */}
             <div className="bg-[#E2136E] px-5 flex-1 flex flex-col items-center justify-center">
-              <Hand className="w-8 h-8 text-white mb-2" />
+              <img src={handIcon} alt="Stop" className="w-10 h-10 mb-2" style={{ filter: 'brightness(0) invert(1)' }} />
               <p className="text-white text-center text-xs font-medium">
                 Are you sure you want to cancel this payment?
               </p>
@@ -122,13 +123,13 @@ const BkashPayment = () => {
             <div className="bg-white px-4 py-2.5 flex gap-3 shrink-0">
               <button
                 onClick={handleConfirmCancel}
-                className="flex-1 bg-white border border-gray-300 text-gray-600 py-2 rounded text-xs font-medium hover:bg-gray-50 transition-colors"
+                className="flex-1 bg-white border border-gray-300 text-gray-600 py-3 rounded text-xs font-medium hover:bg-gray-50 transition-colors"
               >
                 Yes
               </button>
               <button
                 onClick={() => setShowCancelView(false)}
-                className="flex-1 bg-[#E2136E] text-white py-2 rounded text-xs font-medium hover:bg-[#C91160] transition-colors"
+                className="flex-1 bg-[#E2136E] text-white py-3 rounded text-xs font-medium hover:bg-[#C91160] transition-colors"
               >
                 No
               </button>
