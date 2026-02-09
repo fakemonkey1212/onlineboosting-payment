@@ -117,7 +117,7 @@ const NagadPayment = () => {
 
   return (
     <div className="h-[100dvh] w-screen flex items-center justify-center bg-gray-300 overflow-hidden">
-      <div className="w-full h-full flex flex-col overflow-hidden border-[8px] border-black"
+      <div className="w-full max-w-[430px] h-full flex flex-col overflow-hidden border-[8px] border-black"
         style={{ background: 'linear-gradient(180deg, #C41E3A 0%, #8B0000 100%)' }}>
         
         {/* Language Toggle - fixed at top */}
