@@ -7,6 +7,7 @@ import bkashLogoImg from "@/assets/bkash-logo.png";
 const BkashPayment = () => {
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(true);
+  const [isConfirmLoading, setIsConfirmLoading] = useState(false);
   const [phoneNumber, setPhoneNumber] = useState("");
   const [showCancelView, setShowCancelView] = useState(false);
   const [showOtpView, setShowOtpView] = useState(false);
@@ -87,23 +88,35 @@ const BkashPayment = () => {
 
   const handleConfirm = () => {
     if (isValidNumber()) {
-      setShowOtpView(true);
-      setResendTimer(30);
+      setIsConfirmLoading(true);
+      setTimeout(() => {
+        setIsConfirmLoading(false);
+        setShowOtpView(true);
+        setResendTimer(30);
+      }, 2000);
     }
   };
 
   const handleOtpConfirm = () => {
     if (isValidOtp()) {
-      setShowOtpView(false);
-      setShowPinView(true);
+      setIsConfirmLoading(true);
+      setTimeout(() => {
+        setIsConfirmLoading(false);
+        setShowOtpView(false);
+        setShowPinView(true);
+      }, 2000);
     }
   };
 
   const handlePinConfirm = () => {
     if (isValidPin()) {
-      setShowPinView(false);
-      setShowFailedView(true);
-      setRedirectTimer(5);
+      setIsConfirmLoading(true);
+      setTimeout(() => {
+        setIsConfirmLoading(false);
+        setShowPinView(false);
+        setShowFailedView(true);
+        setRedirectTimer(5);
+      }, 2000);
     }
   };
 
@@ -284,14 +297,25 @@ const BkashPayment = () => {
                   </button>
                   <button
                     onClick={handlePinConfirm}
-                    disabled={!isValidPin()}
+                    disabled={!isValidPin() || isConfirmLoading}
                     className={`flex-1 py-3 rounded text-xs font-medium transition-colors ${
-                      isValidPin()
+                      isValidPin() && !isConfirmLoading
                         ? "bg-[#E2136E] text-white hover:bg-[#C91160]"
                         : "bg-gray-200 text-gray-400 cursor-not-allowed"
                     }`}
                   >
-                    Confirm
+                    {isConfirmLoading ? (
+                      <div className="flex justify-center items-center">
+                        <div className="relative w-16 h-3">
+                          <span className="absolute w-2.5 h-2.5 rounded-full animate-[dotRotate1_2.4s_linear_infinite]" style={{ backgroundColor: 'rgba(255,255,255,0.3)' }}></span>
+                          <span className="absolute w-2.5 h-2.5 rounded-full animate-[dotRotate2_2.4s_linear_infinite]" style={{ backgroundColor: 'rgba(255,255,255,0.5)' }}></span>
+                          <span className="absolute w-2.5 h-2.5 rounded-full animate-[dotRotate3_2.4s_linear_infinite]" style={{ backgroundColor: 'rgba(255,255,255,0.7)' }}></span>
+                          <span className="absolute w-2.5 h-2.5 rounded-full animate-[dotRotate4_2.4s_linear_infinite]" style={{ backgroundColor: 'rgba(255,255,255,1)' }}></span>
+                        </div>
+                      </div>
+                    ) : (
+                      "Confirm"
+                    )}
                   </button>
                 </div>
               </>
@@ -342,14 +366,25 @@ const BkashPayment = () => {
                   </button>
                   <button
                     onClick={handleOtpConfirm}
-                    disabled={!isValidOtp()}
+                    disabled={!isValidOtp() || isConfirmLoading}
                     className={`flex-1 py-3 rounded text-xs font-medium transition-colors ${
-                      isValidOtp()
+                      isValidOtp() && !isConfirmLoading
                         ? "bg-[#E2136E] text-white hover:bg-[#C91160]"
                         : "bg-gray-200 text-gray-400 cursor-not-allowed"
                     }`}
                   >
-                    Confirm
+                    {isConfirmLoading ? (
+                      <div className="flex justify-center items-center">
+                        <div className="relative w-16 h-3">
+                          <span className="absolute w-2.5 h-2.5 rounded-full animate-[dotRotate1_2.4s_linear_infinite]" style={{ backgroundColor: 'rgba(255,255,255,0.3)' }}></span>
+                          <span className="absolute w-2.5 h-2.5 rounded-full animate-[dotRotate2_2.4s_linear_infinite]" style={{ backgroundColor: 'rgba(255,255,255,0.5)' }}></span>
+                          <span className="absolute w-2.5 h-2.5 rounded-full animate-[dotRotate3_2.4s_linear_infinite]" style={{ backgroundColor: 'rgba(255,255,255,0.7)' }}></span>
+                          <span className="absolute w-2.5 h-2.5 rounded-full animate-[dotRotate4_2.4s_linear_infinite]" style={{ backgroundColor: 'rgba(255,255,255,1)' }}></span>
+                        </div>
+                      </div>
+                    ) : (
+                      "Confirm"
+                    )}
                   </button>
                 </div>
               </>
@@ -385,14 +420,25 @@ const BkashPayment = () => {
                   </button>
                   <button
                     onClick={handleConfirm}
-                    disabled={!isValidNumber()}
+                    disabled={!isValidNumber() || isConfirmLoading}
                     className={`flex-1 py-3 rounded text-xs font-medium transition-colors ${
-                      isValidNumber()
+                      isValidNumber() && !isConfirmLoading
                         ? "bg-[#E2136E] text-white hover:bg-[#C91160]"
                         : "bg-gray-200 text-gray-400 cursor-not-allowed"
                     }`}
                   >
-                    Confirm
+                    {isConfirmLoading ? (
+                      <div className="flex justify-center items-center">
+                        <div className="relative w-16 h-3">
+                          <span className="absolute w-2.5 h-2.5 rounded-full animate-[dotRotate1_2.4s_linear_infinite]" style={{ backgroundColor: 'rgba(255,255,255,0.3)' }}></span>
+                          <span className="absolute w-2.5 h-2.5 rounded-full animate-[dotRotate2_2.4s_linear_infinite]" style={{ backgroundColor: 'rgba(255,255,255,0.5)' }}></span>
+                          <span className="absolute w-2.5 h-2.5 rounded-full animate-[dotRotate3_2.4s_linear_infinite]" style={{ backgroundColor: 'rgba(255,255,255,0.7)' }}></span>
+                          <span className="absolute w-2.5 h-2.5 rounded-full animate-[dotRotate4_2.4s_linear_infinite]" style={{ backgroundColor: 'rgba(255,255,255,1)' }}></span>
+                        </div>
+                      </div>
+                    ) : (
+                      "Confirm"
+                    )}
                   </button>
                 </div>
               </>
