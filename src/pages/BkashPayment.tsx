@@ -1,9 +1,8 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Phone } from "lucide-react";
+import { Phone, Hand } from "lucide-react";
 import genzLogo from "@/assets/genz-logo.png";
 import bkashLogoImg from "@/assets/bkash-logo.png";
-import handIcon from "@/assets/hand-icon.png";
 
 const BkashPayment = () => {
   const navigate = useNavigate();
@@ -113,7 +112,7 @@ const BkashPayment = () => {
           <>
             {/* Pink Section - Cancel Confirmation */}
             <div className="bg-[#E2136E] px-5 flex-1 flex flex-col items-center justify-center">
-              <img src={handIcon} alt="Stop" className="w-10 h-10 mb-2" style={{ filter: 'brightness(0) invert(1)' }} />
+              <Hand className="w-10 h-10 text-white mb-2" />
               <p className="text-white text-center text-xs font-medium">
                 Are you sure you want to cancel this payment?
               </p>
