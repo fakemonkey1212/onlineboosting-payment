@@ -2,8 +2,11 @@ import { Home, Upload, X, Headphones, HelpCircle, Gift, LogIn } from "lucide-rea
 import genzLogo from "@/assets/genz-logo.png";
 import bkashLogo from "@/assets/bkash-logo.png";
 import nagadLogo from "@/assets/nagad-logo.png";
+import rocketLogo from "@/assets/rocket-logo.png";
+import upayLogo from "@/assets/upay-logo.png";
 import visaLogo from "@/assets/visa-logo.png";
 import mastercardLogo from "@/assets/mastercard-logo.png";
+import troyLogo from "@/assets/troy-logo.png";
 
 const Index = () => {
   return (
@@ -86,10 +89,19 @@ const Index = () => {
                 <img src={nagadLogo} alt="Nagad" className="h-10 md:h-12 object-contain" />
               </div>
               <div className="bg-card rounded-lg flex items-center justify-center h-[70px] md:h-20 cursor-pointer hover:shadow-md transition-shadow">
+                <img src={rocketLogo} alt="Rocket" className="h-10 md:h-12 object-contain" />
+              </div>
+              <div className="bg-card rounded-lg flex items-center justify-center h-[70px] md:h-20 cursor-pointer hover:shadow-md transition-shadow">
+                <img src={upayLogo} alt="Upay" className="h-10 md:h-12 object-contain" />
+              </div>
+              <div className="bg-card rounded-lg flex items-center justify-center h-[70px] md:h-20 cursor-pointer hover:shadow-md transition-shadow">
                 <img src={visaLogo} alt="VISA" className="h-8 md:h-10 object-contain" />
               </div>
               <div className="bg-card rounded-lg flex items-center justify-center h-[70px] md:h-20 cursor-pointer hover:shadow-md transition-shadow">
                 <img src={mastercardLogo} alt="Mastercard" className="h-10 md:h-12 object-contain" />
+              </div>
+              <div className="bg-card rounded-lg flex items-center justify-center h-[70px] md:h-20 cursor-pointer hover:shadow-md transition-shadow">
+                <img src={troyLogo} alt="Troy" className="h-8 md:h-10 object-contain" />
               </div>
             </div>
           </div>
