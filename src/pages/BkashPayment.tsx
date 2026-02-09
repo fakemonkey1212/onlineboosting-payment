@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { Phone, Hand, XCircle } from "lucide-react";
 import genzLogo from "@/assets/genz-logo.png";
@@ -18,6 +18,23 @@ const BkashPayment = () => {
   const [resendTimer, setResendTimer] = useState(30);
   const [resendStatus, setResendStatus] = useState<'idle' | 'sending' | 'sent'>('idle');
   const [redirectTimer, setRedirectTimer] = useState(5);
+
+  const otpInputRef = useRef<HTMLInputElement>(null);
+  const pinInputRef = useRef<HTMLInputElement>(null);
+  const phoneInputRef = useRef<HTMLInputElement>(null);
+
+  // Auto-focus on view change
+  useEffect(() => {
+    if (!isLoading && !showFailedView && !showCancelView) {
+      if (showOtpView) {
+        setTimeout(() => otpInputRef.current?.focus(), 100);
+      } else if (showPinView) {
+        setTimeout(() => pinInputRef.current?.focus(), 100);
+      } else {
+        setTimeout(() => phoneInputRef.current?.focus(), 100);
+      }
+    }
+  }, [isLoading, showOtpView, showPinView, showFailedView, showCancelView]);
 
   // Initial loading effect
   useEffect(() => {
@@ -279,11 +296,11 @@ const BkashPayment = () => {
                     ({getMaskedNumber()})
                   </p>
                   <input
+                    ref={pinInputRef}
                     type="password"
                     value={pinCode}
                     onChange={handlePinChange}
                     placeholder="Enter PIN"
-                    autoFocus
                     className="w-full bg-white rounded px-4 py-2.5 text-center text-gray-600 text-sm placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-white/50"
                   />
                 </div>
@@ -328,11 +345,11 @@ const BkashPayment = () => {
                     Enter verification code sent to {getMaskedNumber()}
                   </h3>
                   <input
+                    ref={otpInputRef}
                     type="tel"
                     value={otpCode}
                     onChange={handleOtpChange}
                     placeholder="Enter 6 digit code"
-                    autoFocus
                     className="w-full bg-white rounded px-4 py-2.5 text-center text-gray-600 text-sm placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-white/50"
                   />
                   {resendStatus === 'sending' ? (
@@ -400,11 +417,11 @@ const BkashPayment = () => {
                     </h3>
                   </div>
                   <input
+                    ref={phoneInputRef}
                     type="tel"
                     value={phoneNumber}
                     onChange={handlePhoneChange}
                     placeholder="e.g 01XXXXXXXXX"
-                    autoFocus
                     className="w-full bg-white rounded px-4 py-2.5 text-center text-gray-600 text-sm placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-white/50"
                   />
                   <div className="h-5 flex items-center justify-center mt-3">
