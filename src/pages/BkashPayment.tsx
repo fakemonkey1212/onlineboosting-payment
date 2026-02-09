@@ -136,7 +136,7 @@ const BkashPayment = () => {
           <>
             {/* Pink Section - Payment Failed */}
             <div className="bg-[#E2136E] flex-1 flex flex-col items-center justify-center">
-              <XCircle className="w-12 h-12 text-white mb-3" strokeWidth={1.5} />
+              <XCircle className="w-8 h-8 text-white mb-3" strokeWidth={1.5} />
               <h3 className="text-white text-center text-sm font-medium mb-2">
                 Payment Cancelled
               </h3>
