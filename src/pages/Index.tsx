@@ -80,34 +80,34 @@ const Index = () => {
               মোবাইল ব্যাংকিং
             </button>
 
-            {/* Payment Methods Grid - matches reference design */}
-            <div className="grid grid-cols-2 gap-2.5 md:gap-3 flex-1">
-              <div className="bg-card rounded-lg flex items-center justify-center h-[70px] md:h-20 cursor-pointer hover:shadow-md transition-shadow">
+            {/* Payment Methods Grid - 2 cols mobile with border, 3 cols desktop/tablet */}
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-2.5 md:gap-3">
+              <div className="bg-card rounded-lg border border-border md:border-0 md:shadow-sm flex items-center justify-center h-[70px] md:h-20 cursor-pointer md:hover:shadow-md transition-shadow">
                 <img src={bkashLogo} alt="bKash" className="h-10 md:h-12 object-contain" />
               </div>
-              <div className="bg-card rounded-lg flex items-center justify-center h-[70px] md:h-20 cursor-pointer hover:shadow-md transition-shadow">
+              <div className="bg-card rounded-lg border border-border md:border-0 md:shadow-sm flex items-center justify-center h-[70px] md:h-20 cursor-pointer md:hover:shadow-md transition-shadow">
                 <img src={nagadLogo} alt="Nagad" className="h-10 md:h-12 object-contain" />
               </div>
-              <div className="bg-card rounded-lg flex items-center justify-center h-[70px] md:h-20 cursor-pointer hover:shadow-md transition-shadow">
+              <div className="bg-card rounded-lg border border-border md:border-0 md:shadow-sm flex items-center justify-center h-[70px] md:h-20 cursor-pointer md:hover:shadow-md transition-shadow">
                 <img src={rocketLogo} alt="Rocket" className="h-10 md:h-12 object-contain" />
               </div>
-              <div className="bg-card rounded-lg flex items-center justify-center h-[70px] md:h-20 cursor-pointer hover:shadow-md transition-shadow">
+              <div className="bg-card rounded-lg border border-border md:border-0 md:shadow-sm flex items-center justify-center h-[70px] md:h-20 cursor-pointer md:hover:shadow-md transition-shadow">
                 <img src={upayLogo} alt="Upay" className="h-10 md:h-12 object-contain" />
               </div>
-              <div className="bg-card rounded-lg flex items-center justify-center h-[70px] md:h-20 cursor-pointer hover:shadow-md transition-shadow">
+              <div className="bg-card rounded-lg border border-border md:border-0 md:shadow-sm flex items-center justify-center h-[70px] md:h-20 cursor-pointer md:hover:shadow-md transition-shadow">
                 <img src={visaLogo} alt="VISA" className="h-8 md:h-10 object-contain" />
               </div>
-              <div className="bg-card rounded-lg flex items-center justify-center h-[70px] md:h-20 cursor-pointer hover:shadow-md transition-shadow">
+              <div className="bg-card rounded-lg border border-border md:border-0 md:shadow-sm flex items-center justify-center h-[70px] md:h-20 cursor-pointer md:hover:shadow-md transition-shadow">
                 <img src={mastercardLogo} alt="Mastercard" className="h-10 md:h-12 object-contain" />
               </div>
-              <div className="bg-card rounded-lg flex items-center justify-center h-[70px] md:h-20 cursor-pointer hover:shadow-md transition-shadow">
+              <div className="bg-card rounded-lg border border-border md:border-0 md:shadow-sm flex items-center justify-center h-[70px] md:h-20 cursor-pointer md:hover:shadow-md transition-shadow">
                 <img src={troyLogo} alt="Troy" className="h-8 md:h-10 object-contain" />
               </div>
             </div>
           </div>
 
-          {/* Pay Footer - Full width on mobile */}
-          <div className="bg-pay-bar py-3 md:py-4 text-center md:rounded-b-2xl -mx-3 md:mx-0">
+          {/* Pay Footer - Full width on mobile, inside box on desktop */}
+          <div className="bg-pay-bar py-3 md:py-4 text-center md:rounded-b-2xl -mx-3 md:mx-0 mt-auto">
             <span className="text-primary font-bold text-base md:text-lg">Pay 434 BDT</span>
           </div>
         </div>
