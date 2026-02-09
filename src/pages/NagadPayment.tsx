@@ -89,7 +89,7 @@ const NagadPayment = () => {
             type="tel" inputMode="numeric" maxLength={1} value={phoneDigits[idx] || ""}
             onChange={(e) => handleDigitChange(idx, e.target.value, phoneDigits, setPhoneDigits, phoneInputRefs, 11)}
             onKeyDown={(e) => handleKeyDown(idx, e, phoneDigits, setPhoneDigits, phoneInputRefs)}
-            className="w-5 h-6 bg-white rounded text-center text-gray-800 text-[10px] font-medium focus:outline-none focus:ring-1 focus:ring-white/50"
+            className="w-7 h-8 bg-white rounded text-center text-gray-800 text-xs font-medium focus:outline-none focus:ring-1 focus:ring-white/50"
           />
         );
       }
@@ -109,7 +109,7 @@ const NagadPayment = () => {
           type="password" inputMode="numeric" maxLength={1} value={digit}
           onChange={(e) => handleDigitChange(index, e.target.value, pinDigits, setPinDigits, pinInputRefs, 4)}
           onKeyDown={(e) => handleKeyDown(index, e, pinDigits, setPinDigits, pinInputRefs)}
-          className="w-6 h-7 bg-white rounded text-center text-gray-800 text-sm font-medium focus:outline-none focus:ring-1 focus:ring-white/50"
+          className="w-7 h-8 bg-white rounded text-center text-gray-800 text-xs font-medium focus:outline-none focus:ring-1 focus:ring-white/50"
         />
       ))}
     </div>
@@ -172,7 +172,7 @@ const NagadPayment = () => {
                 <input ref={otpInputRef} type="tel" inputMode="numeric" maxLength={6} value={otpValue}
                   onChange={(e) => setOtpValue(e.target.value.replace(/\D/g, '').slice(0, 6))}
                   placeholder="XXXXXX"
-                  className="w-3/5 h-7 bg-white rounded text-center text-gray-800 text-sm font-medium focus:outline-none focus:ring-1 focus:ring-white/50 placeholder:text-gray-400"
+                  className="w-2/5 h-8 bg-white rounded text-center text-gray-800 text-xs font-medium focus:outline-none focus:ring-1 focus:ring-white/50 placeholder:text-gray-400"
                 />
                 {otpResent && (
                   <p className="text-[#ccc] text-xs font-bold mt-2">OTP has been resent via SMS to your mobile number</p>
