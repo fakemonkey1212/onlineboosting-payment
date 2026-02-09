@@ -106,6 +106,30 @@ export default {
           "50%": { left: "22px" },
           "75%": { left: "44px" },
         },
+        "dotRotateBtnA": {
+          "0%, 100%": { left: "0px" },
+          "25%": { left: "12px" },
+          "50%": { left: "24px" },
+          "75%": { left: "36px" },
+        },
+        "dotRotateBtnB": {
+          "0%, 100%": { left: "12px" },
+          "25%": { left: "24px" },
+          "50%": { left: "36px" },
+          "75%": { left: "0px" },
+        },
+        "dotRotateBtnC": {
+          "0%, 100%": { left: "24px" },
+          "25%": { left: "36px" },
+          "50%": { left: "0px" },
+          "75%": { left: "12px" },
+        },
+        "dotRotateBtnD": {
+          "0%, 100%": { left: "36px" },
+          "25%": { left: "0px" },
+          "50%": { left: "12px" },
+          "75%": { left: "24px" },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
