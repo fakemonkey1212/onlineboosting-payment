@@ -11,14 +11,14 @@ const Index = () => {
       <div className="w-full max-w-[520px] flex flex-col h-full max-h-[100vh] md:max-h-[85vh]">
         {/* Card - white on desktop, transparent on mobile */}
         <div className="bg-transparent md:bg-card md:rounded-2xl md:shadow-sm flex-1 flex flex-col overflow-hidden">
-          {/* Top Bar - Icons in one white box */}
-          <div className="flex items-center justify-between px-3 py-2 md:px-5 md:py-3">
-            <div className="bg-card rounded-lg flex items-center gap-2 px-3 py-2 shadow-sm">
+          {/* Top Bar - All icons in one white box */}
+          <div className="flex items-center justify-center px-3 py-2 md:px-5 md:py-3">
+            <div className="bg-card rounded-lg flex items-center justify-between w-full px-4 py-2 shadow-sm">
               <Home className="w-4 h-4 text-foreground" strokeWidth={1.5} />
-            </div>
-            <div className="bg-card rounded-lg flex items-center gap-3 px-3 py-2 shadow-sm">
-              <Upload className="w-4 h-4 text-foreground" strokeWidth={1.5} />
-              <X className="w-4 h-4 text-foreground" strokeWidth={1.5} />
+              <div className="flex items-center gap-3">
+                <Upload className="w-4 h-4 text-foreground" strokeWidth={1.5} />
+                <X className="w-4 h-4 text-foreground" strokeWidth={1.5} />
+              </div>
             </div>
           </div>
 
@@ -77,25 +77,25 @@ const Index = () => {
               মোবাইল ব্যাংকিং
             </button>
 
-            {/* Payment Methods Grid - 2 cols mobile, 3 cols desktop */}
-            <div className="grid grid-cols-2 md:grid-cols-3 gap-2 md:gap-3 flex-1">
-              <div className="bg-card rounded-xl border border-border flex items-center justify-center h-14 md:h-20 cursor-pointer hover:shadow-md transition-shadow">
-                <img src={bkashLogo} alt="bKash" className="h-6 md:h-9 object-contain" />
+            {/* Payment Methods Grid - 2 cols mobile, 3 cols desktop, no gaps on mobile */}
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-0 md:gap-3 flex-1">
+              <div className="bg-card border border-border flex items-center justify-center h-16 md:h-20 cursor-pointer hover:shadow-md transition-shadow">
+                <img src={bkashLogo} alt="bKash" className="h-8 md:h-10 object-contain" />
               </div>
-              <div className="bg-card rounded-xl border border-border flex items-center justify-center h-14 md:h-20 cursor-pointer hover:shadow-md transition-shadow">
-                <img src={nagadLogo} alt="Nagad" className="h-6 md:h-9 object-contain" />
+              <div className="bg-card border border-border flex items-center justify-center h-16 md:h-20 cursor-pointer hover:shadow-md transition-shadow">
+                <img src={nagadLogo} alt="Nagad" className="h-8 md:h-10 object-contain" />
               </div>
-              <div className="bg-card rounded-xl border border-border flex items-center justify-center h-14 md:h-20 cursor-pointer hover:shadow-md transition-shadow">
-                <img src={visaLogo} alt="VISA" className="h-5 md:h-7 object-contain" />
+              <div className="bg-card border border-border flex items-center justify-center h-16 md:h-20 cursor-pointer hover:shadow-md transition-shadow">
+                <img src={visaLogo} alt="VISA" className="h-7 md:h-8 object-contain" />
               </div>
-              <div className="bg-card rounded-xl border border-border flex items-center justify-center h-14 md:h-20 cursor-pointer hover:shadow-md transition-shadow">
-                <img src={mastercardLogo} alt="Mastercard" className="h-6 md:h-9 object-contain" />
+              <div className="bg-card border border-border flex items-center justify-center h-16 md:h-20 cursor-pointer hover:shadow-md transition-shadow">
+                <img src={mastercardLogo} alt="Mastercard" className="h-8 md:h-10 object-contain" />
               </div>
             </div>
           </div>
 
-          {/* Pay Footer */}
-          <div className="bg-pay-bar py-3 md:py-4 text-center md:rounded-b-2xl">
+          {/* Pay Footer - Full width on mobile */}
+          <div className="bg-pay-bar py-3 md:py-4 text-center md:rounded-b-2xl -mx-3 md:mx-0">
             <span className="text-primary font-bold text-base md:text-lg">Pay 434 BDT</span>
           </div>
         </div>
