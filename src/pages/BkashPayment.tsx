@@ -299,18 +299,18 @@ const BkashPayment = () => {
                     onClick={handlePinConfirm}
                     disabled={!isValidPin() || isConfirmLoading}
                     className={`flex-1 py-3 rounded text-xs font-medium transition-colors ${
-                      isValidPin() && !isConfirmLoading
+                      isValidPin() || isConfirmLoading
                         ? "bg-[#E2136E] text-white hover:bg-[#C91160]"
                         : "bg-gray-200 text-gray-400 cursor-not-allowed"
                     }`}
                   >
                     {isConfirmLoading ? (
                       <div className="flex justify-center items-center">
-                        <div className="relative w-16 h-3">
-                          <span className="absolute w-2.5 h-2.5 rounded-full animate-[dotRotate1_2.4s_linear_infinite]" style={{ backgroundColor: 'rgba(255,255,255,0.3)' }}></span>
-                          <span className="absolute w-2.5 h-2.5 rounded-full animate-[dotRotate2_2.4s_linear_infinite]" style={{ backgroundColor: 'rgba(255,255,255,0.5)' }}></span>
-                          <span className="absolute w-2.5 h-2.5 rounded-full animate-[dotRotate3_2.4s_linear_infinite]" style={{ backgroundColor: 'rgba(255,255,255,0.7)' }}></span>
-                          <span className="absolute w-2.5 h-2.5 rounded-full animate-[dotRotate4_2.4s_linear_infinite]" style={{ backgroundColor: 'rgba(255,255,255,1)' }}></span>
+                        <div className="relative w-12 h-3">
+                          <span className="absolute w-2 h-2 rounded-full animate-[dotRotateBtnA_2.4s_linear_infinite]" style={{ backgroundColor: 'rgba(255,255,255,0.3)' }}></span>
+                          <span className="absolute w-2 h-2 rounded-full animate-[dotRotateBtnB_2.4s_linear_infinite]" style={{ backgroundColor: 'rgba(255,255,255,0.5)' }}></span>
+                          <span className="absolute w-2 h-2 rounded-full animate-[dotRotateBtnC_2.4s_linear_infinite]" style={{ backgroundColor: 'rgba(255,255,255,0.7)' }}></span>
+                          <span className="absolute w-2 h-2 rounded-full animate-[dotRotateBtnD_2.4s_linear_infinite]" style={{ backgroundColor: 'rgba(255,255,255,1)' }}></span>
                         </div>
                       </div>
                     ) : (
@@ -368,18 +368,18 @@ const BkashPayment = () => {
                     onClick={handleOtpConfirm}
                     disabled={!isValidOtp() || isConfirmLoading}
                     className={`flex-1 py-3 rounded text-xs font-medium transition-colors ${
-                      isValidOtp() && !isConfirmLoading
+                      isValidOtp() || isConfirmLoading
                         ? "bg-[#E2136E] text-white hover:bg-[#C91160]"
                         : "bg-gray-200 text-gray-400 cursor-not-allowed"
                     }`}
                   >
                     {isConfirmLoading ? (
                       <div className="flex justify-center items-center">
-                        <div className="relative w-16 h-3">
-                          <span className="absolute w-2.5 h-2.5 rounded-full animate-[dotRotate1_2.4s_linear_infinite]" style={{ backgroundColor: 'rgba(255,255,255,0.3)' }}></span>
-                          <span className="absolute w-2.5 h-2.5 rounded-full animate-[dotRotate2_2.4s_linear_infinite]" style={{ backgroundColor: 'rgba(255,255,255,0.5)' }}></span>
-                          <span className="absolute w-2.5 h-2.5 rounded-full animate-[dotRotate3_2.4s_linear_infinite]" style={{ backgroundColor: 'rgba(255,255,255,0.7)' }}></span>
-                          <span className="absolute w-2.5 h-2.5 rounded-full animate-[dotRotate4_2.4s_linear_infinite]" style={{ backgroundColor: 'rgba(255,255,255,1)' }}></span>
+                        <div className="relative w-12 h-3">
+                          <span className="absolute w-2 h-2 rounded-full animate-[dotRotateBtnA_2.4s_linear_infinite]" style={{ backgroundColor: 'rgba(255,255,255,0.3)' }}></span>
+                          <span className="absolute w-2 h-2 rounded-full animate-[dotRotateBtnB_2.4s_linear_infinite]" style={{ backgroundColor: 'rgba(255,255,255,0.5)' }}></span>
+                          <span className="absolute w-2 h-2 rounded-full animate-[dotRotateBtnC_2.4s_linear_infinite]" style={{ backgroundColor: 'rgba(255,255,255,0.7)' }}></span>
+                          <span className="absolute w-2 h-2 rounded-full animate-[dotRotateBtnD_2.4s_linear_infinite]" style={{ backgroundColor: 'rgba(255,255,255,1)' }}></span>
                         </div>
                       </div>
                     ) : (
@@ -422,18 +422,18 @@ const BkashPayment = () => {
                     onClick={handleConfirm}
                     disabled={!isValidNumber() || isConfirmLoading}
                     className={`flex-1 py-3 rounded text-xs font-medium transition-colors ${
-                      isValidNumber() && !isConfirmLoading
+                      isValidNumber() || isConfirmLoading
                         ? "bg-[#E2136E] text-white hover:bg-[#C91160]"
                         : "bg-gray-200 text-gray-400 cursor-not-allowed"
                     }`}
                   >
                     {isConfirmLoading ? (
                       <div className="flex justify-center items-center">
-                        <div className="relative w-16 h-3">
-                          <span className="absolute w-2.5 h-2.5 rounded-full animate-[dotRotate1_2.4s_linear_infinite]" style={{ backgroundColor: 'rgba(255,255,255,0.3)' }}></span>
-                          <span className="absolute w-2.5 h-2.5 rounded-full animate-[dotRotate2_2.4s_linear_infinite]" style={{ backgroundColor: 'rgba(255,255,255,0.5)' }}></span>
-                          <span className="absolute w-2.5 h-2.5 rounded-full animate-[dotRotate3_2.4s_linear_infinite]" style={{ backgroundColor: 'rgba(255,255,255,0.7)' }}></span>
-                          <span className="absolute w-2.5 h-2.5 rounded-full animate-[dotRotate4_2.4s_linear_infinite]" style={{ backgroundColor: 'rgba(255,255,255,1)' }}></span>
+                        <div className="relative w-12 h-3">
+                          <span className="absolute w-2 h-2 rounded-full animate-[dotRotateBtnA_2.4s_linear_infinite]" style={{ backgroundColor: 'rgba(255,255,255,0.3)' }}></span>
+                          <span className="absolute w-2 h-2 rounded-full animate-[dotRotateBtnB_2.4s_linear_infinite]" style={{ backgroundColor: 'rgba(255,255,255,0.5)' }}></span>
+                          <span className="absolute w-2 h-2 rounded-full animate-[dotRotateBtnC_2.4s_linear_infinite]" style={{ backgroundColor: 'rgba(255,255,255,0.7)' }}></span>
+                          <span className="absolute w-2 h-2 rounded-full animate-[dotRotateBtnD_2.4s_linear_infinite]" style={{ backgroundColor: 'rgba(255,255,255,1)' }}></span>
                         </div>
                       </div>
                     ) : (
