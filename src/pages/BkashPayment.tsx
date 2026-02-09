@@ -272,10 +272,10 @@ const BkashPayment = () => {
               <>
                 {/* Pink Section - PIN Form */}
                 <div className="bg-[#E2136E] px-5 py-5 flex-1 flex flex-col justify-center">
-                  <h3 className="text-white text-center text-xs font-medium mb-1">
+                  <h3 className="text-white text-center text-xs font-medium mb-1 h-4">
                     Enter PIN of your bKash account number
                   </h3>
-                  <p className="text-white text-center text-xs font-medium mb-3">
+                  <p className="text-white text-center text-xs font-medium mb-3 h-4">
                     ({getMaskedNumber()})
                   </p>
                   <input
@@ -283,7 +283,7 @@ const BkashPayment = () => {
                     value={pinCode}
                     onChange={handlePinChange}
                     placeholder="Enter PIN"
-                    className="w-full bg-white rounded px-3 py-1.5 text-center text-gray-600 text-xs placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-white/50"
+                    className="w-full bg-white rounded px-4 py-2.5 text-center text-gray-600 text-sm placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-white/50"
                   />
                 </div>
 
@@ -323,7 +323,7 @@ const BkashPayment = () => {
               <>
                 {/* Pink Section - OTP Form */}
                 <div className="bg-[#E2136E] px-5 py-5 flex-1 flex flex-col justify-center">
-                  <h3 className="text-white text-center text-xs font-medium mb-3">
+                  <h3 className="text-white text-center text-xs font-medium mb-3 h-4">
                     Enter verification code sent to {getMaskedNumber()}
                   </h3>
                   <input
@@ -331,7 +331,7 @@ const BkashPayment = () => {
                     value={otpCode}
                     onChange={handleOtpChange}
                     placeholder="Enter 6 digit code"
-                    className="w-full bg-white rounded px-3 py-1.5 text-center text-gray-600 text-xs placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-white/50"
+                    className="w-full bg-white rounded px-4 py-2.5 text-center text-gray-600 text-sm placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-white/50"
                   />
                   {resendStatus === 'sending' ? (
                     <p className="text-white text-center text-[10px] mt-2">
@@ -392,7 +392,7 @@ const BkashPayment = () => {
               <>
                 {/* Pink Section - Payment Form */}
                 <div className="bg-[#E2136E] px-5 py-5 flex-1 flex flex-col justify-center">
-                  <h3 className="text-white text-center text-xs font-medium mb-3">
+                  <h3 className="text-white text-center text-xs font-medium mb-3 h-4">
                     Your bKash Account Number
                   </h3>
                   <input
@@ -400,9 +400,9 @@ const BkashPayment = () => {
                     value={phoneNumber}
                     onChange={handlePhoneChange}
                     placeholder="e.g 01XXXXXXXXX"
-                    className="w-full bg-white rounded px-3 py-1.5 text-center text-gray-600 text-xs placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-white/50"
+                    className="w-full bg-white rounded px-4 py-2.5 text-center text-gray-600 text-sm placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-white/50"
                   />
-                  <p className="text-white text-center text-[10px] mt-2">
+                  <p className="text-white text-center text-[10px] mt-3 h-4">
                     Confirm and proceed,{" "}
                     <a href="#" className="underline hover:text-white/80">
                       terms & conditions

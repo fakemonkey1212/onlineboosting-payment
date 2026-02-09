@@ -96,14 +96,14 @@ const Index = () => {
               </div>
               <div className="relative bg-transparent md:bg-card rounded-lg border border-border md:border-0 md:shadow-sm flex items-center justify-center h-[70px] md:h-20 cursor-not-allowed">
                 <img src={rocketLogo} alt="Rocket" className="h-10 md:h-12 object-contain opacity-50" />
-                <div className="absolute bottom-1 left-1/2 -translate-x-1/2 bg-black/70 text-white text-[8px] md:text-[10px] px-2 py-0.5 rounded whitespace-nowrap">
-                  Temporarily Unavailable
+                <div className="absolute top-1 right-1 bg-black/70 text-white text-[6px] md:text-[8px] px-1.5 py-0.5 rounded whitespace-nowrap">
+                  Unavailable
                 </div>
               </div>
               <div className="relative bg-transparent md:bg-card rounded-lg border border-border md:border-0 md:shadow-sm flex items-center justify-center h-[70px] md:h-20 cursor-not-allowed">
                 <img src={upayLogo} alt="Upay" className="h-10 md:h-12 object-contain opacity-50" />
-                <div className="absolute bottom-1 left-1/2 -translate-x-1/2 bg-black/70 text-white text-[8px] md:text-[10px] px-2 py-0.5 rounded whitespace-nowrap">
-                  Temporarily Unavailable
+                <div className="absolute top-1 right-1 bg-black/70 text-white text-[6px] md:text-[8px] px-1.5 py-0.5 rounded whitespace-nowrap">
+                  Unavailable
                 </div>
               </div>
               <div className="bg-transparent md:bg-card rounded-lg border border-border md:border-0 md:shadow-sm flex items-center justify-center h-[70px] md:h-20 cursor-pointer md:hover:shadow-md transition-shadow">
@@ -114,8 +114,8 @@ const Index = () => {
               </div>
               <div className="relative bg-transparent md:bg-card rounded-lg border border-border md:border-0 md:shadow-sm flex items-center justify-center h-[70px] md:h-20 cursor-not-allowed">
                 <img src={troyLogo} alt="Troy" className="h-8 md:h-10 object-contain opacity-50" />
-                <div className="absolute bottom-1 left-1/2 -translate-x-1/2 bg-black/70 text-white text-[8px] md:text-[10px] px-2 py-0.5 rounded whitespace-nowrap">
-                  Temporarily Unavailable
+                <div className="absolute top-1 right-1 bg-black/70 text-white text-[6px] md:text-[8px] px-1.5 py-0.5 rounded whitespace-nowrap">
+                  Unavailable
                 </div>
               </div>
             </div>
