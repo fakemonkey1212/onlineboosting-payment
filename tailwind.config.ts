@@ -82,6 +82,30 @@ export default {
             height: "0",
           },
         },
+        "dotRotate1": {
+          "0%, 100%": { left: "0px" },
+          "25%": { left: "18px" },
+          "50%": { left: "36px" },
+          "75%": { left: "54px" },
+        },
+        "dotRotate2": {
+          "0%, 100%": { left: "18px" },
+          "25%": { left: "36px" },
+          "50%": { left: "54px" },
+          "75%": { left: "0px" },
+        },
+        "dotRotate3": {
+          "0%, 100%": { left: "36px" },
+          "25%": { left: "54px" },
+          "50%": { left: "0px" },
+          "75%": { left: "18px" },
+        },
+        "dotRotate4": {
+          "0%, 100%": { left: "54px" },
+          "25%": { left: "0px" },
+          "50%": { left: "18px" },
+          "75%": { left: "36px" },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
