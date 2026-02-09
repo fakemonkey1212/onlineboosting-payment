@@ -392,9 +392,11 @@ const BkashPayment = () => {
               <>
                 {/* Pink Section - Payment Form */}
                 <div className="bg-[#E2136E] px-5 py-5 flex-1 flex flex-col justify-center">
-                  <h3 className="text-white text-center text-xs font-medium mb-3 h-4">
-                    Your bKash Account Number
-                  </h3>
+                  <div className="h-5 flex items-center justify-center mb-3">
+                    <h3 className="text-white text-center text-xs font-medium">
+                      Your bKash Account Number
+                    </h3>
+                  </div>
                   <input
                     type="tel"
                     value={phoneNumber}
@@ -402,12 +404,14 @@ const BkashPayment = () => {
                     placeholder="e.g 01XXXXXXXXX"
                     className="w-full bg-white rounded px-4 py-2.5 text-center text-gray-600 text-sm placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-white/50"
                   />
-                  <p className="text-white text-center text-[10px] mt-3 h-4">
-                    Confirm and proceed,{" "}
-                    <a href="#" className="underline hover:text-white/80">
-                      terms & conditions
-                    </a>
-                  </p>
+                  <div className="h-5 flex items-center justify-center mt-3">
+                    <p className="text-white text-center text-[10px]">
+                      Confirm and proceed,{" "}
+                      <a href="#" className="underline hover:text-white/80">
+                        terms & conditions
+                      </a>
+                    </p>
+                  </div>
                 </div>
 
                 {/* Action Buttons */}
