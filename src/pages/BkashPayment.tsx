@@ -38,14 +38,14 @@ const BkashPayment = () => {
 
   return (
     <div className="min-h-screen bg-gray-200 flex flex-col items-center p-4">
-      <div className="w-full max-w-md bg-white rounded-lg shadow-lg overflow-hidden">
+      <div className="w-full max-w-md bg-white rounded-lg shadow-lg overflow-hidden h-[50vh] flex flex-col">
         {/* bKash Logo Header */}
-        <div className="bg-white py-2.5 flex justify-center border-b">
+        <div className="bg-white py-2.5 flex justify-center border-b shrink-0">
           <img src={bkashLogoImg} alt="bKash" className="h-6 object-contain" />
         </div>
 
         {/* Merchant Info */}
-        <div className="bg-white px-4 py-2.5 flex items-center justify-between border-b">
+        <div className="bg-white px-4 py-2.5 flex items-center justify-between border-b shrink-0">
           <div className="flex items-center gap-2.5">
             <img 
               src={genzLogo} 
@@ -68,7 +68,7 @@ const BkashPayment = () => {
         {!showCancelView ? (
           <>
             {/* Pink Section - Payment Form */}
-            <div className="bg-[#E2136E] px-5 py-6">
+            <div className="bg-[#E2136E] px-5 py-5 flex-1 flex flex-col justify-center">
               <h3 className="text-white text-center text-xs font-medium mb-3">
                 Your bKash Account Number
               </h3>
@@ -88,7 +88,7 @@ const BkashPayment = () => {
             </div>
 
             {/* Action Buttons */}
-            <div className="bg-white px-4 py-3 flex gap-3">
+            <div className="bg-white px-4 py-2.5 flex gap-3 shrink-0">
               <button
                 onClick={handleCancelClick}
                 className="flex-1 bg-white border border-gray-300 text-gray-600 py-2 rounded text-xs font-medium hover:bg-gray-50 transition-colors"
@@ -111,7 +111,7 @@ const BkashPayment = () => {
         ) : (
           <>
             {/* Pink Section - Cancel Confirmation */}
-            <div className="bg-[#E2136E] px-5 py-6 flex flex-col items-center justify-center">
+            <div className="bg-[#E2136E] px-5 flex-1 flex flex-col items-center justify-center">
               <Hand className="w-8 h-8 text-white mb-2" />
               <p className="text-white text-center text-xs font-medium">
                 Are you sure you want to cancel this payment?
@@ -119,7 +119,7 @@ const BkashPayment = () => {
             </div>
 
             {/* Cancel Confirmation Buttons */}
-            <div className="bg-white px-4 py-3 flex gap-3">
+            <div className="bg-white px-4 py-2.5 flex gap-3 shrink-0">
               <button
                 onClick={handleConfirmCancel}
                 className="flex-1 bg-white border border-gray-300 text-gray-600 py-2 rounded text-xs font-medium hover:bg-gray-50 transition-colors"
@@ -137,7 +137,7 @@ const BkashPayment = () => {
         )}
 
         {/* Footer */}
-        <div className="bg-white px-4 py-2 text-center border-t">
+        <div className="bg-white px-4 py-2 text-center border-t shrink-0">
           <div className="flex items-center justify-center gap-1 text-[#E2136E] mb-0.5">
             <Phone className="w-3 h-3" />
             <span className="text-xs font-medium">16247</span>
