@@ -91,7 +91,7 @@ const NagadPayment = () => {
             type="tel" inputMode="numeric" maxLength={1} value={phoneDigits[idx] || ""}
             onChange={(e) => handleDigitChange(idx, e.target.value, phoneDigits, setPhoneDigits, phoneInputRefs, 11)}
             onKeyDown={(e) => handleKeyDown(idx, e, phoneDigits, setPhoneDigits, phoneInputRefs)}
-            className="w-8 h-9 bg-white rounded text-center text-gray-800 text-sm font-medium focus:outline-none focus:ring-1 focus:ring-white/50"
+            className="w-7 h-8 bg-white rounded text-center text-gray-800 text-xs font-medium focus:outline-none focus:ring-1 focus:ring-white/50"
           />
         );
       }
@@ -118,9 +118,9 @@ const NagadPayment = () => {
   );
 
   return (
-    <div className="min-h-screen bg-gray-200 flex flex-col items-center justify-center p-4">
-      <div className="w-full max-w-md flex flex-col rounded-xl overflow-hidden border border-gray-300"
-        style={{ background: 'linear-gradient(180deg, #C41E3A 0%, #8B0000 100%)', height: '90vh' }}>
+    <div className="min-h-screen flex flex-col items-center justify-center bg-gray-300 p-0">
+      <div className="w-full h-screen flex flex-col overflow-hidden border-2 border-black"
+        style={{ background: 'linear-gradient(180deg, #C41E3A 0%, #8B0000 100%)' }}>
       {isLoading ? (
         <div className="flex-1 flex flex-col items-center justify-center">
           <p className="text-white text-sm font-medium">Loading...</p>
