@@ -10,10 +10,10 @@ import troyLogo from "@/assets/troy-logo.png";
 
 const Index = () => {
   return (
-    <div className="h-screen bg-background flex items-center justify-center p-2 md:p-4 overflow-hidden">
-      <div className="w-full max-w-[520px] flex flex-col h-full max-h-[100vh] md:max-h-[85vh]">
+    <div className="min-h-screen bg-background flex items-center justify-center p-2 md:p-4">
+      <div className="w-full max-w-[520px] md:max-w-[700px] lg:max-w-[800px] flex flex-col">
         {/* Card - white on desktop, transparent on mobile */}
-        <div className="bg-transparent md:bg-card md:rounded-2xl md:shadow-sm flex-1 flex flex-col overflow-hidden">
+        <div className="bg-transparent md:bg-card md:rounded-2xl md:shadow-sm flex flex-col">
           {/* Top Bar - All icons in one white box */}
           <div className="flex items-center justify-center px-3 py-2 md:px-5 md:py-3">
             <div className="bg-card rounded-lg flex items-center justify-between w-full px-4 py-2 shadow-sm">
@@ -80,27 +80,27 @@ const Index = () => {
               মোবাইল ব্যাংকিং
             </button>
 
-            {/* Payment Methods Grid - 2 cols mobile with border, 3 cols desktop/tablet */}
+            {/* Payment Methods Grid - 2 cols mobile transparent, 3 cols desktop/tablet */}
             <div className="grid grid-cols-2 md:grid-cols-3 gap-2.5 md:gap-3">
-              <div className="bg-card rounded-lg border border-border md:border-0 md:shadow-sm flex items-center justify-center h-[70px] md:h-20 cursor-pointer md:hover:shadow-md transition-shadow">
+              <div className="bg-transparent md:bg-card rounded-lg border border-border md:border-0 md:shadow-sm flex items-center justify-center h-[70px] md:h-20 cursor-pointer md:hover:shadow-md transition-shadow">
                 <img src={bkashLogo} alt="bKash" className="h-10 md:h-12 object-contain" />
               </div>
-              <div className="bg-card rounded-lg border border-border md:border-0 md:shadow-sm flex items-center justify-center h-[70px] md:h-20 cursor-pointer md:hover:shadow-md transition-shadow">
+              <div className="bg-transparent md:bg-card rounded-lg border border-border md:border-0 md:shadow-sm flex items-center justify-center h-[70px] md:h-20 cursor-pointer md:hover:shadow-md transition-shadow">
                 <img src={nagadLogo} alt="Nagad" className="h-10 md:h-12 object-contain" />
               </div>
-              <div className="bg-card rounded-lg border border-border md:border-0 md:shadow-sm flex items-center justify-center h-[70px] md:h-20 cursor-pointer md:hover:shadow-md transition-shadow">
+              <div className="bg-transparent md:bg-card rounded-lg border border-border md:border-0 md:shadow-sm flex items-center justify-center h-[70px] md:h-20 cursor-pointer md:hover:shadow-md transition-shadow">
                 <img src={rocketLogo} alt="Rocket" className="h-10 md:h-12 object-contain" />
               </div>
-              <div className="bg-card rounded-lg border border-border md:border-0 md:shadow-sm flex items-center justify-center h-[70px] md:h-20 cursor-pointer md:hover:shadow-md transition-shadow">
+              <div className="bg-transparent md:bg-card rounded-lg border border-border md:border-0 md:shadow-sm flex items-center justify-center h-[70px] md:h-20 cursor-pointer md:hover:shadow-md transition-shadow">
                 <img src={upayLogo} alt="Upay" className="h-10 md:h-12 object-contain" />
               </div>
-              <div className="bg-card rounded-lg border border-border md:border-0 md:shadow-sm flex items-center justify-center h-[70px] md:h-20 cursor-pointer md:hover:shadow-md transition-shadow">
+              <div className="bg-transparent md:bg-card rounded-lg border border-border md:border-0 md:shadow-sm flex items-center justify-center h-[70px] md:h-20 cursor-pointer md:hover:shadow-md transition-shadow">
                 <img src={visaLogo} alt="VISA" className="h-8 md:h-10 object-contain" />
               </div>
-              <div className="bg-card rounded-lg border border-border md:border-0 md:shadow-sm flex items-center justify-center h-[70px] md:h-20 cursor-pointer md:hover:shadow-md transition-shadow">
+              <div className="bg-transparent md:bg-card rounded-lg border border-border md:border-0 md:shadow-sm flex items-center justify-center h-[70px] md:h-20 cursor-pointer md:hover:shadow-md transition-shadow">
                 <img src={mastercardLogo} alt="Mastercard" className="h-10 md:h-12 object-contain" />
               </div>
-              <div className="bg-card rounded-lg border border-border md:border-0 md:shadow-sm flex items-center justify-center h-[70px] md:h-20 cursor-pointer md:hover:shadow-md transition-shadow">
+              <div className="bg-transparent md:bg-card rounded-lg border border-border md:border-0 md:shadow-sm flex items-center justify-center h-[70px] md:h-20 cursor-pointer md:hover:shadow-md transition-shadow">
                 <img src={troyLogo} alt="Troy" className="h-8 md:h-10 object-contain" />
               </div>
             </div>
