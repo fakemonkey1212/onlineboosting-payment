@@ -283,6 +283,7 @@ const BkashPayment = () => {
                     value={pinCode}
                     onChange={handlePinChange}
                     placeholder="Enter PIN"
+                    autoFocus
                     className="w-full bg-white rounded px-4 py-2.5 text-center text-gray-600 text-sm placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-white/50"
                   />
                 </div>
@@ -331,6 +332,7 @@ const BkashPayment = () => {
                     value={otpCode}
                     onChange={handleOtpChange}
                     placeholder="Enter 6 digit code"
+                    autoFocus
                     className="w-full bg-white rounded px-4 py-2.5 text-center text-gray-600 text-sm placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-white/50"
                   />
                   {resendStatus === 'sending' ? (
@@ -402,6 +404,7 @@ const BkashPayment = () => {
                     value={phoneNumber}
                     onChange={handlePhoneChange}
                     placeholder="e.g 01XXXXXXXXX"
+                    autoFocus
                     className="w-full bg-white rounded px-4 py-2.5 text-center text-gray-600 text-sm placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-white/50"
                   />
                   <div className="h-5 flex items-center justify-center mt-3">
