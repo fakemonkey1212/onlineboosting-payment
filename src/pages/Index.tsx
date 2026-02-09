@@ -13,8 +13,8 @@ const Index = () => {
   const navigate = useNavigate();
   
   return (
-    <div className="h-screen bg-background flex items-center justify-center p-2 md:p-4 overflow-hidden">
-      <div className="w-full max-w-[520px] md:max-w-[700px] lg:max-w-[800px] flex flex-col h-full max-h-[680px] md:max-h-[720px]">
+    <div className="min-h-screen bg-background flex items-start md:items-center justify-center p-2 md:p-4 overflow-hidden">
+      <div className="w-full max-w-[520px] md:max-w-[700px] lg:max-w-[800px] flex flex-col h-full md:max-h-[720px]">
         {/* Card - white on desktop, transparent on mobile */}
         <div className="bg-transparent md:bg-card md:rounded-2xl md:shadow-sm flex flex-col">
           {/* Top Bar - All icons in one white box */}
@@ -29,7 +29,7 @@ const Index = () => {
           </div>
 
           {/* Content */}
-          <div className="flex-1 px-3 md:px-6 pb-3 md:pb-6 flex flex-col">
+          <div className="flex-1 px-3 md:px-6 pb-16 md:pb-6 flex flex-col">
             {/* GenZ Logo */}
             <div className="flex justify-center mt-1 mb-2">
               <img 
@@ -94,11 +94,17 @@ const Index = () => {
               <div className="bg-transparent md:bg-card rounded-lg border border-border md:border-0 md:shadow-sm flex items-center justify-center h-[70px] md:h-20 cursor-pointer md:hover:shadow-md transition-shadow">
                 <img src={nagadLogo} alt="Nagad" className="h-10 md:h-12 object-contain" />
               </div>
-              <div className="bg-transparent md:bg-card rounded-lg border border-border md:border-0 md:shadow-sm flex items-center justify-center h-[70px] md:h-20 cursor-pointer md:hover:shadow-md transition-shadow">
-                <img src={rocketLogo} alt="Rocket" className="h-10 md:h-12 object-contain" />
+              <div className="relative bg-transparent md:bg-card rounded-lg border border-border md:border-0 md:shadow-sm flex items-center justify-center h-[70px] md:h-20 cursor-not-allowed">
+                <img src={rocketLogo} alt="Rocket" className="h-10 md:h-12 object-contain opacity-50" />
+                <div className="absolute bottom-1 left-1/2 -translate-x-1/2 bg-black/70 text-white text-[8px] md:text-[10px] px-2 py-0.5 rounded whitespace-nowrap">
+                  Temporarily Unavailable
+                </div>
               </div>
-              <div className="bg-transparent md:bg-card rounded-lg border border-border md:border-0 md:shadow-sm flex items-center justify-center h-[70px] md:h-20 cursor-pointer md:hover:shadow-md transition-shadow">
-                <img src={upayLogo} alt="Upay" className="h-10 md:h-12 object-contain" />
+              <div className="relative bg-transparent md:bg-card rounded-lg border border-border md:border-0 md:shadow-sm flex items-center justify-center h-[70px] md:h-20 cursor-not-allowed">
+                <img src={upayLogo} alt="Upay" className="h-10 md:h-12 object-contain opacity-50" />
+                <div className="absolute bottom-1 left-1/2 -translate-x-1/2 bg-black/70 text-white text-[8px] md:text-[10px] px-2 py-0.5 rounded whitespace-nowrap">
+                  Temporarily Unavailable
+                </div>
               </div>
               <div className="bg-transparent md:bg-card rounded-lg border border-border md:border-0 md:shadow-sm flex items-center justify-center h-[70px] md:h-20 cursor-pointer md:hover:shadow-md transition-shadow">
                 <img src={visaLogo} alt="VISA" className="h-8 md:h-10 object-contain" />
@@ -106,8 +112,11 @@ const Index = () => {
               <div className="bg-transparent md:bg-card rounded-lg border border-border md:border-0 md:shadow-sm flex items-center justify-center h-[70px] md:h-20 cursor-pointer md:hover:shadow-md transition-shadow">
                 <img src={mastercardLogo} alt="Mastercard" className="h-10 md:h-12 object-contain" />
               </div>
-              <div className="bg-transparent md:bg-card rounded-lg border border-border md:border-0 md:shadow-sm flex items-center justify-center h-[70px] md:h-20 cursor-pointer md:hover:shadow-md transition-shadow">
-                <img src={troyLogo} alt="Troy" className="h-8 md:h-10 object-contain" />
+              <div className="relative bg-transparent md:bg-card rounded-lg border border-border md:border-0 md:shadow-sm flex items-center justify-center h-[70px] md:h-20 cursor-not-allowed">
+                <img src={troyLogo} alt="Troy" className="h-8 md:h-10 object-contain opacity-50" />
+                <div className="absolute bottom-1 left-1/2 -translate-x-1/2 bg-black/70 text-white text-[8px] md:text-[10px] px-2 py-0.5 rounded whitespace-nowrap">
+                  Temporarily Unavailable
+                </div>
               </div>
             </div>
           </div>
