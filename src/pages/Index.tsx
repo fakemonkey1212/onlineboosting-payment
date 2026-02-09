@@ -77,19 +77,19 @@ const Index = () => {
               মোবাইল ব্যাংকিং
             </button>
 
-            {/* Payment Methods Grid - 2 cols mobile, 3 cols desktop, no gaps on mobile */}
-            <div className="grid grid-cols-2 md:grid-cols-3 gap-0 md:gap-3 flex-1">
-              <div className="bg-card border border-border flex items-center justify-center h-16 md:h-20 cursor-pointer hover:shadow-md transition-shadow">
-                <img src={bkashLogo} alt="bKash" className="h-8 md:h-10 object-contain" />
+            {/* Payment Methods Grid - matches reference design */}
+            <div className="grid grid-cols-2 gap-2.5 md:gap-3 flex-1">
+              <div className="bg-card rounded-lg flex items-center justify-center h-[70px] md:h-20 cursor-pointer hover:shadow-md transition-shadow">
+                <img src={bkashLogo} alt="bKash" className="h-10 md:h-12 object-contain" />
               </div>
-              <div className="bg-card border border-border flex items-center justify-center h-16 md:h-20 cursor-pointer hover:shadow-md transition-shadow">
-                <img src={nagadLogo} alt="Nagad" className="h-8 md:h-10 object-contain" />
+              <div className="bg-card rounded-lg flex items-center justify-center h-[70px] md:h-20 cursor-pointer hover:shadow-md transition-shadow">
+                <img src={nagadLogo} alt="Nagad" className="h-10 md:h-12 object-contain" />
               </div>
-              <div className="bg-card border border-border flex items-center justify-center h-16 md:h-20 cursor-pointer hover:shadow-md transition-shadow">
-                <img src={visaLogo} alt="VISA" className="h-7 md:h-8 object-contain" />
+              <div className="bg-card rounded-lg flex items-center justify-center h-[70px] md:h-20 cursor-pointer hover:shadow-md transition-shadow">
+                <img src={visaLogo} alt="VISA" className="h-8 md:h-10 object-contain" />
               </div>
-              <div className="bg-card border border-border flex items-center justify-center h-16 md:h-20 cursor-pointer hover:shadow-md transition-shadow">
-                <img src={mastercardLogo} alt="Mastercard" className="h-8 md:h-10 object-contain" />
+              <div className="bg-card rounded-lg flex items-center justify-center h-[70px] md:h-20 cursor-pointer hover:shadow-md transition-shadow">
+                <img src={mastercardLogo} alt="Mastercard" className="h-10 md:h-12 object-contain" />
               </div>
             </div>
           </div>
