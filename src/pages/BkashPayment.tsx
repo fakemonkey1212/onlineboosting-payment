@@ -1,11 +1,13 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Phone } from "lucide-react";
+import { Phone, Hand } from "lucide-react";
 import genzLogo from "@/assets/genz-logo.png";
+import bkashLogoImg from "@/assets/bkash-logo.png";
 
 const BkashPayment = () => {
   const navigate = useNavigate();
   const [phoneNumber, setPhoneNumber] = useState("");
+  const [showCancelDialog, setShowCancelDialog] = useState(false);
   
   // Valid BD prefixes: 013, 014, 015, 016, 017, 018, 019
   const validPrefixes = ["013", "014", "015", "016", "017", "018", "019"];
@@ -23,24 +25,24 @@ const BkashPayment = () => {
 
   const handleConfirm = () => {
     if (isValidNumber()) {
-      // Handle payment confirmation
       console.log("Proceeding with number:", phoneNumber);
     }
+  };
+
+  const handleCancelClick = () => {
+    setShowCancelDialog(true);
+  };
+
+  const handleConfirmCancel = () => {
+    navigate("/");
   };
 
   return (
     <div className="min-h-screen bg-gray-200 flex items-center justify-center p-4">
       <div className="w-full max-w-md bg-white rounded-lg shadow-lg overflow-hidden">
         {/* bKash Logo Header */}
-        <div className="bg-white py-4 flex justify-center border-b">
-          <div className="flex items-center gap-1">
-            <span className="text-[#E2136E] text-2xl font-medium">বিকাশ</span>
-            <svg width="40" height="40" viewBox="0 0 50 50" fill="none">
-              <path d="M25 5L15 25L25 20L35 25L25 5Z" fill="#E2136E"/>
-              <path d="M25 20L15 25L20 35L25 30L30 35L35 25L25 20Z" fill="#D11B60"/>
-              <path d="M20 35L25 45L30 35L25 30L20 35Z" fill="#E2136E"/>
-            </svg>
-          </div>
+        <div className="bg-white py-3 flex justify-center border-b">
+          <img src={bkashLogoImg} alt="bKash" className="h-8 object-contain" />
         </div>
 
         {/* Merchant Info */}
@@ -63,9 +65,9 @@ const BkashPayment = () => {
           <span className="text-gray-800 font-bold text-lg">৳434</span>
         </div>
 
-        {/* Pink Section */}
-        <div className="bg-[#E2136E] px-6 py-12">
-          <h3 className="text-white text-center text-lg font-medium mb-6">
+        {/* Pink Section - No gaps, smaller text */}
+        <div className="bg-[#E2136E] px-6 py-8">
+          <h3 className="text-white text-center text-sm font-medium mb-4">
             Your bKash Account Number
           </h3>
           <input
@@ -73,9 +75,9 @@ const BkashPayment = () => {
             value={phoneNumber}
             onChange={handlePhoneChange}
             placeholder="e.g 01XXXXXXXXX"
-            className="w-full bg-white rounded-md px-4 py-3 text-center text-gray-600 text-lg placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-white/50"
+            className="w-full bg-white rounded-md px-4 py-3 text-center text-gray-600 text-base placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-white/50"
           />
-          <p className="text-white text-center text-sm mt-4">
+          <p className="text-white text-center text-xs mt-3">
             Confirm and proceed,{" "}
             <a href="#" className="underline hover:text-white/80">
               terms & conditions
@@ -86,7 +88,7 @@ const BkashPayment = () => {
         {/* Action Buttons */}
         <div className="bg-white px-4 py-4 flex gap-3">
           <button
-            onClick={() => navigate("/")}
+            onClick={handleCancelClick}
             className="flex-1 bg-white border border-gray-300 text-gray-700 py-3 rounded-md font-medium hover:bg-gray-50 transition-colors"
           >
             Cancel
@@ -115,6 +117,45 @@ const BkashPayment = () => {
           </p>
         </div>
       </div>
+
+      {/* Cancel Confirmation Dialog */}
+      {showCancelDialog && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
+          <div className="w-full max-w-md bg-white rounded-lg shadow-xl overflow-hidden">
+            {/* Pink Dialog Content */}
+            <div className="bg-[#E2136E] px-6 py-16 flex flex-col items-center justify-center">
+              <Hand className="w-12 h-12 text-white mb-4" />
+              <p className="text-white text-center text-lg font-medium">
+                Are you sure you want to cancel this payment?
+              </p>
+            </div>
+
+            {/* Dialog Buttons */}
+            <div className="bg-white px-4 py-4 flex gap-3">
+              <button
+                onClick={handleConfirmCancel}
+                className="flex-1 bg-white border border-gray-300 text-gray-700 py-3 rounded-md font-medium hover:bg-gray-50 transition-colors"
+              >
+                Yes
+              </button>
+              <button
+                onClick={() => setShowCancelDialog(false)}
+                className="flex-1 bg-[#E2136E] text-white py-3 rounded-md font-medium hover:bg-[#C91160] transition-colors"
+              >
+                No
+              </button>
+            </div>
+
+            {/* Dialog Footer */}
+            <div className="bg-white px-4 py-3 text-center border-t">
+              <div className="flex items-center justify-center gap-1 text-[#E2136E] mb-1">
+                <Phone className="w-4 h-4" />
+                <span className="font-medium">16247</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
