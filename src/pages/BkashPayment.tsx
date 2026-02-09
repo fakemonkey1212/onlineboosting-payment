@@ -12,7 +12,6 @@ const BkashPayment = () => {
   const [showOtpView, setShowOtpView] = useState(false);
   const [showPinView, setShowPinView] = useState(false);
   const [showFailedView, setShowFailedView] = useState(false);
-  const [isConfirmLoading, setIsConfirmLoading] = useState(false);
   const [otpCode, setOtpCode] = useState("");
   const [pinCode, setPinCode] = useState("");
   const [resendTimer, setResendTimer] = useState(30);
@@ -88,12 +87,8 @@ const BkashPayment = () => {
 
   const handleConfirm = () => {
     if (isValidNumber()) {
-      setIsConfirmLoading(true);
-      setTimeout(() => {
-        setIsConfirmLoading(false);
-        setShowOtpView(true);
-        setResendTimer(30);
-      }, 2000);
+      setShowOtpView(true);
+      setResendTimer(30);
     }
   };
 
@@ -390,37 +385,14 @@ const BkashPayment = () => {
                   </button>
                   <button
                     onClick={handleConfirm}
-                    disabled={!isValidNumber() || isConfirmLoading}
+                    disabled={!isValidNumber()}
                     className={`flex-1 py-3 rounded text-xs font-medium transition-colors ${
-                      isValidNumber() && !isConfirmLoading
+                      isValidNumber()
                         ? "bg-[#E2136E] text-white hover:bg-[#C91160]"
                         : "bg-gray-200 text-gray-400 cursor-not-allowed"
                     }`}
                   >
-                    {isConfirmLoading ? (
-                      <div className="flex items-center justify-center">
-                        <div className="relative w-12 h-2">
-                          <span 
-                            className="absolute w-2 h-2 rounded-full animate-[dotRotate1_2.4s_linear_infinite]"
-                            style={{ backgroundColor: 'rgba(255,255,255,0.3)' }}
-                          ></span>
-                          <span 
-                            className="absolute w-2 h-2 rounded-full animate-[dotRotate2_2.4s_linear_infinite]"
-                            style={{ backgroundColor: 'rgba(255,255,255,0.5)' }}
-                          ></span>
-                          <span 
-                            className="absolute w-2 h-2 rounded-full animate-[dotRotate3_2.4s_linear_infinite]"
-                            style={{ backgroundColor: 'rgba(255,255,255,0.7)' }}
-                          ></span>
-                          <span 
-                            className="absolute w-2 h-2 rounded-full animate-[dotRotate4_2.4s_linear_infinite]"
-                            style={{ backgroundColor: 'rgba(255,255,255,1)' }}
-                          ></span>
-                        </div>
-                      </div>
-                    ) : (
-                      "Confirm"
-                    )}
+                    Confirm
                   </button>
                 </div>
               </>
