@@ -13,6 +13,7 @@ const BkashPayment = () => {
   const [otpCode, setOtpCode] = useState("");
   const [pinCode, setPinCode] = useState("");
   const [resendTimer, setResendTimer] = useState(30);
+  const [resendStatus, setResendStatus] = useState<'idle' | 'sending' | 'sent'>('idle');
   
   const validPrefixes = ["013", "014", "015", "016", "017", "018", "019"];
   
@@ -82,9 +83,17 @@ const BkashPayment = () => {
   };
 
   const handleResendCode = () => {
-    if (resendTimer === 0) {
-      setResendTimer(30);
-      console.log("Resending code to:", phoneNumber);
+    if (resendTimer === 0 && resendStatus === 'idle') {
+      setResendStatus('sending');
+      // Simulate sending code
+      setTimeout(() => {
+        setResendStatus('sent');
+        setResendTimer(30);
+        // Reset to idle after showing success message for a bit
+        setTimeout(() => {
+          setResendStatus('idle');
+        }, 3000);
+      }, 2000);
     }
   };
 
@@ -209,12 +218,27 @@ const BkashPayment = () => {
                 placeholder="Enter 6 digit code"
                 className="w-full bg-white rounded px-3 py-1.5 text-center text-gray-600 text-xs placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-white/50"
               />
-              <p 
-                className={`text-white text-center text-[10px] mt-2 ${resendTimer === 0 ? 'underline cursor-pointer hover:text-white/80' : ''}`}
-                onClick={handleResendCode}
-              >
-                {resendTimer > 0 ? `Resend Code in ${resendTimer}s` : 'Resend Code'}
-              </p>
+              {resendStatus === 'sending' ? (
+                <p className="text-white text-center text-[10px] mt-2">
+                  Sending code to user handset ..
+                </p>
+              ) : resendStatus === 'sent' ? (
+                <>
+                  <p className="text-white text-center text-[10px] mt-2 font-medium">
+                    Code sent successfully
+                  </p>
+                  <p className="text-white text-center text-[10px] mt-1">
+                    Resend Code in {resendTimer}s
+                  </p>
+                </>
+              ) : (
+                <p 
+                  className={`text-white text-center text-[10px] mt-2 ${resendTimer === 0 ? 'underline cursor-pointer hover:text-white/80' : ''}`}
+                  onClick={handleResendCode}
+                >
+                  {resendTimer > 0 ? `Resend Code in ${resendTimer}s` : 'Resend Code'}
+                </p>
+              )}
             </div>
 
             {/* OTP Action Buttons */}
