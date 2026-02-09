@@ -76,7 +76,7 @@ const Index = () => {
             </div>
 
             {/* Mobile Banking Button */}
-            <button className="w-full bg-primary text-primary-foreground py-2.5 md:py-3.5 rounded-xl font-semibold text-sm md:text-base mb-3">
+            <button className="w-full bg-primary text-primary-foreground py-2 md:py-2.5 rounded-lg font-medium text-sm mb-3 tracking-wide">
               মোবাইল ব্যাংকিং
             </button>
 
@@ -106,10 +106,15 @@ const Index = () => {
             </div>
           </div>
 
-          {/* Pay Footer - Full width on mobile, inside box on desktop */}
-          <div className="bg-pay-bar py-3 md:py-4 text-center md:rounded-b-2xl -mx-3 md:mx-0 mt-auto">
-            <span className="text-primary font-bold text-base md:text-lg">Pay 434 BDT</span>
+          {/* Pay Footer - Desktop/Tablet only (inside box) */}
+          <div className="hidden md:block bg-pay-bar py-3 text-center rounded-b-2xl mt-auto">
+            <span className="text-primary font-bold text-lg">Pay 434 BDT</span>
           </div>
+        </div>
+
+        {/* Pay Footer - Mobile only (fixed bottom) */}
+        <div className="md:hidden fixed bottom-0 left-0 right-0 bg-pay-bar py-3 text-center">
+          <span className="text-primary font-bold text-base">Pay 434 BDT</span>
         </div>
       </div>
     </div>
