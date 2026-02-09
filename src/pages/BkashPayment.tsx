@@ -145,10 +145,11 @@ const BkashPayment = () => {
           <>
             {/* Pink Section - Loading */}
             <div className="bg-[#E2136E] flex-1 flex flex-col items-center justify-center">
-              <div className="flex items-center gap-2 mb-3">
-                <span className="w-3 h-3 bg-white/60 rounded-full animate-[pulse_1s_ease-in-out_infinite]"></span>
-                <span className="w-3 h-3 bg-white/80 rounded-full animate-[pulse_1s_ease-in-out_0.2s_infinite]"></span>
-                <span className="w-3 h-3 bg-white rounded-full animate-[pulse_1s_ease-in-out_0.4s_infinite]"></span>
+              <div className="flex items-center gap-1.5 mb-3">
+                <span className="w-2.5 h-2.5 bg-white rounded-full animate-[bounce_1s_ease-in-out_infinite]" style={{ animationDelay: '0ms' }}></span>
+                <span className="w-2.5 h-2.5 bg-white rounded-full animate-[bounce_1s_ease-in-out_infinite]" style={{ animationDelay: '150ms' }}></span>
+                <span className="w-2.5 h-2.5 bg-white rounded-full animate-[bounce_1s_ease-in-out_infinite]" style={{ animationDelay: '300ms' }}></span>
+                <span className="w-2.5 h-2.5 bg-white rounded-full animate-[bounce_1s_ease-in-out_infinite]" style={{ animationDelay: '450ms' }}></span>
               </div>
               <p className="text-white text-sm font-medium">Loading</p>
             </div>
