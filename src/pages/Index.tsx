@@ -7,100 +7,96 @@ import mastercardLogo from "@/assets/mastercard-logo.png";
 
 const Index = () => {
   return (
-    <div className="min-h-screen bg-background flex items-center justify-center p-4">
-      <div className="w-full max-w-[520px] flex flex-col min-h-[85vh]">
+    <div className="h-screen bg-background flex items-center justify-center p-2 md:p-4 overflow-hidden">
+      <div className="w-full max-w-[520px] flex flex-col h-full max-h-[100vh] md:max-h-[85vh]">
         {/* Card - white on desktop, transparent on mobile */}
         <div className="bg-transparent md:bg-card md:rounded-2xl md:shadow-sm flex-1 flex flex-col overflow-hidden">
-          {/* Top Bar */}
-          <div className="flex items-center justify-between px-5 py-4">
-            <div className="w-9 h-9 bg-card md:bg-secondary rounded-lg flex items-center justify-center shadow-sm">
-              <Home className="w-5 h-5 text-foreground" strokeWidth={1.5} />
+          {/* Top Bar - Icons in one white box */}
+          <div className="flex items-center justify-between px-3 py-2 md:px-5 md:py-3">
+            <div className="bg-card rounded-lg flex items-center gap-2 px-3 py-2 shadow-sm">
+              <Home className="w-4 h-4 text-foreground" strokeWidth={1.5} />
             </div>
-            <div className="flex items-center gap-3">
-              <div className="w-9 h-9 bg-card md:bg-secondary rounded-lg flex items-center justify-center shadow-sm">
-                <Upload className="w-4 h-4 text-foreground" strokeWidth={1.5} />
-              </div>
-              <div className="w-9 h-9 bg-card md:bg-secondary rounded-lg flex items-center justify-center shadow-sm">
-                <X className="w-5 h-5 text-foreground" strokeWidth={1.5} />
-              </div>
+            <div className="bg-card rounded-lg flex items-center gap-3 px-3 py-2 shadow-sm">
+              <Upload className="w-4 h-4 text-foreground" strokeWidth={1.5} />
+              <X className="w-4 h-4 text-foreground" strokeWidth={1.5} />
             </div>
           </div>
 
           {/* Content */}
-          <div className="flex-1 px-4 md:px-6 pb-6">
+          <div className="flex-1 px-3 md:px-6 pb-3 md:pb-6 flex flex-col">
             {/* GenZ Logo */}
-            <div className="flex justify-center mt-4 mb-3">
+            <div className="flex justify-center mt-1 mb-2">
               <img 
                 src={genzLogo} 
                 alt="GenZ" 
-                className="w-20 h-20 md:w-24 md:h-24 rounded-full object-cover"
+                className="w-14 h-14 md:w-20 md:h-20 rounded-full object-cover"
               />
             </div>
 
             {/* Title Section */}
-            <div className="text-center mb-4">
-              <h1 className="text-foreground text-xl md:text-2xl font-bold mb-1">
+            <div className="text-center mb-2">
+              <h1 className="text-foreground text-base md:text-xl font-bold mb-0.5">
                 GenZ SMM
               </h1>
-              <p className="text-muted-foreground text-base md:text-lg font-normal">
+              <p className="text-muted-foreground text-sm md:text-base font-normal">
                 Online Payment
               </p>
             </div>
 
             {/* Icon Row */}
-            <div className="flex justify-center gap-6 md:gap-8 mb-6">
-              <div className="flex flex-col items-center gap-1">
-                <div className="w-10 h-10 md:w-12 md:h-12 bg-card md:bg-secondary rounded-full flex items-center justify-center shadow-sm">
-                  <Headphones className="w-5 h-5 md:w-6 md:h-6 text-muted-foreground" strokeWidth={1.5} />
+            <div className="flex justify-center gap-4 md:gap-8 mb-3">
+              <div className="flex flex-col items-center gap-0.5">
+                <div className="w-8 h-8 md:w-10 md:h-10 bg-card md:bg-secondary rounded-full flex items-center justify-center shadow-sm">
+                  <Headphones className="w-4 h-4 md:w-5 md:h-5 text-muted-foreground" strokeWidth={1.5} />
                 </div>
-                <span className="text-xs text-muted-foreground">Support</span>
+                <span className="text-[10px] md:text-xs text-muted-foreground">Support</span>
               </div>
-              <div className="flex flex-col items-center gap-1">
-                <div className="w-10 h-10 md:w-12 md:h-12 bg-card md:bg-secondary rounded-full flex items-center justify-center shadow-sm">
-                  <HelpCircle className="w-5 h-5 md:w-6 md:h-6 text-muted-foreground" strokeWidth={1.5} />
+              <div className="flex flex-col items-center gap-0.5">
+                <div className="w-8 h-8 md:w-10 md:h-10 bg-card md:bg-secondary rounded-full flex items-center justify-center shadow-sm">
+                  <HelpCircle className="w-4 h-4 md:w-5 md:h-5 text-muted-foreground" strokeWidth={1.5} />
                 </div>
-                <span className="text-xs text-muted-foreground">FAQ</span>
+                <span className="text-[10px] md:text-xs text-muted-foreground">FAQ</span>
               </div>
-              <div className="flex flex-col items-center gap-1 relative">
-                <div className="w-10 h-10 md:w-12 md:h-12 bg-card md:bg-secondary rounded-full flex items-center justify-center shadow-sm">
-                  <Gift className="w-5 h-5 md:w-6 md:h-6 text-muted-foreground" strokeWidth={1.5} />
+              <div className="flex flex-col items-center gap-0.5 relative">
+                <div className="w-8 h-8 md:w-10 md:h-10 bg-card md:bg-secondary rounded-full flex items-center justify-center shadow-sm">
+                  <Gift className="w-4 h-4 md:w-5 md:h-5 text-muted-foreground" strokeWidth={1.5} />
                 </div>
-                <span className="absolute -top-1 -right-1 w-4 h-4 bg-destructive text-destructive-foreground text-[10px] rounded-full flex items-center justify-center font-medium">2</span>
-                <span className="text-xs text-muted-foreground">Offers</span>
+                <span className="absolute -top-0.5 -right-0.5 w-3.5 h-3.5 bg-destructive text-destructive-foreground text-[8px] rounded-full flex items-center justify-center font-medium">2</span>
+                <span className="text-[10px] md:text-xs text-muted-foreground">Offers</span>
               </div>
-              <div className="flex flex-col items-center gap-1">
-                <div className="w-10 h-10 md:w-12 md:h-12 bg-card md:bg-secondary rounded-full flex items-center justify-center shadow-sm">
-                  <LogIn className="w-5 h-5 md:w-6 md:h-6 text-muted-foreground" strokeWidth={1.5} />
+              <div className="flex flex-col items-center gap-0.5">
+                <div className="w-8 h-8 md:w-10 md:h-10 bg-card md:bg-secondary rounded-full flex items-center justify-center shadow-sm">
+                  <LogIn className="w-4 h-4 md:w-5 md:h-5 text-muted-foreground" strokeWidth={1.5} />
                 </div>
-                <span className="text-xs text-muted-foreground">Login</span>
+                <span className="text-[10px] md:text-xs text-muted-foreground">Login</span>
               </div>
             </div>
 
             {/* Mobile Banking Button */}
-            <button className="w-full bg-primary text-primary-foreground py-3.5 md:py-4 rounded-xl font-semibold text-base md:text-lg mb-6">
+            <button className="w-full bg-primary text-primary-foreground py-2.5 md:py-3.5 rounded-xl font-semibold text-sm md:text-base mb-3">
               মোবাইল ব্যাংকিং
             </button>
 
             {/* Payment Methods Grid - 2 cols mobile, 3 cols desktop */}
-            <div className="grid grid-cols-2 md:grid-cols-3 gap-3 md:gap-4">
-              <div className="bg-card rounded-xl border border-border flex items-center justify-center h-[72px] md:h-[90px] cursor-pointer hover:shadow-md transition-shadow">
-                <img src={bkashLogo} alt="bKash" className="h-8 md:h-10 object-contain" />
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-2 md:gap-3 flex-1">
+              <div className="bg-card rounded-xl border border-border flex items-center justify-center h-14 md:h-20 cursor-pointer hover:shadow-md transition-shadow">
+                <img src={bkashLogo} alt="bKash" className="h-6 md:h-9 object-contain" />
               </div>
-              <div className="bg-card rounded-xl border border-border flex items-center justify-center h-[72px] md:h-[90px] cursor-pointer hover:shadow-md transition-shadow">
-                <img src={nagadLogo} alt="Nagad" className="h-8 md:h-10 object-contain" />
+              <div className="bg-card rounded-xl border border-border flex items-center justify-center h-14 md:h-20 cursor-pointer hover:shadow-md transition-shadow">
+                <img src={nagadLogo} alt="Nagad" className="h-6 md:h-9 object-contain" />
               </div>
-              <div className="bg-card rounded-xl border border-border flex items-center justify-center h-[72px] md:h-[90px] cursor-pointer hover:shadow-md transition-shadow">
-                <img src={visaLogo} alt="VISA" className="h-6 md:h-8 object-contain" />
+              <div className="bg-card rounded-xl border border-border flex items-center justify-center h-14 md:h-20 cursor-pointer hover:shadow-md transition-shadow">
+                <img src={visaLogo} alt="VISA" className="h-5 md:h-7 object-contain" />
               </div>
-              <div className="bg-card rounded-xl border border-border flex items-center justify-center h-[72px] md:h-[90px] cursor-pointer hover:shadow-md transition-shadow">
-                <img src={mastercardLogo} alt="Mastercard" className="h-8 md:h-10 object-contain" />
+              <div className="bg-card rounded-xl border border-border flex items-center justify-center h-14 md:h-20 cursor-pointer hover:shadow-md transition-shadow">
+                <img src={mastercardLogo} alt="Mastercard" className="h-6 md:h-9 object-contain" />
               </div>
             </div>
           </div>
 
           {/* Pay Footer */}
-          <div className="bg-pay-bar py-4 md:py-5 text-center md:rounded-b-2xl">
-            <span className="text-primary font-bold text-lg md:text-xl">Pay 434 BDT</span>
+          <div className="bg-pay-bar py-3 md:py-4 text-center md:rounded-b-2xl">
+            <span className="text-primary font-bold text-base md:text-lg">Pay 434 BDT</span>
           </div>
         </div>
       </div>
