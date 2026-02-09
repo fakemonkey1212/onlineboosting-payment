@@ -10,8 +10,8 @@ import troyLogo from "@/assets/troy-logo.png";
 
 const Index = () => {
   return (
-    <div className="min-h-screen bg-background flex items-center justify-center p-2 md:p-4">
-      <div className="w-full max-w-[520px] md:max-w-[700px] lg:max-w-[800px] flex flex-col">
+    <div className="h-screen bg-background flex items-center justify-center p-2 md:p-4 overflow-hidden">
+      <div className="w-full max-w-[520px] md:max-w-[700px] lg:max-w-[800px] flex flex-col h-full max-h-[680px] md:max-h-[720px]">
         {/* Card - white on desktop, transparent on mobile */}
         <div className="bg-transparent md:bg-card md:rounded-2xl md:shadow-sm flex flex-col">
           {/* Top Bar - All icons in one white box */}
