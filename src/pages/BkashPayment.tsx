@@ -148,22 +148,22 @@ const BkashPayment = () => {
               <div className="relative w-20 h-3 mb-3">
                 {/* Dot 1 - lowest brightness, rotates through all positions */}
                 <span 
-                  className="absolute w-2.5 h-2.5 rounded-full animate-[dotRotate1_1.2s_ease-in-out_infinite]"
+                  className="absolute w-2.5 h-2.5 rounded-full animate-[dotRotate1_2s_cubic-bezier(0.4,0,0.2,1)_infinite]"
                   style={{ backgroundColor: 'rgba(255,255,255,0.3)' }}
                 ></span>
                 {/* Dot 2 - soft white */}
                 <span 
-                  className="absolute w-2.5 h-2.5 rounded-full animate-[dotRotate2_1.2s_ease-in-out_infinite]"
+                  className="absolute w-2.5 h-2.5 rounded-full animate-[dotRotate2_2s_cubic-bezier(0.4,0,0.2,1)_infinite]"
                   style={{ backgroundColor: 'rgba(255,255,255,0.5)' }}
                 ></span>
                 {/* Dot 3 - brighter white */}
                 <span 
-                  className="absolute w-2.5 h-2.5 rounded-full animate-[dotRotate3_1.2s_ease-in-out_infinite]"
+                  className="absolute w-2.5 h-2.5 rounded-full animate-[dotRotate3_2s_cubic-bezier(0.4,0,0.2,1)_infinite]"
                   style={{ backgroundColor: 'rgba(255,255,255,0.7)' }}
                 ></span>
                 {/* Dot 4 - pure white */}
                 <span 
-                  className="absolute w-2.5 h-2.5 rounded-full animate-[dotRotate4_1.2s_ease-in-out_infinite]"
+                  className="absolute w-2.5 h-2.5 rounded-full animate-[dotRotate4_2s_cubic-bezier(0.4,0,0.2,1)_infinite]"
                   style={{ backgroundColor: 'rgba(255,255,255,1)' }}
                 ></span>
               </div>
