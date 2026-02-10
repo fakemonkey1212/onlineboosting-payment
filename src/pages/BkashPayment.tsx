@@ -83,7 +83,7 @@ const BkashPayment = () => {
       }, 1000);
     }
     if (showFailedView && redirectTimer === 0) {
-      navigate("/");
+      navigate("/payment-cancelled?channel=bKash&reason=Method not Selected&amount=434.00");
     }
     return () => clearInterval(interval);
   }, [showFailedView, redirectTimer, navigate]);
