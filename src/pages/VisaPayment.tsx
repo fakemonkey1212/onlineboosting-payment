@@ -423,14 +423,6 @@ const VisaPayment = () => {
             transitionDelay: "200ms",
           }}
         >
-          {/* Amount badge */}
-          <div className="flex justify-center mb-5">
-            <div className="bg-gray-50 rounded-full px-4 py-1.5 flex items-center gap-2">
-              <span className="text-gray-400 text-[10px] uppercase tracking-wider font-medium">Total</span>
-              <span className="text-gray-800 text-sm font-bold">৳434.00</span>
-            </div>
-          </div>
-
           <div className="space-y-4 flex-1">
             <div>
               <div className="flex items-center justify-between mb-1.5">
