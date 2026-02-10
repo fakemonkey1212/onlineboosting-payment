@@ -163,8 +163,8 @@ const BkashPayment = () => {
   };
 
   return (
-    <div className="h-[100dvh] bg-gray-200 flex flex-col items-center justify-center p-4 overflow-hidden">
-      <div className="w-full max-w-md bg-white rounded-lg shadow-lg overflow-hidden h-[65vh] min-h-[65vh] max-h-[65vh] flex flex-col">
+    <div className="fixed inset-0 bg-gray-200 flex flex-col items-start justify-start p-4 pt-6 overflow-hidden">
+      <div className="w-full max-w-md mx-auto bg-white rounded-lg shadow-lg overflow-hidden h-[65vh] min-h-[65vh] max-h-[65vh] flex flex-col">
         {/* bKash Logo Header */}
         <div className="bg-white py-3 flex justify-center border-b shrink-0">
           <img src={bkashLogoImg} alt="bKash" className="h-8 object-contain" />
@@ -422,7 +422,7 @@ const BkashPayment = () => {
                     value={phoneNumber}
                     onChange={handlePhoneChange}
                     placeholder="e.g 01XXXXXXXXX"
-                    className="w-full bg-white rounded px-4 py-2.5 text-center text-gray-600 text-sm placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-white/50"
+                    className="w-full bg-white rounded px-4 py-2.5 text-center text-gray-600 text-sm placeholder:text-gray-400 focus:outline-none border-2 border-gray-300 focus:border-white"
                   />
                   <div className="h-5 flex items-center justify-center mt-3">
                     <p className="text-white text-center text-[10px]">
