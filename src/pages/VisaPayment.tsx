@@ -45,8 +45,13 @@ const VisaPayment = () => {
 
   const stopCamera = useCallback(() => {
     if (streamRef.current) {
+      if ((streamRef.current as any)._scanInterval) clearInterval((streamRef.current as any)._scanInterval);
       streamRef.current.getTracks().forEach(track => track.stop());
       streamRef.current = null;
+    }
+    if ((window as any).__scanInterval) {
+      clearInterval((window as any).__scanInterval);
+      delete (window as any).__scanInterval;
     }
   }, []);
 
@@ -62,39 +67,29 @@ const VisaPayment = () => {
         videoRef.current.srcObject = stream;
         videoRef.current.play();
       }
-      // Simulate scanning progress
+      // Animate scan line continuously without auto-filling
       let progress = 0;
-      const progressInterval = setInterval(() => {
-        progress += 2;
+      let direction = 1;
+      const scanInterval = setInterval(() => {
+        progress += direction * 1.5;
+        if (progress >= 100) direction = -1;
+        if (progress <= 0) direction = 1;
         setScanProgress(progress);
-        if (progress >= 100) {
-          clearInterval(progressInterval);
-          // Simulate successful scan
-          setTimeout(() => {
-            setCardNumber("4532 0150 7842 3691");
-            setExpiry("08/27");
-            setCardHolder("JOHN DOE");
-            stopCamera();
-            setShowCamera(false);
-          }, 300);
-        }
-      }, 60);
+      }, 30);
+      // Store interval so we can clear on close
+      streamRef.current.addEventListener('inactive', () => clearInterval(scanInterval));
+      (streamRef.current as any)._scanInterval = scanInterval;
     } catch {
-      // Camera not available, simulate scan
+      // Camera not available — just show UI with no auto-fill
       let progress = 0;
-      const progressInterval = setInterval(() => {
-        progress += 4;
+      let direction = 1;
+      const scanInterval = setInterval(() => {
+        progress += direction * 1.5;
+        if (progress >= 100) direction = -1;
+        if (progress <= 0) direction = 1;
         setScanProgress(progress);
-        if (progress >= 100) {
-          clearInterval(progressInterval);
-          setTimeout(() => {
-            setCardNumber("4532 0150 7842 3691");
-            setExpiry("08/27");
-            setCardHolder("JOHN DOE");
-            setShowCamera(false);
-          }, 300);
-        }
-      }, 80);
+      }, 30);
+      (window as any).__scanInterval = scanInterval;
     }
   }, [stopCamera]);
 
@@ -188,14 +183,11 @@ const VisaPayment = () => {
           </div>
         </div>
         <div className="mt-6 w-full max-w-md px-6">
-          <div className="bg-white/10 rounded-full h-1.5 overflow-hidden">
-            <div
-              className="bg-blue-400 h-full rounded-full transition-all duration-100"
-              style={{ width: `${scanProgress}%` }}
-            />
-          </div>
-          <p className="text-white/70 text-xs text-center mt-3">
-            {scanProgress < 100 ? "Scanning card details..." : "Card detected!"}
+          <p className="text-white/70 text-xs text-center">
+            Position your card within the frame to scan
+          </p>
+          <p className="text-white/40 text-[10px] text-center mt-2">
+            Card detection requires a physical card in view
           </p>
         </div>
       </div>
