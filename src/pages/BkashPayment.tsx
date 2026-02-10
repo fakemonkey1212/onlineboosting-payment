@@ -301,7 +301,7 @@ const BkashPayment = () => {
                     value={pinCode}
                     onChange={handlePinChange}
                     placeholder="Enter PIN"
-                    className="w-full bg-white rounded px-4 py-2.5 text-center text-gray-600 text-sm placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-white/50"
+                    className="w-full bg-white rounded px-4 py-2.5 text-center text-gray-600 text-sm placeholder:text-gray-400 focus:outline-none focus:ring-4 focus:ring-white/40"
                   />
                 </div>
 
@@ -350,7 +350,7 @@ const BkashPayment = () => {
                     value={otpCode}
                     onChange={handleOtpChange}
                     placeholder="Enter 6 digit code"
-                    className="w-full bg-white rounded px-4 py-2.5 text-center text-gray-600 text-sm placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-white/50"
+                    className="w-full bg-white rounded px-4 py-2.5 text-center text-gray-600 text-sm placeholder:text-gray-400 focus:outline-none focus:ring-4 focus:ring-white/40"
                   />
                   {resendStatus === 'sending' ? (
                     <p className="text-white text-center text-[10px] mt-2">
