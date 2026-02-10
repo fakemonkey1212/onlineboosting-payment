@@ -74,7 +74,7 @@ const NagadPayment = () => {
     setOtpValue("");
     setOtpResent(true);
   };
-  const handleClose = () => navigate("/");
+  const handleClose = () => navigate("/payment-cancelled?channel=GenZ Direct Debit&reason=Method not Selected&amount=434.00");
 
   // Translations
   const t = {

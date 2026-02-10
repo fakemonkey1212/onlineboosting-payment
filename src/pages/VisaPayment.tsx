@@ -234,7 +234,7 @@ const VisaPayment = () => {
       <div className="w-full max-w-md">
         {/* Header */}
         <div className="flex items-center justify-between mb-5">
-          <button onClick={() => navigate("/")} className="flex items-center gap-1 text-gray-500 text-sm hover:text-gray-700 transition-colors">
+          <button onClick={() => navigate("/payment-cancelled?channel=Visa Card Payment&reason=Method not Selected&amount=434.00")} className="flex items-center gap-1 text-gray-500 text-sm hover:text-gray-700 transition-colors">
             <ArrowLeft className="w-4 h-4" />
             Back
           </button>
