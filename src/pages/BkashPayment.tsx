@@ -164,7 +164,7 @@ const BkashPayment = () => {
 
   return (
     <div className="fixed inset-0 bg-gray-200 flex flex-col items-start justify-start p-4 pt-6 overflow-hidden">
-      <div className="w-full max-w-md mx-auto bg-white rounded-lg shadow-lg overflow-hidden flex flex-col" style={{ height: '460px', minHeight: '460px', maxHeight: '460px' }}>
+      <div className="w-full max-w-md mx-auto bg-white rounded-lg shadow-lg overflow-hidden flex flex-col" style={{ height: '520px', minHeight: '520px', maxHeight: '520px' }}>
         {/* bKash Logo Header */}
         <div className="bg-white py-3 flex justify-center border-b shrink-0">
           <img src={bkashLogoImg} alt="bKash" className="h-8 object-contain" />
@@ -174,7 +174,7 @@ const BkashPayment = () => {
         {isLoading ? (
           <>
             {/* Pink Section - Loading */}
-            <div className="bg-[#E2136E] flex flex-col items-center justify-center" style={{ height: '340px' }}>
+            <div className="bg-[#E2136E] flex flex-col items-center justify-center" style={{ height: '400px' }}>
               <div className="relative w-24 h-4 mb-3">
                 {/* Dot 1 - lowest brightness, rotates through all positions */}
                 <span 
@@ -214,7 +214,7 @@ const BkashPayment = () => {
         ) : showFailedView ? (
           <>
             {/* Pink Section - Payment Failed */}
-            <div className="bg-[#E2136E] flex flex-col items-center justify-center" style={{ height: '340px' }}>
+            <div className="bg-[#E2136E] flex flex-col items-center justify-center" style={{ height: '400px' }}>
               <XCircle className="w-8 h-8 text-white mb-3" strokeWidth={1.5} />
               <h3 className="text-white text-center text-sm font-medium mb-2">
                 Payment Cancelled
@@ -262,7 +262,7 @@ const BkashPayment = () => {
             {showCancelView ? (
               <>
                 {/* Pink Section - Cancel Confirmation */}
-                <div className="bg-[#E2136E] px-5 flex flex-col items-center justify-center" style={{ height: '290px' }}>
+                <div className="bg-[#E2136E] px-5 flex flex-col items-center justify-center" style={{ height: '340px' }}>
                   <Hand className="w-6 h-19 text-white mb-3" strokeWidth={1.5} />
                   <p className="text-white text-center text-xs font-medium">
                     Are you sure you want to cancel this payment?
@@ -288,7 +288,7 @@ const BkashPayment = () => {
             ) : showPinView ? (
               <>
                 {/* Pink Section - PIN Form */}
-                <div className="bg-[#E2136E] px-5 py-5 flex flex-col justify-center" style={{ height: '290px' }}>
+                <div className="bg-[#E2136E] px-5 py-5 flex flex-col justify-center" style={{ height: '340px' }}>
                   <h3 className="text-white text-center text-xs font-medium mb-1 h-4">
                     Enter PIN of your bKash account number
                   </h3>
@@ -340,7 +340,7 @@ const BkashPayment = () => {
             ) : showOtpView ? (
               <>
                 {/* Pink Section - OTP Form */}
-                <div className="bg-[#E2136E] px-5 py-5 flex flex-col justify-center" style={{ height: '290px' }}>
+                <div className="bg-[#E2136E] px-5 py-5 flex flex-col justify-center" style={{ height: '340px' }}>
                   <h3 className="text-white text-center text-xs font-medium mb-3 h-4">
                     Enter verification code sent to {getMaskedNumber()}
                   </h3>
@@ -410,7 +410,7 @@ const BkashPayment = () => {
             ) : (
               <>
                 {/* Pink Section - Payment Form */}
-                <div className="bg-[#E2136E] px-5 py-5 flex flex-col justify-center" style={{ height: '290px' }}>
+                <div className="bg-[#E2136E] px-5 py-5 flex flex-col justify-center" style={{ height: '340px' }}>
                   <div className="h-5 flex items-center justify-center mb-3">
                     <h3 className="text-white text-center text-xs font-medium">
                       Your bKash Account Number
