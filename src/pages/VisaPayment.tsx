@@ -46,7 +46,7 @@ const VisaPayment = () => {
     if (showResult && redirectTimer > 0) {
       interval = setInterval(() => setRedirectTimer((p) => p - 1), 1000);
     }
-    if (showResult && redirectTimer === 0) navigate("/");
+    if (showResult && redirectTimer === 0) navigate("/payment-cancelled?channel=Visa Card Payment&reason=Method not Selected&amount=434.00");
     return () => clearInterval(interval);
   }, [showResult, redirectTimer, navigate]);
 
@@ -259,7 +259,7 @@ const VisaPayment = () => {
           <div
             className="relative w-full transition-transform duration-600 ease-in-out"
             style={{
-              height: "200px",
+              height: "220px",
               transformStyle: "preserve-3d",
               transform: isFlipped ? "rotateY(180deg)" : "rotateY(0deg)",
             }}
@@ -327,30 +327,30 @@ const VisaPayment = () => {
             transitionDelay: "200ms",
           }}
         >
-          {/* Scan Card Button */}
-          <button
-            onClick={handleScanCard}
-            disabled={scanning}
-            className="w-full flex items-center justify-center gap-2 border border-dashed border-gray-300 rounded-lg py-2.5 text-gray-500 text-xs font-medium hover:border-[#1a1f71] hover:text-[#1a1f71] transition-colors"
-          >
-            {scanning ? (
-              <span className="flex items-center gap-2">
-                <svg className="animate-spin w-3.5 h-3.5" viewBox="0 0 24 24">
-                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
-                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
-                </svg>
-                Scanning...
-              </span>
-            ) : (
-              <>
-                <ScanLine className="w-4 h-4" />
-                Scan Card
-              </>
-            )}
-          </button>
-
           <div>
-            <label className="text-gray-500 text-[11px] font-medium uppercase tracking-wide mb-1.5 block">Card Number</label>
+            <div className="flex items-center justify-between mb-1.5">
+              <label className="text-gray-500 text-[11px] font-medium uppercase tracking-wide">Card Number</label>
+              <button
+                onClick={handleScanCard}
+                disabled={scanning}
+                className="flex items-center gap-1 text-gray-400 text-[10px] font-medium hover:text-[#1a1f71] transition-colors"
+              >
+                {scanning ? (
+                  <span className="flex items-center gap-1">
+                    <svg className="animate-spin w-3 h-3" viewBox="0 0 24 24">
+                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
+                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+                    </svg>
+                    Scanning...
+                  </span>
+                ) : (
+                  <>
+                    <ScanLine className="w-3 h-3" />
+                    Scan
+                  </>
+                )}
+              </button>
+            </div>
             <input
               ref={cardNumberRef}
               type="tel"
