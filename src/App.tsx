@@ -7,6 +7,7 @@ import Index from "./pages/Index";
 import BkashPayment from "./pages/BkashPayment";
 import NagadPayment from "./pages/NagadPayment";
 import VisaPayment from "./pages/VisaPayment";
+import PaymentCancelled from "./pages/PaymentCancelled";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -22,6 +23,7 @@ const App = () => (
           <Route path="/bkash" element={<BkashPayment />} />
           <Route path="/nagad" element={<NagadPayment />} />
           <Route path="/visa" element={<VisaPayment />} />
+          <Route path="/payment-cancelled" element={<PaymentCancelled />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>

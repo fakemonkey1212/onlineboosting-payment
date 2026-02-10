@@ -155,7 +155,7 @@ const BkashPayment = () => {
   };
 
   const handleConfirmCancel = () => {
-    navigate("/");
+    navigate("/payment-cancelled?channel=bKash&reason=Method not Selected&amount=434.00");
   };
 
   const handleBackFromCancel = () => {
