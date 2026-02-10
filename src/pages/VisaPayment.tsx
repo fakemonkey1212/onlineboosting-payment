@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { CreditCard, Lock, ArrowLeft, CheckCircle, XCircle } from "lucide-react";
+import { CreditCard, Lock, ArrowLeft, CheckCircle, XCircle, ScanLine } from "lucide-react";
 import genzLogo from "@/assets/genz-logo.png";
 import visaLogo from "@/assets/visa-logo.png";
 
@@ -15,13 +15,31 @@ const VisaPayment = () => {
   const [showResult, setShowResult] = useState<'success' | 'failed' | null>(null);
   const [redirectTimer, setRedirectTimer] = useState(5);
   const [cardVisible, setCardVisible] = useState(false);
+  const [showOtp, setShowOtp] = useState(false);
+  const [otpCode, setOtpCode] = useState("");
+  const [otpTimer, setOtpTimer] = useState(60);
+  const [otpLoading, setOtpLoading] = useState(false);
+  const [scanning, setScanning] = useState(false);
 
   const cardNumberRef = useRef<HTMLInputElement>(null);
+  const otpInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     setTimeout(() => setCardVisible(true), 300);
     setTimeout(() => cardNumberRef.current?.focus(), 600);
   }, []);
+
+  useEffect(() => {
+    if (showOtp) setTimeout(() => otpInputRef.current?.focus(), 100);
+  }, [showOtp]);
+
+  useEffect(() => {
+    let interval: NodeJS.Timeout;
+    if (showOtp && otpTimer > 0) {
+      interval = setInterval(() => setOtpTimer((p) => p - 1), 1000);
+    }
+    return () => clearInterval(interval);
+  }, [showOtp, otpTimer]);
 
   useEffect(() => {
     let interval: NodeJS.Timeout;
@@ -49,9 +67,30 @@ const VisaPayment = () => {
     return `${padded.slice(0, 4)} ${padded.slice(4, 8)} ${padded.slice(8, 12)} ${padded.slice(12, 16)}`;
   };
 
+  const getMaskedCard = () => {
+    const nums = cardNumber.replace(/\s/g, "");
+    if (nums.length < 8) return "****";
+    return `**** **** **** ${nums.slice(-4)}`;
+  };
+
   const isFormValid = () => {
     const nums = cardNumber.replace(/\s/g, "");
     return nums.length === 16 && expiry.length === 5 && (cvv.length === 3 || cvv.length === 4) && cardHolder.length > 2;
+  };
+
+  const handleCardHolderChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value.replace(/[0-9]/g, "");
+    setCardHolder(value);
+  };
+
+  const handleScanCard = () => {
+    setScanning(true);
+    setTimeout(() => {
+      setCardNumber("4532 0150 7842 3691");
+      setExpiry("08/27");
+      setCardHolder("JOHN DOE");
+      setScanning(false);
+    }, 2000);
   };
 
   const handleSubmit = () => {
@@ -59,17 +98,32 @@ const VisaPayment = () => {
     setIsLoading(true);
     setTimeout(() => {
       setIsLoading(false);
+      setShowOtp(true);
+      setOtpTimer(60);
+    }, 2000);
+  };
+
+  const handleOtpConfirm = () => {
+    if (otpCode.length !== 6) return;
+    setOtpLoading(true);
+    setTimeout(() => {
+      setOtpLoading(false);
+      setShowOtp(false);
       setShowResult("failed");
       setRedirectTimer(5);
-    }, 3000);
+    }, 2500);
+  };
+
+  const handleResendOtp = () => {
+    if (otpTimer > 0) return;
+    setOtpTimer(60);
+    setOtpCode("");
   };
 
   if (showResult) {
     return (
       <div className="fixed inset-0 bg-gray-100 flex items-center justify-center p-4">
-        <div
-          className="w-full max-w-md bg-white rounded-2xl shadow-lg p-8 flex flex-col items-center animate-scale-in"
-        >
+        <div className="w-full max-w-md bg-white rounded-2xl shadow-lg p-8 flex flex-col items-center animate-scale-in">
           {showResult === "success" ? (
             <>
               <CheckCircle className="w-16 h-16 text-green-500 mb-4" strokeWidth={1.5} />
@@ -85,6 +139,90 @@ const VisaPayment = () => {
           )}
           <p className="text-gray-400 text-xs mt-4">
             Redirecting to merchant in {redirectTimer}s
+          </p>
+        </div>
+      </div>
+    );
+  }
+
+  if (showOtp) {
+    return (
+      <div className="fixed inset-0 bg-gray-100 flex flex-col items-center justify-start pt-6 p-4 overflow-hidden">
+        <div className="w-full max-w-md">
+          {/* Header */}
+          <div className="flex items-center justify-between mb-5">
+            <button onClick={() => setShowOtp(false)} className="flex items-center gap-1 text-gray-500 text-sm hover:text-gray-700 transition-colors">
+              <ArrowLeft className="w-4 h-4" />
+              Back
+            </button>
+            <div className="flex items-center gap-2">
+              <img src={genzLogo} alt="GenZ" className="w-6 h-6 rounded-full" />
+              <span className="text-gray-700 font-medium text-sm">GenZ SMM</span>
+            </div>
+            <div className="flex items-center gap-1 text-gray-400">
+              <Lock className="w-3 h-3" />
+              <span className="text-[10px]">Secure</span>
+            </div>
+          </div>
+
+          {/* OTP Card */}
+          <div className="bg-white rounded-2xl shadow-sm p-6 animate-scale-in">
+            <div className="flex flex-col items-center mb-6">
+              <div className="w-14 h-14 rounded-full bg-[#1a1f71]/10 flex items-center justify-center mb-3">
+                <Lock className="w-6 h-6 text-[#1a1f71]" />
+              </div>
+              <h3 className="text-gray-800 font-semibold text-base mb-1">OTP Verification</h3>
+              <p className="text-gray-500 text-xs text-center leading-relaxed">
+                A 6-digit verification code has been sent to your registered mobile number linked to card {getMaskedCard()}
+              </p>
+            </div>
+
+            <div className="mb-4">
+              <label className="text-gray-500 text-[11px] font-medium uppercase tracking-wide mb-1.5 block">Enter OTP</label>
+              <input
+                ref={otpInputRef}
+                type="tel"
+                inputMode="numeric"
+                maxLength={6}
+                value={otpCode}
+                onChange={(e) => setOtpCode(e.target.value.replace(/\D/g, "").slice(0, 6))}
+                placeholder="000000"
+                className="w-full border border-gray-200 rounded-lg px-3 py-3 text-center text-lg text-gray-800 placeholder:text-gray-300 focus:outline-none focus:border-[#1a1f71] focus:ring-1 focus:ring-[#1a1f71]/20 transition-colors font-mono tracking-[8px]"
+              />
+            </div>
+
+            <p
+              className={`text-center text-xs mb-4 ${otpTimer > 0 ? 'text-gray-400' : 'text-[#1a1f71] underline cursor-pointer hover:text-[#0d1547]'}`}
+              onClick={handleResendOtp}
+            >
+              {otpTimer > 0 ? `Resend code in ${otpTimer}s` : 'Resend Code'}
+            </p>
+
+            <button
+              onClick={handleOtpConfirm}
+              disabled={otpCode.length !== 6 || otpLoading}
+              className={`w-full py-3 rounded-lg text-sm font-semibold transition-all duration-300 ${
+                otpCode.length === 6 && !otpLoading
+                  ? "bg-[#1a1f71] text-white hover:bg-[#0d1547] shadow-md hover:shadow-lg"
+                  : "bg-gray-200 text-gray-400 cursor-not-allowed"
+              }`}
+            >
+              {otpLoading ? (
+                <span className="flex items-center justify-center gap-2">
+                  <svg className="animate-spin w-4 h-4" viewBox="0 0 24 24">
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
+                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+                  </svg>
+                  Verifying...
+                </span>
+              ) : (
+                "Verify & Pay ৳434"
+              )}
+            </button>
+          </div>
+
+          <p className="text-center text-gray-400 text-[10px] mt-4">
+            Your payment is secured with 256-bit SSL encryption
           </p>
         </div>
       </div>
@@ -189,6 +327,28 @@ const VisaPayment = () => {
             transitionDelay: "200ms",
           }}
         >
+          {/* Scan Card Button */}
+          <button
+            onClick={handleScanCard}
+            disabled={scanning}
+            className="w-full flex items-center justify-center gap-2 border border-dashed border-gray-300 rounded-lg py-2.5 text-gray-500 text-xs font-medium hover:border-[#1a1f71] hover:text-[#1a1f71] transition-colors"
+          >
+            {scanning ? (
+              <span className="flex items-center gap-2">
+                <svg className="animate-spin w-3.5 h-3.5" viewBox="0 0 24 24">
+                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
+                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+                </svg>
+                Scanning...
+              </span>
+            ) : (
+              <>
+                <ScanLine className="w-4 h-4" />
+                Scan Card
+              </>
+            )}
+          </button>
+
           <div>
             <label className="text-gray-500 text-[11px] font-medium uppercase tracking-wide mb-1.5 block">Card Number</label>
             <input
@@ -206,7 +366,7 @@ const VisaPayment = () => {
             <input
               type="text"
               value={cardHolder}
-              onChange={(e) => setCardHolder(e.target.value)}
+              onChange={handleCardHolderChange}
               placeholder="John Doe"
               className="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm text-gray-800 placeholder:text-gray-300 focus:outline-none focus:border-[#1a1f71] focus:ring-1 focus:ring-[#1a1f71]/20 transition-colors uppercase"
             />

@@ -263,7 +263,7 @@ const BkashPayment = () => {
               <>
                 {/* Pink Section - Cancel Confirmation */}
                 <div className="bg-[#E2136E] px-5 flex flex-col items-center justify-center" style={{ height: '290px' }}>
-                  <Hand className="w-10 h-14 text-white mb-3" strokeWidth={1.5} />
+                  <Hand className="w-6 h-19 text-white mb-3" strokeWidth={1.5} />
                   <p className="text-white text-center text-xs font-medium">
                     Are you sure you want to cancel this payment?
                   </p>
