@@ -106,7 +106,7 @@ const NagadPayment = () => {
             type="tel" inputMode="numeric" maxLength={1} value={phoneDigits[idx] || ""}
             onChange={(e) => handleDigitChange(idx, e.target.value, phoneDigits, setPhoneDigits, phoneInputRefs, 11)}
             onKeyDown={(e) => handleKeyDown(idx, e, phoneDigits, setPhoneDigits, phoneInputRefs)}
-            className="w-8 h-9 bg-white rounded text-center text-gray-800 text-sm font-medium focus:outline-none focus:ring-1 focus:ring-white/50"
+            className="w-[7%] max-w-8 h-8 bg-white rounded text-center text-gray-800 text-xs font-medium focus:outline-none focus:ring-1 focus:ring-white/50"
           />
         );
       }
