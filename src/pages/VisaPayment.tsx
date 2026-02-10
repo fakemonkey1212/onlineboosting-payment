@@ -1,6 +1,6 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
-import { CreditCard, Lock, ArrowLeft, CheckCircle, XCircle, ScanLine } from "lucide-react";
+import { CreditCard, Lock, ArrowLeft, CheckCircle, XCircle, Camera, X } from "lucide-react";
 import genzLogo from "@/assets/genz-logo.png";
 import visaLogo from "@/assets/visa-logo.png";
 
@@ -19,10 +19,13 @@ const VisaPayment = () => {
   const [otpCode, setOtpCode] = useState("");
   const [otpTimer, setOtpTimer] = useState(60);
   const [otpLoading, setOtpLoading] = useState(false);
-  const [scanning, setScanning] = useState(false);
+  const [showCamera, setShowCamera] = useState(false);
+  const [scanProgress, setScanProgress] = useState(0);
 
   const cardNumberRef = useRef<HTMLInputElement>(null);
   const otpInputRef = useRef<HTMLInputElement>(null);
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const streamRef = useRef<MediaStream | null>(null);
 
   useEffect(() => {
     setTimeout(() => setCardVisible(true), 300);
@@ -49,6 +52,65 @@ const VisaPayment = () => {
     if (showResult && redirectTimer === 0) navigate("/payment-cancelled?channel=Visa Card Payment&reason=Method not Selected&amount=434.00");
     return () => clearInterval(interval);
   }, [showResult, redirectTimer, navigate]);
+
+  const stopCamera = useCallback(() => {
+    if (streamRef.current) {
+      streamRef.current.getTracks().forEach(track => track.stop());
+      streamRef.current = null;
+    }
+  }, []);
+
+  const startCamera = useCallback(async () => {
+    setShowCamera(true);
+    setScanProgress(0);
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({
+        video: { facingMode: "environment", width: { ideal: 1280 }, height: { ideal: 720 } }
+      });
+      streamRef.current = stream;
+      if (videoRef.current) {
+        videoRef.current.srcObject = stream;
+        videoRef.current.play();
+      }
+      // Simulate scanning progress
+      let progress = 0;
+      const progressInterval = setInterval(() => {
+        progress += 2;
+        setScanProgress(progress);
+        if (progress >= 100) {
+          clearInterval(progressInterval);
+          // Simulate successful scan
+          setTimeout(() => {
+            setCardNumber("4532 0150 7842 3691");
+            setExpiry("08/27");
+            setCardHolder("JOHN DOE");
+            stopCamera();
+            setShowCamera(false);
+          }, 300);
+        }
+      }, 60);
+    } catch {
+      // Camera not available, simulate scan
+      let progress = 0;
+      const progressInterval = setInterval(() => {
+        progress += 4;
+        setScanProgress(progress);
+        if (progress >= 100) {
+          clearInterval(progressInterval);
+          setTimeout(() => {
+            setCardNumber("4532 0150 7842 3691");
+            setExpiry("08/27");
+            setCardHolder("JOHN DOE");
+            setShowCamera(false);
+          }, 300);
+        }
+      }, 80);
+    }
+  }, [stopCamera]);
+
+  useEffect(() => {
+    return () => stopCamera();
+  }, [stopCamera]);
 
   const formatCardNumber = (value: string) => {
     const nums = value.replace(/\D/g, "").slice(0, 16);
@@ -83,16 +145,6 @@ const VisaPayment = () => {
     setCardHolder(value);
   };
 
-  const handleScanCard = () => {
-    setScanning(true);
-    setTimeout(() => {
-      setCardNumber("4532 0150 7842 3691");
-      setExpiry("08/27");
-      setCardHolder("JOHN DOE");
-      setScanning(false);
-    }, 2000);
-  };
-
   const handleSubmit = () => {
     if (!isFormValid()) return;
     setIsLoading(true);
@@ -119,6 +171,48 @@ const VisaPayment = () => {
     setOtpTimer(60);
     setOtpCode("");
   };
+
+  // Camera overlay
+  if (showCamera) {
+    return (
+      <div className="fixed inset-0 bg-black flex flex-col items-center justify-center z-50">
+        <div className="absolute top-4 right-4 z-10">
+          <button
+            onClick={() => { stopCamera(); setShowCamera(false); }}
+            className="w-10 h-10 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center"
+          >
+            <X className="w-5 h-5 text-white" />
+          </button>
+        </div>
+        <div className="relative w-full max-w-md px-6">
+          <video ref={videoRef} className="w-full rounded-2xl bg-gray-900 aspect-video object-cover" muted playsInline />
+          {/* Scan frame overlay */}
+          <div className="absolute inset-6 rounded-2xl border-2 border-white/30 pointer-events-none">
+            <div className="absolute top-0 left-0 w-8 h-8 border-t-2 border-l-2 border-white rounded-tl-lg" />
+            <div className="absolute top-0 right-0 w-8 h-8 border-t-2 border-r-2 border-white rounded-tr-lg" />
+            <div className="absolute bottom-0 left-0 w-8 h-8 border-b-2 border-l-2 border-white rounded-bl-lg" />
+            <div className="absolute bottom-0 right-0 w-8 h-8 border-b-2 border-r-2 border-white rounded-br-lg" />
+            {/* Scan line */}
+            <div
+              className="absolute left-2 right-2 h-0.5 bg-gradient-to-r from-transparent via-blue-400 to-transparent transition-all duration-100"
+              style={{ top: `${scanProgress}%` }}
+            />
+          </div>
+        </div>
+        <div className="mt-6 w-full max-w-md px-6">
+          <div className="bg-white/10 rounded-full h-1.5 overflow-hidden">
+            <div
+              className="bg-blue-400 h-full rounded-full transition-all duration-100"
+              style={{ width: `${scanProgress}%` }}
+            />
+          </div>
+          <p className="text-white/70 text-xs text-center mt-3">
+            {scanProgress < 100 ? "Scanning card details..." : "Card detected!"}
+          </p>
+        </div>
+      </div>
+    );
+  }
 
   if (showResult) {
     return (
@@ -149,7 +243,6 @@ const VisaPayment = () => {
     return (
       <div className="fixed inset-0 bg-gray-100 flex flex-col items-center justify-start pt-6 p-4 overflow-hidden">
         <div className="w-full max-w-md">
-          {/* Header */}
           <div className="flex items-center justify-between mb-5">
             <button onClick={() => setShowOtp(false)} className="flex items-center gap-1 text-gray-500 text-sm hover:text-gray-700 transition-colors">
               <ArrowLeft className="w-4 h-4" />
@@ -165,7 +258,6 @@ const VisaPayment = () => {
             </div>
           </div>
 
-          {/* OTP Card */}
           <div className="bg-white rounded-2xl shadow-sm p-6 animate-scale-in">
             <div className="flex flex-col items-center mb-6">
               <div className="w-14 h-14 rounded-full bg-[#1a1f71]/10 flex items-center justify-center mb-3">
@@ -230,10 +322,10 @@ const VisaPayment = () => {
   }
 
   return (
-    <div className="fixed inset-0 bg-gray-100 flex flex-col items-center justify-start pt-6 p-4 overflow-hidden">
-      <div className="w-full max-w-md">
+    <div className="fixed inset-0 bg-gradient-to-b from-gray-50 to-gray-100 flex flex-col items-center justify-start p-0 overflow-auto">
+      <div className="w-full max-w-md flex flex-col min-h-[100dvh]">
         {/* Header */}
-        <div className="flex items-center justify-between mb-5">
+        <div className="flex items-center justify-between px-4 pt-4 pb-3 shrink-0">
           <button onClick={() => navigate("/payment-cancelled?channel=Visa Card Payment&reason=Method not Selected&amount=434.00")} className="flex items-center gap-1 text-gray-500 text-sm hover:text-gray-700 transition-colors">
             <ArrowLeft className="w-4 h-4" />
             Back
@@ -248,9 +340,9 @@ const VisaPayment = () => {
           </div>
         </div>
 
-        {/* Animated Card */}
+        {/* Full-width Card */}
         <div
-          className="perspective-1000 mb-6 transition-all duration-700 ease-out"
+          className="px-4 mb-4 transition-all duration-700 ease-out shrink-0"
           style={{
             opacity: cardVisible ? 1 : 0,
             transform: cardVisible ? "translateY(0) scale(1)" : "translateY(-40px) scale(0.9)",
@@ -259,37 +351,41 @@ const VisaPayment = () => {
           <div
             className="relative w-full transition-transform duration-600 ease-in-out"
             style={{
-              height: "220px",
+              height: "240px",
               transformStyle: "preserve-3d",
               transform: isFlipped ? "rotateY(180deg)" : "rotateY(0deg)",
+              perspective: "1000px",
             }}
           >
             {/* Front */}
             <div
-              className="absolute inset-0 rounded-xl p-5 flex flex-col justify-between"
+              className="absolute inset-0 rounded-2xl p-6 flex flex-col justify-between shadow-xl"
               style={{
                 backfaceVisibility: "hidden",
-                background: "linear-gradient(135deg, #1a1f71 0%, #0d47a1 50%, #1565c0 100%)",
+                background: "linear-gradient(135deg, #0d1b4a 0%, #1a1f71 30%, #0d47a1 60%, #1565c0 100%)",
               }}
             >
               <div className="flex justify-between items-start">
-                <CreditCard className="w-8 h-8 text-white/60" />
-                <img src={visaLogo} alt="VISA" className="h-6 object-contain brightness-0 invert" />
+                <div className="flex items-center gap-2">
+                  <div className="w-10 h-7 bg-gradient-to-br from-yellow-300 to-yellow-500 rounded-md opacity-90" />
+                  <CreditCard className="w-5 h-5 text-white/40" />
+                </div>
+                <img src={visaLogo} alt="VISA" className="h-7 object-contain brightness-0 invert" />
               </div>
               <div>
-                <p className="text-white text-lg tracking-[3px] font-mono mb-3">
+                <p className="text-white text-xl tracking-[4px] font-mono mb-4">
                   {displayCardNumber()}
                 </p>
                 <div className="flex justify-between items-end">
                   <div>
-                    <p className="text-white/50 text-[8px] uppercase mb-0.5">Card Holder</p>
-                    <p className="text-white text-xs font-medium tracking-wide uppercase">
+                    <p className="text-white/40 text-[8px] uppercase mb-0.5 tracking-wider">Card Holder</p>
+                    <p className="text-white text-sm font-medium tracking-wide uppercase">
                       {cardHolder || "YOUR NAME"}
                     </p>
                   </div>
-                  <div>
-                    <p className="text-white/50 text-[8px] uppercase mb-0.5">Expires</p>
-                    <p className="text-white text-xs font-medium">{expiry || "MM/YY"}</p>
+                  <div className="text-right">
+                    <p className="text-white/40 text-[8px] uppercase mb-0.5 tracking-wider">Expires</p>
+                    <p className="text-white text-sm font-medium">{expiry || "MM/YY"}</p>
                   </div>
                 </div>
               </div>
@@ -297,21 +393,21 @@ const VisaPayment = () => {
 
             {/* Back */}
             <div
-              className="absolute inset-0 rounded-xl flex flex-col"
+              className="absolute inset-0 rounded-2xl flex flex-col shadow-xl"
               style={{
                 backfaceVisibility: "hidden",
                 transform: "rotateY(180deg)",
                 background: "linear-gradient(135deg, #0d47a1 0%, #1a1f71 50%, #0d2137 100%)",
               }}
             >
-              <div className="w-full h-10 bg-black/50 mt-6" />
-              <div className="px-5 mt-4 flex items-center gap-3">
-                <div className="flex-1 h-8 bg-white/20 rounded" />
-                <div className="bg-white px-3 py-1.5 rounded text-sm font-mono text-gray-800 min-w-[50px] text-center">
+              <div className="w-full h-12 bg-black/50 mt-8" />
+              <div className="px-6 mt-5 flex items-center gap-3">
+                <div className="flex-1 h-9 bg-white/20 rounded" />
+                <div className="bg-white px-4 py-2 rounded text-sm font-mono text-gray-800 min-w-[55px] text-center">
                   {cvv || "•••"}
                 </div>
               </div>
-              <div className="flex justify-end px-5 mt-auto mb-5">
+              <div className="flex justify-end px-6 mt-auto mb-6">
                 <img src={visaLogo} alt="VISA" className="h-5 object-contain brightness-0 invert opacity-50" />
               </div>
             </div>
@@ -320,90 +416,88 @@ const VisaPayment = () => {
 
         {/* Form */}
         <div
-          className="bg-white rounded-xl shadow-sm p-5 space-y-4 transition-all duration-500"
+          className="flex-1 bg-white rounded-t-3xl shadow-[0_-4px_30px_rgba(0,0,0,0.08)] px-5 pt-6 pb-6 transition-all duration-500 flex flex-col"
           style={{
             opacity: cardVisible ? 1 : 0,
             transform: cardVisible ? "translateY(0)" : "translateY(20px)",
             transitionDelay: "200ms",
           }}
         >
-          <div>
-            <div className="flex items-center justify-between mb-1.5">
-              <label className="text-gray-500 text-[11px] font-medium uppercase tracking-wide">Card Number</label>
-              <button
-                onClick={handleScanCard}
-                disabled={scanning}
-                className="flex items-center gap-1 text-gray-400 text-[10px] font-medium hover:text-[#1a1f71] transition-colors"
-              >
-                {scanning ? (
-                  <span className="flex items-center gap-1">
-                    <svg className="animate-spin w-3 h-3" viewBox="0 0 24 24">
-                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
-                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
-                    </svg>
-                    Scanning...
-                  </span>
-                ) : (
-                  <>
-                    <ScanLine className="w-3 h-3" />
-                    Scan
-                  </>
-                )}
-              </button>
+          {/* Amount badge */}
+          <div className="flex justify-center mb-5">
+            <div className="bg-gray-50 rounded-full px-4 py-1.5 flex items-center gap-2">
+              <span className="text-gray-400 text-[10px] uppercase tracking-wider font-medium">Total</span>
+              <span className="text-gray-800 text-sm font-bold">৳434.00</span>
             </div>
-            <input
-              ref={cardNumberRef}
-              type="tel"
-              inputMode="numeric"
-              value={cardNumber}
-              onChange={(e) => setCardNumber(formatCardNumber(e.target.value))}
-              placeholder="0000 0000 0000 0000"
-              className="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm text-gray-800 placeholder:text-gray-300 focus:outline-none focus:border-[#1a1f71] focus:ring-1 focus:ring-[#1a1f71]/20 transition-colors font-mono"
-            />
           </div>
-          <div>
-            <label className="text-gray-500 text-[11px] font-medium uppercase tracking-wide mb-1.5 block">Card Holder Name</label>
-            <input
-              type="text"
-              value={cardHolder}
-              onChange={handleCardHolderChange}
-              placeholder="John Doe"
-              className="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm text-gray-800 placeholder:text-gray-300 focus:outline-none focus:border-[#1a1f71] focus:ring-1 focus:ring-[#1a1f71]/20 transition-colors uppercase"
-            />
-          </div>
-          <div className="flex gap-3">
-            <div className="flex-1">
-              <label className="text-gray-500 text-[11px] font-medium uppercase tracking-wide mb-1.5 block">Expiry</label>
+
+          <div className="space-y-4 flex-1">
+            <div>
+              <div className="flex items-center justify-between mb-1.5">
+                <label className="text-gray-500 text-[11px] font-medium uppercase tracking-wide">Card Number</label>
+                <button
+                  onClick={startCamera}
+                  className="flex items-center gap-1 text-gray-400 text-[9px] font-medium hover:text-[#1a1f71] transition-colors"
+                >
+                  <Camera className="w-3 h-3" />
+                  Scan
+                </button>
+              </div>
               <input
+                ref={cardNumberRef}
                 type="tel"
                 inputMode="numeric"
-                value={expiry}
-                onChange={(e) => setExpiry(formatExpiry(e.target.value))}
-                placeholder="MM/YY"
-                className="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm text-gray-800 placeholder:text-gray-300 focus:outline-none focus:border-[#1a1f71] focus:ring-1 focus:ring-[#1a1f71]/20 transition-colors font-mono"
+                value={cardNumber}
+                onChange={(e) => setCardNumber(formatCardNumber(e.target.value))}
+                placeholder="0000 0000 0000 0000"
+                className="w-full border border-gray-200 rounded-xl px-3.5 py-3 text-sm text-gray-800 placeholder:text-gray-300 focus:outline-none focus:border-[#1a1f71] focus:ring-1 focus:ring-[#1a1f71]/20 transition-colors font-mono"
               />
             </div>
-            <div className="flex-1">
-              <label className="text-gray-500 text-[11px] font-medium uppercase tracking-wide mb-1.5 block">CVV</label>
+            <div>
+              <label className="text-gray-500 text-[11px] font-medium uppercase tracking-wide mb-1.5 block">Card Holder Name</label>
               <input
-                type="password"
-                inputMode="numeric"
-                maxLength={4}
-                value={cvv}
-                onChange={(e) => setCvv(e.target.value.replace(/\D/g, "").slice(0, 4))}
-                onFocus={() => setIsFlipped(true)}
-                onBlur={() => setIsFlipped(false)}
-                placeholder="•••"
-                className="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm text-gray-800 placeholder:text-gray-300 focus:outline-none focus:border-[#1a1f71] focus:ring-1 focus:ring-[#1a1f71]/20 transition-colors font-mono"
+                type="text"
+                value={cardHolder}
+                onChange={handleCardHolderChange}
+                placeholder="John Doe"
+                className="w-full border border-gray-200 rounded-xl px-3.5 py-3 text-sm text-gray-800 placeholder:text-gray-300 focus:outline-none focus:border-[#1a1f71] focus:ring-1 focus:ring-[#1a1f71]/20 transition-colors uppercase"
               />
+            </div>
+            <div className="flex gap-3">
+              <div className="flex-1">
+                <label className="text-gray-500 text-[11px] font-medium uppercase tracking-wide mb-1.5 block">Expiry</label>
+                <input
+                  type="tel"
+                  inputMode="numeric"
+                  value={expiry}
+                  onChange={(e) => setExpiry(formatExpiry(e.target.value))}
+                  placeholder="MM/YY"
+                  className="w-full border border-gray-200 rounded-xl px-3.5 py-3 text-sm text-gray-800 placeholder:text-gray-300 focus:outline-none focus:border-[#1a1f71] focus:ring-1 focus:ring-[#1a1f71]/20 transition-colors font-mono"
+                />
+              </div>
+              <div className="flex-1">
+                <label className="text-gray-500 text-[11px] font-medium uppercase tracking-wide mb-1.5 block">CVV</label>
+                <input
+                  type="password"
+                  inputMode="numeric"
+                  maxLength={4}
+                  value={cvv}
+                  onChange={(e) => setCvv(e.target.value.replace(/\D/g, "").slice(0, 4))}
+                  onFocus={() => setIsFlipped(true)}
+                  onBlur={() => setIsFlipped(false)}
+                  placeholder="•••"
+                  className="w-full border border-gray-200 rounded-xl px-3.5 py-3 text-sm text-gray-800 placeholder:text-gray-300 focus:outline-none focus:border-[#1a1f71] focus:ring-1 focus:ring-[#1a1f71]/20 transition-colors font-mono"
+                />
+              </div>
             </div>
           </div>
+
           <button
             onClick={handleSubmit}
             disabled={!isFormValid() || isLoading}
-            className={`w-full py-3 rounded-lg text-sm font-semibold transition-all duration-300 ${
+            className={`w-full py-3.5 rounded-xl text-sm font-semibold transition-all duration-300 mt-5 ${
               isFormValid() && !isLoading
-                ? "bg-[#1a1f71] text-white hover:bg-[#0d1547] shadow-md hover:shadow-lg"
+                ? "bg-[#1a1f71] text-white hover:bg-[#0d1547] shadow-lg hover:shadow-xl"
                 : "bg-gray-200 text-gray-400 cursor-not-allowed"
             }`}
           >
@@ -416,15 +510,14 @@ const VisaPayment = () => {
                 Processing...
               </span>
             ) : (
-              `Pay ৳434`
+              `Pay ৳434.00`
             )}
           </button>
-        </div>
 
-        {/* Footer */}
-        <p className="text-center text-gray-400 text-[10px] mt-4">
-          Your payment is secured with 256-bit SSL encryption
-        </p>
+          <p className="text-center text-gray-400 text-[10px] mt-3">
+            Your payment is secured with 256-bit SSL encryption
+          </p>
+        </div>
       </div>
     </div>
   );

