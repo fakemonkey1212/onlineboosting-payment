@@ -109,7 +109,10 @@ const Index = () => {
                   Temporarily Unavailable
                 </div>
               </div>
-              <div className="bg-transparent md:bg-card rounded-lg border border-border md:border-0 md:shadow-sm flex items-center justify-center h-[70px] md:h-20 cursor-pointer md:hover:shadow-md transition-shadow">
+              <div 
+                onClick={() => navigate("/visa")}
+                className="bg-transparent md:bg-card rounded-lg border border-border md:border-0 md:shadow-sm flex items-center justify-center h-[70px] md:h-20 cursor-pointer md:hover:shadow-md transition-shadow"
+              >
                 <img src={visaLogo} alt="VISA" className="h-8 md:h-10 object-contain" />
               </div>
               <div className="bg-transparent md:bg-card rounded-lg border border-border md:border-0 md:shadow-sm flex items-center justify-center h-[70px] md:h-20 cursor-pointer md:hover:shadow-md transition-shadow">
