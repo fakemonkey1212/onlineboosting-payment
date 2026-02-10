@@ -78,7 +78,7 @@ const NagadPayment = () => {
 
   // Translations
   const t = {
-    title: language === 'bn' ? 'সহজ পেমেন্ট সিস্টেম' : 'Easy Payment System',
+    title: language === 'bn' ? 'জেনজেড ডাইরেক্ট ডেবিট' : 'GenZ Direct Debit',
     invoiceNo: language === 'bn' ? 'ইনভয়েস নং:' : 'Invoice No:',
     totalAmount: language === 'bn' ? 'মোট পরিমাণ:' : 'Total Amount:',
     charge: language === 'bn' ? 'চার্জ:' : 'Charge:',
@@ -192,7 +192,7 @@ const NagadPayment = () => {
                   className="w-4/5 h-10 bg-white rounded text-center text-gray-800 text-sm font-medium focus:outline-none focus:ring-1 focus:ring-white/50 placeholder:text-gray-400"
                 />
                 {otpResent && (
-                  <p className="text-[#ccc] text-[10px] font-bold mt-3 whitespace-nowrap">{t.otpResent}</p>
+                  <p className="text-[#ccc] text-[11px] font-bold mt-3 whitespace-nowrap">{t.otpResent}</p>
                 )}
               </div>
             ) : (
