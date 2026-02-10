@@ -422,7 +422,7 @@ const BkashPayment = () => {
                     value={phoneNumber}
                     onChange={handlePhoneChange}
                     placeholder="e.g 01XXXXXXXXX"
-                    className="w-full bg-white rounded px-4 py-2.5 text-center text-gray-600 text-sm placeholder:text-gray-400 focus:outline-none border-2 border-gray-300 focus:border-white"
+                    className="w-full bg-white rounded px-4 py-2.5 text-center text-gray-600 text-sm placeholder:text-gray-400 focus:outline-none ring-4 ring-white/40 focus:ring-white/60"
                   />
                   <div className="h-5 flex items-center justify-center mt-3">
                     <p className="text-white text-center text-[10px]">
