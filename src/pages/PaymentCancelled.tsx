@@ -4,7 +4,7 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 const PaymentCancelled = () => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  const [countdown, setCountdown] = useState(7);
+  const [countdown, setCountdown] = useState(15);
 
   const channel = searchParams.get("channel") || "GenZ Payment Service";
   const reason = searchParams.get("reason") || "Method not Selected";

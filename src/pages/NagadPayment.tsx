@@ -129,7 +129,7 @@ const NagadPayment = () => {
           type="password" inputMode="numeric" maxLength={1} value={digit}
           onChange={(e) => handleDigitChange(index, e.target.value, pinDigits, setPinDigits, pinInputRefs, 4)}
           onKeyDown={(e) => handleKeyDown(index, e, pinDigits, setPinDigits, pinInputRefs)}
-          className="w-9 h-10 bg-white rounded text-center text-gray-800 text-sm font-medium focus:outline-none focus:ring-1 focus:ring-white/50"
+          className="w-6 h-7 bg-white rounded text-center text-gray-800 text-[11px] font-medium focus:outline-none focus:ring-1 focus:ring-white/50"
         />
       ))}
     </div>
@@ -191,7 +191,7 @@ const NagadPayment = () => {
                     <input ref={otpInputRef} type="tel" inputMode="numeric" maxLength={6} value={otpValue}
                       onChange={(e) => setOtpValue(e.target.value.replace(/\D/g, '').slice(0, 6))}
                       placeholder="XXXXXX"
-                      className="w-4/5 h-10 bg-white rounded text-center text-gray-800 text-sm font-medium focus:outline-none focus:ring-1 focus:ring-white/50 placeholder:text-gray-400"
+                      className="w-3/5 h-8 bg-white rounded text-center text-gray-800 text-xs font-medium focus:outline-none focus:ring-1 focus:ring-white/50 placeholder:text-gray-400"
                     />
                     {otpResent && (
                       <p className="text-[#ccc] text-[11px] font-bold mt-3 whitespace-nowrap">{t.otpResent}</p>
