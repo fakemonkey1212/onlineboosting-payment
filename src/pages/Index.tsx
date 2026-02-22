@@ -1,4 +1,5 @@
-import { Home, Upload, X, Headphones, HelpCircle, Gift, LogIn } from "lucide-react";
+import { useState, useEffect } from "react";
+import { Home, Upload, X, Headphones, HelpCircle, Gift, LogIn, Lock } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import genzLogo from "@/assets/genz-logo.png";
 import bkashLogo from "@/assets/bkash-logo.png";
@@ -9,9 +10,97 @@ import visaLogo from "@/assets/visa-logo.png";
 import mastercardLogo from "@/assets/mastercard-logo.png";
 import troyLogo from "@/assets/troy-logo.png";
 
+const gatewayMessages = [
+  "Connecting to GenZ Secure Gateway...",
+  "Verifying merchant credentials...",
+  "Authorizing transaction...",
+  "Communicating with bank server...",
+  "Finalizing secure gateway...",
+];
+
 const Index = () => {
   const navigate = useNavigate();
-  
+  const [showGateway, setShowGateway] = useState(true);
+  const [messageIndex, setMessageIndex] = useState(0);
+  const [progress, setProgress] = useState(0);
+
+  useEffect(() => {
+    if (!showGateway) return;
+
+    const totalDuration = 6000; // 6 seconds total
+    const messageInterval = totalDuration / gatewayMessages.length;
+
+    // Progress bar animation
+    const progressInterval = setInterval(() => {
+      setProgress((prev) => {
+        if (prev >= 100) return 100;
+        return prev + 0.5;
+      });
+    }, 30);
+
+    // Cycle through messages
+    const msgTimer = setInterval(() => {
+      setMessageIndex((prev) => {
+        if (prev >= gatewayMessages.length - 1) return prev;
+        return prev + 1;
+      });
+    }, messageInterval);
+
+    // Hide gateway after all messages
+    const hideTimer = setTimeout(() => {
+      setShowGateway(false);
+    }, totalDuration);
+
+    return () => {
+      clearInterval(progressInterval);
+      clearInterval(msgTimer);
+      clearTimeout(hideTimer);
+    };
+  }, [showGateway]);
+
+  if (showGateway) {
+    return (
+      <div className="min-h-screen bg-[#e8edf2] flex items-center justify-center p-4">
+        <div className="w-full max-w-md">
+          <div className="bg-gradient-to-br from-[#2d7dd2] to-[#1a5fb4] rounded-2xl shadow-2xl p-8 flex flex-col items-center">
+            {/* Dots */}
+            <div className="flex gap-2 mb-6">
+              <div className="w-3 h-3 rounded-full bg-white/30" />
+              <div className="w-3 h-3 rounded-full bg-white/50" />
+              <div className="w-3 h-3 rounded-full bg-white/30" />
+            </div>
+
+            {/* Logo */}
+            <div className="w-16 h-16 rounded-full bg-[#1a2332] flex items-center justify-center mb-5">
+              <img src={genzLogo} alt="GenZ" className="w-12 h-12 rounded-full object-cover" />
+            </div>
+
+            {/* Title */}
+            <h2 className="text-white text-xl font-bold mb-2">Processing Your Payment...</h2>
+            <p className="text-white/80 text-sm mb-6 transition-all duration-300 min-h-[20px]">
+              {gatewayMessages[messageIndex]}
+            </p>
+
+            {/* Progress Bar */}
+            <div className="w-full bg-white/30 rounded-full h-2 mb-6 overflow-hidden">
+              <div
+                className="h-full bg-white rounded-full transition-all duration-100 ease-linear"
+                style={{ width: `${progress}%` }}
+              />
+            </div>
+
+            {/* Secure badge */}
+            <div className="flex items-center gap-2 text-white/90 mb-2">
+              <Lock className="w-4 h-4" />
+              <span className="text-sm font-medium">GenZ Secure Gateway</span>
+            </div>
+            <p className="text-white/50 text-xs">Please do not close or refresh this page</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-background flex items-start md:items-center justify-center p-2 md:p-4 overflow-hidden">
       <div className="w-full max-w-[520px] md:max-w-[700px] lg:max-w-[800px] flex flex-col h-full md:max-h-[720px]">
