@@ -9,7 +9,7 @@ const DualCircleLoader = () => {
         />
         {/* Inner circle */}
         <div
-          className="absolute inset-1.5 rounded-full border-[4px] border-transparent border-t-[#1a5fb4] border-b-[#1a5fb4]"
+          className="absolute inset-1.5 rounded-full border-[4px] border-transparent border-t-[#2d7dd2] border-b-[#2d7dd2]"
           style={{ animation: "spin-left 0.9s linear infinite" }}
         />
       </div>
