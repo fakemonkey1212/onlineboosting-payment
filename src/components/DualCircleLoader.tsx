@@ -1,15 +1,15 @@
 const DualCircleLoader = () => {
   return (
     <div className="fixed inset-0 z-50 bg-background/80 backdrop-blur-sm flex items-center justify-center">
-      <div className="relative w-20 h-20">
+      <div className="relative w-10 h-10">
         {/* Outer circle */}
         <div
-          className="absolute inset-0 rounded-full border-4 border-transparent border-t-primary border-b-primary"
+          className="absolute inset-0 rounded-full border-[3px] border-transparent border-t-[#2d7dd2] border-b-[#2d7dd2]"
           style={{ animation: "spin-right 1.2s linear infinite" }}
         />
         {/* Inner circle */}
         <div
-          className="absolute inset-3 rounded-full border-4 border-transparent border-t-primary/60 border-b-primary/60"
+          className="absolute inset-1.5 rounded-full border-[3px] border-transparent border-t-[#1a5fb4] border-b-[#1a5fb4]"
           style={{ animation: "spin-left 0.9s linear infinite" }}
         />
       </div>
