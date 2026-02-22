@@ -28,7 +28,7 @@ const Index = () => {
 
   const handlePaymentSelect = (route: string) => {
     setShowLoader(true);
-    setTimeout(() => navigate(route), 1500);
+    setTimeout(() => navigate(route), 4000);
   };
 
   useEffect(() => {
