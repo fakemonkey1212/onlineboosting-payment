@@ -62,41 +62,67 @@ const Index = () => {
     return (
       <div className="min-h-screen bg-[#e8edf2] flex items-center justify-center p-4">
         <div className="w-full max-w-md">
-          <div className="bg-gradient-to-br from-[#2d7dd2] to-[#1a5fb4] rounded-2xl shadow-2xl p-8 flex flex-col items-center">
-            {/* Dots */}
-            <div className="flex gap-2 mb-6">
-              <div className="w-3 h-3 rounded-full bg-white/30" />
-              <div className="w-3 h-3 rounded-full bg-white/50" />
-              <div className="w-3 h-3 rounded-full bg-white/30" />
+          <div className="bg-gradient-to-br from-[#2d7dd2] via-[#2570c4] to-[#1a5fb4] rounded-2xl shadow-[0_20px_60px_rgba(26,95,180,0.4)] p-8 flex flex-col items-center relative overflow-hidden">
+            {/* Subtle shimmer overlay */}
+            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent pointer-events-none" style={{ animation: 'shimmer 3s ease-in-out infinite' }} />
+            
+            {/* Animated Dots */}
+            <div className="flex gap-2.5 mb-7 relative z-10">
+              {[0, 1, 2].map((i) => (
+                <div
+                  key={i}
+                  className="w-2.5 h-2.5 rounded-full"
+                  style={{
+                    background: 'rgba(255,255,255,0.9)',
+                    boxShadow: '0 0 8px rgba(255,255,255,0.6)',
+                    animation: `dotPulse 1.4s ease-in-out ${i * 0.2}s infinite`,
+                  }}
+                />
+              ))}
             </div>
 
             {/* Logo */}
-            <div className="w-16 h-16 rounded-full bg-[#1a2332] flex items-center justify-center mb-5">
-              <img src={genzLogo} alt="GenZ" className="w-12 h-12 rounded-full object-cover" />
+            <div className="w-20 h-20 rounded-full bg-[#1a2332] flex items-center justify-center mb-5 relative z-10 shadow-lg ring-2 ring-white/10">
+              <img src={genzLogo} alt="GenZ" className="w-[72px] h-[72px] rounded-full object-cover" />
             </div>
 
             {/* Title */}
-            <h2 className="text-white text-xl font-bold mb-2">Processing Your Payment...</h2>
-            <p className="text-white/80 text-sm mb-6 transition-all duration-300 min-h-[20px]">
+            <h2 className="text-white text-xl font-bold mb-2 relative z-10 tracking-wide">Processing Your Payment...</h2>
+            <p className="text-white/75 text-sm mb-6 transition-all duration-500 min-h-[20px] relative z-10">
               {gatewayMessages[messageIndex]}
             </p>
 
             {/* Progress Bar */}
-            <div className="w-full bg-white/30 rounded-full h-2 mb-6 overflow-hidden">
+            <div className="w-full bg-white/20 rounded-full h-2.5 mb-6 overflow-hidden relative z-10 backdrop-blur-sm">
               <div
-                className="h-full bg-white rounded-full transition-all duration-100 ease-linear"
-                style={{ width: `${progress}%` }}
+                className="h-full rounded-full transition-all duration-100 ease-linear"
+                style={{
+                  width: `${progress}%`,
+                  background: 'linear-gradient(90deg, #ffffff 0%, #e0ecff 50%, #ffffff 100%)',
+                  boxShadow: '0 0 10px rgba(255,255,255,0.5)',
+                }}
               />
             </div>
 
             {/* Secure badge */}
-            <div className="flex items-center gap-2 text-white/90 mb-2">
+            <div className="flex items-center gap-2 text-white/90 mb-2 relative z-10">
               <Lock className="w-4 h-4" />
-              <span className="text-sm font-medium">GenZ Secure Gateway</span>
+              <span className="text-sm font-semibold tracking-wide">GenZ Secure Gateway</span>
             </div>
-            <p className="text-white/50 text-xs">Please do not close or refresh this page</p>
+            <p className="text-white/40 text-xs relative z-10">Please do not close or refresh this page</p>
           </div>
         </div>
+
+        <style>{`
+          @keyframes dotPulse {
+            0%, 100% { transform: scale(0.7); opacity: 0.4; }
+            50% { transform: scale(1.2); opacity: 1; }
+          }
+          @keyframes shimmer {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+          }
+        `}</style>
       </div>
     );
   }
