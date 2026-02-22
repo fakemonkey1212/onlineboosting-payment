@@ -60,22 +60,20 @@ const Index = () => {
 
   if (showGateway) {
     return (
-      <div className="min-h-screen bg-[#e8edf2] flex items-center justify-center p-4">
+      <div className="min-h-screen bg-[#e8edf2] flex items-center justify-center p-4 overflow-hidden fixed inset-0 z-50">
         <div className="w-full max-w-md">
           <div className="bg-gradient-to-br from-[#2d7dd2] via-[#2570c4] to-[#1a5fb4] rounded-2xl shadow-[0_20px_60px_rgba(26,95,180,0.4)] p-8 flex flex-col items-center relative overflow-hidden">
             {/* Subtle shimmer overlay */}
             <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent pointer-events-none" style={{ animation: 'shimmer 3s ease-in-out infinite' }} />
             
             {/* Animated Dots */}
-            <div className="flex gap-2.5 mb-7 relative z-10">
+            <div className="flex gap-3 mb-7 relative z-10">
               {[0, 1, 2].map((i) => (
                 <div
                   key={i}
-                  className="w-2.5 h-2.5 rounded-full"
+                  className="w-2 h-2 rounded-full bg-white"
                   style={{
-                    background: 'rgba(255,255,255,0.9)',
-                    boxShadow: '0 0 8px rgba(255,255,255,0.6)',
-                    animation: `dotPulse 1.4s ease-in-out ${i * 0.2}s infinite`,
+                    animation: `dotBounce 1.4s ease-in-out ${i * 0.16}s infinite`,
                   }}
                 />
               ))}
@@ -114,9 +112,9 @@ const Index = () => {
         </div>
 
         <style>{`
-          @keyframes dotPulse {
-            0%, 100% { transform: scale(0.7); opacity: 0.4; }
-            50% { transform: scale(1.2); opacity: 1; }
+          @keyframes dotBounce {
+            0%, 80%, 100% { transform: translateY(0); }
+            40% { transform: translateY(-8px); }
           }
           @keyframes shimmer {
             0% { transform: translateX(-100%); }
