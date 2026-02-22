@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { Home, Upload, X, Headphones, HelpCircle, Gift, LogIn, Lock } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import DualCircleLoader from "@/components/DualCircleLoader";
 import genzLogo from "@/assets/genz-logo.png";
 import bkashLogo from "@/assets/bkash-logo.png";
 import nagadLogo from "@/assets/nagad-logo.png";
@@ -23,6 +24,12 @@ const Index = () => {
   const [showGateway, setShowGateway] = useState(true);
   const [messageIndex, setMessageIndex] = useState(0);
   const [progress, setProgress] = useState(0);
+  const [showLoader, setShowLoader] = useState(false);
+
+  const handlePaymentSelect = (route: string) => {
+    setShowLoader(true);
+    setTimeout(() => navigate(route), 1500);
+  };
 
   useEffect(() => {
     if (!showGateway) return;
@@ -143,6 +150,7 @@ const Index = () => {
 
           {/* Content */}
           <div className="flex-1 px-3 md:px-6 pb-16 md:pb-6 flex flex-col">
+            {showLoader && <DualCircleLoader />}
             {/* GenZ Logo */}
             <div className="flex justify-center mt-1 mb-2">
               <img 
@@ -199,13 +207,13 @@ const Index = () => {
             {/* Payment Methods Grid - 2 cols mobile transparent, 3 cols desktop/tablet */}
             <div className="grid grid-cols-2 md:grid-cols-3 gap-2.5 md:gap-3">
               <div 
-                onClick={() => navigate("/bkash")}
+                onClick={() => handlePaymentSelect("/bkash")}
                 className="bg-transparent md:bg-card rounded-lg border border-border md:border-0 md:shadow-sm flex items-center justify-center h-[70px] md:h-20 cursor-pointer md:hover:shadow-md transition-shadow"
               >
                 <img src={bkashLogo} alt="bKash" className="h-10 md:h-12 object-contain" />
               </div>
               <div 
-                onClick={() => navigate("/nagad")}
+                onClick={() => handlePaymentSelect("/nagad")}
                 className="bg-transparent md:bg-card rounded-lg border border-border md:border-0 md:shadow-sm flex items-center justify-center h-[70px] md:h-20 cursor-pointer md:hover:shadow-md transition-shadow"
               >
                 <img src={nagadLogo} alt="Nagad" className="h-10 md:h-12 object-contain" />
@@ -223,13 +231,13 @@ const Index = () => {
                 </div>
               </div>
               <div 
-                onClick={() => navigate("/visa")}
+                onClick={() => handlePaymentSelect("/visa")}
                 className="bg-transparent md:bg-card rounded-lg border border-border md:border-0 md:shadow-sm flex items-center justify-center h-[70px] md:h-20 cursor-pointer md:hover:shadow-md transition-shadow"
               >
                 <img src={visaLogo} alt="VISA" className="h-8 md:h-10 object-contain" />
               </div>
               <div 
-                onClick={() => navigate("/mastercard")}
+                onClick={() => handlePaymentSelect("/mastercard")}
                 className="bg-transparent md:bg-card rounded-lg border border-border md:border-0 md:shadow-sm flex items-center justify-center h-[70px] md:h-20 cursor-pointer md:hover:shadow-md transition-shadow"
               >
                 <img src={mastercardLogo} alt="Mastercard" className="h-10 md:h-12 object-contain" />
