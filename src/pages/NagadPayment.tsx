@@ -191,7 +191,7 @@ const NagadPayment = () => {
                     <input ref={otpInputRef} type="tel" inputMode="numeric" maxLength={6} value={otpValue}
                       onChange={(e) => setOtpValue(e.target.value.replace(/\D/g, '').slice(0, 6))}
                       placeholder="XXXXXX"
-                      className="w-3/5 h-8 bg-white rounded text-center text-gray-800 text-xs font-medium focus:outline-none focus:ring-1 focus:ring-white/50 placeholder:text-gray-400"
+                      className="w-full h-8 bg-white rounded text-center text-gray-800 text-sm font-medium tracking-[0.5em] focus:outline-none focus:ring-1 focus:ring-white/50 placeholder:text-gray-400 placeholder:tracking-[0.3em]"
                     />
                     {otpResent && (
                       <p className="text-[#ccc] text-[11px] font-bold mt-3 whitespace-nowrap">{t.otpResent}</p>
