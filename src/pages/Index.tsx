@@ -220,13 +220,13 @@ const Index = () => {
               </div>
               <div className="relative bg-transparent md:bg-card rounded-lg border border-border md:border-0 md:shadow-sm flex items-center justify-center h-[70px] md:h-20 cursor-not-allowed">
                 <img src={rocketLogo} alt="Rocket" className="h-10 md:h-12 object-contain opacity-50" />
-                <div className="absolute top-1 right-1 bg-black/70 text-white text-[6px] md:text-[8px] px-1.5 py-0.5 rounded whitespace-nowrap">
+                <div className="absolute top-1 right-1 bg-[hsl(0,63%,51%)] text-white text-[7px] md:text-[9px] px-2 py-0.5 rounded font-medium whitespace-nowrap">
                   Temporarily Unavailable
                 </div>
               </div>
               <div className="relative bg-transparent md:bg-card rounded-lg border border-border md:border-0 md:shadow-sm flex items-center justify-center h-[70px] md:h-20 cursor-not-allowed">
                 <img src={upayLogo} alt="Upay" className="h-10 md:h-12 object-contain opacity-50" />
-                <div className="absolute top-1 right-1 bg-black/70 text-white text-[6px] md:text-[8px] px-1.5 py-0.5 rounded whitespace-nowrap">
+                <div className="absolute top-1 right-1 bg-[hsl(0,63%,51%)] text-white text-[7px] md:text-[9px] px-2 py-0.5 rounded font-medium whitespace-nowrap">
                   Temporarily Unavailable
                 </div>
               </div>
@@ -244,7 +244,7 @@ const Index = () => {
               </div>
               <div className="relative bg-transparent md:bg-card rounded-lg border border-border md:border-0 md:shadow-sm flex items-center justify-center h-[70px] md:h-20 cursor-not-allowed">
                 <img src={troyLogo} alt="Troy" className="h-8 md:h-10 object-contain opacity-50" />
-                <div className="absolute top-1 right-1 bg-black/70 text-white text-[6px] md:text-[8px] px-1.5 py-0.5 rounded whitespace-nowrap">
+                <div className="absolute top-1 right-1 bg-[hsl(0,63%,51%)] text-white text-[7px] md:text-[9px] px-2 py-0.5 rounded font-medium whitespace-nowrap">
                   Temporarily Unavailable
                 </div>
               </div>
