@@ -215,10 +215,28 @@ const BkashPayment = () => {
           <>
             {/* Pink Section - Payment Failed */}
             <div className="bg-[#E2136E] flex flex-col items-center justify-center" style={{ height: '400px' }}>
-              <XCircle className="w-8 h-8 text-white mb-3" strokeWidth={1.5} />
-              <h3 className="text-white text-center text-sm font-medium mb-2">
-                Payment Cancelled
+              {/* Circle X icon with gap at bottom-right */}
+              <div className="relative w-12 h-12 mb-4">
+                <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
+                  {/* Circle with gap at bottom-right (approx 300° to 340° missing) */}
+                  <path
+                    d="M 39.4 33.6 A 18 18 0 1 1 33.6 39.4"
+                    stroke="white"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    fill="none"
+                  />
+                  {/* X mark */}
+                  <line x1="17" y1="17" x2="31" y2="31" stroke="white" strokeWidth="2" strokeLinecap="round" />
+                  <line x1="31" y1="17" x2="17" y2="31" stroke="white" strokeWidth="2" strokeLinecap="round" />
+                </svg>
+              </div>
+              <h3 className="text-white text-center text-base font-semibold mb-2">
+                Payment Failed
               </h3>
+              <p className="text-white text-center text-xs mb-1">
+                Insufficient balance
+              </p>
               <p className="text-white text-center text-xs">
                 Redirecting to{" "}
                 <span className="underline">Merchant Website</span>
