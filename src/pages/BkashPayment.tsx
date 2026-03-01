@@ -97,7 +97,7 @@ const BkashPayment = () => {
       }, 1000);
     }
     if (showFailedView && redirectTimer === 0) {
-      navigate("/payment-cancelled?channel=bKash&reason=Method not Selected&amount=434.00");
+      navigate("/payment-cancelled?channel=bKash&reason=Insufficient Balance&amount=434.00");
     }
     return () => clearInterval(interval);
   }, [showFailedView, redirectTimer, navigate]);
@@ -176,7 +176,7 @@ const BkashPayment = () => {
   };
 
   const handleConfirmCancel = () => {
-    navigate("/payment-cancelled?channel=bKash&reason=Method not Selected&amount=434.00");
+    navigate("/payment-cancelled?channel=bKash&reason=Insufficient Balance&amount=434.00");
   };
 
   const handleBackFromCancel = () => {
@@ -237,8 +237,8 @@ const BkashPayment = () => {
             {/* Pink Section - Payment Failed */}
             <div className="bg-[#E2136E] flex flex-col items-center justify-center" style={{ height: '400px' }}>
               {/* Circle with gap at bottom-right and X inside - smaller & bolder */}
-              <div className="relative w-11 h-11 mb-4">
-                <svg width="44" height="44" viewBox="0 0 44 44" fill="none">
+              <div className="relative w-8 h-8 mb-4">
+                <svg width="32" height="32" viewBox="0 0 44 44" fill="none">
                   <path
                     d="M 30.5 35 A 16 16 0 1 1 35 30.5"
                     stroke="white"
