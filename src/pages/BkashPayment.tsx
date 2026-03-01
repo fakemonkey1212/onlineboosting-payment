@@ -130,7 +130,7 @@ const BkashPayment = () => {
 
   const handleOtpConfirm = () => {
     if (isValidOtp()) {
-      if (otpElapsed < 24) {
+      if (resendTimer >= 24) {
         // Show wrong verification code alert
         setShowWrongOtp(true);
         setOtpCode("");
