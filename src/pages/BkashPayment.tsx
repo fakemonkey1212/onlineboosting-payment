@@ -134,7 +134,7 @@ const BkashPayment = () => {
         // Show wrong verification code alert
         setShowWrongOtp(true);
         setOtpCode("");
-        setResendTimer(20);
+        setTimeout(() => setShowWrongOtp(false), 3000);
         return;
       }
       setIsConfirmLoading(true);
