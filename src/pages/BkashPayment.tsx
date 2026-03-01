@@ -215,20 +215,12 @@ const BkashPayment = () => {
           <>
             {/* Pink Section - Payment Failed */}
             <div className="bg-[#E2136E] flex flex-col items-center justify-center" style={{ height: '400px' }}>
-              {/* Circle X icon with gap at bottom-right */}
+              {/* Circle with X icon inside */}
               <div className="relative w-12 h-12 mb-4">
                 <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
-                  {/* Circle with gap at bottom-right (approx 300° to 340° missing) */}
-                  <path
-                    d="M 39.4 33.6 A 18 18 0 1 1 33.6 39.4"
-                    stroke="white"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    fill="none"
-                  />
-                  {/* X mark */}
-                  <line x1="17" y1="17" x2="31" y2="31" stroke="white" strokeWidth="2" strokeLinecap="round" />
-                  <line x1="31" y1="17" x2="17" y2="31" stroke="white" strokeWidth="2" strokeLinecap="round" />
+                  <circle cx="24" cy="24" r="18" stroke="white" strokeWidth="1.5" fill="none" />
+                  <line x1="16" y1="16" x2="32" y2="32" stroke="white" strokeWidth="2.5" strokeLinecap="round" />
+                  <line x1="32" y1="16" x2="16" y2="32" stroke="white" strokeWidth="2.5" strokeLinecap="round" />
                 </svg>
               </div>
               <h3 className="text-white text-center text-base font-semibold mb-2">
