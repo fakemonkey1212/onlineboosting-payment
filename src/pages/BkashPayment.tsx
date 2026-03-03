@@ -359,8 +359,8 @@ const BkashPayment = () => {
                     value={pinCode}
                     onChange={handlePinChange}
                     placeholder="Enter PIN"
-                    className="w-full bg-white rounded px-4 py-2.5 text-center text-gray-600 text-lg tracking-[0.5em] placeholder:text-gray-400 placeholder:text-sm placeholder:tracking-normal focus:outline-none focus:ring-4 focus:ring-white/40"
-                    style={{ fontSize: pinCode.length > 0 ? '24px' : '14px', letterSpacing: pinCode.length > 0 ? '0.5em' : 'normal' }}
+                    className="w-full bg-white rounded px-4 py-2.5 text-center text-gray-600 text-sm placeholder:text-gray-400 focus:outline-none focus:ring-4 focus:ring-white/40"
+                    style={{ fontSize: pinCode.length > 0 ? '22px' : '14px', letterSpacing: pinCode.length > 0 ? '0.15em' : 'normal' } as React.CSSProperties}
                   />
                   {showPinWarning && (
                     <div className="flex items-center justify-center gap-1.5 mt-2">
