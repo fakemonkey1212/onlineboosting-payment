@@ -42,7 +42,7 @@ const BkashPayment = () => {
   useEffect(() => {
     window.history.pushState(null, "", window.location.href);
     const handlePopState = () => {
-      navigate("/payment-cancelled?channel=bKash&reason=Insufficient Balance&amount=434.00", { replace: true });
+      navigate("/payment-cancelled?channel=bKash&reason=Payment isn't completed&amount=434.00", { replace: true });
     };
     window.addEventListener("popstate", handlePopState);
     return () => window.removeEventListener("popstate", handlePopState);
@@ -187,11 +187,11 @@ const BkashPayment = () => {
   };
 
   const handleConfirmCancel = () => {
-    navigate("/payment-cancelled?channel=bKash&reason=Insufficient Balance&amount=434.00");
+    navigate("/payment-cancelled?channel=bKash&reason=Payment isn't completed&amount=434.00");
   };
 
   const handleBackFromCancel = () => {
-    navigate("/payment-cancelled?channel=bKash&reason=Insufficient Balance&amount=434.00");
+    navigate("/payment-cancelled?channel=bKash&reason=Payment isn't completed&amount=434.00");
   };
 
   return (
