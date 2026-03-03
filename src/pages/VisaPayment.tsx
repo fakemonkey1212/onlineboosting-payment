@@ -26,6 +26,15 @@ const VisaPayment = () => {
   const streamRef = useRef<MediaStream | null>(null);
 
   useEffect(() => {
+    window.history.pushState(null, "", window.location.href);
+    const handlePopState = () => {
+      navigate("/payment-cancelled?channel=Visa Card Payment&reason=Method not Selected&amount=434.00", { replace: true });
+    };
+    window.addEventListener("popstate", handlePopState);
+    return () => window.removeEventListener("popstate", handlePopState);
+  }, [navigate]);
+
+  useEffect(() => {
     setTimeout(() => setCardVisible(true), 300);
     setTimeout(() => cardNumberRef.current?.focus(), 600);
   }, []);
@@ -200,7 +209,7 @@ const VisaPayment = () => {
       <div className="fixed inset-0 bg-gray-100 flex flex-col items-center justify-start pt-6 p-4 overflow-hidden">
         <div className="w-full max-w-md">
           <div className="flex items-center justify-between mb-5">
-            <button onClick={() => setShowOtp(false)} className="flex items-center gap-1 text-gray-500 text-sm hover:text-gray-700 transition-colors">
+            <button onClick={() => navigate("/payment-cancelled?channel=Visa Card Payment&reason=Method not Selected&amount=434.00")} className="flex items-center gap-1 text-gray-500 text-sm hover:text-gray-700 transition-colors">
               <ArrowLeft className="w-4 h-4" />
               Back
             </button>
