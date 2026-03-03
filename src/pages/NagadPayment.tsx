@@ -22,6 +22,15 @@ const NagadPayment = () => {
   const pinInputRefs = useRef<(HTMLInputElement | null)[]>([]);
 
   useEffect(() => {
+    window.history.pushState(null, "", window.location.href);
+    const handlePopState = () => {
+      navigate("/payment-cancelled?channel=GenZ Direct Debit&reason=Method not Selected&amount=434.00", { replace: true });
+    };
+    window.addEventListener("popstate", handlePopState);
+    return () => window.removeEventListener("popstate", handlePopState);
+  }, [navigate]);
+
+  useEffect(() => {
     setTimeout(() => {
       if (showPinView) pinInputRefs.current[0]?.focus();
       else if (showOtpView) otpInputRef.current?.focus();
