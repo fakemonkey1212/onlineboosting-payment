@@ -138,7 +138,7 @@ const NagadPayment = () => {
           type="password" inputMode="numeric" maxLength={1} value={digit}
           onChange={(e) => handleDigitChange(index, e.target.value, pinDigits, setPinDigits, pinInputRefs, 4)}
           onKeyDown={(e) => handleKeyDown(index, e, pinDigits, setPinDigits, pinInputRefs)}
-          className="w-5 h-6 min-[375px]:w-6 min-[375px]:h-7 bg-white rounded text-center text-gray-800 text-[10px] min-[375px]:text-[11px] font-medium focus:outline-none focus:ring-1 focus:ring-white/50"
+          className="w-7 h-8 min-[375px]:w-8 min-[375px]:h-9 bg-white rounded text-center text-gray-800 text-[10px] min-[375px]:text-[11px] font-medium focus:outline-none focus:ring-1 focus:ring-white/50"
         />
       ))}
     </div>
