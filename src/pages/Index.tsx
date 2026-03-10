@@ -221,7 +221,7 @@ const Index = () => {
                 onClick={() => handlePaymentSelect("/bkash")}
                 className="group bg-transparent md:bg-card rounded-lg border border-border flex items-center justify-center h-[70px] md:h-20 cursor-pointer transition-all overflow-hidden"
               >
-                <img src={bkashLogo} alt="bKash" className="h-10 md:h-12 object-contain transition-transform duration-300 group-hover:scale-90" />
+                <img src={bkashLogo} alt="bKash" className={`h-10 md:h-12 object-contain transition-transform duration-300 lg:group-hover:scale-90 ${clickedCard === '/bkash' ? 'scale-90' : ''}`} />
               </div>
               <div 
                 onClick={() => handlePaymentSelect("/nagad")}
