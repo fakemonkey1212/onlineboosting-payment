@@ -27,12 +27,19 @@ const Index = () => {
   const [showLoader, setShowLoader] = useState(false);
   const [clickedCard, setClickedCard] = useState<string | null>(null);
 
+  const isMobileOrTablet = typeof window !== 'undefined' && window.innerWidth < 1024;
+
   const handlePaymentSelect = (route: string) => {
-    setClickedCard(route);
-    setTimeout(() => {
+    if (isMobileOrTablet) {
+      setClickedCard(route);
+      setTimeout(() => {
+        setShowLoader(true);
+        setTimeout(() => navigate(route), 4000);
+      }, 500);
+    } else {
       setShowLoader(true);
       setTimeout(() => navigate(route), 4000);
-    }, 1000);
+    }
   };
 
   useEffect(() => {
