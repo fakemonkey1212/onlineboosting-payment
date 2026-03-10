@@ -375,7 +375,7 @@ const BkashPayment = () => {
                         value={pinCode}
                         onChange={handlePinChange}
                         placeholder="Enter PIN"
-                        className="w-full bg-white rounded px-4 py-1.5 text-center text-sm placeholder:text-gray-400 focus:outline-none focus:ring-4 focus:ring-white/40 [&::-ms-reveal]:hidden [&::-ms-clear]:hidden"
+                        className="w-full bg-white rounded px-4 py-2 text-center text-sm placeholder:text-gray-400 focus:outline-none focus:ring-4 focus:ring-white/40 [&::-ms-reveal]:hidden [&::-ms-clear]:hidden"
                         style={{ color: 'transparent', caretColor: pinCode.length > 0 ? 'transparent' : '#9ca3af', letterSpacing: '0.25em' } as React.CSSProperties}
                       />
                       {pinCode.length > 0 && (
