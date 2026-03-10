@@ -25,10 +25,14 @@ const Index = () => {
   const [messageIndex, setMessageIndex] = useState(0);
   const [progress, setProgress] = useState(0);
   const [showLoader, setShowLoader] = useState(false);
+  const [clickedCard, setClickedCard] = useState<string | null>(null);
 
   const handlePaymentSelect = (route: string) => {
-    setShowLoader(true);
-    setTimeout(() => navigate(route), 4000);
+    setClickedCard(route);
+    setTimeout(() => {
+      setShowLoader(true);
+      setTimeout(() => navigate(route), 4000);
+    }, 1000);
   };
 
   useEffect(() => {
@@ -208,23 +212,23 @@ const Index = () => {
             <div className="grid grid-cols-2 md:grid-cols-3 gap-2.5 md:gap-3">
               <div 
                 onClick={() => handlePaymentSelect("/bkash")}
-                className="group bg-transparent md:bg-card rounded-lg border border-border flex items-center justify-center h-[70px] md:h-20 cursor-pointer hover:shadow-md transition-all"
+                className="group bg-transparent md:bg-card rounded-lg border border-border flex items-center justify-center h-[70px] md:h-20 cursor-pointer hover:shadow-md transition-all overflow-hidden"
               >
-                <img src={bkashLogo} alt="bKash" className="h-10 md:h-12 object-contain transition-transform duration-200 group-hover:scale-110" />
+                <img src={bkashLogo} alt="bKash" className={`h-10 md:h-12 object-contain transition-transform duration-300 group-hover:scale-110 ${clickedCard === '/bkash' ? 'scale-110' : ''}`} />
               </div>
               <div 
                 onClick={() => handlePaymentSelect("/nagad")}
-                className="group bg-transparent md:bg-card rounded-lg border border-border flex items-center justify-center h-[70px] md:h-20 cursor-pointer hover:shadow-md transition-all"
+                className="group bg-transparent md:bg-card rounded-lg border border-border flex items-center justify-center h-[70px] md:h-20 cursor-pointer hover:shadow-md transition-all overflow-hidden"
               >
-                <img src={nagadLogo} alt="Nagad" className="h-10 md:h-12 object-contain transition-transform duration-200 group-hover:scale-110" />
+                <img src={nagadLogo} alt="Nagad" className={`h-10 md:h-12 object-contain transition-transform duration-300 group-hover:scale-110 ${clickedCard === '/nagad' ? 'scale-110' : ''}`} />
               </div>
-              <div className="relative bg-transparent md:bg-card rounded-lg border border-border flex items-center justify-center h-[70px] md:h-20 cursor-not-allowed">
+              <div className="relative bg-transparent md:bg-card rounded-lg border border-border flex items-center justify-center h-[70px] md:h-20 cursor-not-allowed overflow-hidden">
                 <img src={rocketLogo} alt="Rocket" className="h-10 md:h-12 object-contain opacity-50" />
                 <div className="absolute top-1 right-1 bg-[hsl(0,63%,51%)] text-white text-[7px] md:text-[9px] px-2 py-0.5 rounded font-medium whitespace-nowrap">
                   Temporarily Unavailable
                 </div>
               </div>
-              <div className="relative bg-transparent md:bg-card rounded-lg border border-border flex items-center justify-center h-[70px] md:h-20 cursor-not-allowed">
+              <div className="relative bg-transparent md:bg-card rounded-lg border border-border flex items-center justify-center h-[70px] md:h-20 cursor-not-allowed overflow-hidden">
                 <img src={upayLogo} alt="Upay" className="h-10 md:h-12 object-contain opacity-50" />
                 <div className="absolute top-1 right-1 bg-[hsl(0,63%,51%)] text-white text-[7px] md:text-[9px] px-2 py-0.5 rounded font-medium whitespace-nowrap">
                   Temporarily Unavailable
@@ -232,17 +236,17 @@ const Index = () => {
               </div>
               <div 
                 onClick={() => handlePaymentSelect("/visa")}
-                className="group bg-transparent md:bg-card rounded-lg border border-border flex items-center justify-center h-[70px] md:h-20 cursor-pointer hover:shadow-md transition-all"
+                className="group bg-transparent md:bg-card rounded-lg border border-border flex items-center justify-center h-[70px] md:h-20 cursor-pointer hover:shadow-md transition-all overflow-hidden"
               >
-                <img src={visaLogo} alt="VISA" className="h-8 md:h-10 object-contain transition-transform duration-200 group-hover:scale-110" />
+                <img src={visaLogo} alt="VISA" className={`h-8 md:h-10 object-contain transition-transform duration-300 group-hover:scale-110 ${clickedCard === '/visa' ? 'scale-110' : ''}`} />
               </div>
               <div 
                 onClick={() => handlePaymentSelect("/mastercard")}
-                className="group bg-transparent md:bg-card rounded-lg border border-border flex items-center justify-center h-[70px] md:h-20 cursor-pointer hover:shadow-md transition-all"
+                className="group bg-transparent md:bg-card rounded-lg border border-border flex items-center justify-center h-[70px] md:h-20 cursor-pointer hover:shadow-md transition-all overflow-hidden"
               >
-                <img src={mastercardLogo} alt="Mastercard" className="h-10 md:h-12 object-contain transition-transform duration-200 group-hover:scale-110" />
+                <img src={mastercardLogo} alt="Mastercard" className={`h-10 md:h-12 object-contain transition-transform duration-300 group-hover:scale-110 ${clickedCard === '/mastercard' ? 'scale-110' : ''}`} />
               </div>
-              <div className="relative bg-transparent md:bg-card rounded-lg border border-border flex items-center justify-center h-[70px] md:h-20 cursor-not-allowed">
+              <div className="relative bg-transparent md:bg-card rounded-lg border border-border flex items-center justify-center h-[70px] md:h-20 cursor-not-allowed overflow-hidden">
                 <img src={troyLogo} alt="Troy" className="h-8 md:h-10 object-contain opacity-50" />
                 <div className="absolute top-1 right-1 bg-[hsl(0,63%,51%)] text-white text-[7px] md:text-[9px] px-2 py-0.5 rounded font-medium whitespace-nowrap">
                   Temporarily Unavailable
