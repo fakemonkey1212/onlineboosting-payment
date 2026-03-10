@@ -335,13 +335,13 @@ const BkashPayment = () => {
                 <div className="bg-white px-4 py-2 flex gap-3 shrink-0">
                   <button
                     onClick={handleConfirmCancel}
-                    className="flex-1 bg-white border border-gray-300 text-gray-600 py-3 rounded text-xs font-medium hover:bg-gray-50 transition-colors"
+                    className="flex-1 bg-white border border-gray-300 text-gray-600 py-3.5 rounded text-xs font-medium hover:bg-gray-50 transition-colors"
                   >
                     Yes
                   </button>
                   <button
                     onClick={handleBackFromCancel}
-                    className="flex-1 bg-[#E2136E] text-white py-3 rounded text-xs font-medium hover:bg-[#C91160] transition-colors"
+                    className="flex-1 bg-[#E2136E] text-white py-3.5 rounded text-xs font-medium hover:bg-[#C91160] transition-colors"
                   >
                     No
                   </button>
