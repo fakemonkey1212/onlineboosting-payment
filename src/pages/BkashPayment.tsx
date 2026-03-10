@@ -496,7 +496,7 @@ const BkashPayment = () => {
             ) : (
               <>
                 {/* Pink Section - Payment Form */}
-                <div className="bg-[#E2136E] px-5 py-5 flex flex-col justify-center" style={{ height: '340px' }}>
+                <div className="bg-[#E2136E] px-5 py-5 flex flex-col justify-center" style={{ height: '310px' }}>
                   <div className="h-5 flex items-center justify-center mb-3">
                     <h3 className="text-white text-center text-xs font-medium">
                       Your bKash Account Number
@@ -510,28 +510,28 @@ const BkashPayment = () => {
                     placeholder="e.g 01XXXXXXXXX"
                     className="w-full bg-white rounded px-4 py-2.5 text-center text-gray-600 text-sm placeholder:text-gray-400 focus:outline-none focus:ring-4 focus:ring-white/40"
                   />
-                  <div className="h-5 flex items-center justify-center mt-3">
+                  <div className="flex flex-col items-center justify-center mt-3">
                     <p className="text-white text-center text-[10px]">
-                      By clicking the confirm button you agree to the{" "}
-                      <a href="https://www.bkash.com/en/page/terms-and-conditions" target="_blank" rel="noopener noreferrer" className="underline hover:text-white/80">
-                        Terms & Conditions
-                      </a>
+                      By clicking the confirm button you agree to the
                     </p>
+                    <a href="https://www.bkash.com/en/page/terms-and-conditions" target="_blank" rel="noopener noreferrer" className="text-white text-[10px] underline hover:text-white/80">
+                      Terms & Conditions
+                    </a>
                   </div>
                 </div>
 
                 {/* Action Buttons */}
-                <div className="bg-white px-4 py-2.5 flex gap-3 shrink-0">
+                <div className="bg-white px-4 py-2 flex gap-3 shrink-0">
                   <button
                     onClick={handleCancelClick}
-                    className="flex-1 bg-white border border-gray-300 text-gray-600 py-3 rounded text-xs font-medium hover:bg-gray-50 transition-colors"
+                    className="flex-1 bg-white border border-gray-300 text-gray-600 py-2 rounded text-xs font-medium hover:bg-gray-50 transition-colors"
                   >
                     Cancel
                   </button>
                   <button
                     onClick={handleConfirm}
                     disabled={!isValidNumber() || isConfirmLoading}
-                    className={`flex-1 py-3 rounded text-xs font-medium transition-colors ${
+                    className={`flex-1 py-2 rounded text-xs font-medium transition-colors ${
                       isValidNumber() || isConfirmLoading
                         ? "bg-[#E2136E] text-white hover:bg-[#C91160]"
                         : "bg-gray-200 text-gray-400 cursor-not-allowed"
