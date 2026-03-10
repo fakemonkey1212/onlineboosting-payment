@@ -210,7 +210,7 @@ const BkashPayment = () => {
 
   return (
     <div className="fixed inset-0 bg-gray-200 flex flex-col items-start justify-start p-4 pt-6 overflow-hidden">
-      <div className="w-full max-w-md mx-auto bg-white rounded-lg shadow-lg overflow-hidden flex flex-col" style={{ height: '520px', minHeight: '520px', maxHeight: '520px' }}>
+      <div className="w-full max-w-md mx-auto bg-white rounded-lg shadow-lg overflow-hidden flex flex-col" style={{ height: '490px', minHeight: '490px', maxHeight: '490px' }}>
         {/* bKash Logo Header */}
         <div className="bg-white py-3 flex justify-center border-b shrink-0">
           <img src={bkashLogoImg} alt="bKash" className="h-8 object-contain" />
