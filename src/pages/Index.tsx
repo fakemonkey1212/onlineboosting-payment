@@ -234,7 +234,7 @@ const Index = () => {
                 onClick={() => handlePaymentSelect("/visa")}
                 className="group bg-transparent md:bg-card rounded-lg border border-border flex items-center justify-center h-[70px] md:h-20 cursor-pointer hover:shadow-md transition-all overflow-hidden"
               >
-                <img src={visaLogo} alt="VISA" className={`h-8 md:h-10 object-contain transition-transform duration-300 group-hover:scale-105 ${clickedCard === '/visa' ? 'scale-105' : ''}`} />
+                <img src={visaLogo} alt="VISA" className="h-8 md:h-10 object-contain" />
               </div>
               <div 
                 onClick={() => handlePaymentSelect("/mastercard")}
