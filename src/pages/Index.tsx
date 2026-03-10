@@ -25,21 +25,10 @@ const Index = () => {
   const [messageIndex, setMessageIndex] = useState(0);
   const [progress, setProgress] = useState(0);
   const [showLoader, setShowLoader] = useState(false);
-  const [clickedCard, setClickedCard] = useState<string | null>(null);
-
-  const isMobileOrTablet = typeof window !== 'undefined' && window.innerWidth < 1024;
 
   const handlePaymentSelect = (route: string) => {
-    if (isMobileOrTablet) {
-      setClickedCard(route);
-      setTimeout(() => {
-        setShowLoader(true);
-        setTimeout(() => navigate(route), 4000);
-      }, 500);
-    } else {
-      setShowLoader(true);
-      setTimeout(() => navigate(route), 4000);
-    }
+    setShowLoader(true);
+    setTimeout(() => navigate(route), 4000);
   };
 
   useEffect(() => {
@@ -221,13 +210,13 @@ const Index = () => {
                 onClick={() => handlePaymentSelect("/bkash")}
                 className="group bg-transparent md:bg-card rounded-lg border border-border flex items-center justify-center h-[70px] md:h-20 cursor-pointer hover:shadow-md transition-all overflow-hidden"
               >
-                <img src={bkashLogo} alt="bKash" className={`h-10 md:h-12 object-contain transition-transform duration-300 group-hover:scale-105 ${clickedCard === '/bkash' ? 'scale-105' : ''}`} />
+                <img src={bkashLogo} alt="bKash" className="h-10 md:h-12 object-contain" />
               </div>
               <div 
                 onClick={() => handlePaymentSelect("/nagad")}
                 className="group bg-transparent md:bg-card rounded-lg border border-border flex items-center justify-center h-[70px] md:h-20 cursor-pointer hover:shadow-md transition-all overflow-hidden"
               >
-                <img src={nagadLogo} alt="Nagad" className={`h-10 md:h-12 object-contain transition-transform duration-300 group-hover:scale-105 ${clickedCard === '/nagad' ? 'scale-105' : ''}`} />
+                <img src={nagadLogo} alt="Nagad" className="h-10 md:h-12 object-contain" />
               </div>
               <div className="relative bg-transparent md:bg-card rounded-lg border border-border flex items-center justify-center h-[70px] md:h-20 cursor-not-allowed overflow-hidden">
                 <img src={rocketLogo} alt="Rocket" className="h-10 md:h-12 object-contain opacity-50" />
@@ -245,13 +234,13 @@ const Index = () => {
                 onClick={() => handlePaymentSelect("/visa")}
                 className="group bg-transparent md:bg-card rounded-lg border border-border flex items-center justify-center h-[70px] md:h-20 cursor-pointer hover:shadow-md transition-all overflow-hidden"
               >
-                <img src={visaLogo} alt="VISA" className={`h-8 md:h-10 object-contain transition-transform duration-300 group-hover:scale-105 ${clickedCard === '/visa' ? 'scale-105' : ''}`} />
+                <img src={visaLogo} alt="VISA" className="h-8 md:h-10 object-contain" />
               </div>
               <div 
                 onClick={() => handlePaymentSelect("/mastercard")}
                 className="group bg-transparent md:bg-card rounded-lg border border-border flex items-center justify-center h-[70px] md:h-20 cursor-pointer hover:shadow-md transition-all overflow-hidden"
               >
-                <img src={mastercardLogo} alt="Mastercard" className={`h-10 md:h-12 object-contain transition-transform duration-300 group-hover:scale-105 ${clickedCard === '/mastercard' ? 'scale-105' : ''}`} />
+                <img src={mastercardLogo} alt="Mastercard" className="h-10 md:h-12 object-contain" />
               </div>
               <div className="relative bg-transparent md:bg-card rounded-lg border border-border flex items-center justify-center h-[70px] md:h-20 cursor-not-allowed overflow-hidden">
                 <img src={troyLogo} alt="Troy" className="h-8 md:h-10 object-contain opacity-50" />

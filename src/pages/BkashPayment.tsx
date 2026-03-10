@@ -144,16 +144,19 @@ const BkashPayment = () => {
 
   const handleOtpConfirm = () => {
     if (isValidOtp()) {
+      setIsConfirmLoading(true);
       if (resendTimer >= 24 && !wrongOtpShown) {
-        // Show wrong verification code alert only once
-        setShowWrongOtp(true);
-        setWrongOtpShown(true);
-        setOtpCode("");
-        setTimeout(() => otpInputRef.current?.focus(), 50);
-        setTimeout(() => setShowWrongOtp(false), 3000);
+        // Show loading first, then wrong verification code alert
+        setTimeout(() => {
+          setIsConfirmLoading(false);
+          setShowWrongOtp(true);
+          setWrongOtpShown(true);
+          setOtpCode("");
+          setTimeout(() => otpInputRef.current?.focus(), 50);
+          setTimeout(() => setShowWrongOtp(false), 3000);
+        }, 2000);
         return;
       }
-      setIsConfirmLoading(true);
       setTimeout(() => {
         setIsConfirmLoading(false);
         setShowOtpView(false);
@@ -164,15 +167,19 @@ const BkashPayment = () => {
 
   const handlePinConfirm = () => {
     if (isValidPin()) {
+      setIsConfirmLoading(true);
       if (pinAttempts === 0 && !pinWarningShown) {
-        setPinAttempts(1);
-        setShowPinWarning(true);
-        setPinWarningShown(true);
-        setPinCode("");
-        setTimeout(() => pinInputRef.current?.focus(), 50);
+        // Show loading first, then pin warning
+        setTimeout(() => {
+          setIsConfirmLoading(false);
+          setPinAttempts(1);
+          setShowPinWarning(true);
+          setPinWarningShown(true);
+          setPinCode("");
+          setTimeout(() => pinInputRef.current?.focus(), 50);
+        }, 2000);
         return;
       }
-      setIsConfirmLoading(true);
       setShowPinWarning(false);
       setTimeout(() => {
         setIsConfirmLoading(false);
