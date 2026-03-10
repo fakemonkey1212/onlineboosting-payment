@@ -446,7 +446,7 @@ const BkashPayment = () => {
                       value={otpCode}
                       onChange={handleOtpChange}
                       placeholder="Enter 6 digit code"
-                      className="w-full bg-white rounded px-4 py-1.5 text-center text-gray-600 text-sm placeholder:text-gray-400 focus:outline-none focus:ring-4 focus:ring-white/40"
+                      className="w-full bg-white rounded px-4 py-2 text-center text-gray-600 text-sm placeholder:text-gray-400 focus:outline-none focus:ring-4 focus:ring-white/40"
                     />
                   </div>
                   {/* Alerts and resend flow below input */}
