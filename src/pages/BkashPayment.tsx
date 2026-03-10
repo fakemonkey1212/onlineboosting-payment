@@ -373,9 +373,9 @@ const BkashPayment = () => {
                       />
                       {pinCode.length > 0 && (
                         <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-                          <div className="flex items-center gap-2.5">
+                          <div className="flex items-center gap-1.5">
                             {Array.from({ length: pinCode.length }).map((_, i) => (
-                              <span key={i} className="w-2.5 h-2.5 rounded-full bg-gray-700 inline-block" />
+                              <span key={i} className="w-3 h-3 rounded-full bg-gray-700 inline-block" />
                             ))}
                             <span className="w-[1px] h-4 bg-gray-500 inline-block animate-pulse" />
                           </div>
