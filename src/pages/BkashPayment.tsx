@@ -414,9 +414,9 @@ const BkashPayment = () => {
             ) : showOtpView ? (
               <>
                 {/* Pink Section - OTP Form */}
-                <div className="bg-[#E2136E] px-5 flex flex-col" style={{ height: '340px' }}>
+                <div className="bg-[#E2136E] px-5 flex flex-col" style={{ height: '310px' }}>
                   {/* Fixed top area for title + input */}
-                  <div className="pt-[100px]">
+                  <div className="pt-[90px]">
                     <h3 className="text-white text-center text-xs font-medium mb-3 h-4">
                       Enter verification code sent to {getMaskedNumber()}
                     </h3>
