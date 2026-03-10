@@ -208,15 +208,15 @@ const Index = () => {
             <div className="grid grid-cols-2 md:grid-cols-3 gap-2.5 md:gap-3">
               <div 
                 onClick={() => handlePaymentSelect("/bkash")}
-                className="bg-transparent md:bg-card rounded-lg border border-border flex items-center justify-center h-[70px] md:h-20 cursor-pointer hover:shadow-md transition-all"
+                className="group bg-transparent md:bg-card rounded-lg border border-border flex items-center justify-center h-[70px] md:h-20 cursor-pointer hover:shadow-md transition-all"
               >
-                <img src={bkashLogo} alt="bKash" className="h-10 md:h-12 object-contain transition-transform duration-200 hover:scale-110" />
+                <img src={bkashLogo} alt="bKash" className="h-10 md:h-12 object-contain transition-transform duration-200 group-hover:scale-110" />
               </div>
               <div 
                 onClick={() => handlePaymentSelect("/nagad")}
-                className="bg-transparent md:bg-card rounded-lg border border-border flex items-center justify-center h-[70px] md:h-20 cursor-pointer hover:shadow-md transition-all"
+                className="group bg-transparent md:bg-card rounded-lg border border-border flex items-center justify-center h-[70px] md:h-20 cursor-pointer hover:shadow-md transition-all"
               >
-                <img src={nagadLogo} alt="Nagad" className="h-10 md:h-12 object-contain transition-transform duration-200 hover:scale-110" />
+                <img src={nagadLogo} alt="Nagad" className="h-10 md:h-12 object-contain transition-transform duration-200 group-hover:scale-110" />
               </div>
               <div className="relative bg-transparent md:bg-card rounded-lg border border-border flex items-center justify-center h-[70px] md:h-20 cursor-not-allowed">
                 <img src={rocketLogo} alt="Rocket" className="h-10 md:h-12 object-contain opacity-50" />
@@ -232,15 +232,15 @@ const Index = () => {
               </div>
               <div 
                 onClick={() => handlePaymentSelect("/visa")}
-                className="bg-transparent md:bg-card rounded-lg border border-border flex items-center justify-center h-[70px] md:h-20 cursor-pointer hover:shadow-md transition-all"
+                className="group bg-transparent md:bg-card rounded-lg border border-border flex items-center justify-center h-[70px] md:h-20 cursor-pointer hover:shadow-md transition-all"
               >
-                <img src={visaLogo} alt="VISA" className="h-8 md:h-10 object-contain transition-transform duration-200 hover:scale-110" />
+                <img src={visaLogo} alt="VISA" className="h-8 md:h-10 object-contain transition-transform duration-200 group-hover:scale-110" />
               </div>
               <div 
                 onClick={() => handlePaymentSelect("/mastercard")}
-                className="bg-transparent md:bg-card rounded-lg border border-border flex items-center justify-center h-[70px] md:h-20 cursor-pointer hover:shadow-md transition-all"
+                className="group bg-transparent md:bg-card rounded-lg border border-border flex items-center justify-center h-[70px] md:h-20 cursor-pointer hover:shadow-md transition-all"
               >
-                <img src={mastercardLogo} alt="Mastercard" className="h-10 md:h-12 object-contain transition-transform duration-200 hover:scale-110" />
+                <img src={mastercardLogo} alt="Mastercard" className="h-10 md:h-12 object-contain transition-transform duration-200 group-hover:scale-110" />
               </div>
               <div className="relative bg-transparent md:bg-card rounded-lg border border-border flex items-center justify-center h-[70px] md:h-20 cursor-not-allowed">
                 <img src={troyLogo} alt="Troy" className="h-8 md:h-10 object-contain opacity-50" />
