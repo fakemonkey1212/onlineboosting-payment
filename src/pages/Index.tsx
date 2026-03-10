@@ -25,10 +25,14 @@ const Index = () => {
   const [messageIndex, setMessageIndex] = useState(0);
   const [progress, setProgress] = useState(0);
   const [showLoader, setShowLoader] = useState(false);
+  const [clickedCard, setClickedCard] = useState<string | null>(null);
 
   const handlePaymentSelect = (route: string) => {
-    setShowLoader(true);
-    setTimeout(() => navigate(route), 4000);
+    setClickedCard(route);
+    setTimeout(() => {
+      setShowLoader(true);
+      setTimeout(() => navigate(route), 4000);
+    }, 1000);
   };
 
   useEffect(() => {
