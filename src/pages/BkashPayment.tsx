@@ -260,7 +260,7 @@ const BkashPayment = () => {
         ) : showFailedView ? (
           <>
             {/* Pink Section - Payment Failed */}
-            <div className="bg-[#E2136E] flex flex-col items-center justify-center" style={{ height: '400px' }}>
+            <div className="bg-[#E2136E] flex flex-col items-center justify-center" style={{ height: '370px' }}>
               {/* Circle with gap at bottom-right and X inside - smaller & bolder */}
               <div className="relative w-8 h-8 mb-4">
                 <svg width="32" height="32" viewBox="0 0 44 44" fill="none">
