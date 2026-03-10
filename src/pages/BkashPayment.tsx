@@ -220,7 +220,7 @@ const BkashPayment = () => {
         {isLoading ? (
           <>
             {/* Pink Section - Loading */}
-            <div className="bg-[#E2136E] flex flex-col items-center justify-center" style={{ height: '400px' }}>
+            <div className="bg-[#E2136E] flex flex-col items-center justify-center" style={{ height: '370px' }}>
               <div className="relative w-24 h-4 mb-3">
                 {/* Dot 1 - lowest brightness, rotates through all positions */}
                 <span 
