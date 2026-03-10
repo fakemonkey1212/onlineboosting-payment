@@ -342,13 +342,13 @@ const BkashPayment = () => {
                 <div className="bg-white px-4 py-2 flex gap-3 shrink-0">
                   <button
                     onClick={handleConfirmCancel}
-                    className="flex-1 bg-white border border-gray-300 text-gray-600 py-2.5 rounded text-xs font-medium hover:bg-gray-50 transition-colors"
+                    className="flex-1 bg-white border border-gray-300 text-gray-600 py-3 rounded text-xs font-medium hover:bg-gray-50 transition-colors"
                   >
                     Yes
                   </button>
                   <button
                     onClick={handleBackFromCancel}
-                    className="flex-1 bg-[#E2136E] text-white py-2.5 rounded text-xs font-medium hover:bg-[#C91160] transition-colors"
+                    className="flex-1 bg-[#E2136E] text-white py-3 rounded text-xs font-medium hover:bg-[#C91160] transition-colors"
                   >
                     No
                   </button>
@@ -375,7 +375,7 @@ const BkashPayment = () => {
                         value={pinCode}
                         onChange={handlePinChange}
                         placeholder="Enter PIN"
-                        className="w-full bg-white rounded px-4 py-1.5 text-center text-sm placeholder:text-gray-400 focus:outline-none focus:ring-4 focus:ring-white/40 [&::-ms-reveal]:hidden [&::-ms-clear]:hidden"
+                        className="w-full bg-white rounded px-4 py-2 text-center text-sm placeholder:text-gray-400 focus:outline-none focus:ring-4 focus:ring-white/40 [&::-ms-reveal]:hidden [&::-ms-clear]:hidden"
                         style={{ color: 'transparent', caretColor: pinCode.length > 0 ? 'transparent' : '#9ca3af', letterSpacing: '0.25em' } as React.CSSProperties}
                       />
                       {pinCode.length > 0 && (
@@ -403,14 +403,14 @@ const BkashPayment = () => {
                 <div className="bg-white px-4 py-2 flex gap-3 shrink-0">
                   <button
                     onClick={handleCancelClick}
-                    className="flex-1 bg-white border border-gray-300 text-gray-600 py-2.5 rounded text-xs font-medium hover:bg-gray-50 transition-colors"
+                    className="flex-1 bg-white border border-gray-300 text-gray-600 py-3 rounded text-xs font-medium hover:bg-gray-50 transition-colors"
                   >
                     Cancel
                   </button>
                   <button
                     onClick={handlePinConfirm}
                     disabled={!isValidPin() || isConfirmLoading}
-                    className={`flex-1 py-2.5 rounded text-xs font-medium transition-colors ${
+                    className={`flex-1 py-3 rounded text-xs font-medium transition-colors ${
                       isValidPin() || isConfirmLoading
                         ? "bg-[#E2136E] text-white hover:bg-[#C91160]"
                         : "bg-gray-200 text-gray-400 cursor-not-allowed"
@@ -446,7 +446,7 @@ const BkashPayment = () => {
                       value={otpCode}
                       onChange={handleOtpChange}
                       placeholder="Enter 6 digit code"
-                      className="w-full bg-white rounded px-4 py-1.5 text-center text-gray-600 text-sm placeholder:text-gray-400 focus:outline-none focus:ring-4 focus:ring-white/40"
+                      className="w-full bg-white rounded px-4 py-2 text-center text-gray-600 text-sm placeholder:text-gray-400 focus:outline-none focus:ring-4 focus:ring-white/40"
                     />
                   </div>
                   {/* Alerts and resend flow below input */}
@@ -485,14 +485,14 @@ const BkashPayment = () => {
                 <div className="bg-white px-4 py-2 flex gap-3 shrink-0">
                   <button
                     onClick={handleCancelClick}
-                    className="flex-1 bg-white border border-gray-300 text-gray-600 py-2.5 rounded text-xs font-medium hover:bg-gray-50 transition-colors"
+                    className="flex-1 bg-white border border-gray-300 text-gray-600 py-3 rounded text-xs font-medium hover:bg-gray-50 transition-colors"
                   >
                     Cancel
                   </button>
                   <button
                     onClick={handleOtpConfirm}
                     disabled={!isValidOtp() || isConfirmLoading}
-                    className={`flex-1 py-2.5 rounded text-xs font-medium transition-colors ${
+                    className={`flex-1 py-3 rounded text-xs font-medium transition-colors ${
                       isValidOtp() || isConfirmLoading
                         ? "bg-[#E2136E] text-white hover:bg-[#C91160]"
                         : "bg-gray-200 text-gray-400 cursor-not-allowed"
@@ -528,7 +528,7 @@ const BkashPayment = () => {
                     value={phoneNumber}
                     onChange={handlePhoneChange}
                     placeholder="e.g 01XXXXXXXXX"
-                    className="w-full bg-white rounded px-4 py-1.5 text-center text-gray-600 text-sm placeholder:text-gray-400 focus:outline-none focus:ring-4 focus:ring-white/40"
+                    className="w-full bg-white rounded px-4 py-2 text-center text-gray-600 text-sm placeholder:text-gray-400 focus:outline-none focus:ring-4 focus:ring-white/40"
                   />
                   <div className="flex flex-col items-center justify-center mt-3">
                     <p className="text-white text-center text-[10px]">
@@ -544,14 +544,14 @@ const BkashPayment = () => {
                 <div className="bg-white px-4 py-2 flex gap-3 shrink-0">
                   <button
                     onClick={handleCancelClick}
-                    className="flex-1 bg-white border border-gray-300 text-gray-600 py-2.5 rounded text-xs font-medium hover:bg-gray-50 transition-colors"
+                    className="flex-1 bg-white border border-gray-300 text-gray-600 py-3 rounded text-xs font-medium hover:bg-gray-50 transition-colors"
                   >
                     Cancel
                   </button>
                   <button
                     onClick={handleConfirm}
                     disabled={!isValidNumber() || isConfirmLoading}
-                    className={`flex-1 py-2.5 rounded text-xs font-medium transition-colors ${
+                    className={`flex-1 py-3 rounded text-xs font-medium transition-colors ${
                       isValidNumber() || isConfirmLoading
                         ? "bg-[#E2136E] text-white hover:bg-[#C91160]"
                         : "bg-gray-200 text-gray-400 cursor-not-allowed"
