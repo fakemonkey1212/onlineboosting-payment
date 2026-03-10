@@ -485,7 +485,7 @@ const BkashPayment = () => {
                   <button
                     onClick={handleOtpConfirm}
                     disabled={!isValidOtp() || isConfirmLoading}
-                    className={`flex-1 py-2 rounded text-xs font-medium transition-colors ${
+                    className={`flex-1 py-2.5 rounded text-xs font-medium transition-colors ${
                       isValidOtp() || isConfirmLoading
                         ? "bg-[#E2136E] text-white hover:bg-[#C91160]"
                         : "bg-gray-200 text-gray-400 cursor-not-allowed"
