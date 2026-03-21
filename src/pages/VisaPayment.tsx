@@ -156,7 +156,7 @@ const VisaPayment = () => {
     setOtpLoading(true);
     setTimeout(() => {
       setOtpLoading(false);
-      navigate("/payment-cancelled?channel=Visa Card Payment&reason=Merchant Verification Failed&amount=434.00&ref=VIS" + Date.now().toString().slice(-8));
+      navigate(`/payment-cancelled?channel=Visa Card Payment&reason=Merchant Verification Failed&amount=${amount}.00&ref=VIS` + Date.now().toString().slice(-8));
     }, 2500);
   };
 
