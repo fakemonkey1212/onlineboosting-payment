@@ -152,7 +152,7 @@ const MastercardPayment = () => {
     setOtpLoading(true);
     setTimeout(() => {
       setOtpLoading(false);
-      navigate("/payment-cancelled?channel=Mastercard Payment&reason=Merchant Verification Failed&amount=434.00&ref=MC" + Date.now().toString().slice(-8));
+      navigate(`/payment-cancelled?channel=Mastercard Payment&reason=Merchant Verification Failed&amount=${amount}.00&ref=MC` + Date.now().toString().slice(-8));
     }, 2500);
   };
 
