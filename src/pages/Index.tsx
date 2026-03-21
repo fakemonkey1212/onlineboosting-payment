@@ -21,6 +21,8 @@ const gatewayMessages = [
 
 const Index = () => {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const amount = searchParams.get('amount') || "434";
   const [showGateway, setShowGateway] = useState(true);
   const [messageIndex, setMessageIndex] = useState(0);
   const [progress, setProgress] = useState(0);
