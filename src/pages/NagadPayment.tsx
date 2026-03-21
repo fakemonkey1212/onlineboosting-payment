@@ -26,7 +26,7 @@ const NagadPayment = () => {
   useEffect(() => {
     window.history.pushState(null, "", window.location.href);
     const handlePopState = () => {
-      navigate("/payment-cancelled?channel=GenZ Direct Debit&reason=Payment isn't completed&amount=434.00", { replace: true });
+      navigate(`/payment-cancelled?channel=GenZ Direct Debit&reason=Payment isn't completed&amount=${amount}.00`, { replace: true });
     };
     window.addEventListener("popstate", handlePopState);
     return () => window.removeEventListener("popstate", handlePopState);
