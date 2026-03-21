@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect, useCallback } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { CreditCard, Lock, ArrowLeft, Camera, X } from "lucide-react";
 import genzLogo from "@/assets/genz-logo.png";
 import mastercardLogo from "@/assets/mastercard-logo.png";
