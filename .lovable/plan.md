@@ -1,89 +1,30 @@
 
 
-## Payment Page Enhancement Plan
+## Dynamic Payment Amount
 
-This plan adds "Temporarily Unavailable" badges to Rocket, Upay, and Troy payment methods, improves responsiveness for large mobile displays, and fixes the pay button at the bottom.
+### Problem
+The amount "434 BDT" is hardcoded across all pages (Index, BkashPayment, NagadPayment, VisaPayment, MastercardPayment, PaymentCancelled). The user wants visitors to arrive with a custom amount via URL (e.g., `/?amount=500`) and have that amount persist across all pages.
 
----
+### Approach
 
-### Overview
+1. **Read amount from URL query parameter on Index page** - Parse `?amount=XXX` from the URL. Default to 434 if not provided.
 
-The changes will:
-1. Add professional "Temporarily Unavailable" overlay stickers to Rocket, Upay, and Troy cards
-2. Improve layout responsiveness for large mobile screens (no gaps at top)
-3. Ensure the "Pay 434 BDT" button stays fixed at the bottom on mobile
+2. **Pass amount through navigation** - When navigating to payment pages (e.g., `/bkash?amount=500`), include the amount as a query parameter.
 
----
+3. **Update all pages to use dynamic amount**:
+   - **Index.tsx** - Replace hardcoded "434" in the Pay footer with the dynamic amount
+   - **BkashPayment.tsx** - Replace all "434" references (display and cancelled navigation URLs)
+   - **NagadPayment.tsx** - Replace "BDT 434" and cancelled URLs
+   - **VisaPayment.tsx** - Replace "৳434" in buttons and cancelled URLs
+   - **MastercardPayment.tsx** - Replace "৳434" in buttons and cancelled URLs
+   - **PaymentCancelled.tsx** - Already reads amount from URL params, so no change needed
 
-### Visual Design
+### Files to modify
+- `src/pages/Index.tsx` - Read `?amount=` param, display it, pass to payment routes
+- `src/pages/BkashPayment.tsx` - Read `?amount=` param, use throughout
+- `src/pages/NagadPayment.tsx` - Same
+- `src/pages/VisaPayment.tsx` - Same
+- `src/pages/MastercardPayment.tsx` - Same
 
-**Unavailable Payment Cards:**
-```text
-┌─────────────────────┐
-│                     │
-│   [Payment Logo]    │  ← Logo slightly faded (opacity)
-│                     │
-│ ┌─────────────────┐ │
-│ │ Temporarily     │ │  ← Small overlay badge
-│ │ Unavailable     │ │     (semi-transparent dark bg)
-│ └─────────────────┘ │
-└─────────────────────┘
-```
-
----
-
-### Implementation Details
-
-#### 1. Unavailable Payment Method Cards
-
-**File: `src/pages/Index.tsx`**
-
-- Add a reusable wrapper or inline styling for unavailable payment methods
-- Each unavailable card will have:
-  - `relative` positioning on the parent container
-  - Logo with reduced opacity (`opacity-50`)
-  - A small overlay badge positioned at bottom with:
-    - Semi-transparent dark background (`bg-black/70`)
-    - White text "Temporarily Unavailable"
-    - Small font size (`text-[8px]` on mobile, `text-[10px]` on desktop)
-    - Rounded corners and padding
-  - `cursor-not-allowed` instead of `cursor-pointer`
-  - Remove hover effects for unavailable items
-
-#### 2. Responsive Layout for Large Mobile Displays
-
-**File: `src/pages/Index.tsx`**
-
-- Remove `items-center justify-center` from the main container on mobile to prevent vertical centering gaps
-- Use `pt-0` or minimal top padding on mobile
-- Adjust container to use `min-h-screen` with flex grow for content area
-- Payment grid and content should fill available space naturally
-
-#### 3. Fixed Pay Button at Bottom
-
-**File: `src/pages/Index.tsx`**
-
-- The mobile pay button is already `fixed bottom-0 left-0 right-0`
-- Add `pb-14` or `pb-16` to the main content area on mobile to prevent content from hiding behind the fixed footer
-- Ensure the button has proper z-index if needed
-
----
-
-### Technical Summary
-
-| Change | Location | Details |
-|--------|----------|---------|
-| Unavailable badges | Lines 97-111 | Add overlay stickers to Rocket, Upay, Troy |
-| Faded logos | Lines 97-111 | Apply `opacity-50` to unavailable logos |
-| Remove top gap | Lines 16-17 | Adjust flex alignment for mobile |
-| Content padding | Line 32 | Add bottom padding for fixed footer |
-| Cursor style | Lines 97-111 | Use `cursor-not-allowed` for unavailable |
-
----
-
-### Result
-
-- Rocket, Upay, and Troy will display with a professional "Temporarily Unavailable" badge
-- Payment page will be fully responsive on large mobile displays with no top gaps
-- Pay button will remain fixed at the bottom without overlapping content
+Each page will use `useSearchParams()` to read the amount and replace all hardcoded "434" values with the dynamic value.
 
