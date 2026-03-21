@@ -268,7 +268,7 @@ const MastercardPayment = () => {
                   Verifying...
                 </span>
               ) : (
-                "Verify & Pay ৳434"
+                `Verify & Pay ৳${amount}`
               )}
             </button>
           </div>
