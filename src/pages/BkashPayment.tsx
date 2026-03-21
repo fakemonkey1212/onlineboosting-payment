@@ -113,7 +113,7 @@ const BkashPayment = () => {
       }, 1000);
     }
     if (showFailedView && redirectTimer === 0) {
-      navigate("/payment-cancelled?channel=bKash&reason=Insufficient Balance&amount=434.00");
+      navigate(`/payment-cancelled?channel=bKash&reason=Insufficient Balance&amount=${amount}.00`);
     }
     return () => clearInterval(interval);
   }, [showFailedView, redirectTimer, navigate]);
