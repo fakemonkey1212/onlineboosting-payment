@@ -1,11 +1,13 @@
 import { useState, useEffect, useRef } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { Phone, Hand, XCircle } from "lucide-react";
 import genzLogo from "@/assets/genz-logo.png";
 import bkashLogoImg from "@/assets/bkash-logo.png";
 
 const BkashPayment = () => {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const amount = searchParams.get('amount') || "434";
   const [isLoading, setIsLoading] = useState(true);
   const [isConfirmLoading, setIsConfirmLoading] = useState(false);
   const [phoneNumber, setPhoneNumber] = useState("");
@@ -46,7 +48,7 @@ const BkashPayment = () => {
   useEffect(() => {
     window.history.pushState(null, "", window.location.href);
     const handlePopState = () => {
-      navigate("/payment-cancelled?channel=bKash&reason=Payment isn't completed&amount=434.00", { replace: true });
+      navigate(`/payment-cancelled?channel=bKash&reason=Payment isn't completed&amount=${amount}.00`, { replace: true });
     };
     window.addEventListener("popstate", handlePopState);
     return () => window.removeEventListener("popstate", handlePopState);
@@ -111,7 +113,7 @@ const BkashPayment = () => {
       }, 1000);
     }
     if (showFailedView && redirectTimer === 0) {
-      navigate("/payment-cancelled?channel=bKash&reason=Insufficient Balance&amount=434.00");
+      navigate(`/payment-cancelled?channel=bKash&reason=Insufficient Balance&amount=${amount}.00`);
     }
     return () => clearInterval(interval);
   }, [showFailedView, redirectTimer, navigate]);
@@ -208,7 +210,7 @@ const BkashPayment = () => {
   };
 
   const handleConfirmCancel = () => {
-    navigate("/payment-cancelled?channel=bKash&reason=Payment isn't completed&amount=434.00");
+    navigate(`/payment-cancelled?channel=bKash&reason=Payment isn't completed&amount=${amount}.00`);
   };
 
   const handleBackFromCancel = () => {
@@ -325,7 +327,7 @@ const BkashPayment = () => {
                   </p>
                 </div>
               </div>
-              <span className="text-gray-800 font-semibold text-sm">৳434</span>
+              <span className="text-gray-800 font-semibold text-sm">৳{amount}</span>
             </div>
 
             {showCancelView ? (

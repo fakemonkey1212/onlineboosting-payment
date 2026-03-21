@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Home, Upload, X, Headphones, HelpCircle, Gift, LogIn, Lock } from "lucide-react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import DualCircleLoader from "@/components/DualCircleLoader";
 import genzLogo from "@/assets/genz-logo.png";
 import bkashLogo from "@/assets/bkash-logo.png";
@@ -21,6 +21,8 @@ const gatewayMessages = [
 
 const Index = () => {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const amount = searchParams.get('amount') || "434";
   const [showGateway, setShowGateway] = useState(true);
   const [messageIndex, setMessageIndex] = useState(0);
   const [progress, setProgress] = useState(0);
@@ -34,11 +36,11 @@ const Index = () => {
       setClickedCard(route);
       setTimeout(() => {
         setShowLoader(true);
-        setTimeout(() => navigate(route), 4000);
+        setTimeout(() => navigate(`${route}?amount=${amount}`), 4000);
       }, 500);
     } else {
       setShowLoader(true);
-      setTimeout(() => navigate(route), 4000);
+      setTimeout(() => navigate(`${route}?amount=${amount}`), 4000);
     }
   };
 
@@ -264,13 +266,13 @@ const Index = () => {
 
           {/* Pay Footer - Desktop/Tablet only (inside box) */}
           <div className="hidden md:block bg-pay-bar py-3 text-center rounded-b-2xl mt-auto">
-            <span className="text-primary font-bold text-lg">Pay 434 BDT</span>
+            <span className="text-primary font-bold text-lg">Pay {amount} BDT</span>
           </div>
         </div>
 
         {/* Pay Footer - Mobile only (fixed bottom) */}
         <div className="md:hidden fixed bottom-0 left-0 right-0 bg-pay-bar py-3 text-center">
-          <span className="text-primary font-bold text-base">Pay 434 BDT</span>
+          <span className="text-primary font-bold text-base">Pay {amount} BDT</span>
         </div>
       </div>
     </div>
