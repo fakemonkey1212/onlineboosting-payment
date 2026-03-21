@@ -266,7 +266,7 @@ const Index = () => {
 
           {/* Pay Footer - Desktop/Tablet only (inside box) */}
           <div className="hidden md:block bg-pay-bar py-3 text-center rounded-b-2xl mt-auto">
-            <span className="text-primary font-bold text-lg">Pay 434 BDT</span>
+            <span className="text-primary font-bold text-lg">Pay {amount} BDT</span>
           </div>
         </div>
 
