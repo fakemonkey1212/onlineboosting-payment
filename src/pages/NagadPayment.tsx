@@ -177,7 +177,7 @@ const NagadPayment = () => {
                   </div>
                   <div className="flex">
                     <span className="text-[#ccc] font-bold text-xs min-[375px]:text-sm w-24 min-[375px]:w-32">{t.totalAmount}</span>
-                    <span className="text-[#ccc] font-bold text-xs min-[375px]:text-sm">BDT 434</span>
+                    <span className="text-[#ccc] font-bold text-xs min-[375px]:text-sm">BDT {amount}</span>
                   </div>
                   <div className="flex">
                     <span className="text-[#ccc] font-bold text-xs min-[375px]:text-sm w-24 min-[375px]:w-32">{t.charge}</span>

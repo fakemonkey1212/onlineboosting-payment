@@ -272,7 +272,7 @@ const Index = () => {
 
         {/* Pay Footer - Mobile only (fixed bottom) */}
         <div className="md:hidden fixed bottom-0 left-0 right-0 bg-pay-bar py-3 text-center">
-          <span className="text-primary font-bold text-base">Pay 434 BDT</span>
+          <span className="text-primary font-bold text-base">Pay {amount} BDT</span>
         </div>
       </div>
     </div>

@@ -462,7 +462,7 @@ const MastercardPayment = () => {
                 Processing...
               </span>
             ) : (
-              `Pay ৳434.00`
+              `Pay ৳${amount}.00`
             )}
           </button>
 

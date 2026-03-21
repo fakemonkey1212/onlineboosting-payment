@@ -327,7 +327,7 @@ const BkashPayment = () => {
                   </p>
                 </div>
               </div>
-              <span className="text-gray-800 font-semibold text-sm">৳434</span>
+              <span className="text-gray-800 font-semibold text-sm">৳{amount}</span>
             </div>
 
             {showCancelView ? (
