@@ -210,7 +210,7 @@ const BkashPayment = () => {
   };
 
   const handleConfirmCancel = () => {
-    navigate("/payment-cancelled?channel=bKash&reason=Payment isn't completed&amount=434.00");
+    navigate(`/payment-cancelled?channel=bKash&reason=Payment isn't completed&amount=${amount}.00`);
   };
 
   const handleBackFromCancel = () => {
