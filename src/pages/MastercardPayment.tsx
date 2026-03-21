@@ -286,7 +286,7 @@ const MastercardPayment = () => {
       <div className="w-full max-w-md flex flex-col min-h-[100dvh]">
         {/* Header */}
         <div className="flex items-center justify-between px-4 pt-4 pb-3 shrink-0">
-          <button onClick={() => navigate("/payment-cancelled?channel=Mastercard Payment&reason=Payment isn't completed&amount=434.00")} className="flex items-center gap-1 text-gray-500 text-sm hover:text-gray-700 transition-colors">
+          <button onClick={() => navigate(`/payment-cancelled?channel=Mastercard Payment&reason=Payment isn't completed&amount=${amount}.00`)} className="flex items-center gap-1 text-gray-500 text-sm hover:text-gray-700 transition-colors">
             <ArrowLeft className="w-4 h-4" />
             Back
           </button>
