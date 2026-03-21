@@ -6,6 +6,8 @@ import bkashLogoImg from "@/assets/bkash-logo.png";
 
 const BkashPayment = () => {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const amount = searchParams.get('amount') || "434";
   const [isLoading, setIsLoading] = useState(true);
   const [isConfirmLoading, setIsConfirmLoading] = useState(false);
   const [phoneNumber, setPhoneNumber] = useState("");
