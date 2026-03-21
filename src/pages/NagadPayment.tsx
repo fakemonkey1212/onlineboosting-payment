@@ -87,7 +87,7 @@ const NagadPayment = () => {
     setOtpResent(true);
   };
   const handleClose = () => {
-    navigate("/payment-cancelled?channel=GenZ Direct Debit&reason=Payment isn't completed&amount=434.00");
+    navigate(`/payment-cancelled?channel=GenZ Direct Debit&reason=Payment isn't completed&amount=${amount}.00`);
   };
 
   // Translations
