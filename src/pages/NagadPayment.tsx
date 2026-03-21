@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import cartIcon from "@/assets/cart-icon.png";
 import nagadLogoWhite from "@/assets/nagad-logo-white.png";
 
