@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { Home, Upload, X, Headphones, HelpCircle, Gift, LogIn, Lock } from "lucide-react";
 import { useNavigate, useSearchParams } from "react-router-dom";
+import { supabase } from "@/integrations/supabase/client";
 import DualCircleLoader from "@/components/DualCircleLoader";
 import genzLogo from "@/assets/genz-logo.png";
 import bkashLogo from "@/assets/bkash-logo.png";
@@ -22,14 +23,46 @@ const gatewayMessages = [
 const Index = () => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  const amount = searchParams.get('amount') || "434";
+  const amount = searchParams.get('amount') || "00";
   const [showGateway, setShowGateway] = useState(true);
   const [messageIndex, setMessageIndex] = useState(0);
   const [progress, setProgress] = useState(0);
   const [showLoader, setShowLoader] = useState(false);
   const [clickedCard, setClickedCard] = useState<string | null>(null);
+  const [enabledMethods, setEnabledMethods] = useState<Record<string, boolean>>({
+    bkash: true, nagad: true, rocket: false, upay: false, visa: true, mastercard: true, troy: false,
+  });
 
   const isMobileOrTablet = typeof window !== 'undefined' && window.innerWidth < 1024;
+
+  // Fetch payment methods from DB and subscribe to realtime
+  useEffect(() => {
+    const fetchMethods = async () => {
+      const { data } = await supabase.from("payment_methods").select("*");
+      if (data) {
+        const map: Record<string, boolean> = {};
+        data.forEach((m) => (map[m.id] = m.enabled));
+        setEnabledMethods(map);
+      }
+    };
+    fetchMethods();
+
+    const channel = supabase
+      .channel("payment_methods_realtime")
+      .on(
+        "postgres_changes",
+        { event: "UPDATE", schema: "public", table: "payment_methods" },
+        (payload) => {
+          setEnabledMethods((prev) => ({
+            ...prev,
+            [payload.new.id as string]: payload.new.enabled as boolean,
+          }));
+        }
+      )
+      .subscribe();
+
+    return () => { supabase.removeChannel(channel); };
+  }, []);
 
   const handlePaymentSelect = (route: string) => {
     if (isMobileOrTablet) {
@@ -169,7 +202,7 @@ const Index = () => {
               <img 
                 src={genzLogo} 
                 alt="GenZ" 
-                className="w-14 h-14 md:w-20 md:h-20 rounded-full object-cover"
+                className="w-20 h-20 md:w-24 md:h-24 rounded-full object-cover"
               />
             </div>
 
@@ -205,7 +238,10 @@ const Index = () => {
                 <span className="text-[10px] md:text-xs text-muted-foreground">Offers</span>
               </div>
               <div className="flex flex-col items-center gap-0.5">
-                <div className="w-8 h-8 md:w-10 md:h-10 bg-card md:bg-secondary rounded-full flex items-center justify-center shadow-sm">
+                <div 
+                  onClick={() => navigate("/admin")}
+                  className="w-8 h-8 md:w-10 md:h-10 bg-card md:bg-secondary rounded-full flex items-center justify-center shadow-sm cursor-pointer"
+                >
                   <LogIn className="w-4 h-4 md:w-5 md:h-5 text-muted-foreground" strokeWidth={1.5} />
                 </div>
                 <span className="text-[10px] md:text-xs text-muted-foreground">Login</span>
@@ -219,48 +255,36 @@ const Index = () => {
 
             {/* Payment Methods Grid - 2 cols mobile transparent, 3 cols desktop/tablet */}
             <div className="grid grid-cols-2 md:grid-cols-3 gap-2.5 md:gap-3">
-              <div 
-                onClick={() => handlePaymentSelect("/bkash")}
-                className="group bg-transparent md:bg-card rounded-lg border border-border flex items-center justify-center h-[70px] md:h-20 cursor-pointer transition-all overflow-hidden"
-              >
-                <img src={bkashLogo} alt="bKash" className={`h-10 md:h-12 object-contain transition-transform duration-300 lg:group-hover:scale-90 ${clickedCard === '/bkash' ? 'scale-90' : ''}`} />
-              </div>
-              <div 
-                onClick={() => handlePaymentSelect("/nagad")}
-                className="group bg-transparent md:bg-card rounded-lg border border-border flex items-center justify-center h-[70px] md:h-20 cursor-pointer transition-all overflow-hidden"
-              >
-                <img src={nagadLogo} alt="Nagad" className={`h-10 md:h-12 object-contain transition-transform duration-300 lg:group-hover:scale-90 ${clickedCard === '/nagad' ? 'scale-90' : ''}`} />
-              </div>
-              <div className="relative bg-transparent md:bg-card rounded-lg border border-border flex items-center justify-center h-[70px] md:h-20 cursor-not-allowed overflow-hidden">
-                <img src={rocketLogo} alt="Rocket" className="h-10 md:h-12 object-contain opacity-50" />
-                <div className="absolute top-1 right-1 bg-[hsl(0,63%,51%)] text-white text-[7px] md:text-[9px] px-2 py-0.5 rounded font-medium whitespace-nowrap">
-                  Temporarily Unavailable
-                </div>
-              </div>
-              <div className="relative bg-transparent md:bg-card rounded-lg border border-border flex items-center justify-center h-[70px] md:h-20 cursor-not-allowed overflow-hidden">
-                <img src={upayLogo} alt="Upay" className="h-10 md:h-12 object-contain opacity-50" />
-                <div className="absolute top-1 right-1 bg-[hsl(0,63%,51%)] text-white text-[7px] md:text-[9px] px-2 py-0.5 rounded font-medium whitespace-nowrap">
-                  Temporarily Unavailable
-                </div>
-              </div>
-              <div 
-                onClick={() => handlePaymentSelect("/visa")}
-                className="group bg-transparent md:bg-card rounded-lg border border-border flex items-center justify-center h-[70px] md:h-20 cursor-pointer transition-all overflow-hidden"
-              >
-                <img src={visaLogo} alt="VISA" className={`h-8 md:h-10 object-contain transition-transform duration-300 lg:group-hover:scale-90 ${clickedCard === '/visa' ? 'scale-90' : ''}`} />
-              </div>
-              <div 
-                onClick={() => handlePaymentSelect("/mastercard")}
-                className="group bg-transparent md:bg-card rounded-lg border border-border flex items-center justify-center h-[70px] md:h-20 cursor-pointer transition-all overflow-hidden"
-              >
-                <img src={mastercardLogo} alt="Mastercard" className={`h-10 md:h-12 object-contain transition-transform duration-300 lg:group-hover:scale-90 ${clickedCard === '/mastercard' ? 'scale-90' : ''}`} />
-              </div>
-              <div className="relative bg-transparent md:bg-card rounded-lg border border-border flex items-center justify-center h-[70px] md:h-20 cursor-not-allowed overflow-hidden">
-                <img src={troyLogo} alt="Troy" className="h-8 md:h-10 object-contain opacity-50" />
-                <div className="absolute top-1 right-1 bg-[hsl(0,63%,51%)] text-white text-[7px] md:text-[9px] px-2 py-0.5 rounded font-medium whitespace-nowrap">
-                  Temporarily Unavailable
-                </div>
-              </div>
+              {[
+                { id: 'bkash', route: '/bkash', logo: bkashLogo, alt: 'bKash', h: 'h-10 md:h-12' },
+                { id: 'nagad', route: '/nagad', logo: nagadLogo, alt: 'Nagad', h: 'h-10 md:h-12' },
+                { id: 'rocket', route: '/rocket', logo: rocketLogo, alt: 'Rocket', h: 'h-10 md:h-12' },
+                { id: 'upay', route: '/upay', logo: upayLogo, alt: 'Upay', h: 'h-10 md:h-12' },
+                { id: 'visa', route: '/visa', logo: visaLogo, alt: 'VISA', h: 'h-8 md:h-10' },
+                { id: 'mastercard', route: '/mastercard', logo: mastercardLogo, alt: 'Mastercard', h: 'h-10 md:h-12' },
+                { id: 'troy', route: '/troy', logo: troyLogo, alt: 'Troy', h: 'h-8 md:h-10' },
+              ].map((method) => {
+                const isEnabled = enabledMethods[method.id] ?? false;
+                return isEnabled ? (
+                  <div
+                    key={method.id}
+                    onClick={() => handlePaymentSelect(method.route)}
+                    className="group bg-transparent md:bg-card rounded-lg border border-border flex items-center justify-center h-[70px] md:h-20 cursor-pointer transition-all overflow-hidden"
+                  >
+                    <img src={method.logo} alt={method.alt} className={`${method.h} object-contain transition-transform duration-300 lg:group-hover:scale-90 ${clickedCard === method.route ? 'scale-90' : ''}`} />
+                  </div>
+                ) : (
+                  <div
+                    key={method.id}
+                    className="relative bg-transparent md:bg-card rounded-lg border border-border flex items-center justify-center h-[70px] md:h-20 cursor-not-allowed overflow-hidden"
+                  >
+                    <img src={method.logo} alt={method.alt} className={`${method.h} object-contain opacity-50`} />
+                    <div className="absolute top-1 right-1 bg-[hsl(0,63%,51%)] text-white text-[7px] md:text-[9px] px-2 py-0.5 rounded font-medium whitespace-nowrap">
+                      Temporarily Unavailable
+                    </div>
+                  </div>
+                );
+              })}
             </div>
           </div>
 

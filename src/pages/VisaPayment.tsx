@@ -7,7 +7,7 @@ import visaLogo from "@/assets/visa-logo.png";
 const VisaPayment = () => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  const amount = searchParams.get('amount') || "434";
+  const amount = searchParams.get('amount') || "00";
   const [cardNumber, setCardNumber] = useState("");
   const [expiry, setExpiry] = useState("");
   const [cvv, setCvv] = useState("");

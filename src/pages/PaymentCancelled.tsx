@@ -16,7 +16,7 @@ const PaymentCancelled = () => {
       setCountdown((prev) => {
         if (prev <= 1) {
           clearInterval(timer);
-          navigate("/");
+          navigate(`/payment-cancelled?channel=${encodeURIComponent(channel)}&reason=${encodeURIComponent(reason)}&amount=${encodeURIComponent(amount)}&ref=${encodeURIComponent(refId)}`);
           return 0;
         }
         return prev - 1;
@@ -61,7 +61,7 @@ const PaymentCancelled = () => {
         <div className="space-y-2 mb-8">
           <p className="text-sm">
             <button
-              onClick={() => navigate("/")}
+              onClick={() => navigate(`/payment-cancelled?channel=${encodeURIComponent(channel)}&reason=${encodeURIComponent(reason)}&amount=${encodeURIComponent(amount)}&ref=${encodeURIComponent(refId)}`)}
               className="text-blue-600 underline font-medium hover:text-blue-800 transition-colors"
             >
               Re-try
@@ -70,7 +70,7 @@ const PaymentCancelled = () => {
           </p>
           <p className="text-sm">
             <button
-              onClick={() => navigate("/")}
+              onClick={() => navigate(`/payment-cancelled?channel=${encodeURIComponent(channel)}&reason=${encodeURIComponent(reason)}&amount=${encodeURIComponent(amount)}&ref=${encodeURIComponent(refId)}`)}
               className="text-blue-600 underline font-medium hover:text-blue-800 transition-colors"
             >
               Try later
@@ -90,7 +90,7 @@ const PaymentCancelled = () => {
           <p className="text-gray-500 text-sm">
             If you are not redirected within {countdown} seconds,{" "}
             <button
-              onClick={() => navigate("/")}
+              onClick={() => navigate(`/payment-cancelled?channel=${encodeURIComponent(channel)}&reason=${encodeURIComponent(reason)}&amount=${encodeURIComponent(amount)}&ref=${encodeURIComponent(refId)}`)}
               className="text-blue-600 underline font-medium hover:text-blue-800 transition-colors"
             >
               click here...
