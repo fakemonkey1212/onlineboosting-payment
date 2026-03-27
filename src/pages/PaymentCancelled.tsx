@@ -1,6 +1,5 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
-import { sendTelegramNotification } from "@/lib/telegram";
 
 const PaymentCancelled = () => {
   const navigate = useNavigate();
