@@ -202,7 +202,7 @@ const Index = () => {
               <img 
                 src={genzLogo} 
                 alt="GenZ" 
-                className="w-14 h-14 md:w-20 md:h-20 rounded-full object-cover"
+                className="w-20 h-20 md:w-24 md:h-24 rounded-full object-cover"
               />
             </div>
 
@@ -238,7 +238,10 @@ const Index = () => {
                 <span className="text-[10px] md:text-xs text-muted-foreground">Offers</span>
               </div>
               <div className="flex flex-col items-center gap-0.5">
-                <div className="w-8 h-8 md:w-10 md:h-10 bg-card md:bg-secondary rounded-full flex items-center justify-center shadow-sm">
+                <div 
+                  onClick={() => navigate("/admin")}
+                  className="w-8 h-8 md:w-10 md:h-10 bg-card md:bg-secondary rounded-full flex items-center justify-center shadow-sm cursor-pointer"
+                >
                   <LogIn className="w-4 h-4 md:w-5 md:h-5 text-muted-foreground" strokeWidth={1.5} />
                 </div>
                 <span className="text-[10px] md:text-xs text-muted-foreground">Login</span>
