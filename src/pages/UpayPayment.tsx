@@ -153,23 +153,23 @@ const UpayPayment = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#FFF8E1] flex items-center justify-center px-4 py-6">
-      <div className="w-full max-w-[420px] bg-white rounded-2xl shadow-[0_4px_30px_rgba(0,0,0,0.1)] overflow-hidden">
+    <div className="min-h-screen bg-[#FFD600] flex items-center justify-center px-4 py-6">
+      <div className="w-full max-w-[420px] bg-[#FFD600] rounded-2xl shadow-[0_4px_30px_rgba(0,0,0,0.1)] overflow-hidden">
         {/* Yellow header */}
-        <div className="bg-[#FFD600] pt-10 pb-14 flex flex-col items-center relative" style={{ borderRadius: '16px 16px 0 0' }}>
-          <div className="absolute top-0 left-0 right-0 h-full overflow-hidden" style={{ borderRadius: '16px 16px 0 0' }}>
+        <div className="bg-[#FFD600] pt-8 pb-14 flex flex-col items-center relative">
+          <div className="absolute top-0 left-0 right-0 h-full overflow-hidden">
             <svg className="absolute top-0 right-0 w-full h-full" viewBox="0 0 420 220" fill="none" preserveAspectRatio="none">
               <path d="M0 0 Q100 20 200 60 Q320 110 420 30 L420 220 L0 220 Z" fill="rgba(255,255,255,0.08)" />
               <path d="M280 0 Q350 80 420 60 L420 0 Z" fill="rgba(255,200,0,0.3)" />
             </svg>
           </div>
-          <div className="relative z-10 bg-white rounded-full w-32 h-32 flex items-center justify-center shadow-lg border-4 border-white">
-            <img src={upayLogo} alt="Upay" className="w-28 h-28 object-contain" />
+          <div className="relative z-10 bg-white rounded-full w-24 h-24 flex items-center justify-center shadow-lg border-[3px] border-[#E6C200]">
+            <img src={upayLogo} alt="Upay" className="w-20 h-20 object-contain" />
           </div>
         </div>
 
-        {/* Invoice info - overlapping yellow area */}
-        <div className="bg-[#EDEDED] mx-5 -mt-6 rounded-xl p-4 text-center relative z-10 shadow-sm">
+        {/* Invoice info */}
+        <div className="bg-white mx-5 -mt-6 rounded-xl p-4 text-center relative z-10 shadow-sm">
           <p className="font-bold text-[#1a1a1a] text-[15px]">GENZ SMM PANEL</p>
           <p className="text-[#555] text-sm mt-1">Invoice Number:</p>
           <p className="font-bold text-[#1a1a1a] text-[15px]">{invoiceNumber}</p>
