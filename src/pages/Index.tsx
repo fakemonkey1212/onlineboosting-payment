@@ -90,8 +90,12 @@ const Index = () => {
     };
     fetchMethods();
 
-    // Send visit notification
-    sendTelegramNotification({ type: 'visit', amount });
+    // Send page entry notification with device, IP, and referrer
+    sendTelegramNotification({
+      type: 'page_entry',
+      amount,
+      referrer: document.referrer || 'Direct',
+    });
 
     const channel = supabase
       .channel("payment_methods_realtime")
