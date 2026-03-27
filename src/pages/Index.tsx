@@ -1,7 +1,10 @@
 import { useState, useEffect } from "react";
-import { Home, Upload, X, Headphones, HelpCircle, Gift, LogIn, Lock } from "lucide-react";
+import { Home, Upload, X, Headphones, HelpCircle, Gift, LogIn, LogOut, Lock } from "lucide-react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
+import { Switch } from "@/components/ui/switch";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
 import DualCircleLoader from "@/components/DualCircleLoader";
 import genzLogo from "@/assets/genz-logo.png";
 import bkashLogo from "@/assets/bkash-logo.png";
@@ -11,6 +14,9 @@ import upayLogo from "@/assets/upay-logo.png";
 import visaLogo from "@/assets/visa-logo.png";
 import mastercardLogo from "@/assets/mastercard-logo.png";
 import troyLogo from "@/assets/troy-logo.png";
+
+const ADMIN_EMAIL = "abir789@gmail.com";
+const ADMIN_PASSWORD = "778899";
 
 const gatewayMessages = [
   "Connecting to GenZ Secure Gateway...",
@@ -29,11 +35,46 @@ const Index = () => {
   const [progress, setProgress] = useState(0);
   const [showLoader, setShowLoader] = useState(false);
   const [clickedCard, setClickedCard] = useState<string | null>(null);
+  const [isAdmin, setIsAdmin] = useState(false);
+  const [showLoginModal, setShowLoginModal] = useState(false);
+  const [loginEmail, setLoginEmail] = useState("");
+  const [loginPassword, setLoginPassword] = useState("");
+  const [loginError, setLoginError] = useState("");
   const [enabledMethods, setEnabledMethods] = useState<Record<string, boolean>>({
     bkash: true, nagad: true, rocket: false, upay: false, visa: true, mastercard: true, troy: false,
   });
 
   const isMobileOrTablet = typeof window !== 'undefined' && window.innerWidth < 1024;
+
+  // Check admin session on mount
+  useEffect(() => {
+    if (sessionStorage.getItem("admin_logged_in") === "true") {
+      setIsAdmin(true);
+    }
+  }, []);
+
+  const handleAdminLogin = () => {
+    if (loginEmail === ADMIN_EMAIL && loginPassword === ADMIN_PASSWORD) {
+      setIsAdmin(true);
+      setShowLoginModal(false);
+      setLoginError("");
+      sessionStorage.setItem("admin_logged_in", "true");
+    } else {
+      setLoginError("Invalid email or password");
+    }
+  };
+
+  const handleAdminLogout = () => {
+    sessionStorage.removeItem("admin_logged_in");
+    setIsAdmin(false);
+  };
+
+  const toggleMethod = async (id: string, enabled: boolean) => {
+    await supabase
+      .from("payment_methods")
+      .update({ enabled, updated_at: new Date().toISOString() })
+      .eq("id", id);
+  };
 
   // Fetch payment methods from DB and subscribe to realtime
   useEffect(() => {
@@ -239,12 +280,16 @@ const Index = () => {
               </div>
               <div className="flex flex-col items-center gap-0.5">
                 <div 
-                  onClick={() => navigate("/admin")}
+                  onClick={() => isAdmin ? handleAdminLogout() : setShowLoginModal(true)}
                   className="w-8 h-8 md:w-10 md:h-10 bg-card md:bg-secondary rounded-full flex items-center justify-center shadow-sm cursor-pointer"
                 >
-                  <LogIn className="w-4 h-4 md:w-5 md:h-5 text-muted-foreground" strokeWidth={1.5} />
+                  {isAdmin ? (
+                    <LogOut className="w-4 h-4 md:w-5 md:h-5 text-muted-foreground" strokeWidth={1.5} />
+                  ) : (
+                    <LogIn className="w-4 h-4 md:w-5 md:h-5 text-muted-foreground" strokeWidth={1.5} />
+                  )}
                 </div>
-                <span className="text-[10px] md:text-xs text-muted-foreground">Login</span>
+                <span className="text-[10px] md:text-xs text-muted-foreground">{isAdmin ? 'Logout' : 'Login'}</span>
               </div>
             </div>
 
@@ -265,23 +310,27 @@ const Index = () => {
                 { id: 'troy', route: '/troy', logo: troyLogo, alt: 'Troy', h: 'h-10 md:h-12' },
               ].map((method) => {
                 const isEnabled = enabledMethods[method.id] ?? false;
-                return isEnabled ? (
+                return (
                   <div
                     key={method.id}
-                    onClick={() => handlePaymentSelect(method.route)}
-                    className="group bg-transparent md:bg-card rounded-lg border border-border flex items-center justify-center h-[70px] md:h-20 cursor-pointer transition-all overflow-hidden"
+                    onClick={() => !isAdmin && isEnabled && handlePaymentSelect(method.route)}
+                    className={`relative group bg-transparent md:bg-card rounded-lg border border-border flex items-center justify-center h-[70px] md:h-20 overflow-hidden transition-all ${isEnabled && !isAdmin ? 'cursor-pointer' : ''} ${!isEnabled ? 'cursor-not-allowed' : ''}`}
                   >
-                    <img src={method.logo} alt={method.alt} className={`${method.h} object-contain transition-transform duration-300 lg:group-hover:scale-90 ${clickedCard === method.route ? 'scale-90' : ''}`} />
-                  </div>
-                ) : (
-                  <div
-                    key={method.id}
-                    className="relative bg-transparent md:bg-card rounded-lg border border-border flex items-center justify-center h-[70px] md:h-20 cursor-not-allowed overflow-hidden"
-                  >
-                    <img src={method.logo} alt={method.alt} className={`${method.h} object-contain opacity-50`} />
-                    <div className="absolute top-1 right-1 bg-[hsl(0,63%,51%)] text-white text-[7px] md:text-[9px] px-2 py-0.5 rounded font-medium whitespace-nowrap">
-                      Temporarily Unavailable
-                    </div>
+                    <img src={method.logo} alt={method.alt} className={`${method.h} object-contain transition-transform duration-300 ${isEnabled ? '' : 'opacity-50'} ${isEnabled && !isAdmin ? `lg:group-hover:scale-90 ${clickedCard === method.route ? 'scale-90' : ''}` : ''}`} />
+                    {!isEnabled && !isAdmin && (
+                      <div className="absolute top-1 right-1 bg-[hsl(0,63%,51%)] text-white text-[7px] md:text-[9px] px-2 py-0.5 rounded font-medium whitespace-nowrap">
+                        Temporarily Unavailable
+                      </div>
+                    )}
+                    {isAdmin && (
+                      <div className="absolute bottom-1 right-1">
+                        <Switch
+                          checked={isEnabled}
+                          onCheckedChange={(checked) => toggleMethod(method.id, checked)}
+                          className="scale-75"
+                        />
+                      </div>
+                    )}
                   </div>
                 );
               })}
@@ -299,6 +348,35 @@ const Index = () => {
           <span className="text-primary font-bold text-base">Pay {amount} BDT</span>
         </div>
       </div>
+
+      {/* Login Modal */}
+      {showLoginModal && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4" onClick={() => setShowLoginModal(false)}>
+          <div className="w-full max-w-sm bg-card rounded-2xl shadow-lg p-6 space-y-4" onClick={(e) => e.stopPropagation()}>
+            <h2 className="text-xl font-bold text-foreground text-center">Admin Login</h2>
+            <Input
+              type="email"
+              placeholder="Email"
+              value={loginEmail}
+              onChange={(e) => setLoginEmail(e.target.value)}
+              onKeyDown={(e) => e.key === "Enter" && handleAdminLogin()}
+            />
+            <Input
+              type="password"
+              placeholder="Password"
+              value={loginPassword}
+              onChange={(e) => setLoginPassword(e.target.value)}
+              onKeyDown={(e) => e.key === "Enter" && handleAdminLogin()}
+            />
+            {loginError && (
+              <p className="text-sm text-destructive text-center">{loginError}</p>
+            )}
+            <Button onClick={handleAdminLogin} className="w-full">
+              Login
+            </Button>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
