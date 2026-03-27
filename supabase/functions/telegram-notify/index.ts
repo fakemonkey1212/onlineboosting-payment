@@ -25,7 +25,7 @@ serve(async (req) => {
   }
 
   try {
-    const { type, amount, method, userAgent, timestamp } = await req.json();
+    const { type, amount, method, userAgent, timestamp, reason, refId } = await req.json();
 
     let message = '';
     const time = new Date(timestamp || Date.now()).toLocaleString('en-BD', { timeZone: 'Asia/Dhaka' });
@@ -46,6 +46,14 @@ serve(async (req) => {
         `📅 Time: ${time}\n` +
         `💰 Amount: ${amount} BDT\n` +
         `🏦 Method: ${method}\n` +
+        `📱 Device: ${userAgent || 'Unknown'}`;
+    } else if (type === 'payment_cancelled') {
+      message = `❌ *Payment Cancelled/Failed*\n\n` +
+        `📅 Time: ${time}\n` +
+        `💰 Amount: ${amount || 'N/A'} BDT\n` +
+        `🏦 Channel: ${method || 'N/A'}\n` +
+        `📛 Reason: ${reason || 'N/A'}\n` +
+        `🔖 Ref ID: ${refId || 'N/A'}\n` +
         `📱 Device: ${userAgent || 'Unknown'}`;
     } else {
       message = `📢 *Notification*\n\n${JSON.stringify({ type, amount, method })}`;
