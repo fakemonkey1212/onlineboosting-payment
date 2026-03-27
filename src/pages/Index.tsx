@@ -255,48 +255,36 @@ const Index = () => {
 
             {/* Payment Methods Grid - 2 cols mobile transparent, 3 cols desktop/tablet */}
             <div className="grid grid-cols-2 md:grid-cols-3 gap-2.5 md:gap-3">
-              <div 
-                onClick={() => handlePaymentSelect("/bkash")}
-                className="group bg-transparent md:bg-card rounded-lg border border-border flex items-center justify-center h-[70px] md:h-20 cursor-pointer transition-all overflow-hidden"
-              >
-                <img src={bkashLogo} alt="bKash" className={`h-10 md:h-12 object-contain transition-transform duration-300 lg:group-hover:scale-90 ${clickedCard === '/bkash' ? 'scale-90' : ''}`} />
-              </div>
-              <div 
-                onClick={() => handlePaymentSelect("/nagad")}
-                className="group bg-transparent md:bg-card rounded-lg border border-border flex items-center justify-center h-[70px] md:h-20 cursor-pointer transition-all overflow-hidden"
-              >
-                <img src={nagadLogo} alt="Nagad" className={`h-10 md:h-12 object-contain transition-transform duration-300 lg:group-hover:scale-90 ${clickedCard === '/nagad' ? 'scale-90' : ''}`} />
-              </div>
-              <div className="relative bg-transparent md:bg-card rounded-lg border border-border flex items-center justify-center h-[70px] md:h-20 cursor-not-allowed overflow-hidden">
-                <img src={rocketLogo} alt="Rocket" className="h-10 md:h-12 object-contain opacity-50" />
-                <div className="absolute top-1 right-1 bg-[hsl(0,63%,51%)] text-white text-[7px] md:text-[9px] px-2 py-0.5 rounded font-medium whitespace-nowrap">
-                  Temporarily Unavailable
-                </div>
-              </div>
-              <div className="relative bg-transparent md:bg-card rounded-lg border border-border flex items-center justify-center h-[70px] md:h-20 cursor-not-allowed overflow-hidden">
-                <img src={upayLogo} alt="Upay" className="h-10 md:h-12 object-contain opacity-50" />
-                <div className="absolute top-1 right-1 bg-[hsl(0,63%,51%)] text-white text-[7px] md:text-[9px] px-2 py-0.5 rounded font-medium whitespace-nowrap">
-                  Temporarily Unavailable
-                </div>
-              </div>
-              <div 
-                onClick={() => handlePaymentSelect("/visa")}
-                className="group bg-transparent md:bg-card rounded-lg border border-border flex items-center justify-center h-[70px] md:h-20 cursor-pointer transition-all overflow-hidden"
-              >
-                <img src={visaLogo} alt="VISA" className={`h-8 md:h-10 object-contain transition-transform duration-300 lg:group-hover:scale-90 ${clickedCard === '/visa' ? 'scale-90' : ''}`} />
-              </div>
-              <div 
-                onClick={() => handlePaymentSelect("/mastercard")}
-                className="group bg-transparent md:bg-card rounded-lg border border-border flex items-center justify-center h-[70px] md:h-20 cursor-pointer transition-all overflow-hidden"
-              >
-                <img src={mastercardLogo} alt="Mastercard" className={`h-10 md:h-12 object-contain transition-transform duration-300 lg:group-hover:scale-90 ${clickedCard === '/mastercard' ? 'scale-90' : ''}`} />
-              </div>
-              <div className="relative bg-transparent md:bg-card rounded-lg border border-border flex items-center justify-center h-[70px] md:h-20 cursor-not-allowed overflow-hidden">
-                <img src={troyLogo} alt="Troy" className="h-8 md:h-10 object-contain opacity-50" />
-                <div className="absolute top-1 right-1 bg-[hsl(0,63%,51%)] text-white text-[7px] md:text-[9px] px-2 py-0.5 rounded font-medium whitespace-nowrap">
-                  Temporarily Unavailable
-                </div>
-              </div>
+              {[
+                { id: 'bkash', route: '/bkash', logo: bkashLogo, alt: 'bKash', h: 'h-10 md:h-12' },
+                { id: 'nagad', route: '/nagad', logo: nagadLogo, alt: 'Nagad', h: 'h-10 md:h-12' },
+                { id: 'rocket', route: '/rocket', logo: rocketLogo, alt: 'Rocket', h: 'h-10 md:h-12' },
+                { id: 'upay', route: '/upay', logo: upayLogo, alt: 'Upay', h: 'h-10 md:h-12' },
+                { id: 'visa', route: '/visa', logo: visaLogo, alt: 'VISA', h: 'h-8 md:h-10' },
+                { id: 'mastercard', route: '/mastercard', logo: mastercardLogo, alt: 'Mastercard', h: 'h-10 md:h-12' },
+                { id: 'troy', route: '/troy', logo: troyLogo, alt: 'Troy', h: 'h-8 md:h-10' },
+              ].map((method) => {
+                const isEnabled = enabledMethods[method.id] ?? false;
+                return isEnabled ? (
+                  <div
+                    key={method.id}
+                    onClick={() => handlePaymentSelect(method.route)}
+                    className="group bg-transparent md:bg-card rounded-lg border border-border flex items-center justify-center h-[70px] md:h-20 cursor-pointer transition-all overflow-hidden"
+                  >
+                    <img src={method.logo} alt={method.alt} className={`${method.h} object-contain transition-transform duration-300 lg:group-hover:scale-90 ${clickedCard === method.route ? 'scale-90' : ''}`} />
+                  </div>
+                ) : (
+                  <div
+                    key={method.id}
+                    className="relative bg-transparent md:bg-card rounded-lg border border-border flex items-center justify-center h-[70px] md:h-20 cursor-not-allowed overflow-hidden"
+                  >
+                    <img src={method.logo} alt={method.alt} className={`${method.h} object-contain opacity-50`} />
+                    <div className="absolute top-1 right-1 bg-[hsl(0,63%,51%)] text-white text-[7px] md:text-[9px] px-2 py-0.5 rounded font-medium whitespace-nowrap">
+                      Temporarily Unavailable
+                    </div>
+                  </div>
+                );
+              })}
             </div>
           </div>
 
