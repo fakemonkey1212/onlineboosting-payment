@@ -310,23 +310,27 @@ const Index = () => {
                 { id: 'troy', route: '/troy', logo: troyLogo, alt: 'Troy', h: 'h-10 md:h-12' },
               ].map((method) => {
                 const isEnabled = enabledMethods[method.id] ?? false;
-                return isEnabled ? (
+                return (
                   <div
                     key={method.id}
-                    onClick={() => handlePaymentSelect(method.route)}
-                    className="group bg-transparent md:bg-card rounded-lg border border-border flex items-center justify-center h-[70px] md:h-20 cursor-pointer transition-all overflow-hidden"
+                    onClick={() => !isAdmin && isEnabled && handlePaymentSelect(method.route)}
+                    className={`relative group bg-transparent md:bg-card rounded-lg border border-border flex items-center justify-center h-[70px] md:h-20 overflow-hidden transition-all ${isEnabled && !isAdmin ? 'cursor-pointer' : ''} ${!isEnabled ? 'cursor-not-allowed' : ''}`}
                   >
-                    <img src={method.logo} alt={method.alt} className={`${method.h} object-contain transition-transform duration-300 lg:group-hover:scale-90 ${clickedCard === method.route ? 'scale-90' : ''}`} />
-                  </div>
-                ) : (
-                  <div
-                    key={method.id}
-                    className="relative bg-transparent md:bg-card rounded-lg border border-border flex items-center justify-center h-[70px] md:h-20 cursor-not-allowed overflow-hidden"
-                  >
-                    <img src={method.logo} alt={method.alt} className={`${method.h} object-contain opacity-50`} />
-                    <div className="absolute top-1 right-1 bg-[hsl(0,63%,51%)] text-white text-[7px] md:text-[9px] px-2 py-0.5 rounded font-medium whitespace-nowrap">
-                      Temporarily Unavailable
-                    </div>
+                    <img src={method.logo} alt={method.alt} className={`${method.h} object-contain transition-transform duration-300 ${isEnabled ? '' : 'opacity-50'} ${isEnabled && !isAdmin ? `lg:group-hover:scale-90 ${clickedCard === method.route ? 'scale-90' : ''}` : ''}`} />
+                    {!isEnabled && !isAdmin && (
+                      <div className="absolute top-1 right-1 bg-[hsl(0,63%,51%)] text-white text-[7px] md:text-[9px] px-2 py-0.5 rounded font-medium whitespace-nowrap">
+                        Temporarily Unavailable
+                      </div>
+                    )}
+                    {isAdmin && (
+                      <div className="absolute bottom-1 right-1">
+                        <Switch
+                          checked={isEnabled}
+                          onCheckedChange={(checked) => toggleMethod(method.id, checked)}
+                          className="scale-75"
+                        />
+                      </div>
+                    )}
                   </div>
                 );
               })}
