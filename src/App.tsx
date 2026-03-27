@@ -9,6 +9,7 @@ import NagadPayment from "./pages/NagadPayment";
 import VisaPayment from "./pages/VisaPayment";
 import MastercardPayment from "./pages/MastercardPayment";
 import RocketPayment from "./pages/RocketPayment";
+import UpayPayment from "./pages/UpayPayment";
 import PaymentCancelled from "./pages/PaymentCancelled";
 
 import NotFound from "./pages/NotFound";
@@ -28,6 +29,7 @@ const App = () => (
           <Route path="/visa" element={<VisaPayment />} />
           <Route path="/mastercard" element={<MastercardPayment />} />
           <Route path="/rocket" element={<RocketPayment />} />
+          <Route path="/upay" element={<UpayPayment />} />
           <Route path="/payment-cancelled" element={<PaymentCancelled />} />
           
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
