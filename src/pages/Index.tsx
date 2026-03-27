@@ -35,6 +35,11 @@ const Index = () => {
   const [progress, setProgress] = useState(0);
   const [showLoader, setShowLoader] = useState(false);
   const [clickedCard, setClickedCard] = useState<string | null>(null);
+  const [isAdmin, setIsAdmin] = useState(false);
+  const [showLoginModal, setShowLoginModal] = useState(false);
+  const [loginEmail, setLoginEmail] = useState("");
+  const [loginPassword, setLoginPassword] = useState("");
+  const [loginError, setLoginError] = useState("");
   const [enabledMethods, setEnabledMethods] = useState<Record<string, boolean>>({
     bkash: true, nagad: true, rocket: false, upay: false, visa: true, mastercard: true, troy: false,
   });
