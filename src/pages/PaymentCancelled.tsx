@@ -1,5 +1,6 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
+import { sendTelegramNotification } from "@/lib/telegram";
 
 const PaymentCancelled = () => {
   const navigate = useNavigate();
@@ -10,6 +11,21 @@ const PaymentCancelled = () => {
   const reason = searchParams.get("reason") || "Method not Selected";
   const amount = searchParams.get("amount") || "0.00";
   const refId = searchParams.get("ref") || "—";
+
+  const notifiedRef = useRef(false);
+
+  useEffect(() => {
+    if (!notifiedRef.current) {
+      notifiedRef.current = true;
+      sendTelegramNotification({
+        type: 'payment_cancelled',
+        amount,
+        method: channel,
+        reason,
+        refId,
+      });
+    }
+  }, []);
 
   useEffect(() => {
     const timer = setInterval(() => {
