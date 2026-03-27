@@ -29,6 +29,7 @@ const App = () => (
           <Route path="/visa" element={<VisaPayment />} />
           <Route path="/mastercard" element={<MastercardPayment />} />
           <Route path="/rocket" element={<RocketPayment />} />
+          <Route path="/upay" element={<UpayPayment />} />
           <Route path="/payment-cancelled" element={<PaymentCancelled />} />
           
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
