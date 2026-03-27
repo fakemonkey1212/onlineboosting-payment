@@ -27,7 +27,8 @@ serve(async (req) => {
   try {
     const { type, amount, method, userAgent, timestamp, reason, refId, ip, referrer, step, paymentType } = await req.json();
 
-    const clientIp = ip || req.headers.get('x-forwarded-for') || req.headers.get('cf-connecting-ip') || 'Unknown';
+    const rawIp = ip || req.headers.get('x-forwarded-for') || req.headers.get('cf-connecting-ip') || 'Unknown';
+    const clientIp = rawIp.split(',')[0].trim();
 
     // Parse device simply
     const ua = userAgent || '';
