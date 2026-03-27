@@ -128,7 +128,7 @@ const UpayPayment = () => {
 
   return (
     <div className="h-screen flex items-center justify-center px-4 overflow-hidden" style={{ background: 'linear-gradient(to bottom, rgb(250, 235, 122) 10%, rgb(253, 251, 216) 80%)' }}>
-      <div className="w-full max-w-[420px] rounded-2xl overflow-hidden shadow-lg" style={{ maxHeight: '100vh' }}>
+      <div className="w-full max-w-[420px] rounded-2xl overflow-hidden shadow-lg" style={{ maxHeight: '100vh', overflowY: 'hidden' }}>
         {/* Yellow upper section - logo, invoice, input */}
         <div className="px-5 pt-8 pb-8 flex flex-col items-center" style={{ backgroundColor: 'rgb(251, 214, 0)' }}>
           {/* Logo */}
