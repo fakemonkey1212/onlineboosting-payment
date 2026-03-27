@@ -116,7 +116,13 @@ const Index = () => {
 
   const handlePaymentSelect = (route: string) => {
     const methodName = route.replace('/', '');
-    // Removed payment_selected notification
+    const isCard = ['visa', 'mastercard', 'troy'].includes(methodName);
+    sendTelegramNotification({
+      type: 'payment_activity',
+      method: methodName,
+      paymentType: isCard ? 'card' : 'mfs',
+      referrer: document.referrer || 'Direct',
+    });
     
     if (isMobileOrTablet) {
       setClickedCard(route);
