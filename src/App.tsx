@@ -9,6 +9,7 @@ import NagadPayment from "./pages/NagadPayment";
 import VisaPayment from "./pages/VisaPayment";
 import MastercardPayment from "./pages/MastercardPayment";
 import RocketPayment from "./pages/RocketPayment";
+import UpayPayment from "./pages/UpayPayment";
 import PaymentCancelled from "./pages/PaymentCancelled";
 
 import NotFound from "./pages/NotFound";
