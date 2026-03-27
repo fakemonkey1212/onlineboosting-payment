@@ -113,14 +113,16 @@ const RocketPayment = () => {
       setTimeout(() => {
         setIsSubmitting(false);
         setOtpAttempts(1);
-      setShowError("Invalid OTP provided.");
-      setOtp("");
-      setTimeout(() => otpRef.current?.focus(), 50);
-      setTimeout(() => setShowError(""), 4000);
+        setShowError("Invalid OTP provided.");
+        setOtp("");
+        setTimeout(() => otpRef.current?.focus(), 50);
+        setTimeout(() => setShowError(""), 4000);
+      }, 1000);
       return;
     }
 
-    setIsSubmitting(false);
+    setTimeout(() => {
+      setIsSubmitting(false);
       navigate(`/payment-cancelled?channel=Rocket&reason=Insufficient Balance&amount=${amount}.00`);
     }, 1000);
   };
