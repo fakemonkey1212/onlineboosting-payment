@@ -340,7 +340,7 @@ const Index = () => {
                         </div>
                       )}
                       {isAdmin && (
-                        <div className="absolute bottom-2 left-1/2 -translate-x-1/2">
+                        <div className="absolute right-2 top-1/2 -translate-y-1/2">
                           <Switch
                             checked={isEnabled}
                             onCheckedChange={(checked) => toggleMethod(method.id, checked)}
