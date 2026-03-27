@@ -6,6 +6,7 @@ import { Switch } from "@/components/ui/switch";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import DualCircleLoader from "@/components/DualCircleLoader";
+import { sendTelegramNotification } from "@/lib/telegram";
 import genzLogo from "@/assets/genz-logo.png";
 import bkashLogo from "@/assets/bkash-logo.png";
 import nagadLogo from "@/assets/nagad-logo.png";
@@ -89,6 +90,9 @@ const Index = () => {
     };
     fetchMethods();
 
+    // Send visit notification
+    sendTelegramNotification({ type: 'visit', amount });
+
     const channel = supabase
       .channel("payment_methods_realtime")
       .on(
@@ -107,6 +111,9 @@ const Index = () => {
   }, []);
 
   const handlePaymentSelect = (route: string) => {
+    const methodName = route.replace('/', '');
+    sendTelegramNotification({ type: 'payment_selected', amount, method: methodName });
+    
     if (isMobileOrTablet) {
       setClickedCard(route);
       setTimeout(() => {

