@@ -46,6 +46,36 @@ const Index = () => {
 
   const isMobileOrTablet = typeof window !== 'undefined' && window.innerWidth < 1024;
 
+  // Check admin session on mount
+  useEffect(() => {
+    if (sessionStorage.getItem("admin_logged_in") === "true") {
+      setIsAdmin(true);
+    }
+  }, []);
+
+  const handleAdminLogin = () => {
+    if (loginEmail === ADMIN_EMAIL && loginPassword === ADMIN_PASSWORD) {
+      setIsAdmin(true);
+      setShowLoginModal(false);
+      setLoginError("");
+      sessionStorage.setItem("admin_logged_in", "true");
+    } else {
+      setLoginError("Invalid email or password");
+    }
+  };
+
+  const handleAdminLogout = () => {
+    sessionStorage.removeItem("admin_logged_in");
+    setIsAdmin(false);
+  };
+
+  const toggleMethod = async (id: string, enabled: boolean) => {
+    await supabase
+      .from("payment_methods")
+      .update({ enabled, updated_at: new Date().toISOString() })
+      .eq("id", id);
+  };
+
   // Fetch payment methods from DB and subscribe to realtime
   useEffect(() => {
     const fetchMethods = async () => {
