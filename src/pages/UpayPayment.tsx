@@ -153,8 +153,8 @@ const UpayPayment = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#FFD600] flex items-center justify-center px-4 py-6">
-      <div className="w-full max-w-[420px] bg-[#FFD600] rounded-2xl shadow-[0_4px_30px_rgba(0,0,0,0.1)] overflow-hidden">
+    <div className="min-h-screen bg-[#F5F0E0] flex items-center justify-center px-4 py-6">
+      <div className="w-full max-w-[420px] bg-[#F5F0E0] rounded-2xl shadow-[0_4px_30px_rgba(0,0,0,0.1)] overflow-hidden">
         {/* Yellow header */}
         <div className="bg-[#FFD600] pt-10 pb-16 flex flex-col items-center relative">
           <div className="absolute top-0 left-0 right-0 h-full overflow-hidden">
