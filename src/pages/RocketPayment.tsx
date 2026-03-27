@@ -225,10 +225,11 @@ const RocketPayment = () => {
               <button
                 onClick={handleOtpSubmit}
                 disabled={isSubmitting}
-                className="border border-[#999] bg-[#f0f0f0] px-3 py-0.5 flex items-center gap-1 hover:bg-[#e0e0e0]"
+                className="border border-[#999] bg-[#f0f0f0] px-2 py-0.5 flex items-center gap-1 hover:bg-[#e0e0e0] text-sm"
+                style={{ fontFamily: 'Arial, sans-serif' }}
               >
-                <span className="text-sm font-bold text-[#333]" style={{ fontFamily: 'Arial, sans-serif' }}>Go</span>
-                <span className="text-red-600 font-bold text-sm">▶</span>
+                <span className="font-bold text-[#333]">Go</span>
+                <span className="bg-red-600 text-white text-[10px] font-bold px-1 py-[1px] leading-none">&gt;</span>
               </button>
             </div>
 
