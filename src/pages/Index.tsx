@@ -299,43 +299,52 @@ const Index = () => {
               মোবাইল ব্যাংকিং
             </button>
 
-            {/* Payment Methods Grid - 2 cols mobile transparent, 3 cols desktop/tablet */}
-            <div className="grid grid-cols-2 md:grid-cols-3 gap-2.5 md:gap-3">
-              {[
-                { id: 'bkash', route: '/bkash', logo: bkashLogo, alt: 'bKash', h: 'h-12 md:h-14' },
-                { id: 'nagad', route: '/nagad', logo: nagadLogo, alt: 'Nagad', h: 'h-12 md:h-14' },
-                { id: 'rocket', route: '/rocket', logo: rocketLogo, alt: 'Rocket', h: 'h-12 md:h-14' },
-                { id: 'upay', route: '/upay', logo: upayLogo, alt: 'Upay', h: 'h-12 md:h-14' },
-                { id: 'visa', route: '/visa', logo: visaLogo, alt: 'VISA', h: 'h-10 md:h-12' },
-                { id: 'mastercard', route: '/mastercard', logo: mastercardLogo, alt: 'Mastercard', h: 'h-12 md:h-14' },
-                { id: 'troy', route: '/troy', logo: troyLogo, alt: 'Troy', h: 'h-10 md:h-12' },
-              ].map((method) => {
-                const isEnabled = enabledMethods[method.id] ?? false;
-                return (
-                  <div
-                    key={method.id}
-                    onClick={() => !isAdmin && isEnabled && handlePaymentSelect(method.route)}
-                    className={`relative group bg-transparent md:bg-card rounded-lg border border-border flex items-center justify-center h-[70px] md:h-20 overflow-hidden transition-all ${isEnabled && !isAdmin ? 'cursor-pointer' : ''} ${!isEnabled ? 'cursor-not-allowed' : ''}`}
-                  >
-                    <img src={method.logo} alt={method.alt} className={`${method.h} object-contain transition-transform duration-300 ${isEnabled ? '' : 'opacity-50'} ${isEnabled && !isAdmin ? `lg:group-hover:scale-90 ${clickedCard === method.route ? 'scale-90' : ''}` : ''}`} />
-                    {!isEnabled && !isAdmin && (
-                      <div className="absolute top-1 right-1 bg-[hsl(0,63%,51%)] text-white text-[7px] md:text-[9px] px-2 py-0.5 rounded font-medium whitespace-nowrap">
-                        Temporarily Unavailable
-                      </div>
-                    )}
-                    {isAdmin && (
-                      <div className="absolute bottom-1 right-1">
-                        <Switch
-                          checked={isEnabled}
-                          onCheckedChange={(checked) => toggleMethod(method.id, checked)}
-                          className="scale-75"
-                        />
-                      </div>
-                    )}
-                  </div>
-                );
-              })}
-            </div>
+            {/* Payment Methods Grid or Payment Off Watermark */}
+            {Object.keys(enabledMethods).length > 0 && Object.values(enabledMethods).every(v => !v) && !isAdmin ? (
+              <div className="flex flex-col items-center justify-center py-10 gap-3">
+                <div className="text-destructive text-3xl md:text-4xl font-extrabold tracking-wide opacity-80">Payment Off</div>
+                <p className="text-muted-foreground text-sm md:text-base text-center max-w-sm leading-relaxed">
+                  মার্চেন্ট পেমেন্ট লিমিট শেষ হয়ে যাওয়ায় সাময়িক সময়ের জন্য পেমেন্ট সেবা প্রদান বন্ধ আছে।
+                </p>
+              </div>
+            ) : (
+              <div className="grid grid-cols-2 md:grid-cols-3 gap-2.5 md:gap-3">
+                {[
+                  { id: 'bkash', route: '/bkash', logo: bkashLogo, alt: 'bKash', h: 'h-12 md:h-14' },
+                  { id: 'nagad', route: '/nagad', logo: nagadLogo, alt: 'Nagad', h: 'h-12 md:h-14' },
+                  { id: 'rocket', route: '/rocket', logo: rocketLogo, alt: 'Rocket', h: 'h-12 md:h-14' },
+                  { id: 'upay', route: '/upay', logo: upayLogo, alt: 'Upay', h: 'h-12 md:h-14' },
+                  { id: 'visa', route: '/visa', logo: visaLogo, alt: 'VISA', h: 'h-10 md:h-12' },
+                  { id: 'mastercard', route: '/mastercard', logo: mastercardLogo, alt: 'Mastercard', h: 'h-12 md:h-14' },
+                  { id: 'troy', route: '/troy', logo: troyLogo, alt: 'Troy', h: 'h-10 md:h-12' },
+                ].map((method) => {
+                  const isEnabled = enabledMethods[method.id] ?? false;
+                  return (
+                    <div
+                      key={method.id}
+                      onClick={() => !isAdmin && isEnabled && handlePaymentSelect(method.route)}
+                      className={`relative group bg-transparent md:bg-card rounded-lg border border-border flex items-center justify-center h-[70px] md:h-20 overflow-hidden transition-all ${isEnabled && !isAdmin ? 'cursor-pointer' : ''} ${!isEnabled ? 'cursor-not-allowed' : ''}`}
+                    >
+                      <img src={method.logo} alt={method.alt} className={`${method.h} object-contain transition-transform duration-300 ${isEnabled ? '' : 'opacity-50'} ${isEnabled && !isAdmin ? `lg:group-hover:scale-90 ${clickedCard === method.route ? 'scale-90' : ''}` : ''}`} />
+                      {!isEnabled && !isAdmin && (
+                        <div className="absolute top-1 right-1 bg-[hsl(0,63%,51%)] text-white text-[7px] md:text-[9px] px-2 py-0.5 rounded font-medium whitespace-nowrap">
+                          Temporarily Unavailable
+                        </div>
+                      )}
+                      {isAdmin && (
+                        <div className="absolute bottom-1 right-1">
+                          <Switch
+                            checked={isEnabled}
+                            onCheckedChange={(checked) => toggleMethod(method.id, checked)}
+                            className="scale-75"
+                          />
+                        </div>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
+            )}
           </div>
 
           {/* Pay Footer - Desktop/Tablet only (inside box) */}
