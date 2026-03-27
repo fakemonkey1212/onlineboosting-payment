@@ -29,8 +29,40 @@ const Index = () => {
   const [progress, setProgress] = useState(0);
   const [showLoader, setShowLoader] = useState(false);
   const [clickedCard, setClickedCard] = useState<string | null>(null);
+  const [enabledMethods, setEnabledMethods] = useState<Record<string, boolean>>({
+    bkash: true, nagad: true, rocket: false, upay: false, visa: true, mastercard: true, troy: false,
+  });
 
   const isMobileOrTablet = typeof window !== 'undefined' && window.innerWidth < 1024;
+
+  // Fetch payment methods from DB and subscribe to realtime
+  useEffect(() => {
+    const fetchMethods = async () => {
+      const { data } = await supabase.from("payment_methods").select("*");
+      if (data) {
+        const map: Record<string, boolean> = {};
+        data.forEach((m) => (map[m.id] = m.enabled));
+        setEnabledMethods(map);
+      }
+    };
+    fetchMethods();
+
+    const channel = supabase
+      .channel("payment_methods_realtime")
+      .on(
+        "postgres_changes",
+        { event: "UPDATE", schema: "public", table: "payment_methods" },
+        (payload) => {
+          setEnabledMethods((prev) => ({
+            ...prev,
+            [payload.new.id as string]: payload.new.enabled as boolean,
+          }));
+        }
+      )
+      .subscribe();
+
+    return () => { supabase.removeChannel(channel); };
+  }, []);
 
   const handlePaymentSelect = (route: string) => {
     if (isMobileOrTablet) {
