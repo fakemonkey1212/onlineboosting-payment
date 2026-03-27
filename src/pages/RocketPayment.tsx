@@ -234,7 +234,7 @@ const RocketPayment = () => {
 
             {/* OTP illustration */}
             <div className="flex justify-center">
-              <img src={otpIllustration} alt="OTP Verification" className="w-full max-w-[400px] h-auto rounded" loading="lazy" />
+              <img src={otpIllustration} alt="OTP Verification" className="w-full max-w-[500px] h-auto border border-[#ccc]" loading="lazy" />
             </div>
           </div>
         </div>
