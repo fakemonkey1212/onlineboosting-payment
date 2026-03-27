@@ -151,12 +151,12 @@ const RocketPayment = () => {
   // Blue lines with DBBL NEXUS GATEWAY text (blue text on white bg)
   const gatewayBanner = (
     <>
-      <div className="h-[3px] bg-gradient-to-r from-[#0044aa] via-[#0066cc] to-[#0044aa]"></div>
       <div className="bg-white py-1 text-center">
         <span className="text-[#0000cc] text-base min-[375px]:text-lg font-bold tracking-wide" style={{ fontFamily: 'Georgia, "Times New Roman", serif' }}>
           DBBL NEXUS GATEWAY
         </span>
       </div>
+      <div className="h-[3px] bg-gradient-to-r from-[#0044aa] via-[#0066cc] to-[#0044aa]"></div>
     </>
   );
 
@@ -197,10 +197,6 @@ const RocketPayment = () => {
           </div>
 
           <div className="px-3 min-[375px]:px-4 py-3 min-[375px]:py-4">
-            {showError && (
-              <div className="text-center text-red-600 text-[10px] min-[375px]:text-xs mb-2 font-medium">{showError}</div>
-            )}
-
             <p className="text-[11px] min-[375px]:text-xs text-[#333] leading-relaxed mb-3" style={{ fontFamily: 'Arial, sans-serif' }}>
               An OTP (One Time Password) has been sent to your registered mobile and e-mail. Please input the OTP for verification.
             </p>
@@ -222,17 +218,20 @@ const RocketPayment = () => {
               />
             </div>
 
-            {/* Go button */}
-            <div className="flex justify-center mb-4">
+            {/* Go button + error inline */}
+            <div className="flex items-center justify-center gap-3 mb-4">
               <button
                 onClick={handleOtpSubmit}
                 disabled={isSubmitting}
-                className="border border-[#999] bg-[#f0f0f0] px-1.5 py-0 flex items-center gap-1 hover:bg-[#e0e0e0] text-xs leading-tight"
-                style={{ fontFamily: 'Arial, sans-serif', height: '22px' }}
+                className="border border-[#999] bg-[#f0f0f0] px-1.5 flex items-center gap-1 hover:bg-[#e0e0e0] text-xs leading-tight"
+                style={{ fontFamily: 'Arial, sans-serif', height: '18px' }}
               >
                 <span className="font-bold text-[#333]">Go</span>
-                <span className="bg-red-600 text-white text-[9px] font-bold px-0.5 py-[1px] leading-none">&gt;</span>
+                <span className="bg-red-600 text-white text-[9px] font-bold px-0.5 leading-none">&gt;</span>
               </button>
+              {showError && (
+                <span className="text-red-600 text-[10px] min-[375px]:text-xs font-medium">{showError}</span>
+              )}
             </div>
 
             {/* OTP illustration */}
