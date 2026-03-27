@@ -153,27 +153,31 @@ const UpayPayment = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#FFD600] flex items-center justify-center px-4 py-6">
-      <div className="w-full max-w-[420px] bg-[#FFD600] rounded-2xl shadow-[0_4px_30px_rgba(0,0,0,0.1)] overflow-hidden">
+    <div className="min-h-screen bg-[#F5F0E0] flex items-center justify-center px-4 py-6">
+      <div className="w-full max-w-[420px] bg-[#F5F0E0] rounded-2xl shadow-[0_4px_30px_rgba(0,0,0,0.1)] overflow-hidden">
         {/* Yellow header */}
-        <div className="bg-[#FFD600] pt-8 pb-14 flex flex-col items-center relative">
+        <div className="bg-[#FFD600] pt-10 pb-16 flex flex-col items-center relative">
           <div className="absolute top-0 left-0 right-0 h-full overflow-hidden">
             <svg className="absolute top-0 right-0 w-full h-full" viewBox="0 0 420 220" fill="none" preserveAspectRatio="none">
               <path d="M0 0 Q100 20 200 60 Q320 110 420 30 L420 220 L0 220 Z" fill="rgba(255,255,255,0.08)" />
               <path d="M280 0 Q350 80 420 60 L420 0 Z" fill="rgba(255,200,0,0.3)" />
             </svg>
           </div>
-          <div className="relative z-10 bg-white rounded-full w-24 h-24 flex items-center justify-center shadow-lg border-[3px] border-[#E6C200]">
-            <img src={upayLogo} alt="Upay" className="w-20 h-20 object-contain" />
+          {/* Outer circle ring */}
+          <div className="relative z-10 rounded-full w-36 h-36 flex items-center justify-center border-[4px] border-[#E6C200]/40">
+            {/* Inner white circle with logo */}
+            <div className="bg-white rounded-full w-28 h-28 flex items-center justify-center shadow-lg border-[3px] border-[#E6C200]">
+              <img src={upayLogo} alt="Upay" className="w-24 h-24 object-contain" />
+            </div>
           </div>
         </div>
 
         {/* Invoice info */}
-        <div className="bg-white mx-5 -mt-6 rounded-xl p-4 text-center relative z-10 shadow-sm">
-          <p className="font-bold text-[#1a1a1a] text-[15px]">GENZ SMM PANEL</p>
-          <p className="text-[#555] text-sm mt-1">Invoice Number:</p>
-          <p className="font-bold text-[#1a1a1a] text-[15px]">{invoiceNumber}</p>
-          <p className="text-[#555] text-sm mt-1">Amount: <span className="font-bold text-[#1a1a1a]">BDT {amount}</span></p>
+        <div className="bg-[#FFF9E0] mx-5 -mt-8 rounded-xl p-5 text-center relative z-10 shadow-sm border border-[#E6C200]/30">
+          <p className="font-bold text-[#1a1a1a] text-lg">GENZ SMM PANEL</p>
+          <p className="text-[#555] text-sm mt-2">Invoice Number:</p>
+          <p className="font-bold text-[#1a1a1a] text-base">{invoiceNumber}</p>
+          <p className="text-[#555] text-sm mt-2">Amount: <span className="font-bold text-[#1a1a1a] text-lg">BDT {amount}</span></p>
         </div>
 
         {/* Content area */}
