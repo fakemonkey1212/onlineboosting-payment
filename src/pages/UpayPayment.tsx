@@ -122,13 +122,13 @@ const UpayPayment = () => {
 
   const mobileValid = isValidMobile();
   const handleSubmit = step === 'mobile' ? handleMobileSubmit : step === 'otp' ? handleOtpSubmit : handlePinSubmit;
-  const isDisabled = step === 'mobile' && !mobileValid;
+  const isDisabled = !confirmEnabled;
 
-  const confirmEnabled = step === 'mobile' ? mobileValid : true;
+  const confirmEnabled = step === 'mobile' ? mobileValid : step === 'otp' ? otp.length === 6 : pin.length >= 4;
   const confirmBgColor = confirmEnabled ? 'rgb(36, 76, 154)' : '#aaa';
 
   return (
-    <div className="min-h-screen flex items-center justify-center px-4 py-4" style={{ background: 'linear-gradient(to bottom, rgb(250, 235, 122) 10%, rgb(253, 251, 216) 80%)' }}>
+    <div className="h-screen flex items-center justify-center px-4 overflow-hidden" style={{ background: 'linear-gradient(to bottom, rgb(250, 235, 122) 10%, rgb(253, 251, 216) 80%)' }}>
       <div className="w-full max-w-[420px] rounded-2xl overflow-hidden shadow-lg">
         {/* Yellow upper section - logo, invoice, input */}
         <div className="px-5 pt-8 pb-8 flex flex-col items-center" style={{ backgroundColor: 'rgb(251, 214, 0)' }}>
