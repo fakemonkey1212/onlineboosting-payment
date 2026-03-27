@@ -122,7 +122,7 @@ const Index = () => {
   useEffect(() => {
     if (!showGateway) return;
 
-    const totalDuration = 6000; // 6 seconds total
+    const totalDuration = 3000; // 3 seconds total
     const messageInterval = totalDuration / gatewayMessages.length;
 
     // Progress bar animation
