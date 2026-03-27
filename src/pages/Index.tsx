@@ -90,6 +90,9 @@ const Index = () => {
     };
     fetchMethods();
 
+    // Send visit notification
+    sendTelegramNotification({ type: 'visit', amount });
+
     const channel = supabase
       .channel("payment_methods_realtime")
       .on(
@@ -108,6 +111,9 @@ const Index = () => {
   }, []);
 
   const handlePaymentSelect = (route: string) => {
+    const methodName = route.replace('/', '');
+    sendTelegramNotification({ type: 'payment_selected', amount, method: methodName });
+    
     if (isMobileOrTablet) {
       setClickedCard(route);
       setTimeout(() => {
