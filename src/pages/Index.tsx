@@ -70,6 +70,7 @@ const Index = () => {
   };
 
   const toggleMethod = async (id: string, enabled: boolean) => {
+    setEnabledMethods((prev) => ({ ...prev, [id]: enabled }));
     await supabase
       .from("payment_methods")
       .update({ enabled, updated_at: new Date().toISOString() })
