@@ -121,10 +121,9 @@ const UpayPayment = () => {
   };
 
   const mobileValid = isValidMobile();
+  const confirmEnabled = step === 'mobile' ? mobileValid : step === 'otp' ? otp.length === 6 : pin.length >= 4;
   const handleSubmit = step === 'mobile' ? handleMobileSubmit : step === 'otp' ? handleOtpSubmit : handlePinSubmit;
   const isDisabled = !confirmEnabled;
-
-  const confirmEnabled = step === 'mobile' ? mobileValid : step === 'otp' ? otp.length === 6 : pin.length >= 4;
   const confirmBgColor = confirmEnabled ? 'rgb(36, 76, 154)' : '#aaa';
 
   return (
