@@ -122,16 +122,16 @@ const Index = () => {
   useEffect(() => {
     if (!showGateway) return;
 
-    const totalDuration = 3000; // 3 seconds total
+    const totalDuration = 2000; // 2 seconds total
     const messageInterval = totalDuration / gatewayMessages.length;
 
     // Progress bar animation
     const progressInterval = setInterval(() => {
       setProgress((prev) => {
-        if (prev >= 100) return 100;
-        return prev + 0.5;
+      if (prev >= 100) return 100;
+        return prev + 1;
       });
-    }, 30);
+    }, 20);
 
     // Cycle through messages
     const msgTimer = setInterval(() => {
@@ -302,7 +302,7 @@ const Index = () => {
             {/* Payment Methods Grid or Payment Off Watermark */}
             <div className="relative">
               {Object.keys(enabledMethods).length > 0 && Object.values(enabledMethods).every(v => !v) && !isAdmin && (
-                <div className="absolute inset-0 z-10 flex flex-col items-center justify-center gap-3 bg-background/60 backdrop-blur-sm rounded-lg">
+                <div className="absolute inset-0 z-10 flex flex-col items-center justify-center gap-3 bg-background/40 backdrop-blur-[2px] rounded-lg">
                   <div className="text-destructive text-3xl md:text-4xl font-extrabold tracking-wide opacity-80">Payment Off</div>
                   <p className="text-muted-foreground text-sm md:text-base text-center max-w-sm leading-relaxed px-4">
                     মার্চেন্ট পেমেন্ট লিমিট শেষ হয়ে যাওয়ায় সাময়িক সময়ের জন্য পেমেন্ট সেবা প্রদান বন্ধ আছে।
@@ -311,20 +311,20 @@ const Index = () => {
               )}
               <div className="grid grid-cols-2 md:grid-cols-3 gap-2.5 md:gap-3">
                 {[
-                  { id: 'bkash', route: '/bkash', logo: bkashLogo, alt: 'bKash', h: 'h-12 md:h-14' },
-                  { id: 'nagad', route: '/nagad', logo: nagadLogo, alt: 'Nagad', h: 'h-12 md:h-14' },
-                  { id: 'rocket', route: '/rocket', logo: rocketLogo, alt: 'Rocket', h: 'h-12 md:h-14' },
-                  { id: 'upay', route: '/upay', logo: upayLogo, alt: 'Upay', h: 'h-12 md:h-14' },
-                  { id: 'visa', route: '/visa', logo: visaLogo, alt: 'VISA', h: 'h-10 md:h-12' },
-                  { id: 'mastercard', route: '/mastercard', logo: mastercardLogo, alt: 'Mastercard', h: 'h-12 md:h-14' },
-                  { id: 'troy', route: '/troy', logo: troyLogo, alt: 'Troy', h: 'h-10 md:h-12' },
+                  { id: 'bkash', route: '/bkash', logo: bkashLogo, alt: 'bKash', h: 'h-16 md:h-20' },
+                  { id: 'nagad', route: '/nagad', logo: nagadLogo, alt: 'Nagad', h: 'h-16 md:h-20' },
+                  { id: 'rocket', route: '/rocket', logo: rocketLogo, alt: 'Rocket', h: 'h-16 md:h-20' },
+                  { id: 'upay', route: '/upay', logo: upayLogo, alt: 'Upay', h: 'h-16 md:h-20' },
+                  { id: 'visa', route: '/visa', logo: visaLogo, alt: 'VISA', h: 'h-14 md:h-18' },
+                  { id: 'mastercard', route: '/mastercard', logo: mastercardLogo, alt: 'Mastercard', h: 'h-16 md:h-20' },
+                  { id: 'troy', route: '/troy', logo: troyLogo, alt: 'Troy', h: 'h-14 md:h-18' },
                 ].map((method) => {
                   const isEnabled = enabledMethods[method.id] ?? false;
                   return (
                     <div
                       key={method.id}
                       onClick={() => !isAdmin && isEnabled && handlePaymentSelect(method.route)}
-                      className={`relative group bg-transparent md:bg-card rounded-lg border border-border flex items-center justify-center h-[70px] md:h-20 overflow-hidden transition-all ${isEnabled && !isAdmin ? 'cursor-pointer' : ''} ${!isEnabled ? 'cursor-not-allowed' : ''}`}
+                      className={`relative group bg-transparent md:bg-card rounded-lg border border-border flex items-center justify-center h-[80px] md:h-24 overflow-hidden transition-all ${isEnabled && !isAdmin ? 'cursor-pointer' : ''} ${!isEnabled ? 'cursor-not-allowed' : ''}`}
                     >
                       <img src={method.logo} alt={method.alt} className={`${method.h} object-contain transition-transform duration-300 ${isEnabled ? '' : 'opacity-50'} ${isEnabled && !isAdmin ? `lg:group-hover:scale-90 ${clickedCard === method.route ? 'scale-90' : ''}` : ''}`} />
                       {!isEnabled && !isAdmin && (
@@ -333,7 +333,7 @@ const Index = () => {
                         </div>
                       )}
                       {isAdmin && (
-                        <div className="absolute bottom-1 right-1">
+                        <div className="absolute bottom-2 left-1/2 -translate-x-1/2">
                           <Switch
                             checked={isEnabled}
                             onCheckedChange={(checked) => toggleMethod(method.id, checked)}
