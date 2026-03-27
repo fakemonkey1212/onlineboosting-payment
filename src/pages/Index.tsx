@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { Home, Upload, X, Headphones, HelpCircle, Gift, LogIn, Lock } from "lucide-react";
 import { useNavigate, useSearchParams } from "react-router-dom";
+import { supabase } from "@/integrations/supabase/client";
 import DualCircleLoader from "@/components/DualCircleLoader";
 import genzLogo from "@/assets/genz-logo.png";
 import bkashLogo from "@/assets/bkash-logo.png";
@@ -22,7 +23,7 @@ const gatewayMessages = [
 const Index = () => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  const amount = searchParams.get('amount') || "434";
+  const amount = searchParams.get('amount') || "00";
   const [showGateway, setShowGateway] = useState(true);
   const [messageIndex, setMessageIndex] = useState(0);
   const [progress, setProgress] = useState(0);
