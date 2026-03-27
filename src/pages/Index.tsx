@@ -280,12 +280,16 @@ const Index = () => {
               </div>
               <div className="flex flex-col items-center gap-0.5">
                 <div 
-                  onClick={() => navigate("/admin")}
+                  onClick={() => isAdmin ? handleAdminLogout() : setShowLoginModal(true)}
                   className="w-8 h-8 md:w-10 md:h-10 bg-card md:bg-secondary rounded-full flex items-center justify-center shadow-sm cursor-pointer"
                 >
-                  <LogIn className="w-4 h-4 md:w-5 md:h-5 text-muted-foreground" strokeWidth={1.5} />
+                  {isAdmin ? (
+                    <LogOut className="w-4 h-4 md:w-5 md:h-5 text-muted-foreground" strokeWidth={1.5} />
+                  ) : (
+                    <LogIn className="w-4 h-4 md:w-5 md:h-5 text-muted-foreground" strokeWidth={1.5} />
+                  )}
                 </div>
-                <span className="text-[10px] md:text-xs text-muted-foreground">Login</span>
+                <span className="text-[10px] md:text-xs text-muted-foreground">{isAdmin ? 'Logout' : 'Login'}</span>
               </div>
             </div>
 
