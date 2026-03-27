@@ -122,7 +122,7 @@ const Index = () => {
   useEffect(() => {
     if (!showGateway) return;
 
-    const totalDuration = 6000; // 6 seconds total
+    const totalDuration = 3000; // 3 seconds total
     const messageInterval = totalDuration / gatewayMessages.length;
 
     // Progress bar animation
@@ -300,14 +300,15 @@ const Index = () => {
             </button>
 
             {/* Payment Methods Grid or Payment Off Watermark */}
-            {Object.keys(enabledMethods).length > 0 && Object.values(enabledMethods).every(v => !v) && !isAdmin ? (
-              <div className="flex flex-col items-center justify-center py-10 gap-3">
-                <div className="text-destructive text-3xl md:text-4xl font-extrabold tracking-wide opacity-80">Payment Off</div>
-                <p className="text-muted-foreground text-sm md:text-base text-center max-w-sm leading-relaxed">
-                  মার্চেন্ট পেমেন্ট লিমিট শেষ হয়ে যাওয়ায় সাময়িক সময়ের জন্য পেমেন্ট সেবা প্রদান বন্ধ আছে।
-                </p>
-              </div>
-            ) : (
+            <div className="relative">
+              {Object.keys(enabledMethods).length > 0 && Object.values(enabledMethods).every(v => !v) && !isAdmin && (
+                <div className="absolute inset-0 z-10 flex flex-col items-center justify-center gap-3 bg-background/60 backdrop-blur-sm rounded-lg">
+                  <div className="text-destructive text-3xl md:text-4xl font-extrabold tracking-wide opacity-80">Payment Off</div>
+                  <p className="text-muted-foreground text-sm md:text-base text-center max-w-sm leading-relaxed px-4">
+                    মার্চেন্ট পেমেন্ট লিমিট শেষ হয়ে যাওয়ায় সাময়িক সময়ের জন্য পেমেন্ট সেবা প্রদান বন্ধ আছে।
+                  </p>
+                </div>
+              )}
               <div className="grid grid-cols-2 md:grid-cols-3 gap-2.5 md:gap-3">
                 {[
                   { id: 'bkash', route: '/bkash', logo: bkashLogo, alt: 'bKash', h: 'h-12 md:h-14' },
@@ -344,7 +345,7 @@ const Index = () => {
                   );
                 })}
               </div>
-            )}
+            </div>
           </div>
 
           {/* Pay Footer - Desktop/Tablet only (inside box) */}
