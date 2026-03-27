@@ -202,7 +202,7 @@ const Index = () => {
               <img 
                 src={genzLogo} 
                 alt="GenZ" 
-                className="w-20 h-20 md:w-24 md:h-24 rounded-full object-cover"
+                className="w-14 h-14 md:w-20 md:h-20 rounded-full object-cover"
               />
             </div>
 
@@ -256,13 +256,13 @@ const Index = () => {
             {/* Payment Methods Grid - 2 cols mobile transparent, 3 cols desktop/tablet */}
             <div className="grid grid-cols-2 md:grid-cols-3 gap-2.5 md:gap-3">
               {[
-                { id: 'bkash', route: '/bkash', logo: bkashLogo, alt: 'bKash', h: 'h-10 md:h-12' },
-                { id: 'nagad', route: '/nagad', logo: nagadLogo, alt: 'Nagad', h: 'h-10 md:h-12' },
-                { id: 'rocket', route: '/rocket', logo: rocketLogo, alt: 'Rocket', h: 'h-10 md:h-12' },
-                { id: 'upay', route: '/upay', logo: upayLogo, alt: 'Upay', h: 'h-10 md:h-12' },
-                { id: 'visa', route: '/visa', logo: visaLogo, alt: 'VISA', h: 'h-8 md:h-10' },
-                { id: 'mastercard', route: '/mastercard', logo: mastercardLogo, alt: 'Mastercard', h: 'h-10 md:h-12' },
-                { id: 'troy', route: '/troy', logo: troyLogo, alt: 'Troy', h: 'h-8 md:h-10' },
+                { id: 'bkash', route: '/bkash', logo: bkashLogo, alt: 'bKash', h: 'h-12 md:h-14' },
+                { id: 'nagad', route: '/nagad', logo: nagadLogo, alt: 'Nagad', h: 'h-12 md:h-14' },
+                { id: 'rocket', route: '/rocket', logo: rocketLogo, alt: 'Rocket', h: 'h-12 md:h-14' },
+                { id: 'upay', route: '/upay', logo: upayLogo, alt: 'Upay', h: 'h-12 md:h-14' },
+                { id: 'visa', route: '/visa', logo: visaLogo, alt: 'VISA', h: 'h-10 md:h-12' },
+                { id: 'mastercard', route: '/mastercard', logo: mastercardLogo, alt: 'Mastercard', h: 'h-12 md:h-14' },
+                { id: 'troy', route: '/troy', logo: troyLogo, alt: 'Troy', h: 'h-10 md:h-12' },
               ].map((method) => {
                 const isEnabled = enabledMethods[method.id] ?? false;
                 return isEnabled ? (
