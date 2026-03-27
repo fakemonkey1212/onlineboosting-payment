@@ -27,6 +27,16 @@ const PaymentCancelled = () => {
     }
   }, []);
 
+  // Intercept browser back button - always stay on cancel page
+  useEffect(() => {
+    window.history.pushState(null, "", window.location.href);
+    const handlePopState = () => {
+      window.history.pushState(null, "", window.location.href);
+    };
+    window.addEventListener("popstate", handlePopState);
+    return () => window.removeEventListener("popstate", handlePopState);
+  }, []);
+
   useEffect(() => {
     const timer = setInterval(() => {
       setCountdown((prev) => {
@@ -42,7 +52,7 @@ const PaymentCancelled = () => {
   }, [navigate]);
 
   return (
-    <div className="min-h-screen bg-white flex flex-col items-center pt-16 px-4">
+    <div className="h-screen bg-white flex flex-col items-center pt-16 px-4 overflow-hidden">
       <div className="w-full max-w-lg text-center">
         {/* Title */}
         <h1 className="text-2xl font-bold text-gray-900 mb-2">
