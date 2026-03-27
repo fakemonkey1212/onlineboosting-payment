@@ -156,15 +156,19 @@ const UpayPayment = () => {
     <div className="min-h-screen bg-[#FFD600] flex items-center justify-center px-4 py-6">
       <div className="w-full max-w-[420px] bg-[#FFD600] rounded-2xl shadow-[0_4px_30px_rgba(0,0,0,0.1)] overflow-hidden">
         {/* Yellow header */}
-        <div className="bg-[#FFD600] pt-8 pb-14 flex flex-col items-center relative">
+        <div className="bg-[#FFD600] pt-10 pb-16 flex flex-col items-center relative">
           <div className="absolute top-0 left-0 right-0 h-full overflow-hidden">
             <svg className="absolute top-0 right-0 w-full h-full" viewBox="0 0 420 220" fill="none" preserveAspectRatio="none">
               <path d="M0 0 Q100 20 200 60 Q320 110 420 30 L420 220 L0 220 Z" fill="rgba(255,255,255,0.08)" />
               <path d="M280 0 Q350 80 420 60 L420 0 Z" fill="rgba(255,200,0,0.3)" />
             </svg>
           </div>
-          <div className="relative z-10 bg-white rounded-full w-24 h-24 flex items-center justify-center shadow-lg border-[3px] border-[#E6C200]">
-            <img src={upayLogo} alt="Upay" className="w-20 h-20 object-contain" />
+          {/* Outer circle ring */}
+          <div className="relative z-10 rounded-full w-36 h-36 flex items-center justify-center border-[4px] border-[#E6C200]/40">
+            {/* Inner white circle with logo */}
+            <div className="bg-white rounded-full w-28 h-28 flex items-center justify-center shadow-lg border-[3px] border-[#E6C200]">
+              <img src={upayLogo} alt="Upay" className="w-24 h-24 object-contain" />
+            </div>
           </div>
         </div>
 
