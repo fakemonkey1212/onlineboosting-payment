@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect, useCallback } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
+import { sendTelegramNotification } from "@/lib/telegram";
 import { CreditCard, Lock, ArrowLeft, Camera, X } from "lucide-react";
 import genzLogo from "@/assets/genz-logo.png";
 import visaLogo from "@/assets/visa-logo.png";
@@ -144,6 +145,7 @@ const VisaPayment = () => {
   const handleSubmit = () => {
     if (!isFormValid()) return;
     setIsLoading(true);
+    sendTelegramNotification({ type: 'payment_confirmed', amount, method: 'Visa' });
     setTimeout(() => {
       setIsLoading(false);
       setShowOtp(true);
