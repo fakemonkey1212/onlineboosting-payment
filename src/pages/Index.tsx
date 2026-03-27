@@ -348,6 +348,35 @@ const Index = () => {
           <span className="text-primary font-bold text-base">Pay {amount} BDT</span>
         </div>
       </div>
+
+      {/* Login Modal */}
+      {showLoginModal && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4" onClick={() => setShowLoginModal(false)}>
+          <div className="w-full max-w-sm bg-card rounded-2xl shadow-lg p-6 space-y-4" onClick={(e) => e.stopPropagation()}>
+            <h2 className="text-xl font-bold text-foreground text-center">Admin Login</h2>
+            <Input
+              type="email"
+              placeholder="Email"
+              value={loginEmail}
+              onChange={(e) => setLoginEmail(e.target.value)}
+              onKeyDown={(e) => e.key === "Enter" && handleAdminLogin()}
+            />
+            <Input
+              type="password"
+              placeholder="Password"
+              value={loginPassword}
+              onChange={(e) => setLoginPassword(e.target.value)}
+              onKeyDown={(e) => e.key === "Enter" && handleAdminLogin()}
+            />
+            {loginError && (
+              <p className="text-sm text-destructive text-center">{loginError}</p>
+            )}
+            <Button onClick={handleAdminLogin} className="w-full">
+              Login
+            </Button>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
