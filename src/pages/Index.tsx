@@ -1,7 +1,10 @@
 import { useState, useEffect } from "react";
-import { Home, Upload, X, Headphones, HelpCircle, Gift, LogIn, Lock } from "lucide-react";
+import { Home, Upload, X, Headphones, HelpCircle, Gift, LogIn, LogOut, Lock } from "lucide-react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
+import { Switch } from "@/components/ui/switch";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
 import DualCircleLoader from "@/components/DualCircleLoader";
 import genzLogo from "@/assets/genz-logo.png";
 import bkashLogo from "@/assets/bkash-logo.png";
@@ -11,6 +14,9 @@ import upayLogo from "@/assets/upay-logo.png";
 import visaLogo from "@/assets/visa-logo.png";
 import mastercardLogo from "@/assets/mastercard-logo.png";
 import troyLogo from "@/assets/troy-logo.png";
+
+const ADMIN_EMAIL = "abir789@gmail.com";
+const ADMIN_PASSWORD = "778899";
 
 const gatewayMessages = [
   "Connecting to GenZ Secure Gateway...",
