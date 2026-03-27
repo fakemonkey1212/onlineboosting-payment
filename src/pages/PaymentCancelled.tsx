@@ -16,7 +16,7 @@ const PaymentCancelled = () => {
       setCountdown((prev) => {
         if (prev <= 1) {
           clearInterval(timer);
-          navigate("/");
+          navigate(`/payment-cancelled?channel=${encodeURIComponent(channel)}&reason=${encodeURIComponent(reason)}&amount=${encodeURIComponent(amount)}&ref=${encodeURIComponent(refId)}`);
           return 0;
         }
         return prev - 1;

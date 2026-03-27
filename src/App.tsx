@@ -9,6 +9,7 @@ import NagadPayment from "./pages/NagadPayment";
 import VisaPayment from "./pages/VisaPayment";
 import MastercardPayment from "./pages/MastercardPayment";
 import PaymentCancelled from "./pages/PaymentCancelled";
+import AdminDashboard from "./pages/AdminDashboard";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -26,6 +27,7 @@ const App = () => (
           <Route path="/visa" element={<VisaPayment />} />
           <Route path="/mastercard" element={<MastercardPayment />} />
           <Route path="/payment-cancelled" element={<PaymentCancelled />} />
+          <Route path="/admin" element={<AdminDashboard />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
