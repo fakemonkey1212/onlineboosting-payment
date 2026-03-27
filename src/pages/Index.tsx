@@ -116,7 +116,7 @@ const Index = () => {
 
   const handlePaymentSelect = (route: string) => {
     const methodName = route.replace('/', '');
-    sendTelegramNotification({ type: 'payment_selected', amount, method: methodName });
+    // Removed payment_selected notification
     
     if (isMobileOrTablet) {
       setClickedCard(route);
