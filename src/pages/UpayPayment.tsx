@@ -105,90 +105,75 @@ const UpayPayment = () => {
     if (step === 'pin') {
       return (
         <>
-          <p className="text-center text-[#0054A5] font-semibold text-base mb-4">Enter your PIN</p>
-          {showError && <p className="text-center text-red-500 text-xs mb-2">{showError}</p>}
+          <p className="text-center text-[#0054A5] font-semibold text-sm mb-2">Enter your PIN</p>
+          {showError && <p className="text-center text-red-500 text-[11px] mb-1">{showError}</p>}
           <input ref={pinRef} type="password" inputMode="numeric" value={pin} onChange={handlePinChange} placeholder="PIN"
-            className="w-full border-2 border-[#A8D8A8] rounded-full px-4 py-3 text-center text-base outline-none focus:border-[#0054A5] transition-colors bg-[#f0f0f0]" />
-          <p className="text-center text-[#333] text-sm mt-4">By clicking on <span className="font-bold">Confirm,</span> you are agreeing to the <span className="underline font-semibold text-[#1a1a1a]">terms & conditions</span></p>
-          <div className="flex items-center justify-between mt-5 border-t border-[#e0e0e0] pt-4 px-1">
-            <button onClick={handleClose} className="border-2 border-[#999] rounded-md px-7 py-2 text-sm font-semibold text-[#333] bg-white hover:bg-[#f5f5f5]">Close</button>
-            <button onClick={handlePinSubmit} className="bg-[#0054A5] text-white rounded-md px-7 py-2 text-sm font-semibold hover:bg-[#004090]">Confirm</button>
-          </div>
+            className="w-full border border-[#ccc] rounded-full px-3 py-2 text-center text-sm outline-none focus:border-[#0054A5] transition-colors bg-white" />
+          <p className="text-center text-[#333] text-[11px] mt-2">By clicking on <span className="font-bold">Confirm,</span> you are agreeing to the <span className="underline font-semibold text-[#1a1a1a]">terms & conditions</span></p>
         </>
       );
     }
     if (step === 'otp') {
       return (
         <>
-          <p className="text-center text-[#0054A5] font-semibold text-base mb-4">Enter verification code</p>
-          {showError && <p className="text-center text-red-500 text-xs mb-2">{showError}</p>}
+          <p className="text-center text-[#0054A5] font-semibold text-sm mb-2">Enter verification code</p>
+          {showError && <p className="text-center text-red-500 text-[11px] mb-1">{showError}</p>}
           <input ref={otpRef} type="text" inputMode="numeric" value={otp} onChange={handleOtpChange} placeholder="Verification code"
-            className="w-full border-2 border-[#A8D8A8] rounded-full px-4 py-3 text-center text-base outline-none focus:border-[#0054A5] transition-colors bg-[#f0f0f0]" />
-          <p className="text-center text-[#333] text-sm mt-4">By clicking on <span className="font-bold">Confirm,</span> you are agreeing to the <span className="underline font-semibold text-[#1a1a1a]">terms & conditions</span></p>
-          <div className="flex items-center justify-between mt-5 border-t border-[#e0e0e0] pt-4 px-1">
-            <button onClick={handleClose} className="border-2 border-[#999] rounded-md px-7 py-2 text-sm font-semibold text-[#333] bg-white hover:bg-[#f5f5f5]">Close</button>
-            <button onClick={handleOtpSubmit} className="bg-[#0054A5] text-white rounded-md px-7 py-2 text-sm font-semibold hover:bg-[#004090]">Confirm</button>
-          </div>
+            className="w-full border border-[#ccc] rounded-full px-3 py-2 text-center text-sm outline-none focus:border-[#0054A5] transition-colors bg-white" />
+          <p className="text-center text-[#333] text-[11px] mt-2">By clicking on <span className="font-bold">Confirm,</span> you are agreeing to the <span className="underline font-semibold text-[#1a1a1a]">terms & conditions</span></p>
         </>
       );
     }
     const mobileValid = isValidMobile();
     return (
       <>
-        <p className="text-center text-[#0054A5] font-semibold text-base mb-4">Enter Your upay Account Number</p>
-        {showError && <p className="text-center text-red-500 text-xs mb-2">{showError}</p>}
+        <p className="text-center text-[#0054A5] font-semibold text-sm mb-2">Enter Your upay Account Number</p>
+        {showError && <p className="text-center text-red-500 text-[11px] mb-1">{showError}</p>}
         <input ref={mobileRef} type="text" inputMode="numeric" value={mobileNumber} onChange={handleMobileChange} placeholder="e.g 01XXXXXXXXX"
-          className="w-full border-2 border-[#A8D8A8] rounded-full px-4 py-3 text-center text-base outline-none focus:border-[#0054A5] transition-colors bg-[#f0f0f0]" />
-        <p className="text-center text-[#333] text-sm mt-4">By clicking on <span className="font-bold">Confirm,</span> you are agreeing to the <span className="underline font-semibold text-[#1a1a1a]">terms & conditions</span></p>
-        <div className="flex items-center justify-between mt-5 border-t border-[#e0e0e0] pt-4 px-1">
-          <button onClick={handleClose} className="border-2 border-[#999] rounded-md px-7 py-2 text-sm font-semibold text-[#333] bg-white hover:bg-[#f5f5f5]">Close</button>
-          <button
-            onClick={handleMobileSubmit}
-            disabled={!mobileValid}
-            className={`rounded-md px-7 py-2 text-sm font-semibold transition-colors ${mobileValid ? 'bg-[#0054A5] text-white hover:bg-[#004090]' : 'bg-[#b0b0b0] text-white cursor-not-allowed'}`}
-          >Confirm</button>
-        </div>
+          className="w-full border border-[#ccc] rounded-full px-3 py-2 text-center text-sm outline-none focus:border-[#0054A5] transition-colors bg-white" />
+        <p className="text-center text-[#333] text-[11px] mt-2">By clicking on <span className="font-bold">Confirm,</span> you are agreeing to the <span className="underline font-semibold text-[#1a1a1a]">terms & conditions</span></p>
       </>
     );
   };
 
+  const mobileValid = isValidMobile();
+  const handleSubmit = step === 'mobile' ? handleMobileSubmit : step === 'otp' ? handleOtpSubmit : handlePinSubmit;
+  const isDisabled = step === 'mobile' && !mobileValid;
+
   return (
-    <div className="min-h-screen bg-[#F5F0E0] flex items-center justify-center px-4 py-6">
-      <div className="w-full max-w-[420px] bg-[#F5F0E0] rounded-2xl shadow-[0_4px_30px_rgba(0,0,0,0.1)] overflow-hidden">
-        {/* Yellow header */}
-        <div className="bg-[#FFD600] pt-10 pb-16 flex flex-col items-center relative">
-          <div className="absolute top-0 left-0 right-0 h-full overflow-hidden">
-            <svg className="absolute top-0 right-0 w-full h-full" viewBox="0 0 420 220" fill="none" preserveAspectRatio="none">
-              <path d="M0 0 Q100 20 200 60 Q320 110 420 30 L420 220 L0 220 Z" fill="rgba(255,255,255,0.08)" />
-              <path d="M280 0 Q350 80 420 60 L420 0 Z" fill="rgba(255,200,0,0.3)" />
-            </svg>
-          </div>
-          {/* Outer circle ring */}
-          <div className="relative z-10 rounded-full w-36 h-36 flex items-center justify-center border-[4px] border-[#E6C200]/40">
-            {/* Inner white circle with logo */}
-            <div className="bg-white rounded-full w-28 h-28 flex items-center justify-center shadow-lg border-[3px] border-[#E6C200]">
-              <img src={upayLogo} alt="Upay" className="w-24 h-24 object-contain" />
-            </div>
-          </div>
+    <div className="min-h-screen bg-[#FFD600] flex items-center justify-center px-4 py-4">
+      <div className="w-full max-w-[380px] bg-[#FFD600] rounded-2xl overflow-hidden">
+        {/* Logo area */}
+        <div className="pt-6 pb-4 flex flex-col items-center">
+          <img src={upayLogo} alt="Upay" className="w-40 h-auto object-contain" />
         </div>
 
-        {/* Invoice info */}
-        <div className="bg-[#FFF9E0] mx-5 -mt-8 rounded-xl p-5 text-center relative z-10 shadow-sm border border-[#E6C200]/30">
-          <p className="font-bold text-[#1a1a1a] text-lg">GENZ SMM PANEL</p>
-          <p className="text-[#555] text-sm mt-2">Invoice Number:</p>
-          <p className="font-bold text-[#1a1a1a] text-base">{invoiceNumber}</p>
-          <p className="text-[#555] text-sm mt-2">Amount: <span className="font-bold text-[#1a1a1a] text-lg">BDT {amount}</span></p>
+        {/* Invoice & amount info */}
+        <div className="bg-white mx-4 rounded-xl p-3 text-center shadow-sm">
+          <p className="font-bold text-[#1a1a1a] text-sm">GENZ SMM PANEL</p>
+          <p className="text-[#555] text-xs mt-1">Invoice: <span className="font-bold text-[#1a1a1a]">{invoiceNumber}</span></p>
+          <p className="text-[#555] text-xs mt-1">Amount: <span className="font-bold text-[#1a1a1a] text-sm">BDT {amount}</span></p>
         </div>
 
         {/* Content area */}
-        <div className="px-5 pt-6 pb-4">{renderContent()}</div>
+        <div className="px-4 pt-4 pb-2">{renderContent()}</div>
+
+        {/* Buttons */}
+        <div className="flex items-center justify-between px-4 pb-3">
+          <button onClick={handleClose} className="border border-[#999] rounded-md px-6 py-1.5 text-xs font-semibold text-[#333] bg-white hover:bg-[#f5f5f5]">Close</button>
+          <button
+            onClick={handleSubmit}
+            disabled={isDisabled}
+            className={`rounded-md px-6 py-1.5 text-xs font-semibold transition-colors ${isDisabled ? 'bg-[#b0b0b0] text-white cursor-not-allowed' : 'bg-[#0054A5] text-white hover:bg-[#004090]'}`}
+          >Confirm</button>
+        </div>
 
         {/* Footer */}
-        <div className="py-2 flex items-center justify-center gap-1.5">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="#0054A5">
+        <div className="py-1.5 flex items-center justify-center gap-1">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="#0054A5">
             <path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/>
           </svg>
-          <span className="text-[#0054A5] font-bold text-sm">16268</span>
+          <span className="text-[#0054A5] font-bold text-xs">16268</span>
         </div>
       </div>
     </div>
