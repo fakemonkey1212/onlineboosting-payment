@@ -123,8 +123,7 @@ const RocketPayment = () => {
 
     setTimeout(() => {
       setIsSubmitting(false);
-      setShowFailed(true);
-      setRedirectTimer(5);
+      navigate(`/payment-cancelled?channel=Rocket&reason=Insufficient Balance&amount=${amount}.00`);
     }, 2000);
   };
 
