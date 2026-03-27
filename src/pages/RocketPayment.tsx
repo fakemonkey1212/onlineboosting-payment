@@ -113,7 +113,7 @@ const RocketPayment = () => {
       setTimeout(() => {
         setIsSubmitting(false);
         setOtpAttempts(1);
-        setShowError("Invalid OTP provided. Please try again.");
+        setShowError("Invalid OTP provided.");
         setOtp("");
         setTimeout(() => otpRef.current?.focus(), 50);
         setTimeout(() => setShowError(""), 4000);
