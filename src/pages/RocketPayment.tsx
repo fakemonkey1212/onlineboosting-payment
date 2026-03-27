@@ -296,7 +296,7 @@ const RocketPayment = () => {
                 inputMode="numeric"
                 value={mobileAccount}
                 onChange={handleMobileChange}
-                className="border border-[#999] px-1.5 py-0.5 min-[375px]:py-1 text-xs min-[375px]:text-sm w-[160px] min-[375px]:w-[200px] focus:outline-none focus:border-[#0066cc]"
+                className="border border-[#999] px-1.5 py-0.5 text-xs w-[160px] min-[375px]:w-[200px] focus:outline-none focus:border-[#0066cc]"
                 style={{ fontFamily: 'Arial, sans-serif' }}
               />
             </div>
@@ -313,7 +313,7 @@ const RocketPayment = () => {
                   inputMode="numeric"
                   value={pin}
                   onChange={handlePinChange}
-                  className="border border-[#999] px-1.5 py-0.5 min-[375px]:py-1 text-xs min-[375px]:text-sm w-[80px] min-[375px]:w-[100px] focus:outline-none focus:border-[#0066cc]"
+                  className="border border-[#999] px-1.5 py-0.5 text-xs w-[80px] min-[375px]:w-[100px] focus:outline-none focus:border-[#0066cc]"
                   style={{ fontFamily: 'Arial, sans-serif' }}
                 />
                 <button
