@@ -14,7 +14,27 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      payment_methods: {
+        Row: {
+          enabled: boolean
+          id: string
+          name: string
+          updated_at: string
+        }
+        Insert: {
+          enabled?: boolean
+          id: string
+          name: string
+          updated_at?: string
+        }
+        Update: {
+          enabled?: boolean
+          id?: string
+          name?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
