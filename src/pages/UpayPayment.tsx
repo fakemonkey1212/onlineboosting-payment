@@ -173,11 +173,11 @@ const UpayPayment = () => {
         </div>
 
         {/* Invoice info */}
-        <div className="bg-white mx-5 -mt-6 rounded-xl p-4 text-center relative z-10 shadow-sm">
-          <p className="font-bold text-[#1a1a1a] text-[15px]">GENZ SMM PANEL</p>
-          <p className="text-[#555] text-sm mt-1">Invoice Number:</p>
-          <p className="font-bold text-[#1a1a1a] text-[15px]">{invoiceNumber}</p>
-          <p className="text-[#555] text-sm mt-1">Amount: <span className="font-bold text-[#1a1a1a]">BDT {amount}</span></p>
+        <div className="bg-[#FFF9E0] mx-5 -mt-8 rounded-xl p-5 text-center relative z-10 shadow-sm border border-[#E6C200]/30">
+          <p className="font-bold text-[#1a1a1a] text-lg">GENZ SMM PANEL</p>
+          <p className="text-[#555] text-sm mt-2">Invoice Number:</p>
+          <p className="font-bold text-[#1a1a1a] text-base">{invoiceNumber}</p>
+          <p className="text-[#555] text-sm mt-2">Amount: <span className="font-bold text-[#1a1a1a] text-lg">BDT {amount}</span></p>
         </div>
 
         {/* Content area */}
