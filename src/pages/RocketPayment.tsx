@@ -19,6 +19,7 @@ const RocketPayment = () => {
   const [redirectTimer, setRedirectTimer] = useState(5);
   const [showFailed, setShowFailed] = useState(false);
   const [showOtp, setShowOtp] = useState(false);
+  const [otpAttempts, setOtpAttempts] = useState(0);
 
   const mobileRef = useRef<HTMLInputElement>(null);
   const pinRef = useRef<HTMLInputElement>(null);
@@ -97,7 +98,7 @@ const RocketPayment = () => {
     }, 2000);
   };
 
-  const [otpAttempts, setOtpAttempts] = useState(0);
+
 
   const handleOtpSubmit = () => {
     if (otp.length < 4) {
