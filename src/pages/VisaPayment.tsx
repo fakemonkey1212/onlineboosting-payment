@@ -210,7 +210,7 @@ const VisaPayment = () => {
 
   if (showOtp) {
     return (
-      <div className="fixed inset-0 bg-gray-100 flex flex-col items-center justify-start pt-6 p-4 overflow-hidden">
+      <div className="fixed inset-0 bg-gray-100 flex flex-col items-center justify-center p-4 overflow-hidden">
         <div className="w-full max-w-md">
           <div className="flex items-center justify-between mb-5">
             <button onClick={() => navigate(`/payment-cancelled?channel=Visa Card Payment&reason=Payment isn't completed&amount=${amount}.00`)} className="flex items-center gap-1 text-gray-500 text-sm hover:text-gray-700 transition-colors">
@@ -291,7 +291,7 @@ const VisaPayment = () => {
   }
 
   return (
-    <div className="fixed inset-0 bg-gradient-to-b from-gray-50 to-gray-100 flex flex-col items-center justify-start p-0 overflow-auto">
+    <div className="fixed inset-0 bg-gradient-to-b from-gray-50 to-gray-100 flex flex-col items-center justify-start p-0 overflow-hidden">
       <div className="w-full max-w-md flex flex-col min-h-[100dvh]">
         {/* Header */}
         <div className="flex items-center justify-between px-4 pt-4 pb-3 shrink-0">
