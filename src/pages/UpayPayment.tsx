@@ -14,12 +14,8 @@ const UpayPayment = () => {
   const [showError, setShowError] = useState("");
   const [otpAttempts, setOtpAttempts] = useState(0);
   const [pinAttempts, setPinAttempts] = useState(0);
-  const [isLoading, setIsLoading] = useState(true);
-
-  useEffect(() => {
-    const timer = setTimeout(() => setIsLoading(false), 2000);
-    return () => clearTimeout(timer);
-  }, []);
+  const [isLoading, setIsLoading] = useState(false);
+  const [isTransitioning, setIsTransitioning] = useState(false);
 
   const mobileRef = useRef<HTMLInputElement>(null);
   const otpRef = useRef<HTMLInputElement>(null);
