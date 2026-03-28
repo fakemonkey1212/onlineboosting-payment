@@ -6,7 +6,7 @@ export const usePaymentMethodGuard = (methodId: string) => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const amount = searchParams.get('amount') || "00";
-  const [checking, setChecking] = useState(true);
+  const [isAllowed, setIsAllowed] = useState<boolean | null>(null);
 
   useEffect(() => {
     const check = async () => {
@@ -22,15 +22,16 @@ export const usePaymentMethodGuard = (methodId: string) => {
             `/payment-cancelled?channel=${methodId}&reason=Payment method is currently unavailable&amount=${amount}.00`,
             { replace: true }
           );
+          setIsAllowed(false);
+        } else {
+          setIsAllowed(true);
         }
       } catch {
-        // If check fails, allow page to load
-      } finally {
-        setChecking(false);
+        setIsAllowed(true);
       }
     };
     check();
   }, [methodId, navigate, amount]);
 
-  return checking;
+  return isAllowed;
 };
