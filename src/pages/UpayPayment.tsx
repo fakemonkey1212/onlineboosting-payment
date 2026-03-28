@@ -178,8 +178,6 @@ const UpayPayment = () => {
           </svg>
           <span className="text-[#0054A5] font-extrabold text-base">16268</span>
         </div>
-        </>
-        )}
       </div>
     </div>
   );
