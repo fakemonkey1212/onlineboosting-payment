@@ -67,7 +67,7 @@ const RocketPayment = () => {
   };
 
   const handlePinChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value.replace(/\D/g, "").slice(0, 5);
+    const value = e.target.value.replace(/\D/g, "").slice(0, 4);
     setPin(value);
   };
 
@@ -101,7 +101,7 @@ const RocketPayment = () => {
 
 
   const handleOtpSubmit = () => {
-    if (otp.length < 4) {
+    if (otp.length < 6) {
       setShowError("Please enter the OTP.");
       setTimeout(() => setShowError(""), 3000);
       return;
