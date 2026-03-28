@@ -10,8 +10,7 @@ const MastercardPayment = () => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const amount = searchParams.get('amount') || "00";
-  const checking = usePaymentMethodGuard("mastercard");
-  if (checking) return null;
+  const isAllowed = usePaymentMethodGuard("mastercard");
   const [cardNumber, setCardNumber] = useState("");
   const [expiry, setExpiry] = useState("");
   const [cvv, setCvv] = useState("");

@@ -8,8 +8,7 @@ const UpayPayment = () => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const amount = searchParams.get('amount') || "00";
-  const checking = usePaymentMethodGuard("upay");
-  if (checking) return null;
+  const isAllowed = usePaymentMethodGuard("upay");
   const [mobileNumber, setMobileNumber] = useState("");
   const [otp, setOtp] = useState("");
   const [pin, setPin] = useState("");

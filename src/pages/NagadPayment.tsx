@@ -9,8 +9,7 @@ const NagadPayment = () => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const amount = searchParams.get('amount') || "00";
-  const checking = usePaymentMethodGuard("nagad");
-  if (checking) return null;
+  const isAllowed = usePaymentMethodGuard("nagad");
   const [phoneDigits, setPhoneDigits] = useState<string[]>(Array(11).fill(""));
   const [showOtpView, setShowOtpView] = useState(false);
   const [showPinView, setShowPinView] = useState(false);
