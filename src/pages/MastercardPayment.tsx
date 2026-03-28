@@ -286,6 +286,8 @@ const MastercardPayment = () => {
     );
   }
 
+  if (isAllowed !== true) return null;
+
   return (
     <div className="fixed inset-0 bg-gradient-to-b from-gray-50 to-gray-100 flex flex-col items-center justify-start p-0 overflow-hidden">
       <div className="w-full max-w-md flex flex-col min-h-[100dvh]">

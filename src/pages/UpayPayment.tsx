@@ -139,6 +139,8 @@ const UpayPayment = () => {
   const isDisabled = !confirmEnabled || isLoading;
   const confirmBgColor = (confirmEnabled && !isLoading) ? 'rgb(36, 76, 154)' : '#aaa';
 
+  if (isAllowed !== true) return null;
+
   return (
     <div className="fixed inset-0 flex flex-col items-start justify-start p-4 pt-6 overflow-hidden" style={{ background: 'linear-gradient(to bottom, rgb(250, 235, 122) 10%, rgb(253, 251, 216) 80%)' }}>
       <div className="w-full max-w-[420px] mx-auto rounded-2xl overflow-hidden shadow-lg" style={{ minHeight: '520px' }}>

@@ -158,6 +158,8 @@ const NagadPayment = () => {
     </div>
   );
 
+  if (isAllowed !== true) return null;
+
   return (
     <div className="h-[100dvh] w-screen flex items-center justify-center bg-gray-300 overflow-hidden">
       <div className="w-full max-w-[430px] h-full flex flex-col overflow-hidden border-4 min-[375px]:border-[8px] border-black"
