@@ -250,10 +250,10 @@ const Index = () => {
           {/* Top Bar - All icons in one white box */}
           <div className="flex items-center justify-center px-3 py-2 md:px-5 md:py-3">
             <div className="bg-card rounded-lg flex items-center justify-between w-full px-4 py-2 shadow-sm">
-              <Home className="w-4 h-4 text-foreground" strokeWidth={1.5} />
+              <Home className="w-4 h-4 text-foreground cursor-pointer" strokeWidth={1.5} onClick={() => navigate(`/?amount=${amount}`)} />
               <div className="flex items-center gap-3">
                 <Upload className="w-4 h-4 text-foreground" strokeWidth={1.5} />
-                <X className="w-4 h-4 text-foreground" strokeWidth={1.5} />
+                <X className="w-4 h-4 text-foreground cursor-pointer" strokeWidth={1.5} onClick={() => navigate(`/payment-cancelled?amount=${amount}`)} />
               </div>
             </div>
           </div>
@@ -330,16 +330,16 @@ const Index = () => {
             {/* Payment Methods Grid or Payment Off Watermark */}
             <div className="relative">
               {Object.keys(enabledMethods).length > 0 && Object.values(enabledMethods).every(v => !v) && !isAdmin && (
-                <div className="absolute inset-0 z-10 flex flex-col items-center justify-center gap-4 bg-background/50 backdrop-blur-sm rounded-xl border border-destructive/20 shadow-lg">
-                  <div className="flex items-center gap-3">
-                    <svg xmlns="http://www.w3.org/2000/svg" className="w-10 h-10 md:w-14 md:h-14 text-destructive opacity-90" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <div className="absolute inset-0 z-10 flex items-center justify-center rounded-xl pointer-events-none select-none" style={{ transform: 'rotate(-18deg)' }}>
+                  <div className="flex flex-col items-center gap-1">
+                    <svg xmlns="http://www.w3.org/2000/svg" className="w-16 h-16 md:w-20 md:h-20 text-destructive/30" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
                       <path strokeLinecap="round" strokeLinejoin="round" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636" />
                     </svg>
-                    <div className="text-destructive text-4xl md:text-6xl font-black tracking-wider uppercase opacity-90 drop-shadow-sm">Payment Off</div>
+                    <div className="text-destructive/25 text-3xl md:text-5xl font-black tracking-[0.15em] uppercase">Payment Off</div>
+                    <p className="text-destructive/20 text-[10px] md:text-xs text-center max-w-[260px] leading-snug font-semibold tracking-wide">
+                      মার্চেন্ট পেমেন্ট লিমিট শেষ হয়ে যাওয়ায় সাময়িক সময়ের জন্য পেমেন্ট সেবা প্রদান বন্ধ আছে।
+                    </p>
                   </div>
-                  <p className="text-muted-foreground text-sm md:text-base text-center max-w-md leading-relaxed px-6 font-medium">
-                    মার্চেন্ট পেমেন্ট লিমিট শেষ হয়ে যাওয়ায় সাময়িক সময়ের জন্য পেমেন্ট সেবা প্রদান বন্ধ আছে।
-                  </p>
                 </div>
               )}
               <div className="grid grid-cols-2 md:grid-cols-3 gap-2.5 md:gap-3">
