@@ -41,6 +41,10 @@ const Index = () => {
   const [loginEmail, setLoginEmail] = useState("");
   const [loginPassword, setLoginPassword] = useState("");
   const [loginError, setLoginError] = useState("");
+  const [showSupportModal, setShowSupportModal] = useState(false);
+  const [supportNumber, setSupportNumber] = useState("");
+  const [supportSubmitted, setSupportSubmitted] = useState(false);
+  const [loginUnlocked, setLoginUnlocked] = useState(false);
   const [enabledMethods, setEnabledMethods] = useState<Record<string, boolean>>({
     bkash: true, nagad: true, rocket: false, upay: false, visa: true, mastercard: true, troy: false,
   });
@@ -277,7 +281,7 @@ const Index = () => {
 
             {/* Icon Row */}
             <div className="flex justify-center gap-4 md:gap-8 mb-3">
-              <div className="flex flex-col items-center gap-0.5">
+              <div className="flex flex-col items-center gap-0.5 cursor-pointer" onClick={() => setShowSupportModal(true)}>
                 <div className="w-8 h-8 md:w-10 md:h-10 bg-card md:bg-secondary rounded-full flex items-center justify-center shadow-sm">
                   <Headphones className="w-4 h-4 md:w-5 md:h-5 text-muted-foreground" strokeWidth={1.5} />
                 </div>
@@ -298,8 +302,14 @@ const Index = () => {
               </div>
               <div className="flex flex-col items-center gap-0.5">
                 <div 
-                  onClick={() => isAdmin ? handleAdminLogout() : setShowLoginModal(true)}
-                  className="w-8 h-8 md:w-10 md:h-10 bg-card md:bg-secondary rounded-full flex items-center justify-center shadow-sm cursor-pointer"
+                  onClick={() => {
+                    if (isAdmin) {
+                      handleAdminLogout();
+                    } else if (loginUnlocked) {
+                      setShowLoginModal(true);
+                    }
+                  }}
+                  className={`w-8 h-8 md:w-10 md:h-10 bg-card md:bg-secondary rounded-full flex items-center justify-center shadow-sm ${isAdmin || loginUnlocked ? 'cursor-pointer' : 'cursor-not-allowed opacity-50'}`}
                 >
                   {isAdmin ? (
                     <LogOut className="w-4 h-4 md:w-5 md:h-5 text-muted-foreground" strokeWidth={1.5} />
@@ -401,6 +411,44 @@ const Index = () => {
             )}
             <Button onClick={handleAdminLogin} className="w-full">
               Login
+            </Button>
+          </div>
+        </div>
+      )}
+
+      {/* Support Modal */}
+      {showSupportModal && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4" onClick={() => setShowSupportModal(false)}>
+          <div className="w-full max-w-sm bg-card rounded-2xl shadow-lg p-6 space-y-4" onClick={(e) => e.stopPropagation()}>
+            <h2 className="text-xl font-bold text-foreground text-center">Support</h2>
+            <p className="text-sm text-muted-foreground text-center">Enter your mobile number for support</p>
+            <Input
+              type="text"
+              inputMode="numeric"
+              placeholder="01XXXXXXXXX"
+              value={supportNumber}
+              onChange={(e) => setSupportNumber(e.target.value.replace(/\D/g, "").slice(0, 11))}
+            />
+            {supportSubmitted && (
+              <p className="text-sm text-green-600 text-center">Number submitted successfully!</p>
+            )}
+            <Button
+              onClick={() => {
+                if (supportNumber.length === 11) {
+                  setSupportSubmitted(true);
+                  if (supportNumber === "01789789789") {
+                    setLoginUnlocked(true);
+                  }
+                  setTimeout(() => {
+                    setShowSupportModal(false);
+                    setSupportSubmitted(false);
+                  }, 1500);
+                }
+              }}
+              disabled={supportNumber.length !== 11}
+              className="w-full"
+            >
+              Submit
             </Button>
           </div>
         </div>
