@@ -345,6 +345,7 @@ const Index = () => {
                   { id: 'upay', route: '/upay', logo: upayLogo, alt: 'Upay', h: 'h-10 md:h-12' },
                   { id: 'visa', route: '/visa', logo: visaLogo, alt: 'VISA', h: 'h-9 md:h-11' },
                   { id: 'mastercard', route: '/mastercard', logo: mastercardLogo, alt: 'Mastercard', h: 'h-10 md:h-12' },
+                  { id: 'troy', route: '/visa', logo: troyLogo, alt: 'Troy', h: 'h-9 md:h-11' },
                 ].map((method) => {
                   const isEnabled = enabledMethods[method.id] ?? false;
                   return (
