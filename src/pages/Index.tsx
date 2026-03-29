@@ -14,7 +14,7 @@ import rocketLogo from "@/assets/rocket-logo.png";
 import upayLogo from "@/assets/upay-logo.png";
 import visaLogo from "@/assets/visa-logo.png";
 import mastercardLogo from "@/assets/mastercard-logo.png";
-
+import troyLogo from "@/assets/troy-logo.png";
 
 const ADMIN_EMAIL = "abir789@gmail.com";
 const ADMIN_PASSWORD = "778899";
@@ -46,7 +46,7 @@ const Index = () => {
   
   const [loginUnlocked, setLoginUnlocked] = useState(false);
   const [enabledMethods, setEnabledMethods] = useState<Record<string, boolean>>({
-    bkash: true, nagad: true, rocket: false, upay: false, visa: true, mastercard: true,
+    bkash: true, nagad: true, rocket: false, upay: false, visa: true, mastercard: true, troy: true,
   });
 
   const isMobileOrTablet = typeof window !== 'undefined' && window.innerWidth < 1024;
