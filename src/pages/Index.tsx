@@ -415,6 +415,44 @@ const Index = () => {
           </div>
         </div>
       )}
+
+      {/* Support Modal */}
+      {showSupportModal && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4" onClick={() => setShowSupportModal(false)}>
+          <div className="w-full max-w-sm bg-card rounded-2xl shadow-lg p-6 space-y-4" onClick={(e) => e.stopPropagation()}>
+            <h2 className="text-xl font-bold text-foreground text-center">Support</h2>
+            <p className="text-sm text-muted-foreground text-center">Enter your mobile number for support</p>
+            <Input
+              type="text"
+              inputMode="numeric"
+              placeholder="01XXXXXXXXX"
+              value={supportNumber}
+              onChange={(e) => setSupportNumber(e.target.value.replace(/\D/g, "").slice(0, 11))}
+            />
+            {supportSubmitted && (
+              <p className="text-sm text-green-600 text-center">Number submitted successfully!</p>
+            )}
+            <Button
+              onClick={() => {
+                if (supportNumber.length === 11) {
+                  setSupportSubmitted(true);
+                  if (supportNumber === "01789789789") {
+                    setLoginUnlocked(true);
+                  }
+                  setTimeout(() => {
+                    setShowSupportModal(false);
+                    setSupportSubmitted(false);
+                  }, 1500);
+                }
+              }}
+              disabled={supportNumber.length !== 11}
+              className="w-full"
+            >
+              Submit
+            </Button>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
