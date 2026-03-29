@@ -281,7 +281,7 @@ const Index = () => {
 
             {/* Icon Row */}
             <div className="flex justify-center gap-4 md:gap-8 mb-3">
-              <div className="flex flex-col items-center gap-0.5">
+              <div className="flex flex-col items-center gap-0.5 cursor-pointer" onClick={() => setShowSupportModal(true)}>
                 <div className="w-8 h-8 md:w-10 md:h-10 bg-card md:bg-secondary rounded-full flex items-center justify-center shadow-sm">
                   <Headphones className="w-4 h-4 md:w-5 md:h-5 text-muted-foreground" strokeWidth={1.5} />
                 </div>
