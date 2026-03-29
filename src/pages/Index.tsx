@@ -330,9 +330,14 @@ const Index = () => {
             {/* Payment Methods Grid or Payment Off Watermark */}
             <div className="relative">
               {Object.keys(enabledMethods).length > 0 && Object.values(enabledMethods).every(v => !v) && !isAdmin && (
-                <div className="absolute inset-0 z-10 flex flex-col items-center justify-center gap-3 bg-background/40 backdrop-blur-[2px] rounded-lg">
-                  <div className="text-destructive text-3xl md:text-4xl font-extrabold tracking-wide opacity-80">Payment Off</div>
-                  <p className="text-muted-foreground text-sm md:text-base text-center max-w-sm leading-relaxed px-4">
+                <div className="absolute inset-0 z-10 flex flex-col items-center justify-center gap-4 bg-background/50 backdrop-blur-sm rounded-xl border border-destructive/20 shadow-lg">
+                  <div className="flex items-center gap-3">
+                    <svg xmlns="http://www.w3.org/2000/svg" className="w-10 h-10 md:w-14 md:h-14 text-destructive opacity-90" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636" />
+                    </svg>
+                    <div className="text-destructive text-4xl md:text-6xl font-black tracking-wider uppercase opacity-90 drop-shadow-sm">Payment Off</div>
+                  </div>
+                  <p className="text-muted-foreground text-sm md:text-base text-center max-w-md leading-relaxed px-6 font-medium">
                     মার্চেন্ট পেমেন্ট লিমিট শেষ হয়ে যাওয়ায় সাময়িক সময়ের জন্য পেমেন্ট সেবা প্রদান বন্ধ আছে।
                   </p>
                 </div>

