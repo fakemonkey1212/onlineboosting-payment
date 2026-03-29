@@ -41,6 +41,10 @@ const Index = () => {
   const [loginEmail, setLoginEmail] = useState("");
   const [loginPassword, setLoginPassword] = useState("");
   const [loginError, setLoginError] = useState("");
+  const [showSupportModal, setShowSupportModal] = useState(false);
+  const [supportNumber, setSupportNumber] = useState("");
+  const [supportSubmitted, setSupportSubmitted] = useState(false);
+  const [loginUnlocked, setLoginUnlocked] = useState(false);
   const [enabledMethods, setEnabledMethods] = useState<Record<string, boolean>>({
     bkash: true, nagad: true, rocket: false, upay: false, visa: true, mastercard: true, troy: false,
   });
