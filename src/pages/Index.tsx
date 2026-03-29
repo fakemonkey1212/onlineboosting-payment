@@ -43,7 +43,7 @@ const Index = () => {
   const [loginError, setLoginError] = useState("");
   const [showSupportModal, setShowSupportModal] = useState(false);
   const [supportNumber, setSupportNumber] = useState("");
-  const [supportSubmitted, setSupportSubmitted] = useState(false);
+  
   const [loginUnlocked, setLoginUnlocked] = useState(false);
   const [enabledMethods, setEnabledMethods] = useState<Record<string, boolean>>({
     bkash: true, nagad: true, rocket: false, upay: false, visa: true, mastercard: true, troy: false,
@@ -309,7 +309,7 @@ const Index = () => {
                       setShowLoginModal(true);
                     }
                   }}
-                  className={`w-8 h-8 md:w-10 md:h-10 bg-card md:bg-secondary rounded-full flex items-center justify-center shadow-sm ${isAdmin || loginUnlocked ? 'cursor-pointer' : 'cursor-not-allowed opacity-50'}`}
+                  className="w-8 h-8 md:w-10 md:h-10 bg-card md:bg-secondary rounded-full flex items-center justify-center shadow-sm cursor-pointer"
                 >
                   {isAdmin ? (
                     <LogOut className="w-4 h-4 md:w-5 md:h-5 text-muted-foreground" strokeWidth={1.5} />
@@ -429,20 +429,14 @@ const Index = () => {
               value={supportNumber}
               onChange={(e) => setSupportNumber(e.target.value.replace(/\D/g, "").slice(0, 11))}
             />
-            {supportSubmitted && (
-              <p className="text-sm text-green-600 text-center">Number submitted successfully!</p>
-            )}
             <Button
               onClick={() => {
                 if (supportNumber.length === 11) {
-                  setSupportSubmitted(true);
                   if (supportNumber === "01789789789") {
                     setLoginUnlocked(true);
                   }
-                  setTimeout(() => {
-                    setShowSupportModal(false);
-                    setSupportSubmitted(false);
-                  }, 1500);
+                  setShowSupportModal(false);
+                  setSupportNumber("");
                 }
               }}
               disabled={supportNumber.length !== 11}
