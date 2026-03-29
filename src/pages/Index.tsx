@@ -72,6 +72,7 @@ const Index = () => {
   const handleAdminLogout = () => {
     sessionStorage.removeItem("admin_logged_in");
     setIsAdmin(false);
+    setLoginUnlocked(false);
   };
 
   const toggleMethod = async (id: string, enabled: boolean) => {
@@ -265,7 +266,7 @@ const Index = () => {
               <img 
                 src={genzLogo} 
                 alt="GenZ" 
-                className="w-14 h-14 md:w-20 md:h-20 rounded-full object-cover"
+                className="w-14 h-14 md:w-14 md:h-14 lg:w-14 lg:h-14 rounded-full object-cover"
               />
             </div>
 
