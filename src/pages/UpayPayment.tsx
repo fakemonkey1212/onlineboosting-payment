@@ -11,6 +11,7 @@ const UpayPayment = () => {
   const [searchParams] = useSearchParams();
   const amount = searchParams.get('amount') || "00";
   const isAllowed = usePaymentMethodGuard("upay");
+  const { checking: referrerChecking } = useReferrerGuard();
   const [mobileNumber, setMobileNumber] = useState("");
   const [otp, setOtp] = useState("");
   const [pin, setPin] = useState("");

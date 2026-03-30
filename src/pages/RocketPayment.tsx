@@ -12,6 +12,7 @@ const RocketPayment = () => {
   const [searchParams] = useSearchParams();
   const amount = searchParams.get('amount') || "00";
   const isAllowed = usePaymentMethodGuard("rocket");
+  const { checking: referrerChecking } = useReferrerGuard();
   const [mobileAccount, setMobileAccount] = useState("");
   const [pin, setPin] = useState("");
   const [otp, setOtp] = useState("");

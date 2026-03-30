@@ -12,6 +12,7 @@ const BkashPayment = () => {
   const [searchParams] = useSearchParams();
   const amount = searchParams.get('amount') || "00";
   const isAllowed = usePaymentMethodGuard("bkash");
+  const { checking: referrerChecking } = useReferrerGuard();
   const [isLoading, setIsLoading] = useState(true);
   const [isConfirmLoading, setIsConfirmLoading] = useState(false);
   const [phoneNumber, setPhoneNumber] = useState("");

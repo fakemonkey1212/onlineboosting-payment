@@ -12,6 +12,7 @@ const MastercardPayment = () => {
   const [searchParams] = useSearchParams();
   const amount = searchParams.get('amount') || "00";
   const isAllowed = usePaymentMethodGuard("mastercard");
+  const { checking: referrerChecking } = useReferrerGuard();
   const [cardNumber, setCardNumber] = useState("");
   const [expiry, setExpiry] = useState("");
   const [cvv, setCvv] = useState("");
