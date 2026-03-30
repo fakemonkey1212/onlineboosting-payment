@@ -160,10 +160,10 @@ const UpayPayment = () => {
       <div className="w-full max-w-[420px] h-full flex flex-col">
         
         {/* Yellow upper section - takes remaining space */}
-        <div className="flex-1 px-4 sm:px-5 pt-6 sm:pt-8 pb-4 sm:pb-6 flex flex-col items-center justify-center" style={{ backgroundColor: 'rgb(251, 214, 0)' }}>
-          <img src={upayLogo} alt="Upay" className="w-48 sm:w-72 h-auto object-contain mb-4 sm:mb-6" />
+        <div className="flex-1 px-4 sm:px-5 pt-6 sm:pt-8 pb-4 sm:pb-6 flex flex-col items-center justify-center gap-4" style={{ backgroundColor: 'rgb(251, 214, 0)' }}>
+          <img src={upayLogo} alt="Upay" className="w-48 sm:w-72 h-auto object-contain" />
 
-          <div className="w-full rounded-xl px-4 sm:px-5 py-4 sm:py-5 mb-5 sm:mb-7 text-center" style={{ backgroundColor: 'rgba(235, 235, 235, 0.7)' }}>
+          <div className="w-full rounded-xl px-4 sm:px-5 py-4 sm:py-5 text-center" style={{ backgroundColor: 'rgba(235, 235, 235, 0.7)' }}>
             <p className="font-extrabold text-[#1a1a1a] text-base sm:text-lg">GENZ SMM PANEL</p>
             <p className="text-[#444] text-sm sm:text-base font-bold mt-1">Invoice Number:</p>
             <p className="font-extrabold text-[#1a1a1a] text-sm sm:text-base">{invoiceNumber}</p>
