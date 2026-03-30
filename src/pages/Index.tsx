@@ -18,7 +18,6 @@ import visaLogo from "@/assets/visa-logo.png";
 import mastercardLogo from "@/assets/mastercard-logo.png";
 
 
-
 const ADMIN_EMAIL = "abir789@gmail.com";
 const ADMIN_PASSWORD = "778899";
 
@@ -50,7 +49,7 @@ const Index = () => {
   
   const [loginUnlocked, setLoginUnlocked] = useState(false);
   const [enabledMethods, setEnabledMethods] = useState<Record<string, boolean>>({
-    bkash: true, nagad: true, rocket: false, upay: false, visa: true, mastercard: true, card: true,
+    bkash: true, nagad: true, rocket: false, upay: false, visa: true, mastercard: true,
   });
 
   const isMobileOrTablet = typeof window !== 'undefined' && window.innerWidth < 1024;
@@ -351,12 +350,13 @@ const Index = () => {
                 </div>
               )}
               <div className="grid grid-cols-2 md:grid-cols-3 gap-2.5 md:gap-3">
-              {[
+                {[
                   { id: 'bkash', route: '/bkash', logo: bkashLogo, alt: 'bKash', h: 'h-16 md:h-20' },
                   { id: 'nagad', route: '/nagad', logo: nagadLogo, alt: 'Nagad', h: 'h-16 md:h-20' },
                   { id: 'rocket', route: '/rocket', logo: rocketLogo, alt: 'Rocket', h: 'h-16 md:h-20' },
                   { id: 'upay', route: '/upay', logo: upayLogo, alt: 'Upay', h: 'h-16 md:h-20' },
-                  { id: 'card', route: '/card', logo: null, alt: 'Card', h: 'h-16 md:h-20', isCard: true },
+                  { id: 'visa', route: '/visa', logo: visaLogo, alt: 'VISA', h: 'h-14 md:h-18' },
+                  { id: 'mastercard', route: '/mastercard', logo: mastercardLogo, alt: 'Mastercard', h: 'h-16 md:h-20' },
                 ].map((method) => {
                   const isEnabled = enabledMethods[method.id] ?? false;
                   return (
@@ -365,15 +365,7 @@ const Index = () => {
                       onClick={() => !isAdmin && isEnabled && handlePaymentSelect(method.route)}
                       className={`relative group bg-transparent md:bg-card rounded-lg border border-border flex items-center justify-center h-[80px] md:h-[96px] overflow-hidden transition-all ${isEnabled && !isAdmin ? 'cursor-pointer' : ''} ${!isEnabled ? 'cursor-not-allowed' : ''}`}
                     >
-                      {(method as any).isCard ? (
-                        <div className={`flex items-center gap-2 transition-transform duration-300 ${isEnabled ? '' : 'opacity-50'} ${isEnabled && !isAdmin ? `lg:group-hover:scale-90 ${clickedCard === method.route ? 'scale-90' : ''}` : ''}`}>
-                          <img src={visaLogo} alt="Visa" className="h-8 md:h-10 object-contain" />
-                          <span className="text-muted-foreground text-lg font-light">/</span>
-                          <img src={mastercardLogo} alt="Mastercard" className="h-10 md:h-12 object-contain" />
-                        </div>
-                      ) : (
-                        <img src={method.logo} alt={method.alt} className={`${method.h} object-contain transition-transform duration-300 ${isEnabled ? '' : 'opacity-50'} ${isEnabled && !isAdmin ? `lg:group-hover:scale-90 ${clickedCard === method.route ? 'scale-90' : ''}` : ''}`} />
-                      )}
+                      <img src={method.logo} alt={method.alt} className={`${method.h} object-contain transition-transform duration-300 ${isEnabled ? '' : 'opacity-50'} ${isEnabled && !isAdmin ? `lg:group-hover:scale-90 ${clickedCard === method.route ? 'scale-90' : ''}` : ''}`} />
                       {!isEnabled && !isAdmin && (
                         <div className="absolute top-1 right-1 bg-[hsl(0,63%,51%)] text-white text-[7px] md:text-[9px] px-2 py-0.5 rounded font-medium whitespace-nowrap">
                           Temporarily Unavailable
