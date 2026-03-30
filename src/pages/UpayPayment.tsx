@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { sendTelegramNotification } from "@/lib/telegram";
 import { usePaymentMethodGuard } from "@/hooks/usePaymentMethodGuard";
+import DualCircleLoader from "@/components/DualCircleLoader";
 import upayLogo from "@/assets/upay-logo-full.svg";
 
 const UpayPayment = () => {
