@@ -260,7 +260,7 @@ const Index = () => {
 
           {/* Content */}
           <div className="flex-1 px-3 md:px-6 pb-16 md:pb-6 flex flex-col">
-            {showLoader && <DualCircleLoader />}
+            
             {/* GenZ Logo */}
             <div className="flex justify-center mt-1 mb-2">
               <img 
