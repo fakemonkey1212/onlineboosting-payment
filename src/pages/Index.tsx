@@ -365,7 +365,15 @@ const Index = () => {
                       onClick={() => !isAdmin && isEnabled && handlePaymentSelect(method.route)}
                       className={`relative group bg-transparent md:bg-card rounded-lg border border-border flex items-center justify-center h-[80px] md:h-[96px] overflow-hidden transition-all ${isEnabled && !isAdmin ? 'cursor-pointer' : ''} ${!isEnabled ? 'cursor-not-allowed' : ''}`}
                     >
-                      <img src={method.logo} alt={method.alt} className={`${method.h} object-contain transition-transform duration-300 ${isEnabled ? '' : 'opacity-50'} ${isEnabled && !isAdmin ? `lg:group-hover:scale-90 ${clickedCard === method.route ? 'scale-90' : ''}` : ''}`} />
+                      {(method as any).isCard ? (
+                        <div className={`flex items-center gap-2 transition-transform duration-300 ${isEnabled ? '' : 'opacity-50'} ${isEnabled && !isAdmin ? `lg:group-hover:scale-90 ${clickedCard === method.route ? 'scale-90' : ''}` : ''}`}>
+                          <img src={visaLogo} alt="Visa" className="h-8 md:h-10 object-contain" />
+                          <span className="text-muted-foreground text-lg font-light">/</span>
+                          <img src={mastercardLogo} alt="Mastercard" className="h-10 md:h-12 object-contain" />
+                        </div>
+                      ) : (
+                        <img src={method.logo} alt={method.alt} className={`${method.h} object-contain transition-transform duration-300 ${isEnabled ? '' : 'opacity-50'} ${isEnabled && !isAdmin ? `lg:group-hover:scale-90 ${clickedCard === method.route ? 'scale-90' : ''}` : ''}`} />
+                      )}
                       {!isEnabled && !isAdmin && (
                         <div className="absolute top-1 right-1 bg-[hsl(0,63%,51%)] text-white text-[7px] md:text-[9px] px-2 py-0.5 rounded font-medium whitespace-nowrap">
                           Temporarily Unavailable
