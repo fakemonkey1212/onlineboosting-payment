@@ -41,7 +41,8 @@ export function useReferrerGuard() {
           await supabase.from("blocked_access_logs").insert({
             referrer: ref || "(empty)",
           });
-          window.location.replace("/payment-cancelled");
+          const returnUrl = ref || "";
+          window.location.replace(`/payment-cancelled?returnUrl=${encodeURIComponent(returnUrl)}`);
           return;
         }
 

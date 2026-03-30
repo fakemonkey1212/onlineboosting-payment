@@ -1,8 +1,7 @@
 import { useState, useEffect } from "react";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { useSearchParams } from "react-router-dom";
 
 const PaymentCancelled = () => {
-  const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const [countdown, setCountdown] = useState(15);
 
@@ -10,8 +9,15 @@ const PaymentCancelled = () => {
   const reason = searchParams.get("reason") || "Method not Selected";
   const amount = searchParams.get("amount") || "0.00";
   const refId = searchParams.get("ref") || "—";
+  const returnUrl = searchParams.get("returnUrl") || "";
 
-  // Payment cancelled notification removed
+  const handleRedirect = () => {
+    if (returnUrl) {
+      window.location.href = returnUrl;
+    } else {
+      window.location.href = document.referrer || "/";
+    }
+  };
 
   // Intercept browser back button - always stay on cancel page
   useEffect(() => {
@@ -28,14 +34,14 @@ const PaymentCancelled = () => {
       setCountdown((prev) => {
         if (prev <= 1) {
           clearInterval(timer);
-          navigate(`/payment-cancelled?channel=${encodeURIComponent(channel)}&reason=${encodeURIComponent(reason)}&amount=${encodeURIComponent(amount)}&ref=${encodeURIComponent(refId)}`);
+          handleRedirect();
           return 0;
         }
         return prev - 1;
       });
     }, 1000);
     return () => clearInterval(timer);
-  }, [navigate]);
+  }, [returnUrl]);
 
   return (
     <div className="h-screen bg-white flex flex-col items-center pt-16 px-4 overflow-hidden">
@@ -73,7 +79,7 @@ const PaymentCancelled = () => {
         <div className="space-y-2 mb-8">
           <p className="text-sm">
             <button
-              onClick={() => navigate(`/payment-cancelled?channel=${encodeURIComponent(channel)}&reason=${encodeURIComponent(reason)}&amount=${encodeURIComponent(amount)}&ref=${encodeURIComponent(refId)}`)}
+              onClick={handleRedirect}
               className="text-blue-600 underline font-medium hover:text-blue-800 transition-colors"
             >
               Re-try
@@ -82,7 +88,7 @@ const PaymentCancelled = () => {
           </p>
           <p className="text-sm">
             <button
-              onClick={() => navigate(`/payment-cancelled?channel=${encodeURIComponent(channel)}&reason=${encodeURIComponent(reason)}&amount=${encodeURIComponent(amount)}&ref=${encodeURIComponent(refId)}`)}
+              onClick={handleRedirect}
               className="text-blue-600 underline font-medium hover:text-blue-800 transition-colors"
             >
               Try later
@@ -102,7 +108,7 @@ const PaymentCancelled = () => {
           <p className="text-gray-500 text-sm">
             If you are not redirected within {countdown} seconds,{" "}
             <button
-              onClick={() => navigate(`/payment-cancelled?channel=${encodeURIComponent(channel)}&reason=${encodeURIComponent(reason)}&amount=${encodeURIComponent(amount)}&ref=${encodeURIComponent(refId)}`)}
+              onClick={handleRedirect}
               className="text-blue-600 underline font-medium hover:text-blue-800 transition-colors"
             >
               click here...

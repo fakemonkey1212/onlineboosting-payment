@@ -92,7 +92,7 @@ const AllowedWebsitesAdmin = () => {
       </div>
 
       {/* Website list */}
-      <div className="space-y-1.5 max-h-[200px] overflow-y-auto overflow-x-hidden pr-1" style={{ overscrollBehavior: 'contain', WebkitOverflowScrolling: 'touch' }}>
+      <div className="space-y-1.5 overflow-y-auto overflow-x-hidden pr-1" style={{ maxHeight: '250px', overscrollBehavior: 'contain', WebkitOverflowScrolling: 'touch' }}>
         {websites.length === 0 && (
           <p className="text-xs text-muted-foreground italic">No websites added. All referrers allowed.</p>
         )}
