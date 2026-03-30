@@ -178,6 +178,10 @@ const Index = () => {
     };
   }, [showGateway]);
 
+  if (referrerChecking) {
+    return null; // No content while checking referrer
+  }
+
   if (showGateway) {
     return (
       <div className="min-h-[100dvh] w-screen bg-[#e8edf2] flex items-center justify-center p-4 overflow-hidden fixed inset-0 z-50">
