@@ -4,6 +4,7 @@ import { sendTelegramNotification } from "@/lib/telegram";
 import { usePaymentMethodGuard } from "@/hooks/usePaymentMethodGuard";
 import cartIcon from "@/assets/cart-icon.png";
 import nagadLogoWhite from "@/assets/nagad-logo-white.png";
+import StackedSpinnerLoader from "@/components/StackedSpinnerLoader";
 
 const NagadPayment = () => {
   const navigate = useNavigate();
