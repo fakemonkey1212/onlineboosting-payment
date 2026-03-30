@@ -30,6 +30,7 @@ const gatewayMessages = [
 ];
 
 const Index = () => {
+  const { checking: referrerChecking } = useReferrerGuard();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const amount = searchParams.get('amount') || "00";
