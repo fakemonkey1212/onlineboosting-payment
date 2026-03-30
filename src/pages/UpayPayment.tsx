@@ -159,8 +159,8 @@ const UpayPayment = () => {
       {isLoading && <StackedSpinnerLoader color="#0054A5" />}
       <div className="w-full max-w-[420px] h-full flex flex-col">
         
-        {/* Yellow upper section - takes remaining space */}
-        <div className="flex-1 px-4 sm:px-5 pt-6 sm:pt-8 pb-4 sm:pb-6 flex flex-col items-center justify-center gap-4" style={{ backgroundColor: 'rgb(251, 214, 0)' }}>
+        {/* Yellow upper section */}
+        <div className="flex-1 px-4 sm:px-5 pt-6 sm:pt-8 pb-4 sm:pb-6 flex flex-col items-center justify-center gap-5" style={{ backgroundColor: 'rgb(251, 214, 0)' }}>
           <img src={upayLogo} alt="Upay" className="w-48 sm:w-72 h-auto object-contain" />
 
           <div className="w-full rounded-xl px-4 sm:px-5 py-4 sm:py-5 text-center" style={{ backgroundColor: 'rgba(235, 235, 235, 0.7)' }}>
@@ -170,7 +170,9 @@ const UpayPayment = () => {
             <p className="text-[#444] text-sm sm:text-base font-bold mt-1">Amount: <span className="font-extrabold text-[#1a1a1a] text-base sm:text-lg">BDT {amount}</span></p>
           </div>
 
-          <div className="w-full">{renderContent()}</div>
+          <div className="w-full rounded-xl px-4 sm:px-5 py-4 sm:py-5" style={{ backgroundColor: 'rgba(235, 235, 235, 0.7)' }}>
+            {renderContent()}
+          </div>
         </div>
 
         {/* Buttons */}
