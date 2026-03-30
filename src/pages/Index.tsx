@@ -251,7 +251,7 @@ const Index = () => {
 
   return (
     <div className="h-screen bg-background flex items-start md:items-center justify-center p-2 md:p-4 overflow-hidden">
-      <div className="w-full max-w-[520px] md:max-w-[700px] lg:max-w-[800px] flex flex-col h-full md:max-h-[720px]">
+      <div className="w-full max-w-[520px] md:max-w-[700px] lg:max-w-[800px] flex flex-col h-full">
         {/* Card - white on desktop, transparent on mobile */}
         <div className="bg-transparent md:bg-card md:rounded-2xl md:shadow-sm flex flex-col">
           {/* Top Bar - All icons in one white box */}
