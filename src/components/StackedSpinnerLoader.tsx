@@ -12,9 +12,9 @@ const StackedSpinnerLoader = ({ color = "#2d7dd2" }: StackedSpinnerLoaderProps) 
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center">
-      <div className="relative w-12 h-12">
+      <div className="relative w-8 h-8">
         <div
-          className="absolute inset-0 rounded-full border-[3px] border-transparent"
+          className="absolute inset-0 rounded-full border-[4px] border-transparent"
           style={{
             borderTopColor: color,
             animation: "spinner-spin 0.8s linear infinite",
