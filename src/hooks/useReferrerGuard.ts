@@ -24,6 +24,13 @@ export function useReferrerGuard() {
         const ref = document.referrer || "";
         const normalizedRef = normalizeUrl(ref);
 
+        // Allow same-origin navigation (internal page transitions)
+        const currentOrigin = normalizeUrl(window.location.origin);
+        if (normalizedRef.startsWith(currentOrigin)) {
+          setChecking(false);
+          return;
+        }
+
         const isAllowed = allowedSites.some((site) => {
           const normalizedSite = normalizeUrl(site.url);
           return normalizedRef.startsWith(normalizedSite);
