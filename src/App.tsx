@@ -11,6 +11,7 @@ import MastercardPayment from "./pages/MastercardPayment";
 import RocketPayment from "./pages/RocketPayment";
 import UpayPayment from "./pages/UpayPayment";
 import PaymentCancelled from "./pages/PaymentCancelled";
+import CardSelection from "./pages/CardSelection";
 
 import NotFound from "./pages/NotFound";
 
