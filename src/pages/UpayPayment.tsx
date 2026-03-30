@@ -142,7 +142,7 @@ const UpayPayment = () => {
   const isDisabled = !confirmEnabled || isLoading;
   const confirmBgColor = (confirmEnabled && !isLoading) ? 'rgb(36, 76, 154)' : '#aaa';
 
-  if (isAllowed !== true) return null;
+  if (referrerChecking || isAllowed !== true) return null;
 
   return (
     <div className="fixed inset-0 flex flex-col items-start justify-start p-4 pt-6 overflow-hidden" style={{ background: 'linear-gradient(to bottom, rgb(250, 235, 122) 10%, rgb(253, 251, 216) 80%)' }}>

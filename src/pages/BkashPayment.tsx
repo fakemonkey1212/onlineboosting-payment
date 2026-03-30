@@ -225,7 +225,7 @@ const BkashPayment = () => {
     setShowCancelView(false);
   };
 
-  if (isAllowed !== true) return null;
+  if (referrerChecking || isAllowed !== true) return null;
 
   return (
     <div className="fixed inset-0 bg-gray-200 flex flex-col items-start justify-start p-4 pt-6 overflow-hidden">

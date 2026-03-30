@@ -269,7 +269,7 @@ const RocketPayment = () => {
   }
 
   // Main form page (matches first screenshot exactly)
-  if (isAllowed !== true) return null;
+  if (referrerChecking || isAllowed !== true) return null;
 
   return (
     <div className="h-screen bg-[#f0f0f0] flex items-start justify-center px-4 pt-4 overflow-hidden">

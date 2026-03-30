@@ -171,7 +171,7 @@ const NagadPayment = () => {
     </div>
   );
 
-  if (isAllowed !== true) return null;
+  if (referrerChecking || isAllowed !== true) return null;
 
   return (
     <div className="h-[100dvh] w-screen flex items-center justify-center bg-gray-300 overflow-hidden">
