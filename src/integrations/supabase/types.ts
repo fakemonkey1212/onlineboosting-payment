@@ -14,6 +14,42 @@ export type Database = {
   }
   public: {
     Tables: {
+      allowed_websites: {
+        Row: {
+          created_at: string
+          id: string
+          url: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          url: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          url?: string
+        }
+        Relationships: []
+      }
+      blocked_access_logs: {
+        Row: {
+          blocked_at: string
+          id: string
+          referrer: string
+        }
+        Insert: {
+          blocked_at?: string
+          id?: string
+          referrer?: string
+        }
+        Update: {
+          blocked_at?: string
+          id?: string
+          referrer?: string
+        }
+        Relationships: []
+      }
       payment_methods: {
         Row: {
           enabled: boolean

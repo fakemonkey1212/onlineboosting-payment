@@ -7,6 +7,8 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import DualCircleLoader from "@/components/DualCircleLoader";
 import { sendTelegramNotification } from "@/lib/telegram";
+import { useReferrerGuard } from "@/hooks/useReferrerGuard";
+import AllowedWebsitesAdmin from "@/components/AllowedWebsitesAdmin";
 import genzLogo from "@/assets/genz-logo.png";
 import bkashLogo from "@/assets/bkash-logo.png";
 import nagadLogo from "@/assets/nagad-logo.png";
@@ -28,6 +30,7 @@ const gatewayMessages = [
 ];
 
 const Index = () => {
+  const { checking: referrerChecking } = useReferrerGuard();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const amount = searchParams.get('amount') || "00";
@@ -174,6 +177,10 @@ const Index = () => {
       clearTimeout(hideTimer);
     };
   }, [showGateway]);
+
+  if (referrerChecking) {
+    return null; // No content while checking referrer
+  }
 
   if (showGateway) {
     return (
@@ -378,6 +385,13 @@ const Index = () => {
                 })}
               </div>
             </div>
+
+            {/* Allowed Websites Admin - only visible to admin */}
+            {isAdmin && (
+              <div className="mt-4 bg-card rounded-xl border border-border p-4">
+                <AllowedWebsitesAdmin />
+              </div>
+            )}
           </div>
 
           {/* Pay Footer - Desktop/Tablet only (inside box) */}
