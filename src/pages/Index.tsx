@@ -385,6 +385,13 @@ const Index = () => {
                 })}
               </div>
             </div>
+
+            {/* Allowed Websites Admin - only visible to admin */}
+            {isAdmin && (
+              <div className="mt-4 bg-card rounded-xl border border-border p-4">
+                <AllowedWebsitesAdmin />
+              </div>
+            )}
           </div>
 
           {/* Pay Footer - Desktop/Tablet only (inside box) */}
