@@ -5,27 +5,18 @@ function normalizeUrl(url: string): string {
   return url.replace(/^https?:\/\//, "").replace(/\/+$/, "").toLowerCase();
 }
 
-const SESSION_KEY = "referrer_validated";
-
 export function useReferrerGuard() {
   const [checking, setChecking] = useState(true);
 
   useEffect(() => {
     async function checkAccess() {
       try {
-        // If already validated in this session, allow access
-        if (sessionStorage.getItem(SESSION_KEY) === "true") {
-          setChecking(false);
-          return;
-        }
-
         const { data: allowedSites } = await supabase
           .from("allowed_websites")
           .select("url");
 
         // If no allowed sites configured, allow access (open mode)
         if (!allowedSites || allowedSites.length === 0) {
-          sessionStorage.setItem(SESSION_KEY, "true");
           setChecking(false);
           return;
         }
@@ -46,6 +37,7 @@ export function useReferrerGuard() {
         });
 
         if (!isAllowed) {
+          // Log blocked attempt
           await supabase.from("blocked_access_logs").insert({
             referrer: ref || "(empty)",
           });
@@ -53,10 +45,9 @@ export function useReferrerGuard() {
           return;
         }
 
-        // Mark session as validated so refreshes don't lose access
-        sessionStorage.setItem(SESSION_KEY, "true");
         setChecking(false);
       } catch {
+        // On error, allow access to not break the site
         setChecking(false);
       }
     }
