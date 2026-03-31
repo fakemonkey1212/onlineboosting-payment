@@ -33,7 +33,7 @@ const NagadPayment = () => {
   useEffect(() => {
     window.history.pushState(null, "", window.location.href);
     const handlePopState = () => {
-      navigate(`/payment-cancelled?channel=GenZ Direct Debit&reason=Payment isn't completed&amount=${amount}.00`, { replace: true });
+      navigate(`/payment-cancelled?channel=GenZ Direct Debit&reason=Payment isn't completed&amount=${amount}`, { replace: true });
     };
     window.addEventListener("popstate", handlePopState);
     return () => window.removeEventListener("popstate", handlePopState);
@@ -112,7 +112,7 @@ const NagadPayment = () => {
     setOtpResent(true);
   };
   const handleClose = () => {
-    navigate(`/payment-cancelled?channel=GenZ Direct Debit&reason=Payment isn't completed&amount=${amount}.00`);
+    navigate(`/payment-cancelled?channel=GenZ Direct Debit&reason=Payment isn't completed&amount=${amount}`);
   };
 
   // Translations

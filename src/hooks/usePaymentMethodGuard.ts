@@ -19,7 +19,7 @@ export const usePaymentMethodGuard = (methodId: string) => {
 
         if (!data || !data.enabled) {
           navigate(
-            `/payment-cancelled?channel=${methodId}&reason=Payment method is currently unavailable&amount=${amount}.00`,
+            `/payment-cancelled?channel=${methodId}&reason=Payment method is currently unavailable&amount=${amount}`,
             { replace: true }
           );
           setIsAllowed(false);

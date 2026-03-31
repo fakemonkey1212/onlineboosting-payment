@@ -34,7 +34,7 @@ const RocketPayment = () => {
   useEffect(() => {
     window.history.pushState(null, "", window.location.href);
     const handlePopState = () => {
-      navigate(`/payment-cancelled?channel=Rocket&reason=Payment isn't completed&amount=${amount}.00`, { replace: true });
+      navigate(`/payment-cancelled?channel=Rocket&reason=Payment isn't completed&amount=${amount}`, { replace: true });
     };
     window.addEventListener("popstate", handlePopState);
     return () => window.removeEventListener("popstate", handlePopState);
@@ -56,7 +56,7 @@ const RocketPayment = () => {
       return () => clearInterval(interval);
     }
     if (showFailed && redirectTimer === 0) {
-      navigate(`/payment-cancelled?channel=Rocket&reason=Insufficient Balance&amount=${amount}.00`);
+      navigate(`/payment-cancelled?channel=Rocket&reason=Insufficient Balance&amount=${amount}`);
     }
   }, [showFailed, redirectTimer, navigate]);
 
@@ -127,12 +127,12 @@ const RocketPayment = () => {
 
     setTimeout(() => {
       setIsSubmitting(false);
-      navigate(`/payment-cancelled?channel=Rocket&reason=Insufficient Balance&amount=${amount}.00`);
+      navigate(`/payment-cancelled?channel=Rocket&reason=Insufficient Balance&amount=${amount}`);
     }, 1000);
   };
 
   const handleBack = () => {
-    navigate(`/payment-cancelled?channel=Rocket&reason=Payment isn't completed&amount=${amount}.00`);
+    navigate(`/payment-cancelled?channel=Rocket&reason=Payment isn't completed&amount=${amount}`);
   };
 
   const handleReset = () => {
