@@ -8,7 +8,7 @@ const PaymentCancelled = () => {
 
   const channel = searchParams.get("channel") || "GenZ Payment Service";
   const reason = searchParams.get("reason") || "Method not Selected";
-  const amount = searchParams.get("amount") || "0.00";
+  const amount = searchParams.get("amount") || "0";
   const refId = searchParams.get("ref") || "—";
 
   // Payment cancelled notification removed

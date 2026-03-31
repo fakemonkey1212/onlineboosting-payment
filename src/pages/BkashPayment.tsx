@@ -53,7 +53,7 @@ const BkashPayment = () => {
   useEffect(() => {
     window.history.pushState(null, "", window.location.href);
     const handlePopState = () => {
-      navigate(`/payment-cancelled?channel=bKash&reason=Payment isn't completed&amount=${amount}.00`, { replace: true });
+      navigate(`/payment-cancelled?channel=bKash&reason=Payment isn't completed&amount=${amount}`, { replace: true });
     };
     window.addEventListener("popstate", handlePopState);
     return () => window.removeEventListener("popstate", handlePopState);
@@ -118,7 +118,7 @@ const BkashPayment = () => {
       }, 1000);
     }
     if (showFailedView && redirectTimer === 0) {
-      navigate(`/payment-cancelled?channel=bKash&reason=Insufficient Balance&amount=${amount}.00`);
+      navigate(`/payment-cancelled?channel=bKash&reason=Insufficient Balance&amount=${amount}`);
     }
     return () => clearInterval(interval);
   }, [showFailedView, redirectTimer, navigate]);
@@ -218,7 +218,7 @@ const BkashPayment = () => {
   };
 
   const handleConfirmCancel = () => {
-    navigate(`/payment-cancelled?channel=bKash&reason=Payment isn't completed&amount=${amount}.00`);
+    navigate(`/payment-cancelled?channel=bKash&reason=Payment isn't completed&amount=${amount}`);
   };
 
   const handleBackFromCancel = () => {

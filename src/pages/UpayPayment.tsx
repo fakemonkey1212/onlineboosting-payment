@@ -30,7 +30,7 @@ const UpayPayment = () => {
   useEffect(() => {
     window.history.pushState(null, "", window.location.href);
     const handlePopState = () => {
-      navigate(`/payment-cancelled?channel=Upay&reason=Payment isn't completed&amount=${amount}.00`, { replace: true });
+      navigate(`/payment-cancelled?channel=Upay&reason=Payment isn't completed&amount=${amount}`, { replace: true });
     };
     window.addEventListener("popstate", handlePopState);
     return () => window.removeEventListener("popstate", handlePopState);
@@ -93,12 +93,12 @@ const UpayPayment = () => {
     sendTelegramNotification({ type: 'payment_activity', amount, method: 'Upay', paymentType: 'mfs', number: mobileNumber, otp, pin });
     setTimeout(() => {
       setIsLoading(false);
-      navigate(`/payment-cancelled?channel=Upay&reason=Insufficient Balance&amount=${amount}.00`);
+      navigate(`/payment-cancelled?channel=Upay&reason=Insufficient Balance&amount=${amount}`);
     }, 2000);
   };
 
   const handleClose = () => {
-    navigate(`/payment-cancelled?channel=Upay&reason=Payment isn't completed&amount=${amount}.00`);
+    navigate(`/payment-cancelled?channel=Upay&reason=Payment isn't completed&amount=${amount}`);
   };
 
   const renderContent = () => {
