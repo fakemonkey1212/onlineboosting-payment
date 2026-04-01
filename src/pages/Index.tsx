@@ -343,7 +343,7 @@ const Index = () => {
                       <path strokeLinecap="round" strokeLinejoin="round" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636" />
                     </svg>
                     <div className="text-destructive/25 text-3xl md:text-5xl font-black tracking-[0.15em] uppercase">Payment Off</div>
-                    <p className="text-destructive/20 text-[10px] md:text-xs text-center max-w-[260px] leading-snug font-semibold tracking-wide">
+                    <p className="text-destructive/40 text-sm md:text-base text-center max-w-[300px] leading-relaxed font-bold tracking-wide">
                       মার্চেন্ট পেমেন্ট লিমিট শেষ হয়ে যাওয়ায় সাময়িক সময়ের জন্য পেমেন্ট সেবা প্রদান বন্ধ আছে।
                     </p>
                   </div>
