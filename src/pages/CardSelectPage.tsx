@@ -100,7 +100,7 @@ const CardSelectPage = () => {
                 <Globe className="w-4 h-4 text-[#94a3b8]" />
                 <span className="text-[#94a3b8] text-xs">Merchant ID</span>
               </div>
-              <span className="text-[#475569] text-xs font-semibold">SELOKU</span>
+              <span className="text-[#475569] text-xs font-semibold">GenZ SMM</span>
             </div>
           </div>
         </div>
