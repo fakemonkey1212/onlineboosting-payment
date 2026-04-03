@@ -6,6 +6,7 @@ import { useReferrerGuard } from "@/hooks/useReferrerGuard";
 import { Phone, Hand, XCircle } from "lucide-react";
 import genzLogo from "@/assets/genz-logo.png";
 import bkashLogoImg from "@/assets/bkash-logo.png";
+import CancelPaymentDialog from "@/components/CancelPaymentDialog";
 
 const BkashPayment = () => {
   const navigate = useNavigate();
