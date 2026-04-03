@@ -31,11 +31,6 @@ export function useReferrerGuard() {
           return;
         }
 
-        // Allow direct navigation / page refresh (empty referrer)
-        if (!ref) {
-          setChecking(false);
-          return;
-        }
 
         const isAllowed = allowedSites.some((site) => {
           const normalizedSite = normalizeUrl(site.url);
