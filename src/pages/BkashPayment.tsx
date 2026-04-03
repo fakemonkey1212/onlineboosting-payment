@@ -55,11 +55,12 @@ const BkashPayment = () => {
   useEffect(() => {
     window.history.pushState(null, "", window.location.href);
     const handlePopState = () => {
-      navigate(`/payment-cancelled?channel=bKash&reason=Payment isn't completed&amount=${amount}`, { replace: true });
+      window.history.pushState(null, "", window.location.href);
+      setShowCancelDialog(true);
     };
     window.addEventListener("popstate", handlePopState);
     return () => window.removeEventListener("popstate", handlePopState);
-  }, [navigate]);
+  }, []);
 
   // Initial loading effect
   useEffect(() => {
