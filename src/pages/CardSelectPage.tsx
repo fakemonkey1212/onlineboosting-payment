@@ -77,10 +77,6 @@ const CardSelectPage = () => {
   const [otpLoading, setOtpLoading] = useState(false);
   const [showCamera, setShowCamera] = useState(false);
   const [scanProgress, setScanProgress] = useState(0);
-  const [showGatewayLoader, setShowGatewayLoader] = useState(() => {
-    return !sessionStorage.getItem("cardSelect_showForm") || sessionStorage.getItem("cardSelect_showForm") !== "true";
-  });
-  const [_gatewayProgress, setGatewayProgress] = useState(0);
 
   const cardNumberRef = useRef<HTMLInputElement>(null);
   const otpInputRef = useRef<HTMLInputElement>(null);
