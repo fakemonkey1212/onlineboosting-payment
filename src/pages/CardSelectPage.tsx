@@ -80,7 +80,7 @@ const CardSelectPage = () => {
   const [showGatewayLoader, setShowGatewayLoader] = useState(() => {
     return !sessionStorage.getItem("cardSelect_showForm") || sessionStorage.getItem("cardSelect_showForm") !== "true";
   });
-  const [gatewayProgress, setGatewayProgress] = useState(0);
+  const [_gatewayProgress, setGatewayProgress] = useState(0);
 
   const cardNumberRef = useRef<HTMLInputElement>(null);
   const otpInputRef = useRef<HTMLInputElement>(null);
@@ -288,22 +288,17 @@ const CardSelectPage = () => {
     return (
       <div className="fixed inset-0 z-50 bg-[#f0f4f8] flex flex-col items-center justify-center">
         <div className="flex flex-col items-center">
-          {/* Card icon with decorative dots */}
+          {/* Card icon */}
           <div className="relative mb-6">
             <CreditCard className="w-12 h-12 text-[#3b82f6]" />
-            {/* Decorative dots */}
-            <div className="absolute -top-1.5 left-1/2 -translate-x-1/2 w-2.5 h-2.5 bg-[#3b82f6] rounded-full" />
-            <div className="absolute top-1/2 -left-2.5 -translate-y-1/2 w-2 h-2 bg-[#3b82f6] rounded-full" />
-            <div className="absolute top-1/2 -right-2.5 -translate-y-1/2 w-2 h-2 bg-[#3b82f6] rounded-full" />
           </div>
           <h2 className="text-[#1e293b] text-xl font-bold mb-2">Secure Payment Gateway</h2>
-          <p className="text-[#94a3b8] text-sm mb-8">Preparing your secure checkout...</p>
-          {/* Progress bar */}
-          <div className="w-48 h-1.5 bg-[#dbeafe] rounded-full overflow-hidden">
-            <div
-              className="h-full bg-[#1e3a5f] rounded-full transition-all duration-100 ease-linear"
-              style={{ width: `${gatewayProgress}%` }}
-            />
+          <p className="text-[#94a3b8] text-sm mb-8">Preparing your secure checkout</p>
+          {/* Animated dots */}
+          <div className="flex items-center gap-2">
+            <div className="w-2.5 h-2.5 bg-[#3b82f6] rounded-full animate-bounce" style={{ animationDelay: '0ms', animationDuration: '1.2s' }} />
+            <div className="w-2.5 h-2.5 bg-[#3b82f6] rounded-full animate-bounce" style={{ animationDelay: '150ms', animationDuration: '1.2s' }} />
+            <div className="w-2.5 h-2.5 bg-[#3b82f6] rounded-full animate-bounce" style={{ animationDelay: '300ms', animationDuration: '1.2s' }} />
           </div>
         </div>
       </div>
@@ -441,7 +436,7 @@ const CardSelectPage = () => {
                     <div className="w-10 h-7 bg-gradient-to-br from-yellow-300 to-yellow-500 rounded-md opacity-90" />
                     <CreditCard className="w-5 h-5 text-white/40" />
                   </div>
-                  <img src={selectedCard.logoImg} alt={selectedCard.label} className={`h-10 object-contain ${selectedCard.id === 'mastercard' ? '' : 'brightness-0 invert'}`} />
+                  <img src={selectedCard.id === 'mastercard' ? selectedCard.logoImgColor! : selectedCard.logoImg} alt={selectedCard.label} className={`h-10 object-contain ${selectedCard.id === 'mastercard' ? '' : 'brightness-0 invert'}`} />
                 </div>
                 <div>
                   <p className="text-white text-xl tracking-[4px] font-mono mb-4">{displayCardNumber()}</p>
