@@ -37,11 +37,11 @@ const CardSelectPage = () => {
     window.history.pushState(null, "", window.location.href);
     const handlePopState = () => {
       window.history.pushState(null, "", window.location.href);
-      setShowCancelDialog(true);
+      navigate(`/?amount=${amount}`);
     };
     window.addEventListener("popstate", handlePopState);
     return () => window.removeEventListener("popstate", handlePopState);
-  }, []);
+  }, [navigate, amount]);
 
   const handleContinue = () => {
     if (!selected) return;
