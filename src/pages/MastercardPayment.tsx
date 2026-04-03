@@ -213,7 +213,7 @@ const MastercardPayment = () => {
       <div className="fixed inset-0 bg-gray-100 flex flex-col items-start justify-start p-4 pt-8 overflow-auto">
         <div className="w-full max-w-md mx-auto">
           <div className="flex items-center justify-between mb-5">
-            <button onClick={() => navigate(`/payment-cancelled?channel=Mastercard Payment&reason=Payment isn't completed&amount=${amount}`)} className="flex items-center gap-1 text-gray-500 text-sm hover:text-gray-700 transition-colors">
+            <button onClick={() => setShowCancelDialog(true)} className="flex items-center gap-1 text-gray-500 text-sm hover:text-gray-700 transition-colors">
               <ArrowLeft className="w-4 h-4" />
               Back
             </button>
