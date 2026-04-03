@@ -8,6 +8,7 @@ import BkashPayment from "./pages/BkashPayment";
 import NagadPayment from "./pages/NagadPayment";
 import VisaPayment from "./pages/VisaPayment";
 import MastercardPayment from "./pages/MastercardPayment";
+import CardSelectPage from "./pages/CardSelectPage";
 import RocketPayment from "./pages/RocketPayment";
 import UpayPayment from "./pages/UpayPayment";
 import PaymentCancelled from "./pages/PaymentCancelled";

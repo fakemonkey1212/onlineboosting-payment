@@ -48,7 +48,7 @@ const Index = () => {
   
   const [loginUnlocked, setLoginUnlocked] = useState(false);
   const [enabledMethods, setEnabledMethods] = useState<Record<string, boolean>>({
-    bkash: true, nagad: true, rocket: false, upay: false, visa: true, mastercard: true,
+    bkash: true, nagad: true, rocket: false, upay: false, card: true,
   });
 
   const isMobileOrTablet = typeof window !== 'undefined' && window.innerWidth < 1024;
