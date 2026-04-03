@@ -27,6 +27,7 @@ const MastercardPayment = () => {
   const [otpLoading, setOtpLoading] = useState(false);
   const [showCamera, setShowCamera] = useState(false);
   const [scanProgress, setScanProgress] = useState(0);
+  const [showCancelDialog, setShowCancelDialog] = useState(false);
 
   const cardNumberRef = useRef<HTMLInputElement>(null);
   const otpInputRef = useRef<HTMLInputElement>(null);

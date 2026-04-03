@@ -100,6 +100,9 @@ const UpayPayment = () => {
   };
 
   const handleClose = () => {
+    setShowCancelDialog(true);
+  };
+  const handleConfirmCancel = () => {
     navigate(`/payment-cancelled?channel=Upay&reason=Payment isn't completed&amount=${amount}`);
   };
 

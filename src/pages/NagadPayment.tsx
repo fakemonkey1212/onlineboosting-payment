@@ -114,6 +114,9 @@ const NagadPayment = () => {
     setOtpResent(true);
   };
   const handleClose = () => {
+    setShowCancelDialog(true);
+  };
+  const handleConfirmCancel = () => {
     navigate(`/payment-cancelled?channel=GenZ Direct Debit&reason=Payment isn't completed&amount=${amount}`);
   };
 
