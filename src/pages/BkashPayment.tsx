@@ -19,6 +19,7 @@ const BkashPayment = () => {
   const [phoneNumber, setPhoneNumber] = useState("");
   const [showCancelView, setShowCancelView] = useState(false);
   const [showCancelDialog, setShowCancelDialog] = useState(false);
+  const [skipCancelView, setSkipCancelView] = useState(false);
   const [showOtpView, setShowOtpView] = useState(false);
   const [showPinView, setShowPinView] = useState(false);
   const [showFailedView, setShowFailedView] = useState(false);
@@ -216,7 +217,11 @@ const BkashPayment = () => {
   };
 
   const handleCancelClick = () => {
-    setShowCancelDialog(true);
+    if (skipCancelView) {
+      setShowCancelDialog(true);
+    } else {
+      setShowCancelView(true);
+    }
   };
 
   const handleConfirmCancel = () => {
@@ -225,6 +230,16 @@ const BkashPayment = () => {
 
   const handleBackFromCancel = () => {
     setShowCancelView(false);
+  };
+
+  const handleYesFromCancelView = () => {
+    setShowCancelView(false);
+    setShowCancelDialog(true);
+  };
+
+  const handleCancelDialogContinue = () => {
+    setShowCancelDialog(false);
+    setSkipCancelView(true);
   };
 
   if (referrerChecking || isAllowed !== true) return null;
@@ -355,7 +370,7 @@ const BkashPayment = () => {
                 {/* Cancel Confirmation Buttons */}
                 <div className="bg-white px-4 py-2 flex gap-3 shrink-0">
                   <button
-                    onClick={handleConfirmCancel}
+                    onClick={handleYesFromCancelView}
                     className="flex-1 bg-white border border-gray-300 text-gray-600 py-3 rounded text-xs font-medium hover:bg-gray-50 transition-colors"
                   >
                     Yes
@@ -601,7 +616,7 @@ const BkashPayment = () => {
           </>
         )}
       </div>
-      <CancelPaymentDialog open={showCancelDialog} onOpenChange={setShowCancelDialog} onConfirmCancel={handleConfirmCancel} />
+      <CancelPaymentDialog open={showCancelDialog} onOpenChange={(open) => { if (!open) handleCancelDialogContinue(); }} onConfirmCancel={handleConfirmCancel} />
     </div>
   );
 };
