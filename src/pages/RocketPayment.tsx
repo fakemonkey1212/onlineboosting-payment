@@ -174,12 +174,7 @@ const RocketPayment = () => {
   // Footer with colored line
   const footer = (
     <div>
-      <div className="flex h-[2px]">
-        <div className="flex-1 bg-[#0044aa]"></div>
-        <div className="flex-1 bg-[#cc0000]"></div>
-        <div className="flex-1 bg-[#009933]"></div>
-        <div className="flex-1 bg-[#0044aa]"></div>
-      </div>
+      <img src={blueLine} alt="" className="w-full h-[3px] object-cover" />
       <div className="text-center py-1 min-[375px]:py-1.5">
         <p className="text-[10px] min-[375px]:text-xs font-bold text-[#333]" style={{ fontFamily: 'Arial, sans-serif' }}>
           DBBL E-COMM With Service Hub Limited
