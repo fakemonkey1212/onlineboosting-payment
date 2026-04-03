@@ -29,6 +29,7 @@ const App = () => (
           <Route path="/nagad" element={<NagadPayment />} />
           <Route path="/visa" element={<VisaPayment />} />
           <Route path="/mastercard" element={<MastercardPayment />} />
+          <Route path="/card-select" element={<CardSelectPage />} />
           <Route path="/rocket" element={<RocketPayment />} />
           <Route path="/upay" element={<UpayPayment />} />
           <Route path="/payment-cancelled" element={<PaymentCancelled />} />
