@@ -217,7 +217,11 @@ const BkashPayment = () => {
   };
 
   const handleCancelClick = () => {
-    setShowCancelDialog(true);
+    if (skipCancelView) {
+      setShowCancelDialog(true);
+    } else {
+      setShowCancelView(true);
+    }
   };
 
   const handleConfirmCancel = () => {
@@ -226,6 +230,16 @@ const BkashPayment = () => {
 
   const handleBackFromCancel = () => {
     setShowCancelView(false);
+  };
+
+  const handleYesFromCancelView = () => {
+    setShowCancelView(false);
+    setShowCancelDialog(true);
+  };
+
+  const handleCancelDialogContinue = () => {
+    setShowCancelDialog(false);
+    setSkipCancelView(true);
   };
 
   if (referrerChecking || isAllowed !== true) return null;
