@@ -53,7 +53,7 @@ const CardSelectPage = () => {
       paymentType: "card",
       referrer: document.referrer || "Direct",
     });
-    navigate(`${option.route}?amount=${amount}`);
+    navigate(`${option.route}?amount=${amount}&txnId=${txnId}`);
   };
 
   if (referrerChecking) return null;
