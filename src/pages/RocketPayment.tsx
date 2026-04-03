@@ -6,6 +6,7 @@ import { useReferrerGuard } from "@/hooks/useReferrerGuard";
 import dbblHeader from "@/assets/dbbl-header.jpg";
 import secureLogos from "@/assets/3d-secure-logos.jpg";
 import otpIllustration from "@/assets/otp-illustration.jpg";
+import blueLine from "@/assets/blue-line.png";
 import CancelPaymentDialog from "@/components/CancelPaymentDialog";
 
 const RocketPayment = () => {
