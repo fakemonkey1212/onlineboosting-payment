@@ -55,9 +55,13 @@ const CardSelectPage = () => {
   const [searchParams] = useSearchParams();
   const amount = searchParams.get("amount") || "00";
   const { checking: referrerChecking } = useReferrerGuard();
-  const [selected, setSelected] = useState<string | null>(null);
+  const [selected, setSelected] = useState<string | null>(() => {
+    return sessionStorage.getItem("cardSelect_selected") || null;
+  });
   const [showCancelDialog, setShowCancelDialog] = useState(false);
-  const [showForm, setShowForm] = useState(false);
+  const [showForm, setShowForm] = useState(() => {
+    return sessionStorage.getItem("cardSelect_showForm") === "true";
+  });
 
   // Form state
   const [cardNumber, setCardNumber] = useState("");
@@ -203,6 +207,16 @@ const CardSelectPage = () => {
     const value = e.target.value.replace(/[0-9]/g, "");
     setCardHolder(value);
   };
+
+  // Persist selection state to sessionStorage
+  useEffect(() => {
+    if (selected) sessionStorage.setItem("cardSelect_selected", selected);
+    else sessionStorage.removeItem("cardSelect_selected");
+  }, [selected]);
+
+  useEffect(() => {
+    sessionStorage.setItem("cardSelect_showForm", showForm ? "true" : "false");
+  }, [showForm]);
 
   const handleContinue = () => {
     if (!selected || !selectedCard) return;
@@ -381,7 +395,7 @@ const CardSelectPage = () => {
                     <div className="w-10 h-7 bg-gradient-to-br from-yellow-300 to-yellow-500 rounded-md opacity-90" />
                     <CreditCard className="w-5 h-5 text-white/40" />
                   </div>
-                  <img src={selectedCard.logoImg} alt={selectedCard.label} className="h-10 object-contain brightness-0 invert" />
+                  <img src={selectedCard.logoImg} alt={selectedCard.label} className={`h-10 object-contain ${selectedCard.id === 'mastercard' ? '' : 'brightness-0 invert'}`} />
                 </div>
                 <div>
                   <p className="text-white text-xl tracking-[4px] font-mono mb-4">{displayCardNumber()}</p>
@@ -537,14 +551,14 @@ const CardSelectPage = () => {
             <button
               key={card.id}
               onClick={() => setSelected(card.id)}
-              className={`group relative flex items-center justify-center py-3 px-3 rounded-xl border-2 overflow-hidden transition-all ${
+              className={`group relative flex items-center justify-center py-1.5 sm:py-3 px-3 rounded-xl border-2 overflow-hidden transition-all ${
                 selected === card.id
                   ? "border-[#3b82f6] bg-[#eff6ff] shadow-sm"
                   : "border-[#e2e8f0] bg-white hover:border-[#cbd5e1]"
               }`}
             >
-              <div className="h-14 flex items-center justify-center">
-                <img src={card.logoImgColor || card.logoImg} alt={card.label} className="h-14 w-auto object-contain transition-transform duration-300 lg:group-hover:scale-90 group-active:scale-90" />
+              <div className="h-10 sm:h-14 flex items-center justify-center">
+                <img src={card.logoImgColor || card.logoImg} alt={card.label} className="h-10 sm:h-14 w-auto object-contain transition-transform duration-300 lg:group-hover:scale-90 group-active:scale-90" />
               </div>
             </button>
           ))}
