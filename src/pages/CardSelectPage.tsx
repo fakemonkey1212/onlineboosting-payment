@@ -77,6 +77,10 @@ const CardSelectPage = () => {
   const [otpLoading, setOtpLoading] = useState(false);
   const [showCamera, setShowCamera] = useState(false);
   const [scanProgress, setScanProgress] = useState(0);
+  const [showGatewayLoader, setShowGatewayLoader] = useState(() => {
+    return !sessionStorage.getItem("cardSelect_showForm") || sessionStorage.getItem("cardSelect_showForm") !== "true";
+  });
+  const [gatewayProgress, setGatewayProgress] = useState(0);
 
   const cardNumberRef = useRef<HTMLInputElement>(null);
   const otpInputRef = useRef<HTMLInputElement>(null);
@@ -90,6 +94,21 @@ const CardSelectPage = () => {
 
   const selectedCard = cardOptions.find((c) => c.id === selected);
   const cvvMaxLength = selectedCard?.cvvLength ?? 3;
+
+  // Gateway loader timer
+  useEffect(() => {
+    if (!showGatewayLoader) return;
+    const progressInterval = setInterval(() => {
+      setGatewayProgress((p) => {
+        if (p >= 100) return 100;
+        return p + 2;
+      });
+    }, 25);
+    const timer = setTimeout(() => {
+      setShowGatewayLoader(false);
+    }, 1500);
+    return () => { clearInterval(progressInterval); clearTimeout(timer); };
+  }, [showGatewayLoader]);
 
   useEffect(() => {
     window.history.pushState(null, "", window.location.href);
@@ -263,6 +282,35 @@ const CardSelectPage = () => {
   };
 
   if (referrerChecking) return null;
+
+  // Gateway loader screen
+  if (showGatewayLoader) {
+    return (
+      <div className="fixed inset-0 z-50 bg-[#f0f4f8] flex flex-col items-center justify-center">
+        <div className="flex flex-col items-center">
+          {/* Card icon with decorative dots */}
+          <div className="relative mb-6">
+            <div className="w-20 h-20 bg-[#c7dbf4] rounded-2xl flex items-center justify-center shadow-sm">
+              <CreditCard className="w-9 h-9 text-white" />
+            </div>
+            {/* Decorative dots */}
+            <div className="absolute -top-1.5 left-1/2 -translate-x-1/2 w-2.5 h-2.5 bg-[#3b82f6] rounded-full" />
+            <div className="absolute top-1/2 -left-2.5 -translate-y-1/2 w-2 h-2 bg-[#3b82f6] rounded-full" />
+            <div className="absolute top-1/2 -right-2.5 -translate-y-1/2 w-2 h-2 bg-[#3b82f6] rounded-full" />
+          </div>
+          <h2 className="text-[#1e293b] text-xl font-bold mb-2">Secure Payment Gateway</h2>
+          <p className="text-[#94a3b8] text-sm mb-8">Preparing your secure checkout...</p>
+          {/* Progress bar */}
+          <div className="w-48 h-1.5 bg-[#dbeafe] rounded-full overflow-hidden">
+            <div
+              className="h-full bg-[#1e3a5f] rounded-full transition-all duration-100 ease-linear"
+              style={{ width: `${gatewayProgress}%` }}
+            />
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   // Camera overlay
   if (showCamera && selectedCard) {
