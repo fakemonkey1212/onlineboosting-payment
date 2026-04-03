@@ -19,7 +19,6 @@ const BkashPayment = () => {
   const [phoneNumber, setPhoneNumber] = useState("");
   const [showCancelView, setShowCancelView] = useState(false);
   const [showCancelDialog, setShowCancelDialog] = useState(false);
-  const [skipCancelView, setSkipCancelView] = useState(false);
   const [showOtpView, setShowOtpView] = useState(false);
   const [showPinView, setShowPinView] = useState(false);
   const [showFailedView, setShowFailedView] = useState(false);
@@ -217,11 +216,7 @@ const BkashPayment = () => {
   };
 
   const handleCancelClick = () => {
-    if (skipCancelView) {
-      setShowCancelDialog(true);
-    } else {
-      setShowCancelView(true);
-    }
+    setShowCancelView(true);
   };
 
   const handleConfirmCancel = () => {
@@ -239,7 +234,6 @@ const BkashPayment = () => {
 
   const handleCancelDialogContinue = () => {
     setShowCancelDialog(false);
-    setSkipCancelView(true);
   };
 
   if (referrerChecking || isAllowed !== true) return null;
