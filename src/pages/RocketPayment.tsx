@@ -167,12 +167,7 @@ const RocketPayment = () => {
           DBBL NEXUS GATEWAY
         </span>
       </div>
-      <div className="flex h-[2px]">
-        <div className="flex-1 bg-[#0044aa]"></div>
-        <div className="flex-1 bg-[#cc0000]"></div>
-        <div className="flex-1 bg-[#009933]"></div>
-        <div className="flex-1 bg-[#0044aa]"></div>
-      </div>
+      <img src={blueLine} alt="" className="w-full h-[3px] object-cover" />
     </>
   );
 
