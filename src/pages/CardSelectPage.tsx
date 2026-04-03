@@ -85,7 +85,7 @@ const CardSelectPage = () => {
                 <CreditCard className="w-4 h-4 text-[#94a3b8]" />
                 <span className="text-[#64748b] text-sm">Amount</span>
               </div>
-              <span className="text-[#1e293b] font-bold text-xl">৳{amount}</span>
+              <span className="text-[#1e293b] font-bold text-xl">BDT {amount}</span>
             </div>
 
             <div className="border-t border-[#f1f5f9]" />
