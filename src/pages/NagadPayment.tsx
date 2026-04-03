@@ -26,6 +26,7 @@ const NagadPayment = () => {
   const [pinAttempts, setPinAttempts] = useState(0);
   const [otpResent, setOtpResent] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [showCancelDialog, setShowCancelDialog] = useState(false);
 
   const phoneInputRefs = useRef<(HTMLInputElement | null)[]>([]);
   const otpInputRef = useRef<HTMLInputElement | null>(null);
