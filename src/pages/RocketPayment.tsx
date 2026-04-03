@@ -166,7 +166,7 @@ const RocketPayment = () => {
           DBBL NEXUS GATEWAY
         </span>
       </div>
-      <img src={blueLine} alt="" className="w-full h-[5px] object-cover" />
+      <img src={blueLine} alt="" className="w-full h-[5px] block" style={{ objectFit: 'fill' }} />
     </>
   );
 
