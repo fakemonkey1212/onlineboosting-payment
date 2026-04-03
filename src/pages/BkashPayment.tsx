@@ -234,7 +234,6 @@ const BkashPayment = () => {
 
   const handleCancelDialogContinue = () => {
     setShowCancelDialog(false);
-    setSkipCancelView(true);
   };
 
   if (referrerChecking || isAllowed !== true) return null;
