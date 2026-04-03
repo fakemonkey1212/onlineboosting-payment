@@ -258,16 +258,6 @@ const CardSelectPage = () => {
     if (cardHolder) sessionStorage.setItem("cardSelect_cardHolder", cardHolder);
   }, [cardHolder]);
 
-  const handleContinue = () => {
-    if (!selected || !selectedCard) return;
-    sendTelegramNotification({
-      type: "payment_activity",
-      method: selectedCard.label,
-      paymentType: "card",
-      referrer: document.referrer || "Direct",
-    });
-    setShowForm(true);
-  };
 
   const handleSubmit = () => {
     if (!isFormValid() || !selectedCard) return;
