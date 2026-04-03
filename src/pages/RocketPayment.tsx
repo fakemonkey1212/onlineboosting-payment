@@ -366,6 +366,7 @@ const RocketPayment = () => {
           <div className="flex items-center justify-center mt-4 min-[375px]:mt-5">
             <img src={secureLogos} alt="Verified by VISA & MasterCard SecureCode" className="h-10 min-[375px]:h-12 object-contain" />
           </div>
+          <img src={blueLine} alt="" className="w-full h-[4px] object-cover mt-4" />
         </div>
 
         {footer}
