@@ -6,6 +6,7 @@ import { useReferrerGuard } from "@/hooks/useReferrerGuard";
 import { Phone, Hand, XCircle } from "lucide-react";
 import genzLogo from "@/assets/genz-logo.png";
 import bkashLogoImg from "@/assets/bkash-logo.png";
+import CancelPaymentDialog from "@/components/CancelPaymentDialog";
 
 const BkashPayment = () => {
   const navigate = useNavigate();
@@ -17,6 +18,7 @@ const BkashPayment = () => {
   const [isConfirmLoading, setIsConfirmLoading] = useState(false);
   const [phoneNumber, setPhoneNumber] = useState("");
   const [showCancelView, setShowCancelView] = useState(false);
+  const [showCancelDialog, setShowCancelDialog] = useState(false);
   const [showOtpView, setShowOtpView] = useState(false);
   const [showPinView, setShowPinView] = useState(false);
   const [showFailedView, setShowFailedView] = useState(false);
@@ -214,7 +216,7 @@ const BkashPayment = () => {
   };
 
   const handleCancelClick = () => {
-    setShowCancelView(true);
+    setShowCancelDialog(true);
   };
 
   const handleConfirmCancel = () => {
@@ -599,6 +601,7 @@ const BkashPayment = () => {
           </>
         )}
       </div>
+      <CancelPaymentDialog open={showCancelDialog} onOpenChange={setShowCancelDialog} onConfirmCancel={handleConfirmCancel} />
     </div>
   );
 };

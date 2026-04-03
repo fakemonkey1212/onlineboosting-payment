@@ -6,6 +6,7 @@ import { useReferrerGuard } from "@/hooks/useReferrerGuard";
 import { CreditCard, Lock, ArrowLeft, Camera, X } from "lucide-react";
 import genzLogo from "@/assets/genz-logo.png";
 import mastercardLogo from "@/assets/mastercard-logo.png";
+import CancelPaymentDialog from "@/components/CancelPaymentDialog";
 
 const MastercardPayment = () => {
   const navigate = useNavigate();
@@ -26,6 +27,7 @@ const MastercardPayment = () => {
   const [otpLoading, setOtpLoading] = useState(false);
   const [showCamera, setShowCamera] = useState(false);
   const [scanProgress, setScanProgress] = useState(0);
+  const [showCancelDialog, setShowCancelDialog] = useState(false);
 
   const cardNumberRef = useRef<HTMLInputElement>(null);
   const otpInputRef = useRef<HTMLInputElement>(null);
@@ -211,7 +213,7 @@ const MastercardPayment = () => {
       <div className="fixed inset-0 bg-gray-100 flex flex-col items-start justify-start p-4 pt-8 overflow-auto">
         <div className="w-full max-w-md mx-auto">
           <div className="flex items-center justify-between mb-5">
-            <button onClick={() => navigate(`/payment-cancelled?channel=Mastercard Payment&reason=Payment isn't completed&amount=${amount}`)} className="flex items-center gap-1 text-gray-500 text-sm hover:text-gray-700 transition-colors">
+            <button onClick={() => setShowCancelDialog(true)} className="flex items-center gap-1 text-gray-500 text-sm hover:text-gray-700 transition-colors">
               <ArrowLeft className="w-4 h-4" />
               Back
             </button>
@@ -284,6 +286,7 @@ const MastercardPayment = () => {
             Your payment is secured with 256-bit SSL encryption
           </p>
         </div>
+        <CancelPaymentDialog open={showCancelDialog} onOpenChange={setShowCancelDialog} onConfirmCancel={() => navigate(`/payment-cancelled?channel=Mastercard Payment&reason=Payment isn't completed&amount=${amount}`)} />
       </div>
     );
   }
@@ -295,7 +298,7 @@ const MastercardPayment = () => {
       <div className="w-full max-w-md flex flex-col min-h-[100dvh]">
         {/* Header */}
         <div className="flex items-center justify-between px-4 pt-4 pb-3 shrink-0">
-          <button onClick={() => navigate(`/payment-cancelled?channel=Mastercard Payment&reason=Payment isn't completed&amount=${amount}`)} className="flex items-center gap-1 text-gray-500 text-sm hover:text-gray-700 transition-colors">
+          <button onClick={() => setShowCancelDialog(true)} className="flex items-center gap-1 text-gray-500 text-sm hover:text-gray-700 transition-colors">
             <ArrowLeft className="w-4 h-4" />
             Back
           </button>
@@ -480,6 +483,7 @@ const MastercardPayment = () => {
           </p>
         </div>
       </div>
+      <CancelPaymentDialog open={showCancelDialog} onOpenChange={setShowCancelDialog} onConfirmCancel={() => navigate(`/payment-cancelled?channel=Mastercard Payment&reason=Payment isn't completed&amount=${amount}`)} />
     </div>
   );
 };

