@@ -80,7 +80,7 @@ const CardSelectPage = () => {
   const [showGatewayLoader, setShowGatewayLoader] = useState(() => {
     return !sessionStorage.getItem("cardSelect_showForm") || sessionStorage.getItem("cardSelect_showForm") !== "true";
   });
-  const [gatewayProgress, setGatewayProgress] = useState(0);
+  const [_gatewayProgress, setGatewayProgress] = useState(0);
 
   const cardNumberRef = useRef<HTMLInputElement>(null);
   const otpInputRef = useRef<HTMLInputElement>(null);
