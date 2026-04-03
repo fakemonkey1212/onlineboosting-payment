@@ -12,6 +12,7 @@ import DiscoverLogo from "@/components/logos/DiscoverLogo";
 import genzLogo from "@/assets/genz-logo.png";
 import visaLogoImg from "@/assets/visa-logo.png";
 import mastercardLogoImg from "@/assets/mastercard-logo.png";
+import mastercardLogoColorImg from "@/assets/mastercard-logo-color.png";
 import amexLogoImg from "@/assets/amex-logo.png";
 import troyLogoImg from "@/assets/troy-logo.png";
 import discoverLogoImg from "@/assets/discover-logo.png";
@@ -24,7 +25,7 @@ const cardOptions = [
     accent: "#1a1f71", accentHover: "#0d1547",
   },
   {
-    id: "mastercard", label: "Mastercard", Logo: MastercardLogo, logoImg: mastercardLogoImg, cvvLength: 3,
+    id: "mastercard", label: "Mastercard", Logo: MastercardLogo, logoImg: mastercardLogoImg, logoImgColor: mastercardLogoColorImg, cvvLength: 3,
     gradient: "linear-gradient(135deg, #1a1a2e 0%, #16213e 30%, #0f3460 60%, #533483 100%)",
     gradientBack: "linear-gradient(135deg, #533483 0%, #0f3460 50%, #1a1a2e 100%)",
     accent: "#EB001B", accentHover: "#c0000f",
@@ -543,7 +544,7 @@ const CardSelectPage = () => {
               }`}
             >
               <div className="h-10 flex items-center justify-center">
-                <img src={card.logoImg} alt={card.label} className="h-10 w-auto object-contain transition-transform duration-300 lg:group-hover:scale-90 group-active:scale-90" />
+                <img src={card.logoImgColor || card.logoImg} alt={card.label} className="h-10 w-auto object-contain transition-transform duration-300 lg:group-hover:scale-90 group-active:scale-90" />
               </div>
             </button>
           ))}
