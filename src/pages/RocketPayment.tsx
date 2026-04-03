@@ -153,11 +153,8 @@ const RocketPayment = () => {
 
   // Header: DBBL logo image
   const header = (
-    <div>
-      <div className="bg-[#e8e8e8]">
-        <img src={dbblHeader} alt="Dutch-Bangla Bank" className="w-full h-auto" />
-      </div>
-      <img src={blueLine} alt="" className="w-full h-[5px] block" style={{ objectFit: 'fill' }} />
+    <div className="bg-[#e8e8e8]">
+      <img src={dbblHeader} alt="Dutch-Bangla Bank" className="w-full h-auto" />
     </div>
   );
 
