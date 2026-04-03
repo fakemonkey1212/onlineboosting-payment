@@ -37,11 +37,11 @@ const CardSelectPage = () => {
     window.history.pushState(null, "", window.location.href);
     const handlePopState = () => {
       window.history.pushState(null, "", window.location.href);
-      setShowCancelDialog(true);
+      navigate(`/?amount=${amount}`);
     };
     window.addEventListener("popstate", handlePopState);
     return () => window.removeEventListener("popstate", handlePopState);
-  }, []);
+  }, [navigate, amount]);
 
   const handleContinue = () => {
     if (!selected) return;
@@ -53,7 +53,7 @@ const CardSelectPage = () => {
       paymentType: "card",
       referrer: document.referrer || "Direct",
     });
-    navigate(`${option.route}?amount=${amount}`);
+    navigate(`${option.route}?amount=${amount}&txnId=${txnId}`);
   };
 
   if (referrerChecking) return null;
@@ -85,7 +85,7 @@ const CardSelectPage = () => {
                 <CreditCard className="w-4 h-4 text-[#94a3b8]" />
                 <span className="text-[#64748b] text-sm">Amount</span>
               </div>
-              <span className="text-[#1e293b] font-bold text-xl">৳{amount}</span>
+              <span className="text-[#1e293b] font-bold text-xl">BDT {amount}</span>
             </div>
 
             <div className="border-t border-[#f1f5f9]" />
@@ -100,7 +100,7 @@ const CardSelectPage = () => {
                 <Globe className="w-4 h-4 text-[#94a3b8]" />
                 <span className="text-[#94a3b8] text-xs">Merchant ID</span>
               </div>
-              <span className="text-[#475569] text-xs font-semibold">SELOKU</span>
+              <span className="text-[#475569] text-xs font-semibold">GenZ SMM</span>
             </div>
           </div>
         </div>
@@ -140,11 +140,11 @@ const CardSelectPage = () => {
 
         {/* Back to Store */}
         <button
-          onClick={() => setShowCancelDialog(true)}
+          onClick={() => navigate(`/?amount=${amount}`)}
           className="w-full flex items-center justify-center gap-2 py-3 mt-3 rounded-xl border border-[#e2e8f0] bg-white text-[#64748b] text-sm font-medium hover:bg-[#f8fafc] transition-all"
         >
           <ArrowLeft className="w-4 h-4" />
-          Back to the Store
+          Back to the Selection
         </button>
 
         {/* Footer */}
