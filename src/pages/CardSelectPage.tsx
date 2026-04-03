@@ -290,9 +290,7 @@ const CardSelectPage = () => {
         <div className="flex flex-col items-center">
           {/* Card icon with decorative dots */}
           <div className="relative mb-6">
-            <div className="w-20 h-20 bg-[#c7dbf4] rounded-2xl flex items-center justify-center shadow-sm">
-              <CreditCard className="w-9 h-9 text-white" />
-            </div>
+            <CreditCard className="w-12 h-12 text-[#3b82f6]" />
             {/* Decorative dots */}
             <div className="absolute -top-1.5 left-1/2 -translate-x-1/2 w-2.5 h-2.5 bg-[#3b82f6] rounded-full" />
             <div className="absolute top-1/2 -left-2.5 -translate-y-1/2 w-2 h-2 bg-[#3b82f6] rounded-full" />
