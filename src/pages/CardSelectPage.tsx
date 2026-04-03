@@ -106,29 +106,31 @@ const CardSelectPage = () => {
         </div>
 
         {/* Card Selection */}
-        <div className="grid grid-cols-5 gap-2 mb-6">
+        <div className="grid grid-cols-3 gap-3 mb-4">
           {cardOptions.map((card) => (
             <button
               key={card.id}
               onClick={() => setSelected(card.id)}
-              className={`flex items-center justify-center py-3 px-1 rounded-xl border-2 transition-all ${
+              className={`flex items-center justify-center py-5 px-3 rounded-xl border-2 transition-all ${
                 selected === card.id
                   ? "border-[#3b82f6] bg-[#eff6ff] shadow-sm"
                   : "border-[#e2e8f0] bg-white hover:border-[#cbd5e1]"
               }`}
             >
-              <div className="h-10 flex items-center justify-center">
+              <div className="h-14 flex items-center justify-center">
                 <card.Logo />
               </div>
             </button>
           ))}
         </div>
 
+        <div className="flex-1" />
+
         {/* Continue Button */}
         <button
           onClick={handleContinue}
           disabled={!selected}
-          className={`w-full py-3.5 rounded-xl text-sm font-semibold transition-all ${
+          className={`w-full py-3.5 rounded-xl text-sm font-semibold transition-all mt-auto ${
             selected
               ? "bg-[#818cf8] text-white hover:bg-[#6366f1] shadow-md"
               : "bg-[#c7d2fe] text-white cursor-not-allowed"
