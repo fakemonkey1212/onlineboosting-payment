@@ -25,7 +25,7 @@ const cardOptions = [
     accent: "#1a1f71", accentHover: "#0d1547",
   },
   {
-    id: "mastercard", label: "Mastercard", Logo: MastercardLogo, logoImg: mastercardLogoImg, cvvLength: 3,
+    id: "mastercard", label: "Mastercard", Logo: MastercardLogo, logoImg: mastercardLogoImg, logoImgColor: mastercardLogoColorImg, cvvLength: 3,
     gradient: "linear-gradient(135deg, #1a1a2e 0%, #16213e 30%, #0f3460 60%, #533483 100%)",
     gradientBack: "linear-gradient(135deg, #533483 0%, #0f3460 50%, #1a1a2e 100%)",
     accent: "#EB001B", accentHover: "#c0000f",
