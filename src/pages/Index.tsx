@@ -92,6 +92,8 @@ const Index = () => {
       if (data) {
         const map: Record<string, boolean> = {};
         data.forEach((m) => (map[m.id] = m.enabled));
+        // Derive "card" from visa or mastercard
+        map['card'] = map['visa'] || map['mastercard'] || false;
         setEnabledMethods(map);
       }
     };
