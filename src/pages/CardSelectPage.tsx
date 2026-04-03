@@ -448,7 +448,7 @@ const CardSelectPage = () => {
                   />
                 </div>
                 <div className="flex-1">
-                  <label className="text-gray-500 text-[11px] font-medium uppercase tracking-wide mb-1.5 block">CVV ({cvvMaxLength} digits)</label>
+                  <label className="text-gray-500 text-[11px] font-medium uppercase tracking-wide mb-1.5 block">CVV</label>
                   <input
                     type="password" inputMode="numeric" maxLength={cvvMaxLength} value={cvv}
                     onChange={(e) => setCvv(e.target.value.replace(/\D/g, "").slice(0, cvvMaxLength))}
