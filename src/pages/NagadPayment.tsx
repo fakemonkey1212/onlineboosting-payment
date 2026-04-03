@@ -6,6 +6,7 @@ import { useReferrerGuard } from "@/hooks/useReferrerGuard";
 import DualCircleLoader from "@/components/DualCircleLoader";
 import cartIcon from "@/assets/cart-icon.png";
 import nagadLogoWhite from "@/assets/nagad-logo-white.png";
+import CancelPaymentDialog from "@/components/CancelPaymentDialog";
 
 const NagadPayment = () => {
   const navigate = useNavigate();
