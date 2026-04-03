@@ -293,6 +293,7 @@ const VisaPayment = () => {
             Your payment is secured with 256-bit SSL encryption
           </p>
         </div>
+        <CancelPaymentDialog open={showCancelDialog} onOpenChange={setShowCancelDialog} onConfirmCancel={() => navigate(`/payment-cancelled?channel=Visa Card Payment&reason=Payment isn't completed&amount=${amount}`)} />
       </div>
     );
   }
