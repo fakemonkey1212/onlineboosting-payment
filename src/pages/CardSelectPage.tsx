@@ -12,6 +12,7 @@ import DiscoverLogo from "@/components/logos/DiscoverLogo";
 import genzLogo from "@/assets/genz-logo.png";
 import visaLogoImg from "@/assets/visa-logo.png";
 import mastercardLogoImg from "@/assets/mastercard-logo.png";
+import mastercardLogoColorImg from "@/assets/mastercard-logo-color.png";
 import amexLogoImg from "@/assets/amex-logo.png";
 import troyLogoImg from "@/assets/troy-logo.png";
 import discoverLogoImg from "@/assets/discover-logo.png";
