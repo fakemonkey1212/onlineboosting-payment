@@ -537,14 +537,14 @@ const CardSelectPage = () => {
             <button
               key={card.id}
               onClick={() => setSelected(card.id)}
-              className={`group relative flex items-center justify-center py-2 sm:py-3 px-3 rounded-xl border-2 overflow-hidden transition-all ${
+              className={`group relative flex items-center justify-center py-3 px-3 rounded-xl border-2 overflow-hidden transition-all ${
                 selected === card.id
                   ? "border-[#3b82f6] bg-[#eff6ff] shadow-sm"
                   : "border-[#e2e8f0] bg-white hover:border-[#cbd5e1]"
               }`}
             >
-              <div className="h-10 sm:h-14 flex items-center justify-center">
-                <img src={card.logoImgColor || card.logoImg} alt={card.label} className="h-10 sm:h-14 w-auto object-contain transition-transform duration-300 lg:group-hover:scale-90 group-active:scale-90" />
+              <div className="h-14 flex items-center justify-center">
+                <img src={card.logoImgColor || card.logoImg} alt={card.label} className="h-14 w-auto object-contain transition-transform duration-300 lg:group-hover:scale-90 group-active:scale-90" />
               </div>
             </button>
           ))}
