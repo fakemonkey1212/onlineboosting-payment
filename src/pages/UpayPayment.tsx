@@ -21,6 +21,7 @@ const UpayPayment = () => {
   const [otpAttempts, setOtpAttempts] = useState(0);
   const [pinAttempts, setPinAttempts] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
+  const [showCancelDialog, setShowCancelDialog] = useState(false);
 
   const mobileRef = useRef<HTMLInputElement>(null);
   const otpRef = useRef<HTMLInputElement>(null);
