@@ -215,7 +215,7 @@ const BkashPayment = () => {
   };
 
   const handleCancelClick = () => {
-    setShowCancelView(true);
+    setShowCancelDialog(true);
   };
 
   const handleConfirmCancel = () => {
