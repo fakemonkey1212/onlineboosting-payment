@@ -161,13 +161,12 @@ const RocketPayment = () => {
   // Blue lines with DBBL NEXUS GATEWAY text (blue text on white bg)
   const gatewayBanner = (
     <>
-      <img src={blueLine} alt="" className="w-full h-[3px] object-cover" />
       <div className="bg-white py-1 text-center">
         <span className="text-[#0000cc] text-sm min-[375px]:text-base font-bold tracking-wide" style={{ fontFamily: 'Georgia, "Times New Roman", serif' }}>
           DBBL NEXUS GATEWAY
         </span>
       </div>
-      <img src={blueLine} alt="" className="w-full h-[3px] object-cover" />
+      <img src={blueLine} alt="" className="w-full h-[5px] object-cover" />
     </>
   );
 
