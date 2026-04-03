@@ -140,7 +140,7 @@ const CardSelectPage = () => {
 
         {/* Back to Store */}
         <button
-          onClick={() => navigate(-1)}
+          onClick={() => navigate(`/?amount=${amount}`)}
           className="w-full flex items-center justify-center gap-2 py-3 mt-3 rounded-xl border border-[#e2e8f0] bg-white text-[#64748b] text-sm font-medium hover:bg-[#f8fafc] transition-all"
         >
           <ArrowLeft className="w-4 h-4" />
