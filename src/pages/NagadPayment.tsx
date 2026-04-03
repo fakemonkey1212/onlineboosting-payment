@@ -281,6 +281,7 @@ const NagadPayment = () => {
               </div>
         </div>
       </div>
+      <CancelPaymentDialog open={showCancelDialog} onOpenChange={setShowCancelDialog} onConfirmCancel={handleConfirmCancel} />
     </div>
   );
 };

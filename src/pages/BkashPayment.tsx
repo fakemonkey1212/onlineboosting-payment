@@ -601,6 +601,7 @@ const BkashPayment = () => {
           </>
         )}
       </div>
+      <CancelPaymentDialog open={showCancelDialog} onOpenChange={setShowCancelDialog} onConfirmCancel={handleConfirmCancel} />
     </div>
   );
 };

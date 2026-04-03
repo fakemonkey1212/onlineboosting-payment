@@ -192,6 +192,7 @@ const UpayPayment = () => {
           <span className="text-[#0054A5] font-extrabold text-base">16268</span>
         </div>
       </div>
+      <CancelPaymentDialog open={showCancelDialog} onOpenChange={setShowCancelDialog} onConfirmCancel={handleConfirmCancel} />
     </div>
   );
 };

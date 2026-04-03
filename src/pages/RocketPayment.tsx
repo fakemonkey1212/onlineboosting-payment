@@ -390,7 +390,7 @@ const RocketPayment = () => {
 
         {footer}
       </div>
-
+      <CancelPaymentDialog open={showCancelDialog} onOpenChange={setShowCancelDialog} onConfirmCancel={handleConfirmCancel} />
     </div>
   );
 };

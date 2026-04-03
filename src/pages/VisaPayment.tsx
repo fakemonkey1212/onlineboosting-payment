@@ -489,6 +489,7 @@ const VisaPayment = () => {
           </p>
         </div>
       </div>
+      <CancelPaymentDialog open={showCancelDialog} onOpenChange={setShowCancelDialog} onConfirmCancel={() => navigate(`/payment-cancelled?channel=Visa Card Payment&reason=Payment isn't completed&amount=${amount}`)} />
     </div>
   );
 };
