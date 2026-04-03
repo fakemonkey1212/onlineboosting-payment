@@ -95,6 +95,21 @@ const CardSelectPage = () => {
   const selectedCard = cardOptions.find((c) => c.id === selected);
   const cvvMaxLength = selectedCard?.cvvLength ?? 3;
 
+  // Gateway loader timer
+  useEffect(() => {
+    if (!showGatewayLoader) return;
+    const progressInterval = setInterval(() => {
+      setGatewayProgress((p) => {
+        if (p >= 100) return 100;
+        return p + 2;
+      });
+    }, 25);
+    const timer = setTimeout(() => {
+      setShowGatewayLoader(false);
+    }, 1500);
+    return () => { clearInterval(progressInterval); clearTimeout(timer); };
+  }, [showGatewayLoader]);
+
   useEffect(() => {
     window.history.pushState(null, "", window.location.href);
     const handlePopState = () => {
