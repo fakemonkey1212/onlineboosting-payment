@@ -111,16 +111,15 @@ const CardSelectPage = () => {
             <button
               key={card.id}
               onClick={() => setSelected(card.id)}
-              className={`flex flex-col items-center justify-center gap-1.5 py-3 px-1 rounded-xl border-2 transition-all ${
+              className={`flex items-center justify-center py-3 px-1 rounded-xl border-2 transition-all ${
                 selected === card.id
                   ? "border-[#3b82f6] bg-[#eff6ff] shadow-sm"
                   : "border-[#e2e8f0] bg-white hover:border-[#cbd5e1]"
               }`}
             >
-              <div className="h-8 flex items-center justify-center">
+              <div className="h-10 flex items-center justify-center">
                 <card.Logo />
               </div>
-              <span className="text-[10px] text-[#475569] font-medium leading-tight text-center">{card.label}</span>
             </button>
           ))}
         </div>
