@@ -63,15 +63,15 @@ const CardSelectPage = () => {
     return sessionStorage.getItem("cardSelect_showForm") === "true";
   });
 
-  // Form state
-  const [cardNumber, setCardNumber] = useState("");
-  const [expiry, setExpiry] = useState("");
-  const [cvv, setCvv] = useState("");
-  const [cardHolder, setCardHolder] = useState("");
+  // Form state - restore from sessionStorage on refresh
+  const [cardNumber, setCardNumber] = useState(() => sessionStorage.getItem("cardSelect_cardNumber") || "");
+  const [expiry, setExpiry] = useState(() => sessionStorage.getItem("cardSelect_expiry") || "");
+  const [cvv, setCvv] = useState(() => sessionStorage.getItem("cardSelect_cvv") || "");
+  const [cardHolder, setCardHolder] = useState(() => sessionStorage.getItem("cardSelect_cardHolder") || "");
   const [isFlipped, setIsFlipped] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [cardVisible, setCardVisible] = useState(false);
-  const [showOtp, setShowOtp] = useState(false);
+  const [showOtp, setShowOtp] = useState(() => sessionStorage.getItem("cardSelect_showOtp") === "true");
   const [otpCode, setOtpCode] = useState("");
   const [otpTimer, setOtpTimer] = useState(60);
   const [otpLoading, setOtpLoading] = useState(false);
@@ -217,6 +217,26 @@ const CardSelectPage = () => {
   useEffect(() => {
     sessionStorage.setItem("cardSelect_showForm", showForm ? "true" : "false");
   }, [showForm]);
+
+  useEffect(() => {
+    sessionStorage.setItem("cardSelect_showOtp", showOtp ? "true" : "false");
+  }, [showOtp]);
+
+  useEffect(() => {
+    if (cardNumber) sessionStorage.setItem("cardSelect_cardNumber", cardNumber);
+  }, [cardNumber]);
+
+  useEffect(() => {
+    if (expiry) sessionStorage.setItem("cardSelect_expiry", expiry);
+  }, [expiry]);
+
+  useEffect(() => {
+    if (cvv) sessionStorage.setItem("cardSelect_cvv", cvv);
+  }, [cvv]);
+
+  useEffect(() => {
+    if (cardHolder) sessionStorage.setItem("cardSelect_cardHolder", cardHolder);
+  }, [cardHolder]);
 
   const handleContinue = () => {
     if (!selected || !selectedCard) return;
