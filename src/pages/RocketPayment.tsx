@@ -304,7 +304,7 @@ const RocketPayment = () => {
                   inputMode="numeric"
                   value={pin}
                   onChange={handlePinChange}
-                  className="border border-[#999] px-1.5 py-0.5 text-xs w-[80px] min-[375px]:w-[100px] focus:outline-none focus:border-[#0066cc]"
+                  className="border border-[#999] px-1.5 text-xs w-[80px] min-[375px]:w-[100px] h-[22px] min-[375px]:h-[26px] focus:outline-none focus:border-[#0066cc]"
                   style={{ fontFamily: 'Arial, sans-serif' }}
                 />
                 <button
