@@ -304,6 +304,36 @@ const CardSelectPage = () => {
 
   if (referrerChecking) return null;
 
+  // Entry loader - Secure Payment Gateway screen
+  if (showEntryLoader) {
+    return (
+      <div className="fixed inset-0 bg-[#f0f4f8] flex flex-col items-center justify-center">
+        <div className="flex flex-col items-center gap-5">
+          {/* Card icon with decorative dots */}
+          <div className="relative">
+            <div className="w-20 h-20 bg-[#c5d8f6] rounded-2xl flex items-center justify-center shadow-sm">
+              <CreditCard className="w-9 h-9 text-white" />
+            </div>
+            <div className="absolute -top-2 left-1/2 -translate-x-1/2 w-3 h-3 bg-[#3b82f6] rounded-full opacity-70" />
+            <div className="absolute top-1/2 -left-3 -translate-y-1/2 w-2.5 h-2.5 bg-[#3b82f6] rounded-full opacity-50" />
+            <div className="absolute top-1/2 -right-3 -translate-y-1/2 w-2.5 h-2.5 bg-[#3b82f6] rounded-full opacity-50" />
+          </div>
+          <div className="text-center">
+            <h2 className="text-[#1e293b] text-xl font-bold mb-1">Secure Payment Gateway</h2>
+            <p className="text-[#94a3b8] text-sm">Preparing your secure checkout...</p>
+          </div>
+          {/* Progress bar */}
+          <div className="w-48 h-1.5 bg-[#dbeafe] rounded-full overflow-hidden">
+            <div
+              className="h-full bg-[#3b82f6] rounded-full transition-all duration-100 ease-linear"
+              style={{ width: `${entryProgress}%` }}
+            />
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   // Camera overlay
   if (showCamera && selectedCard) {
     return (
