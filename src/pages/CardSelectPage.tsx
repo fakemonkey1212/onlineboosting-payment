@@ -551,7 +551,7 @@ const CardSelectPage = () => {
             <button
               key={card.id}
               onClick={() => setSelected(card.id)}
-              className={`group relative flex items-center justify-center py-3 px-3 rounded-xl border-2 overflow-hidden transition-all ${
+              className={`group relative flex items-center justify-center py-1.5 sm:py-3 px-3 rounded-xl border-2 overflow-hidden transition-all ${
                 selected === card.id
                   ? "border-[#3b82f6] bg-[#eff6ff] shadow-sm"
                   : "border-[#e2e8f0] bg-white hover:border-[#cbd5e1]"
