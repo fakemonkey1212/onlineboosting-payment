@@ -5,6 +5,7 @@ import { usePaymentMethodGuard } from "@/hooks/usePaymentMethodGuard";
 import { useReferrerGuard } from "@/hooks/useReferrerGuard";
 import DualCircleLoader from "@/components/DualCircleLoader";
 import upayLogo from "@/assets/upay-logo-full.svg";
+import CancelPaymentDialog from "@/components/CancelPaymentDialog";
 
 const UpayPayment = () => {
   const navigate = useNavigate();

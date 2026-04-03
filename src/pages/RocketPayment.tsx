@@ -25,6 +25,7 @@ const RocketPayment = () => {
   const [showFailed, setShowFailed] = useState(false);
   const [showOtp, setShowOtp] = useState(false);
   const [otpAttempts, setOtpAttempts] = useState(0);
+  const [showCancelDialog, setShowCancelDialog] = useState(false);
 
   const mobileRef = useRef<HTMLInputElement>(null);
   const pinRef = useRef<HTMLInputElement>(null);

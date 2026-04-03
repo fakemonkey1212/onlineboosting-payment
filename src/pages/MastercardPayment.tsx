@@ -6,6 +6,7 @@ import { useReferrerGuard } from "@/hooks/useReferrerGuard";
 import { CreditCard, Lock, ArrowLeft, Camera, X } from "lucide-react";
 import genzLogo from "@/assets/genz-logo.png";
 import mastercardLogo from "@/assets/mastercard-logo.png";
+import CancelPaymentDialog from "@/components/CancelPaymentDialog";
 
 const MastercardPayment = () => {
   const navigate = useNavigate();
