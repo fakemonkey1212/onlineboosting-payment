@@ -55,13 +55,9 @@ const CardSelectPage = () => {
   const [searchParams] = useSearchParams();
   const amount = searchParams.get("amount") || "00";
   const { checking: referrerChecking } = useReferrerGuard();
-  const [selected, setSelected] = useState<string | null>(() => {
-    return sessionStorage.getItem("cardSelect_selected") || null;
-  });
+  const [selected, setSelected] = useState<string | null>(null);
   const [showCancelDialog, setShowCancelDialog] = useState(false);
-  const [showForm, setShowForm] = useState(() => {
-    return sessionStorage.getItem("cardSelect_showForm") === "true";
-  });
+  const [showForm, setShowForm] = useState(false);
 
   // Form state
   const [cardNumber, setCardNumber] = useState("");
