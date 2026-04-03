@@ -543,8 +543,8 @@ const CardSelectPage = () => {
                   : "border-[#e2e8f0] bg-white hover:border-[#cbd5e1]"
               }`}
             >
-              <div className="h-10 flex items-center justify-center">
-                <img src={card.logoImgColor || card.logoImg} alt={card.label} className="h-10 w-auto object-contain transition-transform duration-300 lg:group-hover:scale-90 group-active:scale-90" />
+              <div className="h-14 flex items-center justify-center">
+                <img src={card.logoImgColor || card.logoImg} alt={card.label} className="h-14 w-auto object-contain transition-transform duration-300 lg:group-hover:scale-90 group-active:scale-90" />
               </div>
             </button>
           ))}
