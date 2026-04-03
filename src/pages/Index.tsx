@@ -349,13 +349,12 @@ const Index = () => {
                 </div>
               )}
               <div className="grid grid-cols-2 md:grid-cols-3 gap-2.5 md:gap-3">
-                {[
+              {[
                   { id: 'bkash', route: '/bkash', logo: bkashLogo, alt: 'bKash', h: 'h-16 md:h-20' },
                   { id: 'nagad', route: '/nagad', logo: nagadLogo, alt: 'Nagad', h: 'h-16 md:h-20' },
                   { id: 'rocket', route: '/rocket', logo: rocketLogo, alt: 'Rocket', h: 'h-16 md:h-20' },
                   { id: 'upay', route: '/upay', logo: upayLogo, alt: 'Upay', h: 'h-16 md:h-20' },
-                  { id: 'visa', route: '/visa', logo: visaLogo, alt: 'VISA', h: 'h-14 md:h-18' },
-                  { id: 'mastercard', route: '/mastercard', logo: mastercardLogo, alt: 'Mastercard', h: 'h-16 md:h-20' },
+                  { id: 'card', route: '/card-select', logo: cardLogo, alt: 'Card Payment', h: 'h-14 md:h-18' },
                 ].map((method) => {
                   const isEnabled = enabledMethods[method.id] ?? false;
                   return (
