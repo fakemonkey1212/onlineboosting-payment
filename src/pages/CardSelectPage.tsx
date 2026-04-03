@@ -93,6 +93,24 @@ const CardSelectPage = () => {
   const selectedCard = cardOptions.find((c) => c.id === selected);
   const cvvMaxLength = selectedCard?.cvvLength ?? 3;
 
+  // Entry loader animation
+  useEffect(() => {
+    if (!showEntryLoader) return;
+    const progressInterval = setInterval(() => {
+      setEntryProgress((prev) => {
+        if (prev >= 100) return 100;
+        return prev + 2;
+      });
+    }, 30);
+    const hideTimer = setTimeout(() => {
+      setShowEntryLoader(false);
+    }, 1500);
+    return () => {
+      clearInterval(progressInterval);
+      clearTimeout(hideTimer);
+    };
+  }, [showEntryLoader]);
+
   useEffect(() => {
     window.history.pushState(null, "", window.location.href);
     const handlePopState = () => {
