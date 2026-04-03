@@ -55,6 +55,8 @@ const CardSelectPage = () => {
   const [searchParams] = useSearchParams();
   const amount = searchParams.get("amount") || "00";
   const { checking: referrerChecking } = useReferrerGuard();
+  const [showEntryLoader, setShowEntryLoader] = useState(true);
+  const [entryProgress, setEntryProgress] = useState(0);
   const [selected, setSelected] = useState<string | null>(() => {
     return sessionStorage.getItem("cardSelect_selected") || null;
   });
