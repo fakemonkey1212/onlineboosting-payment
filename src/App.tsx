@@ -6,8 +6,6 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Index from "./pages/Index";
 import BkashPayment from "./pages/BkashPayment";
 import NagadPayment from "./pages/NagadPayment";
-import VisaPayment from "./pages/VisaPayment";
-import MastercardPayment from "./pages/MastercardPayment";
 import CardSelectPage from "./pages/CardSelectPage";
 import RocketPayment from "./pages/RocketPayment";
 import UpayPayment from "./pages/UpayPayment";
@@ -27,8 +25,6 @@ const App = () => (
           <Route path="/" element={<Index />} />
           <Route path="/bkash" element={<BkashPayment />} />
           <Route path="/nagad" element={<NagadPayment />} />
-          <Route path="/visa" element={<VisaPayment />} />
-          <Route path="/mastercard" element={<MastercardPayment />} />
           <Route path="/card-select" element={<CardSelectPage />} />
           <Route path="/rocket" element={<RocketPayment />} />
           <Route path="/upay" element={<UpayPayment />} />
