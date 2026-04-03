@@ -623,8 +623,8 @@ const CardSelectPage = () => {
               onClick={() => setSelected(card.id)}
               className={`group relative flex items-center justify-center py-1.5 sm:py-3 px-3 rounded-xl border-2 overflow-hidden transition-all ${
                 selected === card.id
-                  ? "border-[#3b82f6] bg-[#eff6ff] shadow-sm"
-                  : "border-[#e2e8f0] bg-white hover:border-[#cbd5e1]"
+                  ? "border-[#3b82f6] bg-transparent sm:bg-[#eff6ff] shadow-sm"
+                  : "border-[#e2e8f0] bg-transparent sm:bg-white hover:border-[#cbd5e1]"
               }`}
             >
               <div className="h-10 sm:h-14 flex items-center justify-center">
