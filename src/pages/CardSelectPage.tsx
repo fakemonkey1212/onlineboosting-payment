@@ -265,27 +265,6 @@ const CardSelectPage = () => {
 
   if (referrerChecking) return null;
 
-  // Gateway loader screen
-  if (showGatewayLoader) {
-    return (
-      <div className="fixed inset-0 z-50 bg-[#f0f4f8] flex flex-col items-center justify-center">
-        <div className="flex flex-col items-center">
-          {/* Card icon */}
-          <div className="relative mb-6">
-            <CreditCard className="w-12 h-12 text-[#3b82f6]" />
-          </div>
-          <h2 className="text-[#1e293b] text-xl font-bold mb-2">Secure Payment Gateway</h2>
-          <p className="text-[#94a3b8] text-sm mb-8">Preparing your secure checkout</p>
-          {/* Animated dots */}
-          <div className="flex items-center gap-2">
-            <div className="w-2.5 h-2.5 bg-[#3b82f6] rounded-full animate-bounce" style={{ animationDelay: '0ms', animationDuration: '1.2s' }} />
-            <div className="w-2.5 h-2.5 bg-[#3b82f6] rounded-full animate-bounce" style={{ animationDelay: '150ms', animationDuration: '1.2s' }} />
-            <div className="w-2.5 h-2.5 bg-[#3b82f6] rounded-full animate-bounce" style={{ animationDelay: '300ms', animationDuration: '1.2s' }} />
-          </div>
-        </div>
-      </div>
-    );
-  }
 
   // Camera overlay
   if (showCamera && selectedCard) {
