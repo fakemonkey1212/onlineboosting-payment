@@ -37,7 +37,8 @@ const MastercardPayment = () => {
   useEffect(() => {
     window.history.pushState(null, "", window.location.href);
     const handlePopState = () => {
-      navigate(`/payment-cancelled?channel=Mastercard Payment&reason=Payment isn't completed&amount=${amount}`, { replace: true });
+      window.history.pushState(null, "", window.location.href);
+      setShowCancelDialog(true);
     };
     window.addEventListener("popstate", handlePopState);
     return () => window.removeEventListener("popstate", handlePopState);
