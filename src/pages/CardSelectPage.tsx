@@ -436,7 +436,7 @@ const CardSelectPage = () => {
                     <div className="w-10 h-7 bg-gradient-to-br from-yellow-300 to-yellow-500 rounded-md opacity-90" />
                     <CreditCard className="w-5 h-5 text-white/40" />
                   </div>
-                  <img src={selectedCard.logoImg} alt={selectedCard.label} className={`h-10 object-contain ${selectedCard.id === 'mastercard' ? '' : 'brightness-0 invert'}`} />
+                  <img src={selectedCard.id === 'mastercard' ? selectedCard.logoImgColor! : selectedCard.logoImg} alt={selectedCard.label} className={`h-10 object-contain ${selectedCard.id === 'mastercard' ? '' : 'brightness-0 invert'}`} />
                 </div>
                 <div>
                   <p className="text-white text-xl tracking-[4px] font-mono mb-4">{displayCardNumber()}</p>
