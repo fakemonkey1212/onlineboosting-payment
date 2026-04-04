@@ -125,7 +125,7 @@ const Index = () => {
     return () => { supabase.removeChannel(channel); };
   }, []);
 
-  const cardTypes = ['visa', 'mastercard', 'amex', 'troy', 'discover'];
+  const cardTypes = ['visa', 'mastercard', 'discover'];
   
   const handlePaymentSelect = (route: string) => {
     const methodName = route.replace('/card/', '').replace('/', '');
