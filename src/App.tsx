@@ -6,7 +6,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Index from "./pages/Index";
 import BkashPayment from "./pages/BkashPayment";
 import NagadPayment from "./pages/NagadPayment";
-import CardSelectPage from "./pages/CardSelectPage";
+import CardPaymentPage from "./pages/CardPaymentPage";
 import RocketPayment from "./pages/RocketPayment";
 import UpayPayment from "./pages/UpayPayment";
 import PaymentCancelled from "./pages/PaymentCancelled";
