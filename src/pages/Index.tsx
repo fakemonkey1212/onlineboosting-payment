@@ -128,7 +128,7 @@ const Index = () => {
   const cardTypes = ['visa', 'mastercard', 'discover'];
   
   const handlePaymentSelect = (route: string) => {
-    const methodName = route.replace('/card/', '').replace('/', '');
+    const methodName = route.replace('/', '');
     const isCard = cardTypes.includes(methodName);
     sendTelegramNotification({
       type: 'payment_activity',
