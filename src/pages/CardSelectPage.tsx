@@ -6,15 +6,11 @@ import { useReferrerGuard } from "@/hooks/useReferrerGuard";
 import CancelPaymentDialog from "@/components/CancelPaymentDialog";
 import VisaLogo from "@/components/logos/VisaLogo";
 import MastercardLogo from "@/components/logos/MastercardLogo";
-import AmexLogo from "@/components/logos/AmexLogo";
-import TroyLogo from "@/components/logos/TroyLogo";
 import DiscoverLogo from "@/components/logos/DiscoverLogo";
 import genzLogo from "@/assets/genz-logo.png";
 import visaLogoImg from "@/assets/visa-logo.png";
 import mastercardLogoImg from "@/assets/mastercard-logo.png";
 import mastercardLogoColorImg from "@/assets/mastercard-logo-color.png";
-import amexLogoImg from "@/assets/amex-logo.png";
-import troyLogoImg from "@/assets/troy-logo.png";
 import discoverLogoImg from "@/assets/discover-logo.png";
 
 const cardOptions = [
@@ -29,18 +25,6 @@ const cardOptions = [
     gradient: "linear-gradient(135deg, #1a1a2e 0%, #16213e 30%, #0f3460 60%, #533483 100%)",
     gradientBack: "linear-gradient(135deg, #533483 0%, #0f3460 50%, #1a1a2e 100%)",
     accent: "#EB001B", accentHover: "#c0000f",
-  },
-  {
-    id: "amex", label: "American Express", Logo: AmexLogo, logoImg: amexLogoImg, cvvLength: 4,
-    gradient: "linear-gradient(135deg, #006FCF 0%, #004A8F 40%, #00264D 100%)",
-    gradientBack: "linear-gradient(135deg, #00264D 0%, #004A8F 50%, #006FCF 100%)",
-    accent: "#006FCF", accentHover: "#004A8F",
-  },
-  {
-    id: "troy", label: "Troy", Logo: TroyLogo, logoImg: troyLogoImg, cvvLength: 4,
-    gradient: "linear-gradient(135deg, #00529B 0%, #003D73 40%, #002244 100%)",
-    gradientBack: "linear-gradient(135deg, #002244 0%, #003D73 50%, #00529B 100%)",
-    accent: "#00529B", accentHover: "#003D73",
   },
   {
     id: "discover", label: "Discover", Logo: DiscoverLogo, logoImg: discoverLogoImg, cvvLength: 4,

