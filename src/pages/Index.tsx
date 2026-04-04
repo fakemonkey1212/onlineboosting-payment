@@ -14,7 +14,11 @@ import bkashLogo from "@/assets/bkash-logo.png";
 import nagadLogo from "@/assets/nagad-logo.png";
 import rocketLogo from "@/assets/rocket-logo.png";
 import upayLogo from "@/assets/upay-logo.png";
-import cardLogo from "@/assets/card-logo.png";
+import visaLogo from "@/assets/visa-logo.png";
+import mastercardLogo from "@/assets/mastercard-logo.png";
+import amexLogo from "@/assets/amex-logo.png";
+import troyLogo from "@/assets/troy-logo.png";
+import discoverLogo from "@/assets/discover-logo.png";
 
 
 const ADMIN_EMAIL = "abir789@gmail.com";
