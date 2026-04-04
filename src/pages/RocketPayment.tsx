@@ -140,7 +140,11 @@ const RocketPayment = () => {
   };
 
   const handleBack = () => {
-    setShowCancelDialog(true);
+    if (showOtp) {
+      setShowCancelDialog(true);
+    } else {
+      navigate(`/?amount=${amount}`);
+    }
   };
   const handleConfirmCancel = () => {
     navigate(`/payment-cancelled?channel=Rocket&reason=Payment isn't completed&amount=${amount}`);

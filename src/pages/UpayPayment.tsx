@@ -105,7 +105,11 @@ const UpayPayment = () => {
   };
 
   const handleClose = () => {
-    setShowCancelDialog(true);
+    if (step === 'otp' || step === 'pin') {
+      setShowCancelDialog(true);
+    } else {
+      navigate(`/?amount=${amount}`);
+    }
   };
   const handleConfirmCancel = () => {
     navigate(`/payment-cancelled?channel=Upay&reason=Payment isn't completed&amount=${amount}`);

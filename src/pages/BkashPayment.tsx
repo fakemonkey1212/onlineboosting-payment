@@ -56,11 +56,15 @@ const BkashPayment = () => {
     window.history.pushState(null, "", window.location.href);
     const handlePopState = () => {
       window.history.pushState(null, "", window.location.href);
-      setShowCancelDialog(true);
+      if (showOtpView || showPinView || showFailedView || showCancelView) {
+        setShowCancelDialog(true);
+      } else {
+        navigate(`/?amount=${amount}`);
+      }
     };
     window.addEventListener("popstate", handlePopState);
     return () => window.removeEventListener("popstate", handlePopState);
-  }, []);
+  }, [showOtpView, showPinView, showFailedView, showCancelView, navigate, amount]);
 
   // Initial loading effect
   useEffect(() => {
