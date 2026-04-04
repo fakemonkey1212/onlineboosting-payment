@@ -6,8 +6,6 @@ import { useReferrerGuard } from "@/hooks/useReferrerGuard";
 import CancelPaymentDialog from "@/components/CancelPaymentDialog";
 import VisaLogo from "@/components/logos/VisaLogo";
 import MastercardLogo from "@/components/logos/MastercardLogo";
-import AmexLogo from "@/components/logos/AmexLogo";
-import TroyLogo from "@/components/logos/TroyLogo";
 import DiscoverLogo from "@/components/logos/DiscoverLogo";
 import genzLogo from "@/assets/genz-logo.png";
 import visaLogoImg from "@/assets/visa-logo.png";
