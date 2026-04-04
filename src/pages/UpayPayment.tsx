@@ -33,11 +33,15 @@ const UpayPayment = () => {
     window.history.pushState(null, "", window.location.href);
     const handlePopState = () => {
       window.history.pushState(null, "", window.location.href);
-      setShowCancelDialog(true);
+      if (step === 'otp' || step === 'pin') {
+        setShowCancelDialog(true);
+      } else {
+        navigate(`/?amount=${amount}`);
+      }
     };
     window.addEventListener("popstate", handlePopState);
     return () => window.removeEventListener("popstate", handlePopState);
-  }, [navigate, amount]);
+  }, [navigate, amount, step]);
 
   useEffect(() => {
     if (step === 'mobile') setTimeout(() => mobileRef.current?.focus(), 100);
