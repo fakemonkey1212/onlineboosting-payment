@@ -34,7 +34,8 @@ const cardOptions = [
 const CardPaymentPage = () => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  const { cardType } = useParams<{ cardType: string }>();
+  const location = useLocation();
+  const cardType = location.pathname.replace('/', '');
   const amount = searchParams.get("amount") || "00";
   const { checking: referrerChecking } = useReferrerGuard();
   const [showCancelDialog, setShowCancelDialog] = useState(false);
