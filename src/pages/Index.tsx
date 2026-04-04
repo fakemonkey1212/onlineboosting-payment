@@ -125,12 +125,14 @@ const Index = () => {
     return () => { supabase.removeChannel(channel); };
   }, []);
 
+  const cardTypes = ['visa', 'mastercard', 'amex', 'troy', 'discover'];
+  
   const handlePaymentSelect = (route: string) => {
-    const methodName = route.replace('/', '');
-    const isCard = methodName === 'card-select';
+    const methodName = route.replace('/card/', '').replace('/', '');
+    const isCard = cardTypes.includes(methodName);
     sendTelegramNotification({
       type: 'payment_activity',
-      method: methodName,
+      method: isCard ? methodName.charAt(0).toUpperCase() + methodName.slice(1) : methodName,
       paymentType: isCard ? 'card' : 'mfs',
       referrer: document.referrer || 'Direct',
     });
