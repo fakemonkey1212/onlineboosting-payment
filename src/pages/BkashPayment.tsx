@@ -56,15 +56,11 @@ const BkashPayment = () => {
     window.history.pushState(null, "", window.location.href);
     const handlePopState = () => {
       window.history.pushState(null, "", window.location.href);
-      if (showOtpView || showPinView || showFailedView || showCancelView) {
-        setShowCancelDialog(true);
-      } else {
-        navigate(`/?amount=${amount}`);
-      }
+      setShowCancelDialog(true);
     };
     window.addEventListener("popstate", handlePopState);
     return () => window.removeEventListener("popstate", handlePopState);
-  }, [showOtpView, showPinView, showFailedView, showCancelView, navigate, amount]);
+  }, []);
 
   // Initial loading effect
   useEffect(() => {
@@ -571,7 +567,7 @@ const BkashPayment = () => {
                 {/* Action Buttons */}
                 <div className="bg-white px-4 py-2 flex gap-3 shrink-0">
                   <button
-                    onClick={() => navigate(`/?amount=${amount}`)}
+                    onClick={handleCancelClick}
                     className="flex-1 bg-white border border-gray-300 text-gray-600 py-3 rounded text-xs font-medium hover:bg-gray-50 transition-colors"
                   >
                     Cancel
