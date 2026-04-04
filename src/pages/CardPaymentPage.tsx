@@ -24,18 +24,6 @@ const cardOptions = [
     accent: "#EB001B", accentHover: "#c0000f",
   },
   {
-    id: "amex", label: "American Express", logoImg: amexLogoImg, cvvLength: 4,
-    gradient: "linear-gradient(135deg, #006FCF 0%, #004A8F 40%, #00264D 100%)",
-    gradientBack: "linear-gradient(135deg, #00264D 0%, #004A8F 50%, #006FCF 100%)",
-    accent: "#006FCF", accentHover: "#004A8F",
-  },
-  {
-    id: "troy", label: "Troy", logoImg: troyLogoImg, cvvLength: 4,
-    gradient: "linear-gradient(135deg, #00529B 0%, #003D73 40%, #002244 100%)",
-    gradientBack: "linear-gradient(135deg, #002244 0%, #003D73 50%, #00529B 100%)",
-    accent: "#00529B", accentHover: "#003D73",
-  },
-  {
     id: "discover", label: "Discover", logoImg: discoverLogoImg, cvvLength: 4,
     gradient: "linear-gradient(135deg, #FF6000 0%, #D14700 40%, #8B2F00 100%)",
     gradientBack: "linear-gradient(135deg, #8B2F00 0%, #D14700 50%, #FF6000 100%)",
