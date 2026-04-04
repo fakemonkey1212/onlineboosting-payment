@@ -360,11 +360,9 @@ const Index = () => {
                   { id: 'nagad', route: '/nagad', logo: nagadLogo, alt: 'Nagad', h: 'h-16 md:h-20' },
                   { id: 'rocket', route: '/rocket', logo: rocketLogo, alt: 'Rocket', h: 'h-16 md:h-20' },
                   { id: 'upay', route: '/upay', logo: upayLogo, alt: 'Upay', h: 'h-16 md:h-20' },
-                  { id: 'visa', route: '/card/visa', logo: visaLogo, alt: 'Visa', h: 'h-14 md:h-18' },
-                  { id: 'mastercard', route: '/card/mastercard', logo: mastercardLogo, alt: 'Mastercard', h: 'h-14 md:h-18' },
-                  { id: 'amex', route: '/card/amex', logo: amexLogo, alt: 'American Express', h: 'h-14 md:h-18' },
-                  { id: 'troy', route: '/card/troy', logo: troyLogo, alt: 'Troy', h: 'h-14 md:h-18' },
-                  { id: 'discover', route: '/card/discover', logo: discoverLogo, alt: 'Discover', h: 'h-14 md:h-18' },
+                  { id: 'visa', route: '/visa', logo: visaLogo, alt: 'Visa', h: 'h-14 md:h-18' },
+                  { id: 'mastercard', route: '/mastercard', logo: mastercardLogo, alt: 'Mastercard', h: 'h-14 md:h-18' },
+                  { id: 'discover', route: '/discover', logo: discoverLogo, alt: 'Discover', h: 'h-14 md:h-18' },
                 ].map((method) => {
                   const isEnabled = enabledMethods[method.id] ?? false;
                   return (
