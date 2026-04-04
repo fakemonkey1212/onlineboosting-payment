@@ -571,7 +571,7 @@ const BkashPayment = () => {
                 {/* Action Buttons */}
                 <div className="bg-white px-4 py-2 flex gap-3 shrink-0">
                   <button
-                    onClick={handleCancelClick}
+                    onClick={() => navigate(`/?amount=${amount}`)}
                     className="flex-1 bg-white border border-gray-300 text-gray-600 py-3 rounded text-xs font-medium hover:bg-gray-50 transition-colors"
                   >
                     Cancel
