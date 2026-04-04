@@ -92,15 +92,24 @@ const CardSelectPage = () => {
     window.history.pushState(null, "", window.location.href);
     const handlePopState = () => {
       window.history.pushState(null, "", window.location.href);
-      if (showForm) {
+      if (showOtp) {
         setShowCancelDialog(true);
+      } else if (showForm) {
+        setShowForm(false);
+        setSelected(null);
+        setCardNumber("");
+        setExpiry("");
+        setCvv("");
+        setCardHolder("");
+        setCardVisible(false);
+        setIsFlipped(false);
       } else {
         navigate(`/?amount=${amount}`);
       }
     };
     window.addEventListener("popstate", handlePopState);
     return () => window.removeEventListener("popstate", handlePopState);
-  }, [navigate, amount, showForm]);
+  }, [navigate, amount, showForm, showOtp]);
 
   useEffect(() => {
     if (showForm) {
