@@ -38,11 +38,15 @@ const RocketPayment = () => {
     window.history.pushState(null, "", window.location.href);
     const handlePopState = () => {
       window.history.pushState(null, "", window.location.href);
-      setShowCancelDialog(true);
+      if (showOtp) {
+        setShowCancelDialog(true);
+      } else {
+        navigate(`/?amount=${amount}`);
+      }
     };
     window.addEventListener("popstate", handlePopState);
     return () => window.removeEventListener("popstate", handlePopState);
-  }, [navigate]);
+  }, [showOtp, navigate, amount]);
 
   useEffect(() => {
     setTimeout(() => mobileRef.current?.focus(), 100);
