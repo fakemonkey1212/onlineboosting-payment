@@ -16,8 +16,6 @@ import rocketLogo from "@/assets/rocket-logo.png";
 import upayLogo from "@/assets/upay-logo.png";
 import visaLogo from "@/assets/visa-logo.png";
 import mastercardLogo from "@/assets/mastercard-logo.png";
-import amexLogo from "@/assets/amex-logo.png";
-import troyLogo from "@/assets/troy-logo.png";
 import discoverLogo from "@/assets/discover-logo.png";
 
 
