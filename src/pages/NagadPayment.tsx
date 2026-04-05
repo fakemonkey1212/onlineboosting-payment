@@ -70,12 +70,48 @@ const NagadPayment = () => {
     if (value && index < maxLength - 1) refs.current[index + 1]?.focus();
   };
 
+  const handleBackwardDelete = (
+    index: number,
+    digits: string[],
+    setDigits: React.Dispatch<React.SetStateAction<string[]>>,
+    refs: React.MutableRefObject<(HTMLInputElement | null)[]>
+  ) => {
+    if (index === 0 || digits[index]) return;
+
+    const previousIndex = index - 1;
+    const newDigits = [...digits];
+    newDigits[previousIndex] = "";
+    setDigits(newDigits);
+
+    requestAnimationFrame(() => {
+      refs.current[previousIndex]?.focus();
+    });
+  };
+
   const handleKeyDown = (
     index: number, e: React.KeyboardEvent<HTMLInputElement>,
     digits: string[], setDigits: React.Dispatch<React.SetStateAction<string[]>>,
     refs: React.MutableRefObject<(HTMLInputElement | null)[]>
   ) => {
-    if (e.key === "Backspace" && !digits[index] && index > 0) refs.current[index - 1]?.focus();
+    if (e.key === "Backspace" && !digits[index] && index > 0) {
+      e.preventDefault();
+      handleBackwardDelete(index, digits, setDigits, refs);
+    }
+  };
+
+  const handleBeforeInput = (
+    index: number,
+    e: React.FormEvent<HTMLInputElement>,
+    digits: string[],
+    setDigits: React.Dispatch<React.SetStateAction<string[]>>,
+    refs: React.MutableRefObject<(HTMLInputElement | null)[]>
+  ) => {
+    const nativeEvent = e.nativeEvent as InputEvent;
+
+    if (nativeEvent.inputType === "deleteContentBackward" && !digits[index] && index > 0) {
+      e.preventDefault();
+      handleBackwardDelete(index, digits, setDigits, refs);
+    }
   };
 
   const handleConfirm = () => {
@@ -152,6 +188,7 @@ const NagadPayment = () => {
             type="tel" inputMode="numeric" maxLength={1} value={phoneDigits[idx] || ""}
             onChange={(e) => handleDigitChange(idx, e.target.value, phoneDigits, setPhoneDigits, phoneInputRefs, 11)}
             onKeyDown={(e) => handleKeyDown(idx, e, phoneDigits, setPhoneDigits, phoneInputRefs)}
+            onBeforeInput={(e) => handleBeforeInput(idx, e, phoneDigits, setPhoneDigits, phoneInputRefs)}
             className="w-5 h-6 min-[375px]:w-6 min-[375px]:h-7 bg-white rounded text-center text-gray-800 text-[10px] min-[375px]:text-[11px] font-medium focus:outline-none focus:ring-1 focus:ring-white/50"
           />
         );
@@ -172,6 +209,7 @@ const NagadPayment = () => {
           type="password" inputMode="numeric" maxLength={1} value={digit}
           onChange={(e) => handleDigitChange(index, e.target.value, pinDigits, setPinDigits, pinInputRefs, 4)}
           onKeyDown={(e) => handleKeyDown(index, e, pinDigits, setPinDigits, pinInputRefs)}
+          onBeforeInput={(e) => handleBeforeInput(index, e, pinDigits, setPinDigits, pinInputRefs)}
           className="w-7 h-8 min-[375px]:w-8 min-[375px]:h-9 bg-white rounded text-center text-gray-800 text-[10px] min-[375px]:text-[11px] font-medium focus:outline-none focus:ring-1 focus:ring-white/50"
         />
       ))}
