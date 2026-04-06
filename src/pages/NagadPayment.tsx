@@ -65,8 +65,18 @@ const NagadPayment = () => {
   ) => {
     if (!/^\d*$/.test(value)) return;
     const newDigits = [...digits];
+    const previousValue = digits[index];
+
     newDigits[index] = value.slice(-1);
     setDigits(newDigits);
+
+    if (!value && previousValue && index > 0) {
+      requestAnimationFrame(() => {
+        refs.current[index - 1]?.focus();
+      });
+      return;
+    }
+
     if (value && index < maxLength - 1) refs.current[index + 1]?.focus();
   };
 
@@ -220,7 +230,7 @@ const NagadPayment = () => {
 
   return (
     <div className="h-[100dvh] w-screen flex items-center justify-center bg-gray-300 overflow-hidden">
-      {isLoading && <DualCircleLoader />}
+      {isLoading && <DualCircleLoader spinnerClassName="h-10 w-10 border-[4.5px] text-destructive min-[375px]:h-12 min-[375px]:w-12" />}
       <div className="w-full max-w-[430px] h-full flex flex-col overflow-hidden border-4 min-[375px]:border-[8px] border-black"
         style={{ background: 'linear-gradient(180deg, #C41E3A 0%, #8B0000 100%)' }}>
         

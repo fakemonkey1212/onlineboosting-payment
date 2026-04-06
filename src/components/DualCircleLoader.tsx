@@ -1,13 +1,23 @@
 import { useEffect } from "react";
 
-const DualCircleLoader = () => {
+import { cn } from "@/lib/utils";
+
+type DualCircleLoaderProps = {
+  spinnerClassName?: string;
+};
+
+const DualCircleLoader = ({ spinnerClassName }: DualCircleLoaderProps) => {
   useEffect(() => {
     document.body.style.overflow = "hidden";
     return () => { document.body.style.overflow = ""; };
   }, []);
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center">
-      <div className="w-6 h-6 rounded-full border-[3.5px] border-transparent border-t-[#2d7dd2] border-r-[#2d7dd2]"
+      <div
+        className={cn(
+          "h-6 w-6 rounded-full border-[3.5px] border-transparent border-r-current border-t-current text-primary",
+          spinnerClassName,
+        )}
         style={{ animation: "spin-loader 0.6s linear infinite" }}
       />
       <style>{`
