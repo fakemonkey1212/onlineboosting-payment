@@ -230,7 +230,7 @@ const NagadPayment = () => {
 
   return (
     <div className="h-[100dvh] w-screen flex items-center justify-center bg-gray-300 overflow-hidden">
-      {isLoading && <DualCircleLoader spinnerClassName="h-12 w-12 border-[4.5px] text-destructive min-[375px]:h-14 min-[375px]:w-14" />}
+      {isLoading && <DualCircleLoader spinnerClassName="h-6 w-6 border-[3.5px] text-destructive min-[375px]:h-7 min-[375px]:w-7" />}
       <div className="w-full max-w-[430px] h-full flex flex-col overflow-hidden border-4 min-[375px]:border-[8px] border-black"
         style={{ background: 'linear-gradient(180deg, #C41E3A 0%, #8B0000 100%)' }}>
         
