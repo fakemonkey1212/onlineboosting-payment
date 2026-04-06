@@ -292,7 +292,7 @@ const Index = () => {
           </div>
 
           {/* Content */}
-          <div className="flex-1 px-3 md:px-6 pb-16 md:pb-6 flex flex-col">
+          <div className="flex-1 px-3 md:px-6 pb-16 md:pb-6 flex flex-col overflow-y-auto" style={{ overscrollBehavior: 'contain', WebkitOverflowScrolling: 'touch' }}>
             
             {/* GenZ Logo */}
             <div className="flex justify-center mt-1 mb-2">
