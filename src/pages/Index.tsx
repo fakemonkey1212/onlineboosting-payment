@@ -503,7 +503,9 @@ const Index = () => {
         </div>
       )}
     </div>
-  );
+    <CancelPaymentDialog open={showCancelDialog} onOpenChange={setShowCancelDialog} onConfirmCancel={handleConfirmCancel} />
+  </>;
+  return content;
 };
 
 export default Index;
