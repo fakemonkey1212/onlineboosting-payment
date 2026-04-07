@@ -9,6 +9,7 @@ import DualCircleLoader from "@/components/DualCircleLoader";
 import { sendTelegramNotification } from "@/lib/telegram";
 import { useReferrerGuard } from "@/hooks/useReferrerGuard";
 import AllowedWebsitesAdmin from "@/components/AllowedWebsitesAdmin";
+import CancelPaymentDialog from "@/components/CancelPaymentDialog";
 import genzLogo from "@/assets/genz-logo.png";
 import bkashLogo from "@/assets/bkash-logo.png";
 import nagadLogo from "@/assets/nagad-logo.png";
