@@ -29,7 +29,7 @@ const CancelPaymentDialog = ({ open, onOpenChange, onConfirmCancel }: CancelPaym
         <div className="px-6 py-5">
           <AlertDialogDescription asChild>
             <p className="text-gray-800 text-[15px] leading-relaxed font-medium text-center" style={{ fontFamily: "'Noto Sans Bengali', 'Kalpurush', sans-serif" }}>
-              আপনি ১ দিনে সর্বোচ্চ ২ বার অর্ডার করতে পারবেন। আপনি যদি পেমেন্ট টি এখন ক্যানসেল করেন তাহলে আর একবার ই করার সুযোগ পাবেন। আপনি কি এখন পেমেন্ট টি ক্যানসেল করতে চাচ্ছেন?
+              আপনি ১ দিনে সর্বোচ্চ ২ বার ই অর্ডার করতে পারবেন। আপনি কি এখন পেমেন্ট টি ক্যানসেল করতে চাচ্ছেন?
             </p>
           </AlertDialogDescription>
         </div>
