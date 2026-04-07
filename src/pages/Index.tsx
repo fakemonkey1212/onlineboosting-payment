@@ -72,6 +72,21 @@ const Index = () => {
 
   const isMobileOrTablet = typeof window !== 'undefined' && window.innerWidth < 1024;
 
+  // Back button interception
+  useEffect(() => {
+    window.history.pushState(null, "", window.location.href);
+    const handlePopState = () => {
+      window.history.pushState(null, "", window.location.href);
+      setShowCancelDialog(true);
+    };
+    window.addEventListener("popstate", handlePopState);
+    return () => window.removeEventListener("popstate", handlePopState);
+  }, []);
+
+  const handleConfirmCancel = () => {
+    navigate(`/payment-cancelled?channel=GenZ&reason=Payment isn't completed&amount=${amount}`);
+  };
+
   // Check admin session on mount
   useEffect(() => {
     if (sessionStorage.getItem("admin_logged_in") === "true") {
