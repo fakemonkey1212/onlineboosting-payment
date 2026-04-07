@@ -64,6 +64,7 @@ const Index = () => {
   const [loginPassword, setLoginPassword] = useState("");
   const [loginError, setLoginError] = useState("");
   const [showSupportModal, setShowSupportModal] = useState(false);
+  const [showCancelDialog, setShowCancelDialog] = useState(false);
   const [supportNumber, setSupportNumber] = useState("");
   
   const [loginUnlocked, setLoginUnlocked] = useState(false);
