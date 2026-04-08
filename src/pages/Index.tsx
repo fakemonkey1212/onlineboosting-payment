@@ -504,7 +504,7 @@ const Index = () => {
           </div>
         )}
 
-        {showLoader && <DualCircleLoader />}
+        {showLoader && <DualCircleLoader size={47} transparentBg />}
       </div>
       <CancelPaymentDialog open={showCancelDialog} onOpenChange={setShowCancelDialog} onConfirmCancel={handleConfirmCancel} />
     </>

