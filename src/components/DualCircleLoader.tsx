@@ -13,14 +13,14 @@ const DualCircleLoader = ({ spinnerClassName }: DualCircleLoaderProps) => {
   }, []);
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center">
-      <div className="relative w-11 h-11">
+      <div className="relative w-[50px] h-[50px]">
         {/* Outer circle - half arc */}
         <div
           className={cn(
             "absolute inset-0 rounded-full border-[5px] border-transparent border-t-[#2196F3] border-b-[#2196F3]",
             spinnerClassName,
           )}
-          style={{ animation: "spin-loader 1.1s linear infinite" }}
+          style={{ animation: "spin-loader 0.9s linear infinite" }}
         />
         {/* Inner circle - half arc */}
         <div
@@ -28,7 +28,7 @@ const DualCircleLoader = ({ spinnerClassName }: DualCircleLoaderProps) => {
             "absolute inset-[7px] rounded-full border-[5px] border-transparent border-t-[#2196F3] border-b-[#2196F3]",
             spinnerClassName,
           )}
-          style={{ animation: "spin-loader-reverse 0.85s linear infinite" }}
+          style={{ animation: "spin-loader-reverse 0.7s linear infinite" }}
         />
       </div>
       <style>{`
