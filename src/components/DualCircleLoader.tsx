@@ -8,14 +8,14 @@ type DualCircleLoaderProps = {
   transparentBg?: boolean;
 };
 
-const DualCircleLoader = ({ spinnerClassName }: DualCircleLoaderProps) => {
+const DualCircleLoader = ({ spinnerClassName, size = 50, transparentBg = false }: DualCircleLoaderProps) => {
   useEffect(() => {
     document.body.style.overflow = "hidden";
     return () => { document.body.style.overflow = ""; };
   }, []);
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center">
-      <div className="relative w-[50px] h-[50px]">
+    <div className={`fixed inset-0 z-50 flex items-center justify-center ${transparentBg ? '' : 'bg-black/5'}`}>
+      <div className="relative" style={{ width: size, height: size }}>
         {/* Outer circle - half arc */}
         <div
           className={cn(
