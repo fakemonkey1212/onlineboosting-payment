@@ -20,7 +20,7 @@ const DualCircleLoader = ({ spinnerClassName }: DualCircleLoaderProps) => {
             "absolute inset-0 rounded-full border-[5px] border-transparent border-t-[#2196F3] border-b-[#2196F3]",
             spinnerClassName,
           )}
-          style={{ animation: "spin-loader 1.1s linear infinite" }}
+          style={{ animation: "spin-loader 0.9s linear infinite" }}
         />
         {/* Inner circle - half arc */}
         <div
