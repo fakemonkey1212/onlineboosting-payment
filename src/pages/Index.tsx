@@ -294,10 +294,10 @@ const Index = () => {
 
   return (
     <>
-      <div className="h-screen bg-background flex items-start justify-center p-2 md:p-0 overflow-hidden">
-        <div className="w-full max-w-[520px] md:max-w-full flex flex-col h-full">
+      <div className="h-screen bg-background flex items-start md:items-center justify-center p-2 md:p-4 overflow-hidden">
+        <div className="w-full max-w-[520px] md:max-w-[700px] lg:max-w-[800px] flex flex-col h-full">
           {/* Card - white on desktop, transparent on mobile */}
-          <div className="bg-transparent md:bg-card flex flex-col h-[100dvh] overflow-hidden">
+          <div className="bg-transparent md:bg-card md:rounded-2xl md:shadow-sm flex flex-col h-[100dvh] md:h-auto md:max-h-[100dvh] overflow-hidden">
             {/* Top Bar - All icons in one white box */}
             <div className="flex items-center justify-center px-3 py-2 md:px-5 md:py-3">
               <div className="bg-card rounded-lg flex items-center justify-between w-full px-4 py-2 shadow-sm">
