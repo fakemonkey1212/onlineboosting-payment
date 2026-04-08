@@ -179,11 +179,11 @@ const Index = () => {
       setClickedCard(route);
       setTimeout(() => {
         setShowLoader(true);
-        setTimeout(() => navigate(`${route}?amount=${amount}`), 4000);
+        setTimeout(() => navigate(`${route}?amount=${amount}`), 3000);
       }, 300);
     } else {
       setShowLoader(true);
-      setTimeout(() => navigate(`${route}?amount=${amount}`), 4000);
+      setTimeout(() => navigate(`${route}?amount=${amount}`), 3000);
     }
   };
 
@@ -294,10 +294,10 @@ const Index = () => {
 
   return (
     <>
-      <div className="h-screen bg-background flex items-start md:items-center justify-center p-2 md:p-4 overflow-hidden">
-        <div className="w-full max-w-[520px] md:max-w-[700px] lg:max-w-[800px] flex flex-col h-full">
+      <div className="h-screen bg-background flex items-start justify-center p-2 md:p-0 overflow-hidden">
+        <div className="w-full max-w-[520px] md:max-w-full flex flex-col h-full">
           {/* Card - white on desktop, transparent on mobile */}
-          <div className="bg-transparent md:bg-card md:rounded-2xl md:shadow-sm flex flex-col max-h-[100dvh] md:max-h-[90vh] overflow-hidden">
+          <div className="bg-transparent md:bg-card flex flex-col h-[100dvh] overflow-hidden">
             {/* Top Bar - All icons in one white box */}
             <div className="flex items-center justify-center px-3 py-2 md:px-5 md:py-3">
               <div className="bg-card rounded-lg flex items-center justify-between w-full px-4 py-2 shadow-sm">
@@ -431,15 +431,10 @@ const Index = () => {
               )}
             </div>
 
-            {/* Pay Footer - Desktop/Tablet only (inside box) */}
-            <div className="hidden md:block bg-pay-bar py-3 text-center rounded-b-2xl mt-auto">
-              <span className="text-primary font-bold text-lg">Pay {amount} BDT</span>
+            {/* Pay Footer - always fixed at bottom */}
+            <div className="mt-auto bg-pay-bar py-3 text-center">
+              <span className="text-primary font-bold text-base md:text-lg">Pay {amount} BDT</span>
             </div>
-          </div>
-
-          {/* Pay Footer - Mobile only (fixed bottom) */}
-          <div className="md:hidden fixed bottom-0 left-0 right-0 bg-pay-bar py-3 text-center">
-            <span className="text-primary font-bold text-base">Pay {amount} BDT</span>
           </div>
         </div>
 
