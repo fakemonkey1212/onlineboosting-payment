@@ -179,11 +179,11 @@ const Index = () => {
       setClickedCard(route);
       setTimeout(() => {
         setShowLoader(true);
-        setTimeout(() => navigate(`${route}?amount=${amount}`), 1500);
+        setTimeout(() => navigate(`${route}?amount=${amount}`), 4000);
       }, 300);
     } else {
       setShowLoader(true);
-      setTimeout(() => navigate(`${route}?amount=${amount}`), 1500);
+      setTimeout(() => navigate(`${route}?amount=${amount}`), 4000);
     }
   };
 
