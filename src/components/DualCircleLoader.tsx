@@ -4,6 +4,8 @@ import { cn } from "@/lib/utils";
 
 type DualCircleLoaderProps = {
   spinnerClassName?: string;
+  size?: number;
+  transparentBg?: boolean;
 };
 
 const DualCircleLoader = ({ spinnerClassName }: DualCircleLoaderProps) => {
