@@ -14,7 +14,7 @@ const DualCircleLoader = ({ spinnerClassName, size = 50, transparentBg = false }
     return () => { document.body.style.overflow = ""; };
   }, []);
   return (
-    <div className={`fixed inset-0 z-50 flex items-center justify-center ${transparentBg ? '' : 'bg-black/5'}`}>
+    <div className={`fixed inset-0 z-50 flex items-center justify-center ${transparentBg ? 'backdrop-blur-[2px] bg-white/30' : 'bg-black/5'}`}>
       <div className="relative" style={{ width: size, height: size }}>
         {/* Outer circle - half arc */}
         <div
