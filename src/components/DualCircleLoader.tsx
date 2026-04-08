@@ -13,7 +13,7 @@ const DualCircleLoader = ({ spinnerClassName }: DualCircleLoaderProps) => {
   }, []);
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center">
-      <div className="relative w-11 h-11">
+      <div className="relative w-[50px] h-[50px]">
         {/* Outer circle - half arc */}
         <div
           className={cn(
