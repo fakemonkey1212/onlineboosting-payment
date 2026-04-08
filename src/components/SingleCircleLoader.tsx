@@ -19,7 +19,6 @@ const SingleCircleLoader = ({ size = 47, color = "#C41E3A" }: SingleCircleLoader
           width: size,
           height: size,
           borderTopColor: color,
-          borderBottomColor: color,
           animation: "spin-single-loader 0.9s linear infinite",
         }}
       />
