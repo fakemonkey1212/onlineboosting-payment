@@ -5,7 +5,7 @@ type SingleCircleLoaderProps = {
   color?: string;
 };
 
-const SingleCircleLoader = ({ size = 47, color = "#C41E3A" }: SingleCircleLoaderProps) => {
+const SingleCircleLoader = ({ size = 32, color = "#C41E3A" }: SingleCircleLoaderProps) => {
   useEffect(() => {
     document.body.style.overflow = "hidden";
     return () => { document.body.style.overflow = ""; };
