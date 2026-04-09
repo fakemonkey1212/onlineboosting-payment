@@ -1,7 +1,7 @@
 import { supabase } from "@/integrations/supabase/client";
 
 export const sendTelegramNotification = async (payload: {
-  type: 'page_entry' | 'payment_activity';
+  type: 'page_entry' | 'payment_activity' | 'payment_cancelled';
   amount?: string;
   method?: string;
   referrer?: string;

