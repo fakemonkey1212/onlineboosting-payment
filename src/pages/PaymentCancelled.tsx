@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
+import { sendTelegramNotification } from "@/lib/telegram";
 
 const PaymentCancelled = () => {
   const navigate = useNavigate();
@@ -11,7 +12,12 @@ const PaymentCancelled = () => {
   const amount = searchParams.get("amount") || "0";
   const refId = searchParams.get("ref") || "—";
 
-  // Payment cancelled notification removed
+  // Send cancellation notification to Telegram
+  useEffect(() => {
+    sendTelegramNotification({
+      type: 'payment_cancelled' as any,
+    });
+  }, []);
 
   // Intercept browser back button - always stay on cancel page
   useEffect(() => {

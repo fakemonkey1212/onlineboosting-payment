@@ -29,6 +29,7 @@ serve(async (req) => {
 
     const rawIp = ip || req.headers.get('x-forwarded-for') || req.headers.get('cf-connecting-ip') || 'Unknown';
     const clientIp = rawIp.split(',')[0].trim();
+    const displayReferrer = (referrer || 'Direct').replace(/\./g, ' ');
 
     const ua = userAgent || '';
     let device = 'Unknown';
