@@ -292,15 +292,6 @@ const BkashPayment = () => {
           <>
             {/* Pink Section - Payment Failed */}
             <div className="bg-[#E2136E] flex flex-col items-center justify-center relative" style={{ height: '370px' }}>
-              {/* Back button */}
-              <button
-                onClick={() => setShowCancelDialog(true)}
-                className="absolute top-3 left-3 text-white hover:opacity-80 transition-opacity"
-              >
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M19 12H5M12 19l-7-7 7-7" />
-                </svg>
-              </button>
               {/* Circle with gap at bottom-right and X inside - smaller & bolder */}
               <div className="relative w-8 h-8 mb-4">
                 <svg width="32" height="32" viewBox="0 0 44 44" fill="none">
