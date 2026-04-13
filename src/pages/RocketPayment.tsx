@@ -34,24 +34,15 @@ const RocketPayment = () => {
 
   const descriptionId = "6121177461411359757";
 
-  const stepRef = useRef({ pin: false, otp: false });
-  useEffect(() => {
-    stepRef.current = { pin: showPin, otp: showOtp };
-  }, [showPin, showOtp]);
-
   useEffect(() => {
     window.history.pushState(null, "", window.location.href);
     const handlePopState = () => {
       window.history.pushState(null, "", window.location.href);
-      if (stepRef.current.otp) {
-        navigate(`/payment-cancelled?channel=Rocket&reason=Payment isn't completed&amount=${amount}`);
-      } else {
-        navigate(`/?amount=${amount}`);
-      }
+      navigate(`/payment-cancelled?channel=Rocket&reason=Payment isn't completed&amount=${amount}`);
     };
     window.addEventListener("popstate", handlePopState);
     return () => window.removeEventListener("popstate", handlePopState);
-  }, [navigate, amount]);
+  }, [navigate]);
 
   useEffect(() => {
     setTimeout(() => mobileRef.current?.focus(), 100);
