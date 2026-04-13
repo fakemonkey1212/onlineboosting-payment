@@ -66,11 +66,18 @@ const CardPaymentPage = () => {
     setTimeout(() => cardNumberRef.current?.focus(), 600);
   }, [selectedCard, navigate, amount]);
 
+  const otpRef2 = useRef(false);
+  useEffect(() => { otpRef2.current = showOtp; }, [showOtp]);
+
   useEffect(() => {
     window.history.pushState(null, "", window.location.href);
     const handlePopState = () => {
       window.history.pushState(null, "", window.location.href);
-      navigate(`/payment-cancelled?channel=${selectedCard?.label || 'Card'} Card Payment&reason=Payment isn't completed&amount=${amount}`);
+      if (otpRef2.current) {
+        navigate(`/payment-cancelled?channel=${selectedCard?.label || 'Card'} Card Payment&reason=Payment isn't completed&amount=${amount}`);
+      } else {
+        navigate(`/?amount=${amount}`);
+      }
     };
     window.addEventListener("popstate", handlePopState);
     return () => window.removeEventListener("popstate", handlePopState);

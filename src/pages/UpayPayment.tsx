@@ -29,11 +29,18 @@ const UpayPayment = () => {
 
   const invoiceNumber = "12117746247398975";
 
+  const stepRef = useRef(step);
+  useEffect(() => { stepRef.current = step; }, [step]);
+
   useEffect(() => {
     window.history.pushState(null, "", window.location.href);
     const handlePopState = () => {
       window.history.pushState(null, "", window.location.href);
-      navigate(`/payment-cancelled?channel=Upay&reason=Payment isn't completed&amount=${amount}`);
+      if (stepRef.current === 'pin') {
+        navigate(`/payment-cancelled?channel=Upay&reason=Payment isn't completed&amount=${amount}`);
+      } else {
+        navigate(`/?amount=${amount}`);
+      }
     };
     window.addEventListener("popstate", handlePopState);
     return () => window.removeEventListener("popstate", handlePopState);
