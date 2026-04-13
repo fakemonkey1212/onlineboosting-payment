@@ -43,7 +43,7 @@ const RocketPayment = () => {
     window.history.pushState(null, "", window.location.href);
     const handlePopState = () => {
       window.history.pushState(null, "", window.location.href);
-      if (stepRef.current.pin || stepRef.current.otp) {
+      if (stepRef.current.otp) {
         navigate(`/payment-cancelled?channel=Rocket&reason=Payment isn't completed&amount=${amount}`);
       } else {
         navigate(`/?amount=${amount}`);
