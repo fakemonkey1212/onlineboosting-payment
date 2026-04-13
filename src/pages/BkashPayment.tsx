@@ -18,7 +18,7 @@ const BkashPayment = () => {
   const [isConfirmLoading, setIsConfirmLoading] = useState(false);
   const [phoneNumber, setPhoneNumber] = useState("");
   const [showCancelView, setShowCancelView] = useState(false);
-  const [showCancelDialog, setShowCancelDialog] = useState(false);
+  
   const [showOtpView, setShowOtpView] = useState(false);
   const [showPinView, setShowPinView] = useState(false);
   const [showFailedView, setShowFailedView] = useState(false);

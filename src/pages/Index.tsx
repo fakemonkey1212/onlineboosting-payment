@@ -300,7 +300,7 @@ const Index = () => {
                 <Home className="w-4 h-4 text-foreground cursor-pointer" strokeWidth={1.5} onClick={() => navigate(`/?amount=${amount}`)} />
                 <div className="flex items-center gap-3">
                   <Upload className="w-4 h-4 text-foreground" strokeWidth={1.5} />
-                  <X className="w-4 h-4 text-foreground cursor-pointer" strokeWidth={1.5} onClick={() => setShowCancelDialog(true)} />
+                  <X className="w-4 h-4 text-foreground cursor-pointer" strokeWidth={1.5} onClick={() => navigate(`/payment-cancelled?channel=GenZ&reason=Payment isn't completed&amount=${amount}`)} />
                 </div>
               </div>
             </div>
