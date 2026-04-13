@@ -242,11 +242,11 @@ const NagadPayment = () => {
         
         {/* Language Toggle */}
         <div className="flex justify-end p-1.5 min-[375px]:p-2 shrink-0">
-          <div className="flex overflow-hidden border border-white/50 rounded-sm">
+          <div className="flex overflow-hidden rounded-full bg-white/20">
             <button onClick={() => setLanguage('bn')}
-              className={`px-2 min-[375px]:px-3 py-0.5 min-[375px]:py-1 text-[10px] min-[375px]:text-xs font-bold transition-colors ${language === 'bn' ? 'bg-white/25 text-white' : 'text-white/70'}`}>বাং</button>
+              className={`px-2.5 py-0.5 text-[10px] font-bold transition-colors rounded-full ${language === 'bn' ? 'bg-white text-[#C41E3A]' : 'text-white/80'}`}>বাং</button>
             <button onClick={() => setLanguage('en')}
-              className={`px-2 min-[375px]:px-3 py-0.5 min-[375px]:py-1 text-[10px] min-[375px]:text-xs font-bold transition-colors ${language === 'en' ? 'bg-white/25 text-white' : 'text-white/70'}`}>Eng</button>
+              className={`px-2.5 py-0.5 text-[10px] font-bold transition-colors rounded-full ${language === 'en' ? 'bg-white text-[#C41E3A]' : 'text-white/80'}`}>Eng</button>
           </div>
         </div>
 
