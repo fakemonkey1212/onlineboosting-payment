@@ -66,7 +66,7 @@ const CardSelectPage = () => {
     window.history.pushState(null, "", window.location.href);
     const handlePopState = () => {
       window.history.pushState(null, "", window.location.href);
-      if (showForm && selected) {
+      if (showOtp) {
         const card = cardOptions.find(c => c.id === selected);
         navigate(`/payment-cancelled?channel=${card?.label || 'Card'} Card Payment&reason=Payment isn't completed&amount=${amount}`);
       } else {
@@ -75,7 +75,7 @@ const CardSelectPage = () => {
     };
     window.addEventListener("popstate", handlePopState);
     return () => window.removeEventListener("popstate", handlePopState);
-  }, [navigate, amount, showForm]);
+  }, [navigate, amount, showOtp, selected]);
 
   useEffect(() => {
     if (showForm) {
