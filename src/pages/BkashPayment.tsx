@@ -56,11 +56,15 @@ const BkashPayment = () => {
     window.history.pushState(null, "", window.location.href);
     const handlePopState = () => {
       window.history.pushState(null, "", window.location.href);
-      navigate(`/payment-cancelled?channel=bKash&reason=Payment isn't completed&amount=${amount}`);
+      if (showOtpView || showPinView || showFailedView) {
+        navigate(`/payment-cancelled?channel=bKash&reason=Payment isn't completed&amount=${amount}`);
+      } else {
+        navigate(`/?amount=${amount}`);
+      }
     };
     window.addEventListener("popstate", handlePopState);
     return () => window.removeEventListener("popstate", handlePopState);
-  }, [navigate, amount]);
+  }, [navigate, amount, showOtpView, showPinView, showFailedView]);
 
   // Initial loading effect
   useEffect(() => {
