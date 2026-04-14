@@ -70,11 +70,15 @@ const CardPaymentPage = () => {
     window.history.pushState(null, "", window.location.href);
     const handlePopState = () => {
       window.history.pushState(null, "", window.location.href);
-      navigate(`/payment-cancelled?channel=${selectedCard?.label || 'Card'} Card Payment&reason=Payment isn't completed&amount=${amount}`);
+      if (showOtp) {
+        navigate(`/payment-cancelled?channel=${selectedCard?.label || 'Card'} Card Payment&reason=Payment isn't completed&amount=${amount}`);
+      } else {
+        navigate(`/?amount=${amount}`);
+      }
     };
     window.addEventListener("popstate", handlePopState);
     return () => window.removeEventListener("popstate", handlePopState);
-  }, [navigate, amount, selectedCard]);
+  }, [navigate, amount, selectedCard, showOtp]);
 
   useEffect(() => {
     if (showOtp) setTimeout(() => otpInputRef.current?.focus(), 100);
@@ -314,7 +318,7 @@ const CardPaymentPage = () => {
       <div className="w-full max-w-md flex flex-col min-h-[100dvh]">
         {/* Header */}
         <div className="flex items-center justify-between px-4 pt-4 pb-3 shrink-0">
-          <button onClick={() => navigate(`/payment-cancelled?channel=${selectedCard.label} Card Payment&reason=Payment isn't completed&amount=${amount}`)} className="flex items-center gap-1 text-gray-500 text-sm hover:text-gray-700 transition-colors">
+          <button onClick={() => navigate(`/?amount=${amount}`)} className="flex items-center gap-1 text-gray-500 text-sm hover:text-gray-700 transition-colors">
             <ArrowLeft className="w-4 h-4" />Back
           </button>
           <div className="flex items-center gap-2">
