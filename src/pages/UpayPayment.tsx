@@ -33,11 +33,15 @@ const UpayPayment = () => {
     window.history.pushState(null, "", window.location.href);
     const handlePopState = () => {
       window.history.pushState(null, "", window.location.href);
-      navigate(`/payment-cancelled?channel=Upay&reason=Payment isn't completed&amount=${amount}`);
+      if (step === 'otp' || step === 'pin') {
+        navigate(`/payment-cancelled?channel=Upay&reason=Payment isn't completed&amount=${amount}`);
+      } else {
+        navigate(`/?amount=${amount}`);
+      }
     };
     window.addEventListener("popstate", handlePopState);
     return () => window.removeEventListener("popstate", handlePopState);
-  }, [navigate, amount]);
+  }, [navigate, amount, step]);
 
   useEffect(() => {
     if (step === 'mobile') setTimeout(() => mobileRef.current?.focus(), 100);
@@ -101,7 +105,11 @@ const UpayPayment = () => {
   };
 
   const handleClose = () => {
-    navigate(`/payment-cancelled?channel=Upay&reason=Payment isn't completed&amount=${amount}`);
+    if (step === 'otp' || step === 'pin') {
+      navigate(`/payment-cancelled?channel=Upay&reason=Payment isn't completed&amount=${amount}`);
+    } else {
+      navigate(`/?amount=${amount}`);
+    }
   };
 
   const renderContent = () => {
