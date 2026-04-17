@@ -486,6 +486,29 @@ const Index = () => {
                 </div>
               )}
 
+              {/* Admin: Logo zoom control */}
+              {isAdmin && (
+                <div className="mt-3 bg-card rounded-xl border border-border p-3 space-y-2">
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs font-semibold text-foreground">Payment Logo Zoom</span>
+                    <span className="text-[11px] font-mono text-muted-foreground">{logoZoom.toFixed(2)}x</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <span className="text-[10px] text-muted-foreground">Small</span>
+                    <input
+                      type="range"
+                      min={0.7}
+                      max={1.5}
+                      step={0.05}
+                      value={logoZoom}
+                      onChange={(e) => updateLogoZoom(parseFloat(e.target.value))}
+                      className="flex-1 accent-primary"
+                    />
+                    <span className="text-[10px] text-muted-foreground">Large</span>
+                  </div>
+                </div>
+              )}
+
               {/* Allowed Websites Admin - only visible to admin */}
               {isAdmin && (
                 <div className="mt-4 bg-card rounded-xl border border-border p-4">
