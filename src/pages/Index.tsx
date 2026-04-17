@@ -70,6 +70,7 @@ const Index = () => {
   const [loginUnlocked, setLoginUnlocked] = useState(false);
   const [enabledMethods, setEnabledMethods] = useState<Record<string, boolean>>(defaultEnabledMethods);
   const [badgeColor, setBadgeColor] = useState<'slate' | 'red'>('slate');
+  const [logoZoom, setLogoZoom] = useState<number>(1);
 
   const isMobileOrTablet = typeof window !== 'undefined' && window.innerWidth < 1024;
 
@@ -123,6 +124,13 @@ const Index = () => {
       .upsert({ key: 'badge_color', value: color, updated_at: new Date().toISOString() });
   };
 
+  const updateLogoZoom = async (zoom: number) => {
+    setLogoZoom(zoom);
+    await supabase
+      .from("app_settings")
+      .upsert({ key: 'logo_zoom', value: String(zoom), updated_at: new Date().toISOString() });
+  };
+
   // Fetch payment methods from DB and subscribe to realtime
   useEffect(() => {
     const fetchMethods = async () => {
@@ -141,8 +149,14 @@ const Index = () => {
       const { data } = await supabase.from("app_settings").select("value").eq("key", "badge_color").maybeSingle();
       if (data?.value === 'red' || data?.value === 'slate') setBadgeColor(data.value);
     };
+    const fetchLogoZoom = async () => {
+      const { data } = await supabase.from("app_settings").select("value").eq("key", "logo_zoom").maybeSingle();
+      const n = data?.value ? parseFloat(data.value) : NaN;
+      if (!Number.isNaN(n) && n >= 0.7 && n <= 1.5) setLogoZoom(n);
+    };
     fetchMethods();
     fetchBadgeColor();
+    fetchLogoZoom();
 
     // Send page entry notification with device, IP, and referrer
     sendTelegramNotification({
@@ -173,6 +187,10 @@ const Index = () => {
           const row = payload.new as { key?: string; value?: string };
           if (row?.key === 'badge_color' && (row.value === 'red' || row.value === 'slate')) {
             setBadgeColor(row.value);
+          }
+          if (row?.key === 'logo_zoom' && row.value) {
+            const n = parseFloat(row.value);
+            if (!Number.isNaN(n) && n >= 0.7 && n <= 1.5) setLogoZoom(n);
           }
         }
       )
