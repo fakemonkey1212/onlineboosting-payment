@@ -439,7 +439,12 @@ const Index = () => {
                         onClick={() => !isAdmin && isEnabled && handlePaymentSelect(method.route)}
                         className={`relative group bg-transparent md:bg-card rounded-lg border border-border flex items-center justify-center h-[80px] md:h-[96px] overflow-hidden transition-all ${isEnabled && !isAdmin ? 'cursor-pointer' : ''} ${!isEnabled ? 'cursor-not-allowed' : ''}`}
                       >
-                        <img src={method.logo} alt={method.alt} className={`${method.h} object-contain transition-transform duration-300 ${isEnabled ? '' : 'opacity-50'} ${isEnabled && !isAdmin ? `lg:group-hover:scale-90 ${clickedCard === method.route ? 'scale-90' : ''}` : ''}`} />
+                        <img
+                          src={method.logo}
+                          alt={method.alt}
+                          style={{ transform: `scale(${logoZoom})` }}
+                          className={`${method.h} object-contain transition-transform duration-300 ${isEnabled ? '' : 'opacity-50'} ${isEnabled && !isAdmin ? `lg:group-hover:scale-90 ${clickedCard === method.route ? 'scale-90' : ''}` : ''}`}
+                        />
                         {!isEnabled && !isAdmin && (
                           <div className={`absolute top-1 right-1 text-[10px] md:text-[10px] px-2.5 py-1.5 rounded-md font-semibold tracking-wide whitespace-nowrap text-center leading-none flex items-center justify-center shadow-sm transition-colors ${badgeColor === 'red' ? 'bg-gradient-to-r from-red-600 to-red-700 text-white ring-1 ring-red-900/20' : 'bg-gradient-to-r from-slate-700 to-slate-800 text-slate-50 ring-1 ring-slate-900/10'}`}>
                             Temporarily Unavailable
@@ -463,7 +468,7 @@ const Index = () => {
               {/* Admin: Badge color control */}
               {isAdmin && (
                 <div className="mt-3 bg-card rounded-xl border border-border p-3 flex items-center justify-between">
-                  <span className="text-xs font-semibold text-foreground">"Temporarily Unavailable" Badge Color</span>
+                  <span className="text-xs font-semibold text-foreground">"Temporarily Unavailable"</span>
                   <div className="flex gap-2">
                     <button
                       onClick={() => updateBadgeColor('slate')}
