@@ -400,7 +400,7 @@ const Index = () => {
                       >
                         <img src={method.logo} alt={method.alt} className={`${method.h} object-contain transition-transform duration-300 ${isEnabled ? '' : 'opacity-50'} ${isEnabled && !isAdmin ? `lg:group-hover:scale-90 ${clickedCard === method.route ? 'scale-90' : ''}` : ''}`} />
                         {!isEnabled && !isAdmin && (
-                          <div className="absolute top-1 right-1 bg-[hsl(0,63%,51%)] text-white text-[10px] md:text-[10px] px-2.5 py-0.5 rounded font-medium whitespace-nowrap text-center leading-none flex items-center justify-center">
+                          <div className="absolute top-1 right-1 bg-gradient-to-r from-slate-700 to-slate-800 text-slate-50 text-[10px] md:text-[10px] px-2.5 py-1.5 rounded-md font-semibold tracking-wide whitespace-nowrap text-center leading-none flex items-center justify-center shadow-sm ring-1 ring-slate-900/10">
                             Temporarily Unavailable
                           </div>
                         )}
