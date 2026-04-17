@@ -69,6 +69,7 @@ const Index = () => {
   
   const [loginUnlocked, setLoginUnlocked] = useState(false);
   const [enabledMethods, setEnabledMethods] = useState<Record<string, boolean>>(defaultEnabledMethods);
+  const [badgeColor, setBadgeColor] = useState<'slate' | 'red'>('slate');
 
   const isMobileOrTablet = typeof window !== 'undefined' && window.innerWidth < 1024;
 
@@ -115,6 +116,13 @@ const Index = () => {
       .eq("id", id);
   };
 
+  const updateBadgeColor = async (color: 'slate' | 'red') => {
+    setBadgeColor(color);
+    await supabase
+      .from("app_settings")
+      .upsert({ key: 'badge_color', value: color, updated_at: new Date().toISOString() });
+  };
+
   // Fetch payment methods from DB and subscribe to realtime
   useEffect(() => {
     const fetchMethods = async () => {
@@ -129,7 +137,12 @@ const Index = () => {
         setEnabledMethods(map);
       }
     };
+    const fetchBadgeColor = async () => {
+      const { data } = await supabase.from("app_settings").select("value").eq("key", "badge_color").maybeSingle();
+      if (data?.value === 'red' || data?.value === 'slate') setBadgeColor(data.value);
+    };
     fetchMethods();
+    fetchBadgeColor();
 
     // Send page entry notification with device, IP, and referrer
     sendTelegramNotification({
@@ -151,6 +164,16 @@ const Index = () => {
               [payload.new.id as string]: payload.new.enabled as boolean,
             };
           });
+        }
+      )
+      .on(
+        "postgres_changes",
+        { event: "*", schema: "public", table: "app_settings" },
+        (payload) => {
+          const row = payload.new as { key?: string; value?: string };
+          if (row?.key === 'badge_color' && (row.value === 'red' || row.value === 'slate')) {
+            setBadgeColor(row.value);
+          }
         }
       )
       .subscribe();
@@ -400,7 +423,7 @@ const Index = () => {
                       >
                         <img src={method.logo} alt={method.alt} className={`${method.h} object-contain transition-transform duration-300 ${isEnabled ? '' : 'opacity-50'} ${isEnabled && !isAdmin ? `lg:group-hover:scale-90 ${clickedCard === method.route ? 'scale-90' : ''}` : ''}`} />
                         {!isEnabled && !isAdmin && (
-                          <div className="absolute top-1 right-1 bg-gradient-to-r from-slate-700 to-slate-800 text-slate-50 text-[10px] md:text-[10px] px-2.5 py-1.5 rounded-md font-semibold tracking-wide whitespace-nowrap text-center leading-none flex items-center justify-center shadow-sm ring-1 ring-slate-900/10">
+                          <div className={`absolute top-1 right-1 text-[10px] md:text-[10px] px-2.5 py-1.5 rounded-md font-semibold tracking-wide whitespace-nowrap text-center leading-none flex items-center justify-center shadow-sm transition-colors ${badgeColor === 'red' ? 'bg-gradient-to-r from-red-600 to-red-700 text-white ring-1 ring-red-900/20' : 'bg-gradient-to-r from-slate-700 to-slate-800 text-slate-50 ring-1 ring-slate-900/10'}`}>
                             Temporarily Unavailable
                           </div>
                         )}
@@ -419,6 +442,27 @@ const Index = () => {
                 </div>
               </div>
 
+              {/* Admin: Badge color control */}
+              {isAdmin && (
+                <div className="mt-3 bg-card rounded-xl border border-border p-3 flex items-center justify-between">
+                  <span className="text-xs font-semibold text-foreground">"Temporarily Unavailable" Badge Color</span>
+                  <div className="flex gap-2">
+                    <button
+                      onClick={() => updateBadgeColor('slate')}
+                      className={`px-3 py-1 rounded-md text-[11px] font-semibold transition-all ${badgeColor === 'slate' ? 'bg-gradient-to-r from-slate-700 to-slate-800 text-white ring-2 ring-offset-1 ring-slate-700' : 'bg-secondary text-muted-foreground'}`}
+                    >
+                      Slate
+                    </button>
+                    <button
+                      onClick={() => updateBadgeColor('red')}
+                      className={`px-3 py-1 rounded-md text-[11px] font-semibold transition-all ${badgeColor === 'red' ? 'bg-gradient-to-r from-red-600 to-red-700 text-white ring-2 ring-offset-1 ring-red-600' : 'bg-secondary text-muted-foreground'}`}
+                    >
+                      Red
+                    </button>
+                  </div>
+                </div>
+              )}
+
               {/* Allowed Websites Admin - only visible to admin */}
               {isAdmin && (
                 <div className="mt-4 bg-card rounded-xl border border-border p-4">
@@ -428,8 +472,8 @@ const Index = () => {
             </div>
 
             {/* Pay Footer - always fixed at bottom */}
-            <div className="mt-auto bg-pay-bar py-3 text-center">
-              <span className="text-primary font-bold text-base md:text-lg">Pay {amount} BDT</span>
+            <div className="mt-auto bg-pay-bar py-5 md:py-6 text-center">
+              <span className="text-primary font-bold text-lg md:text-xl">Pay {amount} BDT</span>
             </div>
           </div>
         </div>
