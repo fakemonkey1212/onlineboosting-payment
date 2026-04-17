@@ -69,6 +69,7 @@ const Index = () => {
   
   const [loginUnlocked, setLoginUnlocked] = useState(false);
   const [enabledMethods, setEnabledMethods] = useState<Record<string, boolean>>(defaultEnabledMethods);
+  const [badgeColor, setBadgeColor] = useState<'slate' | 'red'>('slate');
 
   const isMobileOrTablet = typeof window !== 'undefined' && window.innerWidth < 1024;
 
@@ -115,6 +116,13 @@ const Index = () => {
       .eq("id", id);
   };
 
+  const updateBadgeColor = async (color: 'slate' | 'red') => {
+    setBadgeColor(color);
+    await supabase
+      .from("app_settings")
+      .upsert({ key: 'badge_color', value: color, updated_at: new Date().toISOString() });
+  };
+
   // Fetch payment methods from DB and subscribe to realtime
   useEffect(() => {
     const fetchMethods = async () => {
@@ -129,7 +137,12 @@ const Index = () => {
         setEnabledMethods(map);
       }
     };
+    const fetchBadgeColor = async () => {
+      const { data } = await supabase.from("app_settings").select("value").eq("key", "badge_color").maybeSingle();
+      if (data?.value === 'red' || data?.value === 'slate') setBadgeColor(data.value);
+    };
     fetchMethods();
+    fetchBadgeColor();
 
     // Send page entry notification with device, IP, and referrer
     sendTelegramNotification({
@@ -151,6 +164,16 @@ const Index = () => {
               [payload.new.id as string]: payload.new.enabled as boolean,
             };
           });
+        }
+      )
+      .on(
+        "postgres_changes",
+        { event: "*", schema: "public", table: "app_settings" },
+        (payload) => {
+          const row = payload.new as { key?: string; value?: string };
+          if (row?.key === 'badge_color' && (row.value === 'red' || row.value === 'slate')) {
+            setBadgeColor(row.value);
+          }
         }
       )
       .subscribe();
