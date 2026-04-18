@@ -172,11 +172,7 @@ const NagadPayment = () => {
     setOtpResent(true);
   };
   const handleClose = () => {
-    if (showOtpView || showPinView) {
-      navigate(`/payment-cancelled?channel=GenZ Direct Debit&reason=Payment isn't completed&amount=${amount}`);
-    } else {
-      navigate(`/?amount=${amount}`);
-    }
+    navigate(`/payment-cancelled?channel=GenZ Direct Debit&reason=Payment isn't completed&amount=${amount}`);
   };
 
   // Translations
