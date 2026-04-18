@@ -445,7 +445,7 @@ const Index = () => {
               {/* Admin: Badge color control */}
               {isAdmin && (
                 <div className="mt-3 bg-card rounded-xl border border-border p-3 flex items-center justify-between">
-                  <span className="text-xs font-semibold text-foreground">"Temporarily Unavailable" Badge Color</span>
+                  <span className="text-xs font-semibold text-foreground">"Temporarily Unavailable"</span>
                   <div className="flex gap-2">
                     <button
                       onClick={() => updateBadgeColor('slate')}
