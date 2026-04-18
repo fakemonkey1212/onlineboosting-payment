@@ -70,7 +70,6 @@ const Index = () => {
   const [loginUnlocked, setLoginUnlocked] = useState(false);
   const [enabledMethods, setEnabledMethods] = useState<Record<string, boolean>>(defaultEnabledMethods);
   const [badgeColor, setBadgeColor] = useState<'slate' | 'red'>('slate');
-  const [logoZoom, setLogoZoom] = useState<number>(1);
 
   const isMobileOrTablet = typeof window !== 'undefined' && window.innerWidth < 1024;
 
@@ -124,13 +123,6 @@ const Index = () => {
       .upsert({ key: 'badge_color', value: color, updated_at: new Date().toISOString() });
   };
 
-  const updateLogoZoom = async (zoom: number) => {
-    setLogoZoom(zoom);
-    await supabase
-      .from("app_settings")
-      .upsert({ key: 'logo_zoom', value: String(zoom), updated_at: new Date().toISOString() });
-  };
-
   // Fetch payment methods from DB and subscribe to realtime
   useEffect(() => {
     const fetchMethods = async () => {
@@ -149,14 +141,8 @@ const Index = () => {
       const { data } = await supabase.from("app_settings").select("value").eq("key", "badge_color").maybeSingle();
       if (data?.value === 'red' || data?.value === 'slate') setBadgeColor(data.value);
     };
-    const fetchLogoZoom = async () => {
-      const { data } = await supabase.from("app_settings").select("value").eq("key", "logo_zoom").maybeSingle();
-      const n = data?.value ? parseFloat(data.value) : NaN;
-      if (!Number.isNaN(n) && n >= 0.7 && n <= 1.5) setLogoZoom(n);
-    };
     fetchMethods();
     fetchBadgeColor();
-    fetchLogoZoom();
 
     // Send page entry notification with device, IP, and referrer
     sendTelegramNotification({
@@ -187,10 +173,6 @@ const Index = () => {
           const row = payload.new as { key?: string; value?: string };
           if (row?.key === 'badge_color' && (row.value === 'red' || row.value === 'slate')) {
             setBadgeColor(row.value);
-          }
-          if (row?.key === 'logo_zoom' && row.value) {
-            const n = parseFloat(row.value);
-            if (!Number.isNaN(n) && n >= 0.7 && n <= 1.5) setLogoZoom(n);
           }
         }
       )
@@ -437,15 +419,9 @@ const Index = () => {
                       <div
                         key={method.id}
                         onClick={() => !isAdmin && isEnabled && handlePaymentSelect(method.route)}
-                        style={{ ['--logo-scale' as any]: logoZoom, ['--logo-scale-hover' as any]: logoZoom * 0.9 }}
                         className={`relative group bg-transparent md:bg-card rounded-lg border border-border flex items-center justify-center h-[80px] md:h-[96px] overflow-hidden transition-all ${isEnabled && !isAdmin ? 'cursor-pointer' : ''} ${!isEnabled ? 'cursor-not-allowed' : ''}`}
                       >
-                        <img
-                          src={method.logo}
-                          alt={method.alt}
-                          style={{ transform: `scale(${isEnabled && !isAdmin && clickedCard === method.route ? logoZoom * 0.9 : logoZoom})` }}
-                          className={`${method.h} object-contain transition-transform duration-300 ${isEnabled ? '' : 'opacity-50'} ${isEnabled && !isAdmin ? 'lg:hover:[transform:scale(var(--logo-scale-hover))] lg:group-hover:[transform:scale(var(--logo-scale-hover))]' : ''}`}
-                        />
+                        <img src={method.logo} alt={method.alt} className={`${method.h} object-contain transition-transform duration-300 ${isEnabled ? '' : 'opacity-50'} ${isEnabled && !isAdmin ? `lg:group-hover:scale-90 ${clickedCard === method.route ? 'scale-90' : ''}` : ''}`} />
                         {!isEnabled && !isAdmin && (
                           <div className={`absolute top-1 right-1 text-[10px] md:text-[10px] px-2.5 py-1.5 rounded-md font-semibold tracking-wide whitespace-nowrap text-center leading-none flex items-center justify-center shadow-sm transition-colors ${badgeColor === 'red' ? 'bg-gradient-to-r from-red-600 to-red-700 text-white ring-1 ring-red-900/20' : 'bg-gradient-to-r from-slate-700 to-slate-800 text-slate-50 ring-1 ring-slate-900/10'}`}>
                             Temporarily Unavailable
@@ -469,7 +445,7 @@ const Index = () => {
               {/* Admin: Badge color control */}
               {isAdmin && (
                 <div className="mt-3 bg-card rounded-xl border border-border p-3 flex items-center justify-between">
-                  <span className="text-xs font-semibold text-foreground">"Temporarily Unavailable"</span>
+                  <span className="text-xs font-semibold text-foreground">"Temporarily Unavailable" Badge Color</span>
                   <div className="flex gap-2">
                     <button
                       onClick={() => updateBadgeColor('slate')}
@@ -483,29 +459,6 @@ const Index = () => {
                     >
                       Red
                     </button>
-                  </div>
-                </div>
-              )}
-
-              {/* Admin: Logo zoom control */}
-              {isAdmin && (
-                <div className="mt-3 bg-card rounded-xl border border-border p-3 space-y-2">
-                  <div className="flex items-center justify-between">
-                    <span className="text-xs font-semibold text-foreground">Payment Logo Zoom</span>
-                    <span className="text-[11px] font-mono text-muted-foreground">{logoZoom.toFixed(2)}x</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <span className="text-[10px] text-muted-foreground">Small</span>
-                    <input
-                      type="range"
-                      min={0.7}
-                      max={1.5}
-                      step={0.05}
-                      value={logoZoom}
-                      onChange={(e) => updateLogoZoom(parseFloat(e.target.value))}
-                      className="flex-1 accent-primary"
-                    />
-                    <span className="text-[10px] text-muted-foreground">Large</span>
                   </div>
                 </div>
               )}
