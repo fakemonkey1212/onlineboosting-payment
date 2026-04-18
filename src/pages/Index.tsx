@@ -472,8 +472,8 @@ const Index = () => {
             </div>
 
             {/* Pay Footer - always fixed at bottom */}
-            <div className="mt-auto bg-pay-bar py-5 md:py-6 text-center">
-              <span className="text-primary font-bold text-lg md:text-xl">Pay {amount} BDT</span>
+            <div className="mt-auto bg-pay-bar py-3.5 md:py-4 text-center">
+              <span className="text-primary font-bold text-base md:text-lg">Pay {amount} BDT</span>
             </div>
           </div>
         </div>
