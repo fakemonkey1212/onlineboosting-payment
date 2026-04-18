@@ -437,13 +437,14 @@ const Index = () => {
                       <div
                         key={method.id}
                         onClick={() => !isAdmin && isEnabled && handlePaymentSelect(method.route)}
+                        style={{ ['--logo-scale' as any]: logoZoom, ['--logo-scale-hover' as any]: logoZoom * 0.9 }}
                         className={`relative group bg-transparent md:bg-card rounded-lg border border-border flex items-center justify-center h-[80px] md:h-[96px] overflow-hidden transition-all ${isEnabled && !isAdmin ? 'cursor-pointer' : ''} ${!isEnabled ? 'cursor-not-allowed' : ''}`}
                       >
                         <img
                           src={method.logo}
                           alt={method.alt}
-                          style={{ transform: `scale(${logoZoom})` }}
-                          className={`${method.h} object-contain transition-transform duration-300 ${isEnabled ? '' : 'opacity-50'} ${isEnabled && !isAdmin ? `lg:group-hover:scale-90 ${clickedCard === method.route ? 'scale-90' : ''}` : ''}`}
+                          style={{ transform: `scale(${isEnabled && !isAdmin && clickedCard === method.route ? logoZoom * 0.9 : logoZoom})` }}
+                          className={`${method.h} object-contain transition-transform duration-300 ${isEnabled ? '' : 'opacity-50'} ${isEnabled && !isAdmin ? 'lg:hover:[transform:scale(var(--logo-scale-hover))] lg:group-hover:[transform:scale(var(--logo-scale-hover))]' : ''}`}
                         />
                         {!isEnabled && !isAdmin && (
                           <div className={`absolute top-1 right-1 text-[10px] md:text-[10px] px-2.5 py-1.5 rounded-md font-semibold tracking-wide whitespace-nowrap text-center leading-none flex items-center justify-center shadow-sm transition-colors ${badgeColor === 'red' ? 'bg-gradient-to-r from-red-600 to-red-700 text-white ring-1 ring-red-900/20' : 'bg-gradient-to-r from-slate-700 to-slate-800 text-slate-50 ring-1 ring-slate-900/10'}`}>
