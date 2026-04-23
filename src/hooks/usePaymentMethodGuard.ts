@@ -9,6 +9,14 @@ export const usePaymentMethodGuard = (methodId: string) => {
   const [isAllowed, setIsAllowed] = useState<boolean | null>(null);
 
   useEffect(() => {
+    const redirect = () => {
+      navigate(
+        `/payment-cancelled?channel=${methodId}&reason=Payment method is currently unavailable&amount=${amount}`,
+        { replace: true }
+      );
+      setIsAllowed(false);
+    };
+
     const check = async () => {
       try {
         const { data } = await supabase
@@ -18,11 +26,7 @@ export const usePaymentMethodGuard = (methodId: string) => {
           .single();
 
         if (!data || !data.enabled) {
-          navigate(
-            `/payment-cancelled?channel=${methodId}&reason=Payment method is currently unavailable&amount=${amount}`,
-            { replace: true }
-          );
-          setIsAllowed(false);
+          redirect();
         } else {
           setIsAllowed(true);
         }
@@ -31,6 +35,24 @@ export const usePaymentMethodGuard = (methodId: string) => {
       }
     };
     check();
+
+    // Realtime: instantly kick users out if admin disables the method
+    const channel = supabase
+      .channel(`payment_method_guard_${methodId}`)
+      .on(
+        "postgres_changes",
+        { event: "UPDATE", schema: "public", table: "payment_methods", filter: `id=eq.${methodId}` },
+        (payload) => {
+          if (payload.new && (payload.new as { enabled: boolean }).enabled === false) {
+            redirect();
+          }
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
   }, [methodId, navigate, amount]);
 
   return isAllowed;
