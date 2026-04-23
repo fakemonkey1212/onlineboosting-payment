@@ -110,10 +110,14 @@ const Index = () => {
 
   const toggleMethod = async (id: string, enabled: boolean) => {
     setEnabledMethods((prev) => ({ ...prev, [id]: enabled }));
-    await supabase
+
+    const { error } = await supabase
       .from("payment_methods")
-      .update({ enabled, updated_at: new Date().toISOString() })
-      .eq("id", id);
+      .upsert({ id, name: paymentMethods.find((method) => method.id === id)?.alt ?? id, enabled, updated_at: new Date().toISOString() });
+
+    if (error) {
+      setEnabledMethods((prev) => ({ ...prev, [id]: !enabled }));
+    }
   };
 
   const updateBadgeColor = async (color: 'slate' | 'red') => {
