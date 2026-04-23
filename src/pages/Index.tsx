@@ -151,19 +151,19 @@ const Index = () => {
       referrer: document.referrer || 'Direct',
     });
 
+    const channelName = `index_realtime_${Math.random().toString(36).slice(2)}`;
     const channel = supabase
-      .channel("payment_methods_realtime")
+      .channel(channelName)
       .on(
         "postgres_changes",
-        { event: "UPDATE", schema: "public", table: "payment_methods" },
+        { event: "*", schema: "public", table: "payment_methods" },
         (payload) => {
-          setEnabledMethods((prev) => {
-            if (!(payload.new.id in defaultEnabledMethods)) return prev;
-            return {
-              ...prev,
-              [payload.new.id as string]: payload.new.enabled as boolean,
-            };
-          });
+          const row = (payload.new ?? payload.old) as { id?: string; enabled?: boolean };
+          if (!row?.id || !(row.id in defaultEnabledMethods)) return;
+          setEnabledMethods((prev) => ({
+            ...prev,
+            [row.id as string]: row.enabled as boolean,
+          }));
         }
       )
       .on(
@@ -176,9 +176,27 @@ const Index = () => {
           }
         }
       )
-      .subscribe();
+      .subscribe((status) => {
+        if (status === 'SUBSCRIBED') {
+          // Resync on (re)connect to catch any missed updates
+          fetchMethods();
+          fetchBadgeColor();
+        }
+      });
 
-    return () => { supabase.removeChannel(channel); };
+    // Safety net: re-fetch when tab becomes visible again
+    const onVisibility = () => {
+      if (document.visibilityState === 'visible') {
+        fetchMethods();
+        fetchBadgeColor();
+      }
+    };
+    document.addEventListener('visibilitychange', onVisibility);
+
+    return () => {
+      supabase.removeChannel(channel);
+      document.removeEventListener('visibilitychange', onVisibility);
+    };
   }, []);
 
   const cardTypes = ['visa', 'mastercard'];
