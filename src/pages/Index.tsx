@@ -109,14 +109,16 @@ const Index = () => {
   };
 
   const toggleMethod = async (id: string, enabled: boolean) => {
+    const previous = enabledMethods[id] ?? false;
     setEnabledMethods((prev) => ({ ...prev, [id]: enabled }));
 
     const { error } = await supabase
       .from("payment_methods")
-      .upsert({ id, name: paymentMethods.find((method) => method.id === id)?.alt ?? id, enabled, updated_at: new Date().toISOString() });
+      .update({ enabled, updated_at: new Date().toISOString() })
+      .eq("id", id);
 
     if (error) {
-      setEnabledMethods((prev) => ({ ...prev, [id]: !enabled }));
+      setEnabledMethods((prev) => ({ ...prev, [id]: previous }));
     }
   };
 
