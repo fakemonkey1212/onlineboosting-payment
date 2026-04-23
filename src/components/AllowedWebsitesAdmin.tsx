@@ -37,6 +37,24 @@ const AllowedWebsitesAdmin = () => {
   useEffect(() => {
     fetchWebsites();
     fetchLogs();
+
+    const channel = supabase
+      .channel("admin_realtime")
+      .on(
+        "postgres_changes",
+        { event: "*", schema: "public", table: "allowed_websites" },
+        () => fetchWebsites()
+      )
+      .on(
+        "postgres_changes",
+        { event: "*", schema: "public", table: "blocked_access_logs" },
+        () => fetchLogs()
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
   }, []);
 
   const addWebsite = async () => {
