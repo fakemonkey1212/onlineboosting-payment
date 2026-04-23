@@ -31,6 +31,14 @@ export function useReferrerGuard() {
           return;
         }
 
+        // Always allow Lovable preview/editor domains (for admin access)
+        const currentHost = window.location.hostname.toLowerCase();
+        const lovableHosts = ["lovable.app", "lovable.dev", "lovableproject.com"];
+        if (lovableHosts.some((h) => currentHost.endsWith(h) || normalizedRef.includes(h))) {
+          setChecking(false);
+          return;
+        }
+
 
         const isAllowed = allowedSites.some((site) => {
           const normalizedSite = normalizeUrl(site.url);
