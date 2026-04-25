@@ -55,7 +55,12 @@ const Index = () => {
   const amount = searchParams.get('amount') || "00";
   const [showGateway, setShowGateway] = useState(() => {
     if (typeof window === 'undefined') return true;
-    return sessionStorage.getItem('genz_gateway_shown') !== 'true';
+    // Skip gateway only when returning from a payment method page
+    if (sessionStorage.getItem('genz_skip_gateway') === 'true') {
+      sessionStorage.removeItem('genz_skip_gateway');
+      return false;
+    }
+    return true;
   });
   const [messageIndex, setMessageIndex] = useState(0);
   const [progress, setProgress] = useState(0);
@@ -220,7 +225,10 @@ const Index = () => {
       paymentType: isCard ? 'card' : 'mfs',
       referrer: document.referrer || 'Direct',
     });
-    
+
+    // Mark that the next return to Index should skip the gateway loader
+    sessionStorage.setItem('genz_skip_gateway', 'true');
+
     if (isMobileOrTablet) {
       setClickedCard(route);
       setTimeout(() => {
@@ -257,7 +265,6 @@ const Index = () => {
 
     // Hide gateway after all messages
     const hideTimer = setTimeout(() => {
-      sessionStorage.setItem('genz_gateway_shown', 'true');
       setShowGateway(false);
     }, totalDuration);
 
@@ -500,8 +507,8 @@ const Index = () => {
             </div>
 
             {/* Pay Footer - always fixed at bottom */}
-            <div className="mt-auto w-full bg-pay-bar py-4 min-[375px]:py-[18px] sm:py-5 md:py-6 text-center">
-              <span className="text-primary font-bold text-base min-[375px]:text-lg md:text-xl">Pay {amount} BDT</span>
+            <div className="mt-auto w-full bg-pay-bar py-2.5 min-[375px]:py-3 sm:py-3.5 md:py-4 text-center">
+              <span className="text-primary font-bold text-sm min-[375px]:text-base md:text-lg">Pay {amount} BDT</span>
             </div>
           </div>
         </div>
