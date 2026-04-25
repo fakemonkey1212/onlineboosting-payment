@@ -451,7 +451,7 @@ const Index = () => {
                       >
                         <img src={method.logo} alt={method.alt} className={`${method.h} object-contain transition-transform duration-300 ${isEnabled ? '' : 'opacity-50'} ${isEnabled && !isAdmin ? `lg:group-hover:scale-90 ${clickedCard === method.route ? 'scale-90' : ''}` : ''}`} />
                         {!isEnabled && !isAdmin && (
-                          <div className={`absolute top-1 right-1 text-[10px] md:text-[10px] px-2.5 py-1.5 rounded-md font-semibold tracking-wide whitespace-nowrap text-center leading-none flex items-center justify-center shadow-sm transition-colors ${badgeColor === 'red' ? 'bg-gradient-to-r from-red-600 to-red-700 text-white ring-1 ring-red-900/20' : 'bg-gradient-to-r from-slate-700 to-slate-800 text-slate-50 ring-1 ring-slate-900/10'}`}>
+                          <div className={`absolute top-1.5 right-1.5 text-[9px] md:text-[10px] px-2 py-1 rounded-full font-medium tracking-wide whitespace-nowrap text-center leading-none flex items-center justify-center backdrop-blur-md shadow-sm transition-colors ${badgeColor === 'red' ? 'bg-red-500/25 text-red-700/90 ring-1 ring-red-400/30' : 'bg-slate-500/20 text-slate-700/90 ring-1 ring-slate-400/30'}`}>
                             Temporarily Unavailable
                           </div>
                         )}
