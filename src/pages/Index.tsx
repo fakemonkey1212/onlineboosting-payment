@@ -265,7 +265,6 @@ const Index = () => {
 
     // Hide gateway after all messages
     const hideTimer = setTimeout(() => {
-      sessionStorage.setItem('genz_gateway_shown', 'true');
       setShowGateway(false);
     }, totalDuration);
 
