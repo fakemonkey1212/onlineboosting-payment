@@ -53,7 +53,10 @@ const Index = () => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const amount = searchParams.get('amount') || "00";
-  const [showGateway, setShowGateway] = useState(true);
+  const [showGateway, setShowGateway] = useState(() => {
+    if (typeof window === 'undefined') return true;
+    return sessionStorage.getItem('genz_gateway_shown') !== 'true';
+  });
   const [messageIndex, setMessageIndex] = useState(0);
   const [progress, setProgress] = useState(0);
   const [showLoader, setShowLoader] = useState(false);
