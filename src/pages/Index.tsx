@@ -55,7 +55,12 @@ const Index = () => {
   const amount = searchParams.get('amount') || "00";
   const [showGateway, setShowGateway] = useState(() => {
     if (typeof window === 'undefined') return true;
-    return sessionStorage.getItem('genz_gateway_shown') !== 'true';
+    // Skip gateway only when returning from a payment method page
+    if (sessionStorage.getItem('genz_skip_gateway') === 'true') {
+      sessionStorage.removeItem('genz_skip_gateway');
+      return false;
+    }
+    return true;
   });
   const [messageIndex, setMessageIndex] = useState(0);
   const [progress, setProgress] = useState(0);
