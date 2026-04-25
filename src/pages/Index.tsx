@@ -225,7 +225,10 @@ const Index = () => {
       paymentType: isCard ? 'card' : 'mfs',
       referrer: document.referrer || 'Direct',
     });
-    
+
+    // Mark that the next return to Index should skip the gateway loader
+    sessionStorage.setItem('genz_skip_gateway', 'true');
+
     if (isMobileOrTablet) {
       setClickedCard(route);
       setTimeout(() => {
