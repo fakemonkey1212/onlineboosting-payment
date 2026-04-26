@@ -364,7 +364,7 @@ const Index = () => {
             </div>
 
             {/* Content */}
-            <div className={`flex-1 px-3 md:px-6 pb-16 md:pb-6 flex flex-col ${isAdmin ? 'overflow-y-auto' : 'overflow-hidden'}`} style={{ overscrollBehavior: 'contain', WebkitOverflowScrolling: 'touch' }}>
+            <div className={`flex-1 min-h-0 px-3 md:px-6 pb-2 md:pb-6 flex flex-col ${isAdmin ? 'overflow-y-auto' : 'overflow-hidden'}`} style={{ overscrollBehavior: 'contain', WebkitOverflowScrolling: 'touch' }}>
               
               {/* GenZ Logo */}
               <div className="flex justify-center mt-1 mb-2">
