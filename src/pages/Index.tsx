@@ -507,8 +507,14 @@ const Index = () => {
             </div>
 
             {/* Pay Footer - fixed to viewport bottom on mobile, in-flow on desktop */}
-            <div className="fixed md:static bottom-0 left-0 right-0 z-40 w-screen md:w-full md:mt-auto bg-pay-bar py-3 min-[375px]:py-3.5 md:py-4 text-center shadow-[0_-2px_8px_rgba(0,0,0,0.04)] md:shadow-none" style={{ paddingBottom: 'max(0.75rem, env(safe-area-inset-bottom))' }}>
-              <span className="text-primary font-bold text-base md:text-lg">Pay {amount} BDT</span>
+           <div
+              className="fixed md:static bottom-0 left-0 right-0 z-40 w-screen md:w-full md:mt-auto bg-pay-bar py-4 min-[375px]:py-[18px] md:py-5 text-center shadow-[0_-2px_8px_rgba(0,0,0,0.04)] md:shadow-none"
+              style={{
+                paddingBottom: 'calc(env(safe-area-inset-bottom, 0px) + 1rem)',
+                paddingTop: 'calc(env(safe-area-inset-bottom, 0px) * 0.15 + 1rem)',
+              }}
+            >
+             <span className="text-primary font-bold text-base min-[375px]:text-[17px] md:text-lg">Pay {amount} BDT</span>
             </div>
           </div>
         </div>
