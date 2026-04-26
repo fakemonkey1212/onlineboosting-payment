@@ -348,10 +348,10 @@ const Index = () => {
 
   return (
     <>
-      <div className="h-screen bg-background flex items-start md:items-center justify-center p-2 md:p-4 overflow-hidden">
-        <div className="w-full max-w-[520px] md:max-w-[700px] lg:max-w-[800px] flex flex-col h-full">
+      <div className="min-h-[100dvh] bg-background flex items-start md:items-center justify-center p-0 md:p-4 overflow-hidden">
+        <div className="w-full max-w-none md:max-w-[700px] lg:max-w-[800px] flex flex-col min-h-[100dvh] md:min-h-0 md:h-auto">
           {/* Card - white on desktop, transparent on mobile */}
-          <div className="bg-transparent md:bg-card md:rounded-2xl md:shadow-sm flex flex-col h-[100dvh] md:h-auto md:max-h-[100dvh] overflow-hidden">
+          <div className="bg-transparent md:bg-card md:rounded-2xl md:shadow-sm flex flex-col min-h-[100dvh] md:min-h-0 md:h-auto md:max-h-[100dvh] overflow-hidden pb-[60px] md:pb-0 relative">
             {/* Top Bar - All icons in one white box */}
             <div className="flex items-center justify-center px-3 py-2 md:px-5 md:py-3">
               <div className="bg-card rounded-lg flex items-center justify-between w-full px-4 py-2 shadow-sm">
@@ -506,9 +506,9 @@ const Index = () => {
               )}
             </div>
 
-            {/* Pay Footer - always fixed at bottom */}
-            <div className="mt-auto w-full bg-pay-bar py-2.5 min-[375px]:py-3 sm:py-3.5 md:py-4 text-center">
-              <span className="text-primary font-bold text-sm min-[375px]:text-base md:text-lg">Pay {amount} BDT</span>
+            {/* Pay Footer - fixed to viewport bottom on mobile, in-flow on desktop */}
+            <div className="fixed md:static bottom-0 left-0 right-0 z-40 w-screen md:w-full md:mt-auto bg-pay-bar py-3 min-[375px]:py-3.5 md:py-4 text-center shadow-[0_-2px_8px_rgba(0,0,0,0.04)] md:shadow-none" style={{ paddingBottom: 'max(0.75rem, env(safe-area-inset-bottom))' }}>
+              <span className="text-primary font-bold text-base md:text-lg">Pay {amount} BDT</span>
             </div>
           </div>
         </div>
