@@ -351,7 +351,7 @@ const Index = () => {
       <div className="min-h-[100dvh] bg-background flex items-start md:items-center justify-center p-0 md:p-4 overflow-hidden">
         <div className="w-full max-w-none md:max-w-[700px] lg:max-w-[800px] flex flex-col min-h-[100dvh] md:min-h-0 md:h-auto">
           {/* Card - white on desktop, transparent on mobile */}
-          <div className="bg-transparent md:bg-card md:rounded-2xl md:shadow-sm flex flex-col min-h-[100dvh] md:min-h-0 md:h-auto md:max-h-[100dvh] overflow-hidden pb-[84px] md:pb-0 relative">
+          <div className="bg-transparent md:bg-card md:rounded-2xl md:shadow-sm flex flex-col min-h-[100dvh] md:min-h-0 md:h-auto md:max-h-[100dvh] overflow-hidden pb-[calc(96px+env(safe-area-inset-bottom,0px))] md:pb-0 relative">
             {/* Top Bar - All icons in one white box */}
             <div className="flex items-center justify-center px-3 py-2 md:px-5 md:py-3">
               <div className="bg-card rounded-lg flex items-center justify-between w-full px-4 py-2 shadow-sm">
@@ -508,10 +508,10 @@ const Index = () => {
 
             {/* Pay Footer - fixed to viewport bottom on mobile, in-flow on desktop */}
            <div
-              className="fixed md:static bottom-0 left-0 right-0 z-40 w-screen md:w-full md:mt-auto bg-pay-bar py-4 min-[375px]:py-[18px] md:py-5 text-center shadow-[0_-2px_8px_rgba(0,0,0,0.04)] md:shadow-none"
+              className="fixed md:static bottom-0 left-0 right-0 z-50 w-screen md:w-full md:mt-auto bg-pay-bar py-4 min-[375px]:py-[18px] md:py-5 text-center rounded-none shadow-[0_-2px_8px_rgba(0,0,0,0.04)] md:shadow-none"
               style={{
                 paddingBottom: 'calc(env(safe-area-inset-bottom, 0px) + 1rem)',
-                paddingTop: 'calc(env(safe-area-inset-bottom, 0px) * 0.15 + 1rem)',
+                paddingTop: '1rem',
               }}
             >
              <span className="text-primary font-bold text-base min-[375px]:text-[17px] md:text-lg">Pay {amount} BDT</span>
