@@ -247,25 +247,25 @@ const BkashPayment = () => {
           <>
             {/* Pink Section - Loading */}
             <div className="bg-[#E2136E] flex flex-col items-center justify-center" style={{ height: '370px' }}>
-              <div className="relative w-24 h-4 mb-3">
+              <div className="relative w-24 h-2.5 mb-3">
                 {/* Dot 1 - lowest brightness, rotates through all positions */}
                 <span 
-                  className="absolute w-3.5 h-3.5 rounded-full animate-[dotRotate1_2.4s_linear_infinite]"
+                  className="absolute w-2.5 h-2.5 rounded-full animate-[dotRotate1_2.4s_linear_infinite]"
                   style={{ backgroundColor: 'rgba(255,255,255,0.3)' }}
                 ></span>
                 {/* Dot 2 - soft white */}
                 <span 
-                  className="absolute w-3.5 h-3.5 rounded-full animate-[dotRotate2_2.4s_linear_infinite]"
+                  className="absolute w-2.5 h-2.5 rounded-full animate-[dotRotate2_2.4s_linear_infinite]"
                   style={{ backgroundColor: 'rgba(255,255,255,0.5)' }}
                 ></span>
                 {/* Dot 3 - brighter white */}
                 <span 
-                  className="absolute w-3.5 h-3.5 rounded-full animate-[dotRotate3_2.4s_linear_infinite]"
+                  className="absolute w-2.5 h-2.5 rounded-full animate-[dotRotate3_2.4s_linear_infinite]"
                   style={{ backgroundColor: 'rgba(255,255,255,0.7)' }}
                 ></span>
                 {/* Dot 4 - pure white */}
                 <span 
-                  className="absolute w-3.5 h-3.5 rounded-full animate-[dotRotate4_2.4s_linear_infinite]"
+                  className="absolute w-2.5 h-2.5 rounded-full animate-[dotRotate4_2.4s_linear_infinite]"
                   style={{ backgroundColor: 'rgba(255,255,255,1)' }}
                 ></span>
               </div>
