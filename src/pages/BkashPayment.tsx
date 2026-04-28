@@ -247,26 +247,26 @@ const BkashPayment = () => {
           <>
             {/* Pink Section - Loading */}
             <div className="bg-[#E2136E] flex flex-col items-center justify-center" style={{ height: '370px' }}>
-              <div className="relative w-24 h-2.5 mb-3">
+              <div className="relative w-24 mb-3" style={{ height: '13px' }}>
                 {/* Dot 1 - lowest brightness, rotates through all positions */}
                 <span 
-                  className="absolute w-2.5 h-2.5 rounded-full animate-[dotRotate1_2.4s_linear_infinite]"
-                  style={{ backgroundColor: 'rgba(255,255,255,0.3)' }}
+                  className="absolute rounded-full animate-[dotRotate1_2.4s_linear_infinite]"
+                  style={{ width: '13px', height: '13px', backgroundColor: 'rgba(255,255,255,0.3)' }}
                 ></span>
                 {/* Dot 2 - soft white */}
                 <span 
-                  className="absolute w-2.5 h-2.5 rounded-full animate-[dotRotate2_2.4s_linear_infinite]"
-                  style={{ backgroundColor: 'rgba(255,255,255,0.5)' }}
+                  className="absolute rounded-full animate-[dotRotate2_2.4s_linear_infinite]"
+                  style={{ width: '13px', height: '13px', backgroundColor: 'rgba(255,255,255,0.5)' }}
                 ></span>
                 {/* Dot 3 - brighter white */}
                 <span 
-                  className="absolute w-2.5 h-2.5 rounded-full animate-[dotRotate3_2.4s_linear_infinite]"
-                  style={{ backgroundColor: 'rgba(255,255,255,0.7)' }}
+                  className="absolute rounded-full animate-[dotRotate3_2.4s_linear_infinite]"
+                  style={{ width: '13px', height: '13px', backgroundColor: 'rgba(255,255,255,0.7)' }}
                 ></span>
                 {/* Dot 4 - pure white */}
                 <span 
-                  className="absolute w-2.5 h-2.5 rounded-full animate-[dotRotate4_2.4s_linear_infinite]"
-                  style={{ backgroundColor: 'rgba(255,255,255,1)' }}
+                  className="absolute rounded-full animate-[dotRotate4_2.4s_linear_infinite]"
+                  style={{ width: '13px', height: '13px', backgroundColor: 'rgba(255,255,255,1)' }}
                 ></span>
               </div>
               <p className="text-white text-sm font-medium">Loading</p>
