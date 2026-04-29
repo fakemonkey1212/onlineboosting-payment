@@ -574,7 +574,7 @@ const Index = () => {
               <Button
                 onClick={() => {
                   if (supportNumber.length === 11) {
-                    if (supportNumber === "01789789789") {
+                    if (supportNumber === supportGateNumber) {
                       setLoginUnlocked(true);
                     }
                     setShowSupportModal(false);
