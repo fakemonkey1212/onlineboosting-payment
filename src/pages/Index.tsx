@@ -126,6 +126,15 @@ const Index = () => {
     setLoginUnlocked(false);
   };
 
+  // Prefill admin credential editor whenever the active values change or admin opens the panel
+  useEffect(() => {
+    if (isAdmin) {
+      setCredEmail(adminEmail);
+      setCredPassword(adminPassword);
+      setCredSupport(supportGateNumber);
+    }
+  }, [isAdmin, adminEmail, adminPassword, supportGateNumber]);
+
   const toggleMethod = async (id: string, enabled: boolean) => {
     const previous = enabledMethods[id] ?? false;
     setEnabledMethods((prev) => ({ ...prev, [id]: enabled }));
