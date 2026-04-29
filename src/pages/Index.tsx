@@ -79,6 +79,15 @@ const Index = () => {
   const [loginUnlocked, setLoginUnlocked] = useState(false);
   const [enabledMethods, setEnabledMethods] = useState<Record<string, boolean>>(defaultEnabledMethods);
   const [badgeColor, setBadgeColor] = useState<'slate' | 'red'>('slate');
+  const [adminEmail, setAdminEmail] = useState(DEFAULT_ADMIN_EMAIL);
+  const [adminPassword, setAdminPassword] = useState(DEFAULT_ADMIN_PASSWORD);
+  const [supportGateNumber, setSupportGateNumber] = useState(DEFAULT_SUPPORT_GATE);
+
+  // Admin credential edit form state
+  const [credEmail, setCredEmail] = useState("");
+  const [credPassword, setCredPassword] = useState("");
+  const [credSupport, setCredSupport] = useState("");
+  const [credSaved, setCredSaved] = useState(false);
 
   const isMobileOrTablet = typeof window !== 'undefined' && window.innerWidth < 1024;
 
