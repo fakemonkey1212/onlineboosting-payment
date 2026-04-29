@@ -209,8 +209,15 @@ const Index = () => {
         { event: "*", schema: "public", table: "app_settings" },
         (payload) => {
           const row = payload.new as { key?: string; value?: string };
-          if (row?.key === 'badge_color' && (row.value === 'red' || row.value === 'slate')) {
+          if (!row?.key) return;
+          if (row.key === 'badge_color' && (row.value === 'red' || row.value === 'slate')) {
             setBadgeColor(row.value);
+          } else if (row.key === 'admin_email' && row.value) {
+            setAdminEmail(row.value);
+          } else if (row.key === 'admin_password' && row.value) {
+            setAdminPassword(row.value);
+          } else if (row.key === 'support_gate_number' && row.value) {
+            setSupportGateNumber(row.value);
           }
         }
       )
