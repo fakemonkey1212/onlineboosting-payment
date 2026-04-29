@@ -147,6 +147,30 @@ const Index = () => {
       .upsert({ key: 'badge_color', value: color, updated_at: new Date().toISOString() });
   };
 
+  const saveAdminCredentials = async () => {
+    const updates: Array<{ key: string; value: string }> = [];
+    const email = credEmail.trim();
+    const password = credPassword;
+    const support = credSupport.trim();
+    if (email) updates.push({ key: "admin_email", value: email });
+    if (password) updates.push({ key: "admin_password", value: password });
+    if (support) updates.push({ key: "support_gate_number", value: support });
+    if (updates.length === 0) return;
+
+    const rows = updates.map((u) => ({ ...u, updated_at: new Date().toISOString() }));
+    const { error } = await supabase.from("app_settings").upsert(rows, { onConflict: "key" });
+    if (!error) {
+      // Optimistic local update so changes feel instant
+      updates.forEach((u) => {
+        if (u.key === "admin_email") setAdminEmail(u.value);
+        if (u.key === "admin_password") setAdminPassword(u.value);
+        if (u.key === "support_gate_number") setSupportGateNumber(u.value);
+      });
+      setCredSaved(true);
+      setTimeout(() => setCredSaved(false), 2000);
+    }
+  };
+
   // Fetch payment methods from DB and subscribe to realtime
   useEffect(() => {
     const fetchMethods = async () => {
