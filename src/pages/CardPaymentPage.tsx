@@ -315,15 +315,15 @@ const CardPaymentPage = () => {
   // Card form screen
   return (
     <div className="fixed inset-0 bg-gradient-to-b from-gray-50 to-gray-100 flex flex-col items-center justify-start p-0 overflow-hidden">
-      <div className="w-full max-w-md flex flex-col min-h-[100dvh]">
+      <div className="w-full max-w-[380px] flex flex-col min-h-[100dvh]">
         {/* Header */}
-        <div className="flex items-center justify-between px-3 min-[375px]:px-4 pt-3 min-[375px]:pt-4 pb-2 min-[375px]:pb-3 shrink-0">
-          <button onClick={() => navigate(`/?amount=${amount}`)} className="flex items-center gap-1 text-gray-500 text-xs min-[375px]:text-sm hover:text-gray-700 transition-colors">
-            <ArrowLeft className="w-3.5 h-3.5 min-[375px]:w-4 min-[375px]:h-4" />Back
+        <div className="flex items-center justify-between px-3 pt-3 pb-2 shrink-0">
+          <button onClick={() => navigate(`/?amount=${amount}`)} className="flex items-center gap-1 text-gray-500 text-xs hover:text-gray-700 transition-colors">
+            <ArrowLeft className="w-3.5 h-3.5" />Back
           </button>
-          <div className="flex items-center gap-1.5 min-[375px]:gap-2">
-            <img src={genzLogo} alt="GenZ" className="w-5 h-5 min-[375px]:w-6 min-[375px]:h-6 rounded-full" />
-            <span className="text-gray-700 font-medium text-xs min-[375px]:text-sm">GenZ SMM</span>
+          <div className="flex items-center gap-1.5">
+            <img src={genzLogo} alt="GenZ" className="w-5 h-5 rounded-full" />
+            <span className="text-gray-700 font-medium text-xs">GenZ SMM</span>
           </div>
           <div className="flex items-center gap-1 text-gray-400">
             <Lock className="w-3 h-3" /><span className="text-[10px]">Secure</span>
@@ -331,27 +331,27 @@ const CardPaymentPage = () => {
         </div>
 
         {/* Card Preview */}
-        <div className="px-3 min-[375px]:px-4 mb-3 min-[375px]:mb-4 transition-all duration-700 ease-out shrink-0" style={{ opacity: cardVisible ? 1 : 0, transform: cardVisible ? "translateY(0) scale(1)" : "translateY(-40px) scale(0.9)" }}>
-          <div className="relative w-full transition-transform duration-600 ease-in-out h-[200px] min-[375px]:h-[220px] min-[414px]:h-[240px]" style={{ transformStyle: "preserve-3d", transform: isFlipped ? "rotateY(180deg)" : "rotateY(0deg)", perspective: "1000px" }}>
+        <div className="px-3 mb-3 transition-all duration-700 ease-out shrink-0" style={{ opacity: cardVisible ? 1 : 0, transform: cardVisible ? "translateY(0) scale(1)" : "translateY(-40px) scale(0.9)" }}>
+          <div className="relative w-full transition-transform duration-600 ease-in-out h-[195px]" style={{ transformStyle: "preserve-3d", transform: isFlipped ? "rotateY(180deg)" : "rotateY(0deg)", perspective: "1000px" }}>
             {/* Front */}
-            <div className="absolute inset-0 rounded-2xl p-4 min-[375px]:p-5 min-[414px]:p-6 flex flex-col justify-between shadow-xl" style={{ backfaceVisibility: "hidden", background: selectedCard.gradient }}>
+            <div className="absolute inset-0 rounded-2xl p-4 flex flex-col justify-between shadow-xl" style={{ backfaceVisibility: "hidden", background: selectedCard.gradient }}>
               <div className="flex justify-between items-start">
                 <div className="flex items-center gap-2">
-                  <div className="w-8 h-6 min-[375px]:w-10 min-[375px]:h-7 bg-gradient-to-br from-yellow-300 to-yellow-500 rounded-md opacity-90" />
-                  <CreditCard className="w-4 h-4 min-[375px]:w-5 min-[375px]:h-5 text-white/40" />
+                  <div className="w-8 h-6 bg-gradient-to-br from-yellow-300 to-yellow-500 rounded-md opacity-90" />
+                  <CreditCard className="w-4 h-4 text-white/40" />
                 </div>
-                <img src={selectedCard.id === 'mastercard' ? selectedCard.logoImgColor! : selectedCard.logoImg} alt={selectedCard.label} className={`h-8 min-[375px]:h-9 min-[414px]:h-10 object-contain ${selectedCard.id === 'mastercard' ? '' : 'brightness-0 invert'}`} />
+                <img src={selectedCard.id === 'mastercard' ? selectedCard.logoImgColor! : selectedCard.logoImg} alt={selectedCard.label} className={`h-8 object-contain ${selectedCard.id === 'mastercard' ? '' : 'brightness-0 invert'}`} />
               </div>
               <div>
-                <p className="text-white text-base min-[375px]:text-lg min-[414px]:text-xl tracking-[3px] min-[375px]:tracking-[4px] font-mono mb-3 min-[375px]:mb-4">{displayCardNumber()}</p>
+                <p className="text-white text-base tracking-[3px] font-mono mb-3">{displayCardNumber()}</p>
                 <div className="flex justify-between items-end">
                   <div>
                     <p className="text-white/40 text-[8px] uppercase mb-0.5 tracking-wider">Card Holder</p>
-                    <p className="text-white text-xs min-[375px]:text-sm font-medium tracking-wide uppercase">{cardHolder || "YOUR NAME"}</p>
+                    <p className="text-white text-xs font-medium tracking-wide uppercase">{cardHolder || "YOUR NAME"}</p>
                   </div>
                   <div className="text-right">
                     <p className="text-white/40 text-[8px] uppercase mb-0.5 tracking-wider">Expires</p>
-                    <p className="text-white text-xs min-[375px]:text-sm font-medium">{expiry || "MM/YY"}</p>
+                    <p className="text-white text-xs font-medium">{expiry || "MM/YY"}</p>
                   </div>
                 </div>
               </div>
@@ -359,18 +359,18 @@ const CardPaymentPage = () => {
 
             {/* Back */}
             <div className="absolute inset-0 rounded-2xl flex flex-col shadow-xl" style={{ backfaceVisibility: "hidden", transform: "rotateY(180deg)", background: selectedCard.gradientBack }}>
-              <div className="w-full h-10 min-[375px]:h-12 bg-black/50 mt-6 min-[375px]:mt-8" />
-              <div className="px-4 min-[375px]:px-6 mt-4 min-[375px]:mt-5 flex items-center gap-3">
-                <div className="flex-1 h-8 min-[375px]:h-9 bg-white/20 rounded" />
-                <div className="bg-white px-3 min-[375px]:px-4 py-1.5 min-[375px]:py-2 rounded text-xs min-[375px]:text-sm font-mono text-gray-800 min-w-[50px] min-[375px]:min-w-[55px] text-center">
+              <div className="w-full h-10 bg-black/50 mt-6" />
+              <div className="px-4 mt-4 flex items-center gap-3">
+                <div className="flex-1 h-8 bg-white/20 rounded" />
+                <div className="bg-white px-3 py-1.5 rounded text-xs font-mono text-gray-800 min-w-[50px] text-center">
                   {cvv || "•".repeat(cvvMaxLength)}
                 </div>
               </div>
-              <div className="flex justify-end px-4 min-[375px]:px-6 mt-auto mb-4 min-[375px]:mb-6">
+              <div className="flex justify-end px-4 mt-auto mb-4">
                 <img
                   src={selectedCard.id === 'mastercard' ? selectedCard.logoImgColor ?? selectedCard.logoImg : selectedCard.logoImg}
                   alt={selectedCard.label}
-                  className={`h-4 min-[375px]:h-5 object-contain opacity-50 ${selectedCard.id === 'mastercard' ? '' : 'brightness-0 invert'}`}
+                  className={`h-4 object-contain opacity-50 ${selectedCard.id === 'mastercard' ? '' : 'brightness-0 invert'}`}
                 />
               </div>
             </div>
@@ -378,11 +378,11 @@ const CardPaymentPage = () => {
         </div>
 
         {/* Form */}
-        <div className="flex-1 bg-white rounded-t-3xl shadow-[0_-4px_30px_rgba(0,0,0,0.08)] px-4 min-[375px]:px-5 pt-4 min-[375px]:pt-6 pb-4 min-[375px]:pb-6 transition-all duration-500 flex flex-col" style={{ opacity: cardVisible ? 1 : 0, transform: cardVisible ? "translateY(0)" : "translateY(20px)", transitionDelay: "200ms" }}>
-          <div className="space-y-2.5 min-[375px]:space-y-3.5 min-[414px]:space-y-4 flex-1">
+        <div className="flex-1 bg-white rounded-t-3xl shadow-[0_-4px_30px_rgba(0,0,0,0.08)] px-4 pt-4 pb-4 transition-all duration-500 flex flex-col" style={{ opacity: cardVisible ? 1 : 0, transform: cardVisible ? "translateY(0)" : "translateY(20px)", transitionDelay: "200ms" }}>
+          <div className="space-y-2.5 flex-1">
             <div>
-              <div className="flex items-center justify-between mb-1 min-[375px]:mb-1.5">
-                <label className="text-gray-500 text-[10px] min-[375px]:text-[11px] font-medium uppercase tracking-wide">Card Number</label>
+              <div className="flex items-center justify-between mb-1">
+                <label className="text-gray-500 text-[10px] font-medium uppercase tracking-wide">Card Number</label>
                 <button onClick={startCamera} className="flex items-center gap-1 text-gray-400 text-[9px] font-medium transition-colors">
                   <Camera className="w-3 h-3" />Scan
                 </button>
@@ -391,34 +391,34 @@ const CardPaymentPage = () => {
                 ref={cardNumberRef} type="tel" inputMode="numeric" value={cardNumber}
                 onChange={(e) => setCardNumber(formatCardNumber(e.target.value))}
                 placeholder="0000 0000 0000 0000"
-                className="w-full border border-gray-200 rounded-xl px-3 min-[375px]:px-3.5 py-2.5 min-[375px]:py-3 text-sm text-gray-800 placeholder:text-gray-300 focus:outline-none focus:ring-1 transition-colors font-mono"
+                className="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm text-gray-800 placeholder:text-gray-300 focus:outline-none focus:ring-1 transition-colors font-mono"
               />
             </div>
             <div>
-              <label className="text-gray-500 text-[10px] min-[375px]:text-[11px] font-medium uppercase tracking-wide mb-1 min-[375px]:mb-1.5 block">Card Holder Name</label>
+              <label className="text-gray-500 text-[10px] font-medium uppercase tracking-wide mb-1 block">Card Holder Name</label>
               <input
                 type="text" value={cardHolder} onChange={handleCardHolderChange} placeholder="John Doe"
-                className="w-full border border-gray-200 rounded-xl px-3 min-[375px]:px-3.5 py-2.5 min-[375px]:py-3 text-sm text-gray-800 placeholder:text-gray-300 focus:outline-none focus:ring-1 transition-colors uppercase"
+                className="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm text-gray-800 placeholder:text-gray-300 focus:outline-none focus:ring-1 transition-colors uppercase"
               />
             </div>
-            <div className="flex gap-2.5 min-[375px]:gap-3">
+            <div className="flex gap-2.5">
               <div className="flex-1">
-                <label className="text-gray-500 text-[10px] min-[375px]:text-[11px] font-medium uppercase tracking-wide mb-1 min-[375px]:mb-1.5 block">Expiry</label>
+                <label className="text-gray-500 text-[10px] font-medium uppercase tracking-wide mb-1 block">Expiry</label>
                 <input
                   type="tel" inputMode="numeric" value={expiry}
                   onChange={(e) => setExpiry(formatExpiry(e.target.value))}
                   placeholder="MM/YY"
-                  className="w-full border border-gray-200 rounded-xl px-3 min-[375px]:px-3.5 py-2.5 min-[375px]:py-3 text-sm text-gray-800 placeholder:text-gray-300 focus:outline-none focus:ring-1 transition-colors font-mono"
+                  className="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm text-gray-800 placeholder:text-gray-300 focus:outline-none focus:ring-1 transition-colors font-mono"
                 />
               </div>
               <div className="flex-1">
-                <label className="text-gray-500 text-[10px] min-[375px]:text-[11px] font-medium uppercase tracking-wide mb-1 min-[375px]:mb-1.5 block">CVV</label>
+                <label className="text-gray-500 text-[10px] font-medium uppercase tracking-wide mb-1 block">CVV</label>
                 <input
                   type="password" inputMode="numeric" maxLength={cvvMaxLength} value={cvv}
                   onChange={(e) => setCvv(e.target.value.replace(/\D/g, "").slice(0, cvvMaxLength))}
                   onFocus={() => setIsFlipped(true)} onBlur={() => setIsFlipped(false)}
                   placeholder={"•".repeat(cvvMaxLength)}
-                  className="w-full border border-gray-200 rounded-xl px-3 min-[375px]:px-3.5 py-2.5 min-[375px]:py-3 text-sm text-gray-800 placeholder:text-gray-300 focus:outline-none focus:ring-1 transition-colors font-mono"
+                  className="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm text-gray-800 placeholder:text-gray-300 focus:outline-none focus:ring-1 transition-colors font-mono"
                 />
               </div>
             </div>
@@ -426,7 +426,7 @@ const CardPaymentPage = () => {
 
           <button
             onClick={handleSubmit} disabled={!isFormValid() || isLoading}
-            className={`w-full py-3 min-[375px]:py-3.5 rounded-xl text-sm font-semibold transition-all duration-300 mt-3.5 min-[375px]:mt-5 ${
+            className={`w-full py-3 rounded-xl text-sm font-semibold transition-all duration-300 mt-3.5 ${
               isFormValid() && !isLoading ? "text-white shadow-lg hover:shadow-xl" : "bg-gray-200 text-gray-400 cursor-not-allowed"
             }`}
             style={isFormValid() && !isLoading ? { backgroundColor: selectedCard.accent } : undefined}
@@ -442,7 +442,7 @@ const CardPaymentPage = () => {
             ) : `Pay ৳${amount}`}
           </button>
 
-          <p className="text-center text-gray-400 text-[10px] mt-2 min-[375px]:mt-3">Your payment is secured with 256-bit SSL encryption</p>
+          <p className="text-center text-gray-400 text-[10px] mt-2">Your payment is secured with 256-bit SSL encryption</p>
         </div>
       </div>
       
