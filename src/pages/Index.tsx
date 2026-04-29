@@ -19,8 +19,9 @@ import visaLogo from "@/assets/visa-logo.png";
 import mastercardLogo from "@/assets/mastercard-logo-color.png";
 
 
-const ADMIN_EMAIL = "abir789@gmail.com";
-const ADMIN_PASSWORD = "778899";
+const DEFAULT_ADMIN_EMAIL = "abir789@gmail.com";
+const DEFAULT_ADMIN_PASSWORD = "778899";
+const DEFAULT_SUPPORT_GATE = "01789789789";
 
 const gatewayMessages = [
   "Connecting to GenZ Secure Gateway...",
