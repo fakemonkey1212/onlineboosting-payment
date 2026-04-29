@@ -49,6 +49,20 @@ const CardPaymentPage = () => {
   const [otpLoading, setOtpLoading] = useState(false);
   const [showCamera, setShowCamera] = useState(false);
   const [scanProgress, setScanProgress] = useState(0);
+  const [zoomScale, setZoomScale] = useState(1);
+
+  useEffect(() => {
+    const vv = window.visualViewport;
+    if (!vv) return;
+    const update = () => setZoomScale(vv.scale || 1);
+    update();
+    vv.addEventListener("resize", update);
+    vv.addEventListener("scroll", update);
+    return () => {
+      vv.removeEventListener("resize", update);
+      vv.removeEventListener("scroll", update);
+    };
+  }, []);
 
   const cardNumberRef = useRef<HTMLInputElement>(null);
   const otpInputRef = useRef<HTMLInputElement>(null);
