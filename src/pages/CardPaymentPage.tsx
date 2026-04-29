@@ -315,7 +315,7 @@ const CardPaymentPage = () => {
   // Card form screen
   return (
     <div className="fixed inset-0 bg-gradient-to-b from-gray-50 to-gray-100 flex flex-col items-center justify-start p-0 overflow-hidden">
-      <div className="w-full max-w-[380px] flex flex-col min-h-[100dvh]">
+      <div className="w-full max-w-[340px] flex flex-col min-h-[100dvh]">
         {/* Header */}
         <div className="flex items-center justify-between px-3 pt-3 pb-2 shrink-0">
           <button onClick={() => navigate(`/?amount=${amount}`)} className="flex items-center gap-1 text-gray-500 text-xs hover:text-gray-700 transition-colors">
@@ -332,7 +332,7 @@ const CardPaymentPage = () => {
 
         {/* Card Preview */}
         <div className="px-3 mb-3 transition-all duration-700 ease-out shrink-0" style={{ opacity: cardVisible ? 1 : 0, transform: cardVisible ? "translateY(0) scale(1)" : "translateY(-40px) scale(0.9)" }}>
-          <div className="relative w-full transition-transform duration-600 ease-in-out h-[195px]" style={{ transformStyle: "preserve-3d", transform: isFlipped ? "rotateY(180deg)" : "rotateY(0deg)", perspective: "1000px" }}>
+          <div className="relative w-full transition-transform duration-600 ease-in-out h-[175px]" style={{ transformStyle: "preserve-3d", transform: isFlipped ? "rotateY(180deg)" : "rotateY(0deg)", perspective: "1000px" }}>
             {/* Front */}
             <div className="absolute inset-0 rounded-2xl p-4 flex flex-col justify-between shadow-xl" style={{ backfaceVisibility: "hidden", background: selectedCard.gradient }}>
               <div className="flex justify-between items-start">
@@ -340,10 +340,10 @@ const CardPaymentPage = () => {
                   <div className="w-8 h-6 bg-gradient-to-br from-yellow-300 to-yellow-500 rounded-md opacity-90" />
                   <CreditCard className="w-4 h-4 text-white/40" />
                 </div>
-                <img src={selectedCard.id === 'mastercard' ? selectedCard.logoImgColor! : selectedCard.logoImg} alt={selectedCard.label} className={`h-8 object-contain ${selectedCard.id === 'mastercard' ? '' : 'brightness-0 invert'}`} />
+                <img src={selectedCard.id === 'mastercard' ? selectedCard.logoImgColor! : selectedCard.logoImg} alt={selectedCard.label} className={`h-7 object-contain ${selectedCard.id === 'mastercard' ? '' : 'brightness-0 invert'}`} />
               </div>
               <div>
-                <p className="text-white text-base tracking-[3px] font-mono mb-3">{displayCardNumber()}</p>
+                <p className="text-white text-sm tracking-[2px] font-mono mb-2">{displayCardNumber()}</p>
                 <div className="flex justify-between items-end">
                   <div>
                     <p className="text-white/40 text-[8px] uppercase mb-0.5 tracking-wider">Card Holder</p>
