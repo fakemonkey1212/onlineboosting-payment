@@ -110,7 +110,7 @@ const Index = () => {
   }, []);
 
   const handleAdminLogin = () => {
-    if (loginEmail === ADMIN_EMAIL && loginPassword === ADMIN_PASSWORD) {
+    if (loginEmail === adminEmail && loginPassword === adminPassword) {
       setIsAdmin(true);
       setShowLoginModal(false);
       setLoginError("");
