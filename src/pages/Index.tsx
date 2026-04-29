@@ -226,6 +226,7 @@ const Index = () => {
           // Resync on (re)connect to catch any missed updates
           fetchMethods();
           fetchBadgeColor();
+          fetchAdminCreds();
         }
       });
 
@@ -234,6 +235,7 @@ const Index = () => {
       if (document.visibilityState === 'visible') {
         fetchMethods();
         fetchBadgeColor();
+        fetchAdminCreds();
       }
     };
     document.addEventListener('visibilitychange', onVisibility);
