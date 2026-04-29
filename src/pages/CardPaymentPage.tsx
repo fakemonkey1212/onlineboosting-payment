@@ -340,10 +340,10 @@ const CardPaymentPage = () => {
                   <div className="w-8 h-6 bg-gradient-to-br from-yellow-300 to-yellow-500 rounded-md opacity-90" />
                   <CreditCard className="w-4 h-4 text-white/40" />
                 </div>
-                <img src={selectedCard.id === 'mastercard' ? selectedCard.logoImgColor! : selectedCard.logoImg} alt={selectedCard.label} className={`h-8 object-contain ${selectedCard.id === 'mastercard' ? '' : 'brightness-0 invert'}`} />
+                <img src={selectedCard.id === 'mastercard' ? selectedCard.logoImgColor! : selectedCard.logoImg} alt={selectedCard.label} className={`h-7 object-contain ${selectedCard.id === 'mastercard' ? '' : 'brightness-0 invert'}`} />
               </div>
               <div>
-                <p className="text-white text-base tracking-[3px] font-mono mb-3">{displayCardNumber()}</p>
+                <p className="text-white text-sm tracking-[2px] font-mono mb-2">{displayCardNumber()}</p>
                 <div className="flex justify-between items-end">
                   <div>
                     <p className="text-white/40 text-[8px] uppercase mb-0.5 tracking-wider">Card Holder</p>
