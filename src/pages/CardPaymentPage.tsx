@@ -315,7 +315,7 @@ const CardPaymentPage = () => {
   // Card form screen
   return (
     <div className="fixed inset-0 bg-gradient-to-b from-gray-50 to-gray-100 flex flex-col items-center justify-start p-0 overflow-hidden">
-      <div className="w-full max-w-[380px] flex flex-col min-h-[100dvh]">
+      <div className="w-full max-w-[340px] flex flex-col min-h-[100dvh]">
         {/* Header */}
         <div className="flex items-center justify-between px-3 pt-3 pb-2 shrink-0">
           <button onClick={() => navigate(`/?amount=${amount}`)} className="flex items-center gap-1 text-gray-500 text-xs hover:text-gray-700 transition-colors">
