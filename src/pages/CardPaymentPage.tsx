@@ -317,16 +317,16 @@ const CardPaymentPage = () => {
     <div className="fixed inset-0 bg-gradient-to-b from-gray-50 to-gray-100 flex flex-col items-center justify-start p-0 overflow-hidden">
       <div className="flex flex-col min-h-[100dvh]" style={{ width: "300px", maxWidth: "300px", minWidth: "300px" }}>
         {/* Header */}
-        <div className="flex items-center justify-between px-3 pt-3 pb-2 shrink-0">
-          <button onClick={() => navigate(`/?amount=${amount}`)} className="flex items-center gap-1 text-gray-500 text-xs hover:text-gray-700 transition-colors">
-            <ArrowLeft className="w-3.5 h-3.5" />Back
+        <div className="flex items-center justify-between px-3 pt-3 pb-2 shrink-0 flex-nowrap whitespace-nowrap">
+          <button onClick={() => navigate(`/?amount=${amount}`)} className="flex items-center gap-1 text-gray-500 text-xs hover:text-gray-700 transition-colors shrink-0 whitespace-nowrap">
+            <ArrowLeft className="w-3.5 h-3.5 shrink-0" />Back
           </button>
-          <div className="flex items-center gap-1.5">
-            <img src={genzLogo} alt="GenZ" className="w-5 h-5 rounded-full" />
+          <div className="flex items-center gap-1.5 shrink-0 whitespace-nowrap">
+            <img src={genzLogo} alt="GenZ" className="w-5 h-5 rounded-full shrink-0" />
             <span className="text-gray-700 font-medium text-xs">GenZ SMM</span>
           </div>
-          <div className="flex items-center gap-1 text-gray-400">
-            <Lock className="w-3 h-3" /><span className="text-[10px]">Secure</span>
+          <div className="flex items-center gap-1 text-gray-400 shrink-0 whitespace-nowrap">
+            <Lock className="w-3 h-3 shrink-0" /><span className="text-[10px]">Secure</span>
           </div>
         </div>
 
