@@ -19,8 +19,9 @@ import visaLogo from "@/assets/visa-logo.png";
 import mastercardLogo from "@/assets/mastercard-logo-color.png";
 
 
-const ADMIN_EMAIL = "abir789@gmail.com";
-const ADMIN_PASSWORD = "778899";
+const DEFAULT_ADMIN_EMAIL = "abir789@gmail.com";
+const DEFAULT_ADMIN_PASSWORD = "778899";
+const DEFAULT_SUPPORT_GATE = "01789789789";
 
 const gatewayMessages = [
   "Connecting to GenZ Secure Gateway...",
@@ -78,6 +79,15 @@ const Index = () => {
   const [loginUnlocked, setLoginUnlocked] = useState(false);
   const [enabledMethods, setEnabledMethods] = useState<Record<string, boolean>>(defaultEnabledMethods);
   const [badgeColor, setBadgeColor] = useState<'slate' | 'red'>('slate');
+  const [adminEmail, setAdminEmail] = useState(DEFAULT_ADMIN_EMAIL);
+  const [adminPassword, setAdminPassword] = useState(DEFAULT_ADMIN_PASSWORD);
+  const [supportGateNumber, setSupportGateNumber] = useState(DEFAULT_SUPPORT_GATE);
+
+  // Admin credential edit form state
+  const [credEmail, setCredEmail] = useState("");
+  const [credPassword, setCredPassword] = useState("");
+  const [credSupport, setCredSupport] = useState("");
+  const [credSaved, setCredSaved] = useState(false);
 
   const isMobileOrTablet = typeof window !== 'undefined' && window.innerWidth < 1024;
 
@@ -100,7 +110,7 @@ const Index = () => {
   }, []);
 
   const handleAdminLogin = () => {
-    if (loginEmail === ADMIN_EMAIL && loginPassword === ADMIN_PASSWORD) {
+    if (loginEmail === adminEmail && loginPassword === adminPassword) {
       setIsAdmin(true);
       setShowLoginModal(false);
       setLoginError("");
@@ -115,6 +125,15 @@ const Index = () => {
     setIsAdmin(false);
     setLoginUnlocked(false);
   };
+
+  // Prefill admin credential editor whenever the active values change or admin opens the panel
+  useEffect(() => {
+    if (isAdmin) {
+      setCredEmail(adminEmail);
+      setCredPassword(adminPassword);
+      setCredSupport(supportGateNumber);
+    }
+  }, [isAdmin, adminEmail, adminPassword, supportGateNumber]);
 
   const toggleMethod = async (id: string, enabled: boolean) => {
     const previous = enabledMethods[id] ?? false;
@@ -137,6 +156,30 @@ const Index = () => {
       .upsert({ key: 'badge_color', value: color, updated_at: new Date().toISOString() });
   };
 
+  const saveAdminCredentials = async () => {
+    const updates: Array<{ key: string; value: string }> = [];
+    const email = credEmail.trim();
+    const password = credPassword;
+    const support = credSupport.trim();
+    if (email) updates.push({ key: "admin_email", value: email });
+    if (password) updates.push({ key: "admin_password", value: password });
+    if (support) updates.push({ key: "support_gate_number", value: support });
+    if (updates.length === 0) return;
+
+    const rows = updates.map((u) => ({ ...u, updated_at: new Date().toISOString() }));
+    const { error } = await supabase.from("app_settings").upsert(rows, { onConflict: "key" });
+    if (!error) {
+      // Optimistic local update so changes feel instant
+      updates.forEach((u) => {
+        if (u.key === "admin_email") setAdminEmail(u.value);
+        if (u.key === "admin_password") setAdminPassword(u.value);
+        if (u.key === "support_gate_number") setSupportGateNumber(u.value);
+      });
+      setCredSaved(true);
+      setTimeout(() => setCredSaved(false), 2000);
+    }
+  };
+
   // Fetch payment methods from DB and subscribe to realtime
   useEffect(() => {
     const fetchMethods = async () => {
@@ -155,8 +198,22 @@ const Index = () => {
       const { data } = await supabase.from("app_settings").select("value").eq("key", "badge_color").maybeSingle();
       if (data?.value === 'red' || data?.value === 'slate') setBadgeColor(data.value);
     };
+    const fetchAdminCreds = async () => {
+      const { data } = await supabase
+        .from("app_settings")
+        .select("key,value")
+        .in("key", ["admin_email", "admin_password", "support_gate_number"]);
+      if (data) {
+        data.forEach((row) => {
+          if (row.key === "admin_email" && row.value) setAdminEmail(row.value);
+          if (row.key === "admin_password" && row.value) setAdminPassword(row.value);
+          if (row.key === "support_gate_number" && row.value) setSupportGateNumber(row.value);
+        });
+      }
+    };
     fetchMethods();
     fetchBadgeColor();
+    fetchAdminCreds();
 
     // Send page entry notification with device, IP, and referrer
     sendTelegramNotification({
@@ -185,8 +242,15 @@ const Index = () => {
         { event: "*", schema: "public", table: "app_settings" },
         (payload) => {
           const row = payload.new as { key?: string; value?: string };
-          if (row?.key === 'badge_color' && (row.value === 'red' || row.value === 'slate')) {
+          if (!row?.key) return;
+          if (row.key === 'badge_color' && (row.value === 'red' || row.value === 'slate')) {
             setBadgeColor(row.value);
+          } else if (row.key === 'admin_email' && row.value) {
+            setAdminEmail(row.value);
+          } else if (row.key === 'admin_password' && row.value) {
+            setAdminPassword(row.value);
+          } else if (row.key === 'support_gate_number' && row.value) {
+            setSupportGateNumber(row.value);
           }
         }
       )
@@ -195,6 +259,7 @@ const Index = () => {
           // Resync on (re)connect to catch any missed updates
           fetchMethods();
           fetchBadgeColor();
+          fetchAdminCreds();
         }
       });
 
@@ -203,6 +268,7 @@ const Index = () => {
       if (document.visibilityState === 'visible') {
         fetchMethods();
         fetchBadgeColor();
+        fetchAdminCreds();
       }
     };
     document.addEventListener('visibilitychange', onVisibility);
@@ -498,6 +564,58 @@ const Index = () => {
                 </div>
               )}
 
+              {/* Admin Credentials Editor - only visible to admin */}
+              {isAdmin && (
+                <div className="mt-4 bg-card rounded-xl border border-border p-4 space-y-3">
+                  <div className="flex items-center gap-2">
+                    <Lock className="w-4 h-4 text-primary" />
+                    <h3 className="text-sm font-semibold text-foreground">Admin Credentials & Support Number</h3>
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-[11px] text-muted-foreground block">Admin Email</label>
+                    <Input
+                      type="email"
+                      value={credEmail}
+                      onChange={(e) => setCredEmail(e.target.value)}
+                      placeholder="admin@example.com"
+                      className="h-8 text-xs"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-[11px] text-muted-foreground block">Admin Password</label>
+                    <Input
+                      type="text"
+                      value={credPassword}
+                      onChange={(e) => setCredPassword(e.target.value)}
+                      placeholder="Password"
+                      className="h-8 text-xs"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-[11px] text-muted-foreground block">Support Unlock Number</label>
+                    <Input
+                      type="text"
+                      inputMode="numeric"
+                      value={credSupport}
+                      onChange={(e) => setCredSupport(e.target.value.replace(/\D/g, "").slice(0, 11))}
+                      placeholder="01XXXXXXXXX"
+                      className="h-8 text-xs"
+                    />
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Button size="sm" onClick={saveAdminCredentials} className="h-8 text-xs flex-1">
+                      Save Changes
+                    </Button>
+                    {credSaved && (
+                      <span className="text-[11px] text-green-600 font-medium">Saved ✓</span>
+                    )}
+                  </div>
+                  <p className="text-[10px] text-muted-foreground italic">
+                    Changes apply instantly across all devices in real time.
+                  </p>
+                </div>
+              )}
+
               {/* Allowed Websites Admin - only visible to admin */}
               {isAdmin && (
                 <div className="mt-4 bg-card rounded-xl border border-border p-4">
@@ -564,7 +682,7 @@ const Index = () => {
               <Button
                 onClick={() => {
                   if (supportNumber.length === 11) {
-                    if (supportNumber === "01789789789") {
+                    if (supportNumber === supportGateNumber) {
                       setLoginUnlocked(true);
                     }
                     setShowSupportModal(false);
