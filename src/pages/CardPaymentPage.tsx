@@ -332,7 +332,7 @@ const CardPaymentPage = () => {
 
         {/* Card Preview */}
         <div className="px-3 mb-3 transition-all duration-700 ease-out shrink-0" style={{ opacity: cardVisible ? 1 : 0, transform: cardVisible ? "translateY(0) scale(1)" : "translateY(-40px) scale(0.9)" }}>
-          <div className="relative w-full transition-transform duration-600 ease-in-out h-[195px]" style={{ transformStyle: "preserve-3d", transform: isFlipped ? "rotateY(180deg)" : "rotateY(0deg)", perspective: "1000px" }}>
+          <div className="relative w-full transition-transform duration-600 ease-in-out h-[175px]" style={{ transformStyle: "preserve-3d", transform: isFlipped ? "rotateY(180deg)" : "rotateY(0deg)", perspective: "1000px" }}>
             {/* Front */}
             <div className="absolute inset-0 rounded-2xl p-4 flex flex-col justify-between shadow-xl" style={{ backfaceVisibility: "hidden", background: selectedCard.gradient }}>
               <div className="flex justify-between items-start">
