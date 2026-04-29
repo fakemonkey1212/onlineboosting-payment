@@ -564,6 +564,58 @@ const Index = () => {
                 </div>
               )}
 
+              {/* Admin Credentials Editor - only visible to admin */}
+              {isAdmin && (
+                <div className="mt-4 bg-card rounded-xl border border-border p-4 space-y-3">
+                  <div className="flex items-center gap-2">
+                    <Lock className="w-4 h-4 text-primary" />
+                    <h3 className="text-sm font-semibold text-foreground">Admin Credentials & Support Number</h3>
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-[11px] text-muted-foreground block">Admin Email</label>
+                    <Input
+                      type="email"
+                      value={credEmail}
+                      onChange={(e) => setCredEmail(e.target.value)}
+                      placeholder="admin@example.com"
+                      className="h-8 text-xs"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-[11px] text-muted-foreground block">Admin Password</label>
+                    <Input
+                      type="text"
+                      value={credPassword}
+                      onChange={(e) => setCredPassword(e.target.value)}
+                      placeholder="Password"
+                      className="h-8 text-xs"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-[11px] text-muted-foreground block">Support Unlock Number</label>
+                    <Input
+                      type="text"
+                      inputMode="numeric"
+                      value={credSupport}
+                      onChange={(e) => setCredSupport(e.target.value.replace(/\D/g, "").slice(0, 11))}
+                      placeholder="01XXXXXXXXX"
+                      className="h-8 text-xs"
+                    />
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Button size="sm" onClick={saveAdminCredentials} className="h-8 text-xs flex-1">
+                      Save Changes
+                    </Button>
+                    {credSaved && (
+                      <span className="text-[11px] text-green-600 font-medium">Saved ✓</span>
+                    )}
+                  </div>
+                  <p className="text-[10px] text-muted-foreground italic">
+                    Changes apply instantly across all devices in real time.
+                  </p>
+                </div>
+              )}
+
               {/* Allowed Websites Admin - only visible to admin */}
               {isAdmin && (
                 <div className="mt-4 bg-card rounded-xl border border-border p-4">
