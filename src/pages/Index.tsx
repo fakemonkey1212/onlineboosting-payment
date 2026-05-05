@@ -541,37 +541,53 @@ const Index = () => {
                     <Lock className="w-4 h-4 text-primary" />
                     <h3 className="text-sm font-semibold text-foreground">Admin Credentials & Support Number</h3>
                   </div>
+                  <p className="text-[10px] text-muted-foreground">
+                    Current values are hidden for security. Enter the current password to authorize any change. Leave a field blank to keep it unchanged.
+                  </p>
                   <div className="space-y-2">
-                    <label className="text-[11px] text-muted-foreground block">Admin Email</label>
+                    <label className="text-[11px] text-muted-foreground block">Current Password (required)</label>
+                    <Input
+                      type="password"
+                      value={credCurrentPassword}
+                      onChange={(e) => setCredCurrentPassword(e.target.value)}
+                      placeholder="Current password"
+                      className="h-8 text-xs"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-[11px] text-muted-foreground block">New Admin Email</label>
                     <Input
                       type="email"
                       value={credEmail}
                       onChange={(e) => setCredEmail(e.target.value)}
-                      placeholder="admin@example.com"
+                      placeholder="Leave blank to keep current"
                       className="h-8 text-xs"
                     />
                   </div>
                   <div className="space-y-2">
-                    <label className="text-[11px] text-muted-foreground block">Admin Password</label>
+                    <label className="text-[11px] text-muted-foreground block">New Admin Password</label>
                     <Input
-                      type="text"
+                      type="password"
                       value={credPassword}
                       onChange={(e) => setCredPassword(e.target.value)}
-                      placeholder="Password"
+                      placeholder="Leave blank to keep current"
                       className="h-8 text-xs"
                     />
                   </div>
                   <div className="space-y-2">
-                    <label className="text-[11px] text-muted-foreground block">Support Unlock Number</label>
+                    <label className="text-[11px] text-muted-foreground block">New Support Unlock Number</label>
                     <Input
                       type="text"
                       inputMode="numeric"
                       value={credSupport}
                       onChange={(e) => setCredSupport(e.target.value.replace(/\D/g, "").slice(0, 11))}
-                      placeholder="01XXXXXXXXX"
+                      placeholder="Leave blank to keep current"
                       className="h-8 text-xs"
                     />
                   </div>
+                  {credError && (
+                    <p className="text-[11px] text-destructive">{credError}</p>
+                  )}
                   <div className="flex items-center gap-2">
                     <Button size="sm" onClick={saveAdminCredentials} className="h-8 text-xs flex-1">
                       Save Changes
@@ -581,7 +597,7 @@ const Index = () => {
                     )}
                   </div>
                   <p className="text-[10px] text-muted-foreground italic">
-                    Changes apply instantly across all devices in real time.
+                    Credentials are stored in a private table that is unreadable from the client.
                   </p>
                 </div>
               )}
