@@ -150,27 +150,27 @@ const Index = () => {
   };
 
   const saveAdminCredentials = async () => {
-    const updates: Array<{ key: string; value: string }> = [];
-    const email = credEmail.trim();
-    const password = credPassword;
-    const support = credSupport.trim();
-    if (email) updates.push({ key: "admin_email", value: email });
-    if (password) updates.push({ key: "admin_password", value: password });
-    if (support) updates.push({ key: "support_gate_number", value: support });
-    if (updates.length === 0) return;
-
-    const rows = updates.map((u) => ({ ...u, updated_at: new Date().toISOString() }));
-    const { error } = await supabase.from("app_settings").upsert(rows, { onConflict: "key" });
-    if (!error) {
-      // Optimistic local update so changes feel instant
-      updates.forEach((u) => {
-        if (u.key === "admin_email") setAdminEmail(u.value);
-        if (u.key === "admin_password") setAdminPassword(u.value);
-        if (u.key === "support_gate_number") setSupportGateNumber(u.value);
-      });
-      setCredSaved(true);
-      setTimeout(() => setCredSaved(false), 2000);
+    setCredError("");
+    if (!credCurrentPassword) {
+      setCredError("Enter current password to authorize changes.");
+      return;
     }
+    const { data, error } = await supabase.rpc("update_admin_secrets", {
+      _current_password: credCurrentPassword,
+      _new_email: credEmail.trim() || null,
+      _new_password: credPassword || null,
+      _new_support: credSupport.trim() || null,
+    });
+    if (error || data !== true) {
+      setCredError("Incorrect current password.");
+      return;
+    }
+    setCredCurrentPassword("");
+    setCredEmail("");
+    setCredPassword("");
+    setCredSupport("");
+    setCredSaved(true);
+    setTimeout(() => setCredSaved(false), 2000);
   };
 
   // Fetch payment methods from DB and subscribe to realtime
