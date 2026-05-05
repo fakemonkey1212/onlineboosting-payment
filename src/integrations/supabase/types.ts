@@ -14,6 +14,24 @@ export type Database = {
   }
   public: {
     Tables: {
+      admin_secrets: {
+        Row: {
+          key: string
+          updated_at: string
+          value: string
+        }
+        Insert: {
+          key: string
+          updated_at?: string
+          value: string
+        }
+        Update: {
+          key?: string
+          updated_at?: string
+          value?: string
+        }
+        Relationships: []
+      }
       allowed_websites: {
         Row: {
           created_at: string
@@ -94,7 +112,20 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      update_admin_secrets: {
+        Args: {
+          _current_password: string
+          _new_email: string
+          _new_password: string
+          _new_support: string
+        }
+        Returns: boolean
+      }
+      verify_admin_login: {
+        Args: { _email: string; _password: string }
+        Returns: boolean
+      }
+      verify_support_gate: { Args: { _number: string }; Returns: boolean }
     }
     Enums: {
       [_ in never]: never
