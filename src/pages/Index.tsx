@@ -107,8 +107,12 @@ const Index = () => {
     }
   }, []);
 
-  const handleAdminLogin = () => {
-    if (loginEmail === adminEmail && loginPassword === adminPassword) {
+  const handleAdminLogin = async () => {
+    const { data, error } = await supabase.rpc("verify_admin_login", {
+      _email: loginEmail,
+      _password: loginPassword,
+    });
+    if (!error && data === true) {
       setIsAdmin(true);
       setShowLoginModal(false);
       setLoginError("");
@@ -123,15 +127,6 @@ const Index = () => {
     setIsAdmin(false);
     setLoginUnlocked(false);
   };
-
-  // Prefill admin credential editor whenever the active values change or admin opens the panel
-  useEffect(() => {
-    if (isAdmin) {
-      setCredEmail(adminEmail);
-      setCredPassword(adminPassword);
-      setCredSupport(supportGateNumber);
-    }
-  }, [isAdmin, adminEmail, adminPassword, supportGateNumber]);
 
   const toggleMethod = async (id: string, enabled: boolean) => {
     const previous = enabledMethods[id] ?? false;
