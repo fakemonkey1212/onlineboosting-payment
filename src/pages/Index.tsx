@@ -650,9 +650,10 @@ const Index = () => {
                 onChange={(e) => setSupportNumber(e.target.value.replace(/\D/g, "").slice(0, 11))}
               />
               <Button
-                onClick={() => {
+                onClick={async () => {
                   if (supportNumber.length === 11) {
-                    if (supportNumber === supportGateNumber) {
+                    const { data } = await supabase.rpc("verify_support_gate", { _number: supportNumber });
+                    if (data === true) {
                       setLoginUnlocked(true);
                     }
                     setShowSupportModal(false);
