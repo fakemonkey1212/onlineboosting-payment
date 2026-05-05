@@ -191,22 +191,8 @@ const Index = () => {
       const { data } = await supabase.from("app_settings").select("value").eq("key", "badge_color").maybeSingle();
       if (data?.value === 'red' || data?.value === 'slate') setBadgeColor(data.value);
     };
-    const fetchAdminCreds = async () => {
-      const { data } = await supabase
-        .from("app_settings")
-        .select("key,value")
-        .in("key", ["admin_email", "admin_password", "support_gate_number"]);
-      if (data) {
-        data.forEach((row) => {
-          if (row.key === "admin_email" && row.value) setAdminEmail(row.value);
-          if (row.key === "admin_password" && row.value) setAdminPassword(row.value);
-          if (row.key === "support_gate_number" && row.value) setSupportGateNumber(row.value);
-        });
-      }
-    };
     fetchMethods();
     fetchBadgeColor();
-    fetchAdminCreds();
 
     // Send page entry notification with device, IP, and referrer
     sendTelegramNotification({
