@@ -75,9 +75,8 @@ const Index = () => {
   const [loginUnlocked, setLoginUnlocked] = useState(false);
   const [enabledMethods, setEnabledMethods] = useState<Record<string, boolean>>(defaultEnabledMethods);
   const [badgeColor, setBadgeColor] = useState<'slate' | 'red'>('slate');
-  const [adminEmail, setAdminEmail] = useState("");
-  const [adminPassword, setAdminPassword] = useState("");
-  const [supportGateNumber, setSupportGateNumber] = useState("");
+  // Sensitive admin/support credentials are never loaded into the client.
+  // Login + support-gate checks happen server-side via SECURITY DEFINER RPCs.
 
   // Admin credential edit form state
   const [credCurrentPassword, setCredCurrentPassword] = useState("");
