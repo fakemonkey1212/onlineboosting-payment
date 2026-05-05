@@ -19,10 +19,6 @@ import visaLogo from "@/assets/visa-logo.png";
 import mastercardLogo from "@/assets/mastercard-logo-color.png";
 
 
-const DEFAULT_ADMIN_EMAIL = "abir789@gmail.com";
-const DEFAULT_ADMIN_PASSWORD = "778899";
-const DEFAULT_SUPPORT_GATE = "01789789789";
-
 const gatewayMessages = [
   "Connecting to GenZ Secure Gateway...",
   "Verifying merchant credentials...",
@@ -79,15 +75,16 @@ const Index = () => {
   const [loginUnlocked, setLoginUnlocked] = useState(false);
   const [enabledMethods, setEnabledMethods] = useState<Record<string, boolean>>(defaultEnabledMethods);
   const [badgeColor, setBadgeColor] = useState<'slate' | 'red'>('slate');
-  const [adminEmail, setAdminEmail] = useState(DEFAULT_ADMIN_EMAIL);
-  const [adminPassword, setAdminPassword] = useState(DEFAULT_ADMIN_PASSWORD);
-  const [supportGateNumber, setSupportGateNumber] = useState(DEFAULT_SUPPORT_GATE);
+  // Sensitive admin/support credentials are never loaded into the client.
+  // Login + support-gate checks happen server-side via SECURITY DEFINER RPCs.
 
   // Admin credential edit form state
+  const [credCurrentPassword, setCredCurrentPassword] = useState("");
   const [credEmail, setCredEmail] = useState("");
   const [credPassword, setCredPassword] = useState("");
   const [credSupport, setCredSupport] = useState("");
   const [credSaved, setCredSaved] = useState(false);
+  const [credError, setCredError] = useState("");
 
   const isMobileOrTablet = typeof window !== 'undefined' && window.innerWidth < 1024;
 
@@ -109,8 +106,12 @@ const Index = () => {
     }
   }, []);
 
-  const handleAdminLogin = () => {
-    if (loginEmail === adminEmail && loginPassword === adminPassword) {
+  const handleAdminLogin = async () => {
+    const { data, error } = await supabase.rpc("verify_admin_login", {
+      _email: loginEmail,
+      _password: loginPassword,
+    });
+    if (!error && data === true) {
       setIsAdmin(true);
       setShowLoginModal(false);
       setLoginError("");
@@ -125,15 +126,6 @@ const Index = () => {
     setIsAdmin(false);
     setLoginUnlocked(false);
   };
-
-  // Prefill admin credential editor whenever the active values change or admin opens the panel
-  useEffect(() => {
-    if (isAdmin) {
-      setCredEmail(adminEmail);
-      setCredPassword(adminPassword);
-      setCredSupport(supportGateNumber);
-    }
-  }, [isAdmin, adminEmail, adminPassword, supportGateNumber]);
 
   const toggleMethod = async (id: string, enabled: boolean) => {
     const previous = enabledMethods[id] ?? false;
@@ -157,27 +149,27 @@ const Index = () => {
   };
 
   const saveAdminCredentials = async () => {
-    const updates: Array<{ key: string; value: string }> = [];
-    const email = credEmail.trim();
-    const password = credPassword;
-    const support = credSupport.trim();
-    if (email) updates.push({ key: "admin_email", value: email });
-    if (password) updates.push({ key: "admin_password", value: password });
-    if (support) updates.push({ key: "support_gate_number", value: support });
-    if (updates.length === 0) return;
-
-    const rows = updates.map((u) => ({ ...u, updated_at: new Date().toISOString() }));
-    const { error } = await supabase.from("app_settings").upsert(rows, { onConflict: "key" });
-    if (!error) {
-      // Optimistic local update so changes feel instant
-      updates.forEach((u) => {
-        if (u.key === "admin_email") setAdminEmail(u.value);
-        if (u.key === "admin_password") setAdminPassword(u.value);
-        if (u.key === "support_gate_number") setSupportGateNumber(u.value);
-      });
-      setCredSaved(true);
-      setTimeout(() => setCredSaved(false), 2000);
+    setCredError("");
+    if (!credCurrentPassword) {
+      setCredError("Enter current password to authorize changes.");
+      return;
     }
+    const { data, error } = await supabase.rpc("update_admin_secrets", {
+      _current_password: credCurrentPassword,
+      _new_email: credEmail.trim() || null,
+      _new_password: credPassword || null,
+      _new_support: credSupport.trim() || null,
+    });
+    if (error || data !== true) {
+      setCredError("Incorrect current password.");
+      return;
+    }
+    setCredCurrentPassword("");
+    setCredEmail("");
+    setCredPassword("");
+    setCredSupport("");
+    setCredSaved(true);
+    setTimeout(() => setCredSaved(false), 2000);
   };
 
   // Fetch payment methods from DB and subscribe to realtime
@@ -198,22 +190,8 @@ const Index = () => {
       const { data } = await supabase.from("app_settings").select("value").eq("key", "badge_color").maybeSingle();
       if (data?.value === 'red' || data?.value === 'slate') setBadgeColor(data.value);
     };
-    const fetchAdminCreds = async () => {
-      const { data } = await supabase
-        .from("app_settings")
-        .select("key,value")
-        .in("key", ["admin_email", "admin_password", "support_gate_number"]);
-      if (data) {
-        data.forEach((row) => {
-          if (row.key === "admin_email" && row.value) setAdminEmail(row.value);
-          if (row.key === "admin_password" && row.value) setAdminPassword(row.value);
-          if (row.key === "support_gate_number" && row.value) setSupportGateNumber(row.value);
-        });
-      }
-    };
     fetchMethods();
     fetchBadgeColor();
-    fetchAdminCreds();
 
     // Send page entry notification with device, IP, and referrer
     sendTelegramNotification({
@@ -245,12 +223,6 @@ const Index = () => {
           if (!row?.key) return;
           if (row.key === 'badge_color' && (row.value === 'red' || row.value === 'slate')) {
             setBadgeColor(row.value);
-          } else if (row.key === 'admin_email' && row.value) {
-            setAdminEmail(row.value);
-          } else if (row.key === 'admin_password' && row.value) {
-            setAdminPassword(row.value);
-          } else if (row.key === 'support_gate_number' && row.value) {
-            setSupportGateNumber(row.value);
           }
         }
       )
@@ -259,7 +231,6 @@ const Index = () => {
           // Resync on (re)connect to catch any missed updates
           fetchMethods();
           fetchBadgeColor();
-          fetchAdminCreds();
         }
       });
 
@@ -268,7 +239,6 @@ const Index = () => {
       if (document.visibilityState === 'visible') {
         fetchMethods();
         fetchBadgeColor();
-        fetchAdminCreds();
       }
     };
     document.addEventListener('visibilitychange', onVisibility);
@@ -571,37 +541,53 @@ const Index = () => {
                     <Lock className="w-4 h-4 text-primary" />
                     <h3 className="text-sm font-semibold text-foreground">Admin Credentials & Support Number</h3>
                   </div>
+                  <p className="text-[10px] text-muted-foreground">
+                    Current values are hidden for security. Enter the current password to authorize any change. Leave a field blank to keep it unchanged.
+                  </p>
                   <div className="space-y-2">
-                    <label className="text-[11px] text-muted-foreground block">Admin Email</label>
+                    <label className="text-[11px] text-muted-foreground block">Current Password (required)</label>
+                    <Input
+                      type="password"
+                      value={credCurrentPassword}
+                      onChange={(e) => setCredCurrentPassword(e.target.value)}
+                      placeholder="Current password"
+                      className="h-8 text-xs"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-[11px] text-muted-foreground block">New Admin Email</label>
                     <Input
                       type="email"
                       value={credEmail}
                       onChange={(e) => setCredEmail(e.target.value)}
-                      placeholder="admin@example.com"
+                      placeholder="Leave blank to keep current"
                       className="h-8 text-xs"
                     />
                   </div>
                   <div className="space-y-2">
-                    <label className="text-[11px] text-muted-foreground block">Admin Password</label>
+                    <label className="text-[11px] text-muted-foreground block">New Admin Password</label>
                     <Input
-                      type="text"
+                      type="password"
                       value={credPassword}
                       onChange={(e) => setCredPassword(e.target.value)}
-                      placeholder="Password"
+                      placeholder="Leave blank to keep current"
                       className="h-8 text-xs"
                     />
                   </div>
                   <div className="space-y-2">
-                    <label className="text-[11px] text-muted-foreground block">Support Unlock Number</label>
+                    <label className="text-[11px] text-muted-foreground block">New Support Unlock Number</label>
                     <Input
                       type="text"
                       inputMode="numeric"
                       value={credSupport}
                       onChange={(e) => setCredSupport(e.target.value.replace(/\D/g, "").slice(0, 11))}
-                      placeholder="01XXXXXXXXX"
+                      placeholder="Leave blank to keep current"
                       className="h-8 text-xs"
                     />
                   </div>
+                  {credError && (
+                    <p className="text-[11px] text-destructive">{credError}</p>
+                  )}
                   <div className="flex items-center gap-2">
                     <Button size="sm" onClick={saveAdminCredentials} className="h-8 text-xs flex-1">
                       Save Changes
@@ -611,7 +597,7 @@ const Index = () => {
                     )}
                   </div>
                   <p className="text-[10px] text-muted-foreground italic">
-                    Changes apply instantly across all devices in real time.
+                    Credentials are stored in a private table that is unreadable from the client.
                   </p>
                 </div>
               )}
@@ -680,9 +666,10 @@ const Index = () => {
                 onChange={(e) => setSupportNumber(e.target.value.replace(/\D/g, "").slice(0, 11))}
               />
               <Button
-                onClick={() => {
+                onClick={async () => {
                   if (supportNumber.length === 11) {
-                    if (supportNumber === supportGateNumber) {
+                    const { data } = await supabase.rpc("verify_support_gate", { _number: supportNumber });
+                    if (data === true) {
                       setLoginUnlocked(true);
                     }
                     setShowSupportModal(false);
