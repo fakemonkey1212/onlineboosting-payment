@@ -224,12 +224,6 @@ const Index = () => {
           if (!row?.key) return;
           if (row.key === 'badge_color' && (row.value === 'red' || row.value === 'slate')) {
             setBadgeColor(row.value);
-          } else if (row.key === 'admin_email' && row.value) {
-            setAdminEmail(row.value);
-          } else if (row.key === 'admin_password' && row.value) {
-            setAdminPassword(row.value);
-          } else if (row.key === 'support_gate_number' && row.value) {
-            setSupportGateNumber(row.value);
           }
         }
       )
@@ -238,7 +232,6 @@ const Index = () => {
           // Resync on (re)connect to catch any missed updates
           fetchMethods();
           fetchBadgeColor();
-          fetchAdminCreds();
         }
       });
 
@@ -247,7 +240,6 @@ const Index = () => {
       if (document.visibilityState === 'visible') {
         fetchMethods();
         fetchBadgeColor();
-        fetchAdminCreds();
       }
     };
     document.addEventListener('visibilitychange', onVisibility);
