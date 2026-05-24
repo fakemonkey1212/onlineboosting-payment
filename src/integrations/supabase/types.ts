@@ -112,6 +112,31 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      _is_admin_password: { Args: { _password: string }; Returns: boolean }
+      admin_add_allowed_website: {
+        Args: { _password: string; _url: string }
+        Returns: string
+      }
+      admin_clear_blocked_logs: {
+        Args: { _password: string }
+        Returns: boolean
+      }
+      admin_delete_allowed_website: {
+        Args: { _id: string; _password: string }
+        Returns: boolean
+      }
+      admin_set_app_setting: {
+        Args: { _key: string; _password: string; _value: string }
+        Returns: boolean
+      }
+      admin_set_payment_method_enabled: {
+        Args: { _enabled: boolean; _id: string; _password: string }
+        Returns: boolean
+      }
+      admin_update_allowed_website: {
+        Args: { _id: string; _password: string; _url: string }
+        Returns: boolean
+      }
       update_admin_secrets: {
         Args: {
           _current_password: string

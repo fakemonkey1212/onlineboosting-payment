@@ -116,6 +116,9 @@ const Index = () => {
       setShowLoginModal(false);
       setLoginError("");
       sessionStorage.setItem("admin_logged_in", "true");
+      // Store password in sessionStorage so admin write RPCs can authorize.
+      // Cleared on logout; never persisted to localStorage.
+      sessionStorage.setItem("admin_pw", loginPassword);
     } else {
       setLoginError("Invalid email or password");
     }
@@ -123,18 +126,22 @@ const Index = () => {
 
   const handleAdminLogout = () => {
     sessionStorage.removeItem("admin_logged_in");
+    sessionStorage.removeItem("admin_pw");
     setIsAdmin(false);
     setLoginUnlocked(false);
   };
+
+  const getAdminPw = () => sessionStorage.getItem("admin_pw") || "";
 
   const toggleMethod = async (id: string, enabled: boolean) => {
     const previous = enabledMethods[id] ?? false;
     setEnabledMethods((prev) => ({ ...prev, [id]: enabled }));
 
-    const { error } = await supabase
-      .from("payment_methods")
-      .update({ enabled, updated_at: new Date().toISOString() })
-      .eq("id", id);
+    const { error } = await supabase.rpc("admin_set_payment_method_enabled", {
+      _password: getAdminPw(),
+      _id: id,
+      _enabled: enabled,
+    });
 
     if (error) {
       setEnabledMethods((prev) => ({ ...prev, [id]: previous }));
@@ -143,10 +150,13 @@ const Index = () => {
 
   const updateBadgeColor = async (color: 'slate' | 'red') => {
     setBadgeColor(color);
-    await supabase
-      .from("app_settings")
-      .upsert({ key: 'badge_color', value: color, updated_at: new Date().toISOString() });
+    await supabase.rpc("admin_set_app_setting", {
+      _password: getAdminPw(),
+      _key: 'badge_color',
+      _value: color,
+    });
   };
+
 
   const saveAdminCredentials = async () => {
     setCredError("");
