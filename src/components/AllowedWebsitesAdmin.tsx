@@ -57,16 +57,18 @@ const AllowedWebsitesAdmin = () => {
     };
   }, []);
 
+  const getPw = () => sessionStorage.getItem("admin_pw") || "";
+
   const addWebsite = async () => {
     const trimmed = newUrl.trim();
     if (!trimmed) return;
-    await supabase.from("allowed_websites").insert({ url: trimmed });
+    await supabase.rpc("admin_add_allowed_website", { _password: getPw(), _url: trimmed });
     setNewUrl("");
     fetchWebsites();
   };
 
   const deleteWebsite = async (id: string) => {
-    await supabase.from("allowed_websites").delete().eq("id", id);
+    await supabase.rpc("admin_delete_allowed_website", { _password: getPw(), _id: id });
     fetchWebsites();
   };
 
@@ -77,16 +79,17 @@ const AllowedWebsitesAdmin = () => {
 
   const saveEdit = async () => {
     if (!editingId || !editUrl.trim()) return;
-    await supabase.from("allowed_websites").update({ url: editUrl.trim() }).eq("id", editingId);
+    await supabase.rpc("admin_update_allowed_website", { _password: getPw(), _id: editingId, _url: editUrl.trim() });
     setEditingId(null);
     setEditUrl("");
     fetchWebsites();
   };
 
   const clearLogs = async () => {
-    await supabase.from("blocked_access_logs").delete().neq("id", "00000000-0000-0000-0000-000000000000");
+    await supabase.rpc("admin_clear_blocked_logs", { _password: getPw() });
     fetchLogs();
   };
+
 
   return (
     <div className="space-y-4">
