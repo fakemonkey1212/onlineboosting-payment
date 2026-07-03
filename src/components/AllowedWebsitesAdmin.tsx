@@ -3,6 +3,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Plus, Trash2, Edit2, Check, X, Globe, AlertTriangle } from "lucide-react";
+import { toast } from "@/hooks/use-toast";
 
 interface AllowedWebsite {
   id: string;
