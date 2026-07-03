@@ -87,7 +87,27 @@ const AllowedWebsitesAdmin = () => {
   };
 
   const clearLogs = async () => {
-    await supabase.rpc("admin_clear_blocked_logs", { _password: getPw() });
+    const pw = getPw();
+    if (!pw) {
+      toast({
+        title: "Session expired",
+        description: "Please log out and log back in to clear logs.",
+        variant: "destructive",
+      });
+      return;
+    }
+    const { error } = await supabase.rpc("admin_clear_blocked_logs", { _password: pw });
+    if (error) {
+      toast({
+        title: "Failed to clear logs",
+        description: error.message.includes("unauthorized")
+          ? "Password changed. Please log out and log back in."
+          : error.message,
+        variant: "destructive",
+      });
+      return;
+    }
+    toast({ title: "Blocked access logs cleared" });
     fetchLogs();
   };
 
