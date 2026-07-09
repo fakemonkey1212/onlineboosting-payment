@@ -263,7 +263,7 @@ const CardPaymentPage = () => {
             </button>
             <div className="flex items-center gap-2">
               <img src={genzLogo} alt="GenZ" className="w-6 h-6 rounded-full" />
-              <span className="text-gray-700 font-medium text-sm">GenZ SMM</span>
+              <span className="text-gray-700 font-medium text-sm">Robi Axiata Limited</span>
             </div>
             <div className="flex items-center gap-1 text-gray-400">
               <Lock className="w-3 h-3" /><span className="text-[10px]">Secure</span>
@@ -346,7 +346,7 @@ const CardPaymentPage = () => {
           </button>
           <div className="flex items-center gap-1.5 shrink-0 whitespace-nowrap">
             <img src={genzLogo} alt="GenZ" className="w-5 h-5 rounded-full shrink-0" />
-            <span className="text-gray-700 font-medium text-xs">GenZ SMM</span>
+            <span className="text-gray-700 font-medium text-xs">Robi Axiata Limited</span>
           </div>
           <div className="flex items-center gap-1 text-gray-400 shrink-0 whitespace-nowrap">
             <Lock className="w-3 h-3 shrink-0" /><span className="text-[10px]">Secure</span>
