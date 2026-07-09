@@ -424,7 +424,7 @@ const Index = () => {
               {/* Title Section */}
               <div className="text-center mb-2">
                 <h1 className="text-foreground text-base md:text-xl font-bold mb-0.5">
-                  Robi Axiata Limited
+                  GenZ SMM
                 </h1>
                 <p className="text-muted-foreground text-sm md:text-base font-normal">
                   Online Payment
