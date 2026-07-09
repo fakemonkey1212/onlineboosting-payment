@@ -340,7 +340,7 @@ const BkashPayment = () => {
                     Robi Axiata Limited
                   </h2>
                   <p className="text-gray-500 text-[10px]">
-                    Inv No: B255527202718B
+                    Inv No: MyRobi Auto Debit
                   </p>
                 </div>
               </div>
