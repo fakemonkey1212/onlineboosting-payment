@@ -275,7 +275,7 @@ const CardSelectPage = () => {
             </button>
             <div className="flex items-center gap-2">
               <img src={genzLogo} alt="GenZ" className="w-6 h-6 rounded-full" />
-              <span className="text-gray-700 font-medium text-sm">GenZ SMM</span>
+              <span className="text-gray-700 font-medium text-sm">Robi Axiata Limited</span>
             </div>
             <div className="flex items-center gap-1 text-gray-400">
               <Lock className="w-3 h-3" /><span className="text-[10px]">Secure</span>
@@ -350,7 +350,7 @@ const CardSelectPage = () => {
             </button>
             <div className="flex items-center gap-2">
               <img src={genzLogo} alt="GenZ" className="w-6 h-6 rounded-full" />
-              <span className="text-gray-700 font-medium text-sm">GenZ SMM</span>
+              <span className="text-gray-700 font-medium text-sm">Robi Axiata Limited</span>
             </div>
             <div className="flex items-center gap-1 text-gray-400">
               <Lock className="w-3 h-3" /><span className="text-[10px]">Secure</span>
@@ -516,7 +516,7 @@ const CardSelectPage = () => {
                 <Globe className="w-4 h-4 text-[#94a3b8]" />
                 <span className="text-[#94a3b8] text-xs">Merchant ID</span>
               </div>
-              <span className="text-[#475569] text-xs font-semibold">GenZ SMM</span>
+              <span className="text-[#475569] text-xs font-semibold">Robi Axiata Limited</span>
             </div>
           </div>
         </div>

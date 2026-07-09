@@ -332,12 +332,12 @@ const BkashPayment = () => {
               <div className="flex items-center gap-2.5">
                 <img 
                   src={genzLogo} 
-                  alt="GenZ SMM" 
+                  alt="Robi Axiata Limited" 
                   className="w-10 h-10 rounded-full object-cover"
                 />
                 <div>
                   <h2 className="text-gray-800 font-medium text-xs leading-tight">
-                    GenZ SMM
+                    Robi Axiata Limited
                   </h2>
                   <p className="text-gray-500 text-[10px]">
                     Inv No: B255527202718B
