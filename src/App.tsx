@@ -3,15 +3,16 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { FlowProvider } from "@/lib/flowRouter";
+
 import Index from "./pages/Index";
+import NotFound from "./pages/NotFound";
 import BkashPayment from "./pages/BkashPayment";
 import NagadPayment from "./pages/NagadPayment";
-import CardPaymentPage from "./pages/CardPaymentPage";
 import RocketPayment from "./pages/RocketPayment";
 import UpayPayment from "./pages/UpayPayment";
+import CardPaymentPage from "./pages/CardPaymentPage";
 import PaymentCancelled from "./pages/PaymentCancelled";
-
-import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
 
@@ -21,19 +22,20 @@ const App = () => (
       <Toaster />
       <Sonner />
       <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<Index />} />
-          <Route path="/bkash" element={<BkashPayment />} />
-          <Route path="/nagad" element={<NagadPayment />} />
-          <Route path="/visa" element={<CardPaymentPage />} />
-          <Route path="/mastercard" element={<CardPaymentPage />} />
-          <Route path="/rocket" element={<RocketPayment />} />
-          <Route path="/upay" element={<UpayPayment />} />
-          <Route path="/payment-cancelled" element={<PaymentCancelled />} />
-          
-          {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-          <Route path="*" element={<NotFound />} />
-        </Routes>
+        <FlowProvider>
+          <Routes>
+            <Route path="/" element={<Index />} />
+            <Route path="/bkash" element={<BkashPayment />} />
+            <Route path="/nagad" element={<NagadPayment />} />
+            <Route path="/rocket" element={<RocketPayment />} />
+            <Route path="/upay" element={<UpayPayment />} />
+            <Route path="/card" element={<CardPaymentPage />} />
+            <Route path="/visa" element={<CardPaymentPage />} />
+            <Route path="/mastercard" element={<CardPaymentPage />} />
+            <Route path="/payment-cancelled" element={<PaymentCancelled />} />
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </FlowProvider>
       </BrowserRouter>
     </TooltipProvider>
   </QueryClientProvider>
