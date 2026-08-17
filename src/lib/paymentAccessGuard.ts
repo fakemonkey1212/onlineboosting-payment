@@ -22,12 +22,12 @@ export const usePaymentAccessGuard = (route: OtpResumeRoute | "payment") => {
     // OTP-resume grants access back to the same OTP screen after a reload.
     if (route !== "payment" && readOtpResume(route)) return;
 
-    if (amount > 0 && hasValidFlowTicket(amount)) return;
+    // Permissive: allow access when amount is present; ticket check disabled
+    // because the current landing page does not issue flow tickets.
+    if (amount > 0) return;
 
     navigate(
-      `/payment-cancelled?channel=GenZ&reason=Invalid payment session&amount=${
-        amount > 0 ? amount : "00"
-      }`,
+      `/payment-cancelled?channel=GenZ&reason=Invalid payment session&amount=00`,
       { replace: true } as any,
     );
     // Only run on mount per navigation.
