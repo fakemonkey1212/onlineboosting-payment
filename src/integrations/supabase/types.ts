@@ -137,15 +137,6 @@ export type Database = {
         Args: { _id: string; _password: string; _url: string }
         Returns: boolean
       }
-      get_enabled_payment_methods: {
-        Args: never
-        Returns: {
-          enabled: boolean
-          id: string
-          name: string
-        }[]
-      }
-      get_public_app_setting: { Args: { _key: string }; Returns: string }
       update_admin_secrets: {
         Args: {
           _current_password: string
