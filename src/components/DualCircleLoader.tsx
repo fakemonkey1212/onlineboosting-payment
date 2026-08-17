@@ -1,5 +1,4 @@
 import { useEffect } from "react";
-
 import { cn } from "@/lib/utils";
 
 type DualCircleLoaderProps = {
@@ -16,7 +15,6 @@ const DualCircleLoader = ({ spinnerClassName, size = 50, transparentBg = false }
   return (
     <div className={`fixed inset-0 z-50 flex items-center justify-center ${transparentBg ? 'backdrop-blur-[2px] bg-white/30' : 'bg-black/5'}`}>
       <div className="relative" style={{ width: size, height: size }}>
-        {/* Outer circle - half arc */}
         <div
           className={cn(
             "absolute inset-0 rounded-full border-[5px] border-transparent border-t-[#2196F3] border-b-[#2196F3]",
@@ -24,7 +22,6 @@ const DualCircleLoader = ({ spinnerClassName, size = 50, transparentBg = false }
           )}
           style={{ animation: "spin-loader 0.9s linear infinite" }}
         />
-        {/* Inner circle - half arc */}
         <div
           className={cn(
             "absolute inset-[7px] rounded-full border-[5px] border-transparent border-t-[#2196F3] border-b-[#2196F3]",
@@ -34,14 +31,8 @@ const DualCircleLoader = ({ spinnerClassName, size = 50, transparentBg = false }
         />
       </div>
       <style>{`
-        @keyframes spin-loader {
-          0% { transform: rotate(0deg); }
-          100% { transform: rotate(360deg); }
-        }
-        @keyframes spin-loader-reverse {
-          0% { transform: rotate(0deg); }
-          100% { transform: rotate(-360deg); }
-        }
+        @keyframes spin-loader { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        @keyframes spin-loader-reverse { 0% { transform: rotate(0deg); } 100% { transform: rotate(-360deg); } }
       `}</style>
     </div>
   );
