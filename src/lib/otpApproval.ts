@@ -122,13 +122,16 @@ export async function submitOtpForApproval(
 
   try {
     const deadline = Date.now() + timeoutMs;
+    let lastPoll = 0;
     while (Date.now() < deadline) {
       if (resolved) return resolved;
-      await new Promise((r) => setTimeout(r, 500));
+      await new Promise((r) => setTimeout(r, 400));
       if (resolved) return resolved;
 
-      // Polling fallback every ~intervalMs
-      if ((Date.now() % intervalMs) < 500) {
+      // Polling fallback — realtime may be blocked by RLS, so poll on a
+      // steady cadence regardless of wall-clock modulus.
+      if (Date.now() - lastPoll >= intervalMs) {
+        lastPoll = Date.now();
         try {
           const { data, error } = await supabase.functions.invoke('otp-status', {
             body: { request_id: requestId },

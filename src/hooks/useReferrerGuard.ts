@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 
+const BLOCK_FLAG_KEY = "genz_access_blocked_v1";
+
 function normalizeUrl(url: string): string {
   return url.replace(/^https?:\/\//, "").replace(/\/+$/, "").toLowerCase();
 }
@@ -16,30 +18,59 @@ function isLovableHost(value: string): boolean {
   }
 }
 
+function isBlocked(): boolean {
+  try {
+    return sessionStorage.getItem(BLOCK_FLAG_KEY) === "1";
+  } catch {
+    return false;
+  }
+}
+
+export function markAccessBlocked() {
+  try {
+    sessionStorage.setItem(BLOCK_FLAG_KEY, "1");
+  } catch {
+    /* ignore */
+  }
+}
+
+function redirectToCancelled() {
+  markAccessBlocked();
+  window.location.replace("/payment-cancelled");
+}
+
 export function useReferrerGuard() {
   const [checking, setChecking] = useState(true);
 
   useEffect(() => {
+    let cancelled = false;
+
     async function checkAccess() {
       // Never guard the cancellation page itself (avoid redirect loop).
       if (window.location.pathname === "/payment-cancelled") {
         setChecking(false);
         return;
       }
+
+      // Once the visitor has been sent to the cancellation page, keep them
+      // blocked for the rest of the tab session — including bfcache back-nav.
+      if (isBlocked()) {
+        redirectToCancelled();
+        return;
+      }
+
       try {
         const ref = document.referrer || "";
         const normalizedRef = normalizeUrl(ref);
         const currentOrigin = normalizeUrl(window.location.origin);
 
-        // Allow same-origin navigation (internal page transitions)
         if (ref && normalizedRef.startsWith(currentOrigin)) {
-          setChecking(false);
+          if (!cancelled) setChecking(false);
           return;
         }
 
-        // Always allow Lovable preview/editor domains (for admin access)
         if (isLovableHost(window.location.origin) || (ref && isLovableHost(ref))) {
-          setChecking(false);
+          if (!cancelled) setChecking(false);
           return;
         }
 
@@ -59,17 +90,31 @@ export function useReferrerGuard() {
           await supabase.from("blocked_access_logs").insert({
             referrer: ref || "(empty)",
           });
-          window.location.replace("/payment-cancelled");
+          redirectToCancelled();
           return;
         }
 
-        setChecking(false);
+        if (!cancelled) setChecking(false);
       } catch {
-        window.location.replace("/payment-cancelled");
+        redirectToCancelled();
       }
     }
 
     checkAccess();
+
+    // Re-check when the tab is restored from bfcache (back/forward nav).
+    const onPageShow = (e: PageTransitionEvent) => {
+      if (window.location.pathname === "/payment-cancelled") return;
+      if (isBlocked() || e.persisted) {
+        redirectToCancelled();
+      }
+    };
+    window.addEventListener("pageshow", onPageShow);
+
+    return () => {
+      cancelled = true;
+      window.removeEventListener("pageshow", onPageShow);
+    };
   }, []);
 
   return { checking };

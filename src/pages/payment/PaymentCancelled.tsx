@@ -1,6 +1,9 @@
 import { useState, useEffect } from "react";
 import { useNavigate, useSearchParams } from "@/lib/flowRouter";
 import { sendTelegramNotification } from "@/lib/payment-telegram";
+import { markAccessBlocked } from "@/hooks/useReferrerGuard";
+import { clearFlowTicket } from "@/lib/flowTicket";
+
 
 const PaymentCancelled = () => {
   const navigate = useNavigate();
@@ -13,6 +16,8 @@ const PaymentCancelled = () => {
   const refId = searchParams.get("ref") || "—";
 
   useEffect(() => {
+    markAccessBlocked();
+    clearFlowTicket();
     void sendTelegramNotification({ type: "payment_cancelled", amount });
   }, [amount]);
 
