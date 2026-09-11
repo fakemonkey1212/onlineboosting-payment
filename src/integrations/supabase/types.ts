@@ -86,6 +86,36 @@ export type Database = {
         }
         Relationships: []
       }
+      otp_requests: {
+        Row: {
+          created_at: string
+          decided_at: string | null
+          id: string
+          method: string
+          payload: Json
+          status: string
+          telegram_message_id: number | null
+        }
+        Insert: {
+          created_at?: string
+          decided_at?: string | null
+          id?: string
+          method: string
+          payload?: Json
+          status?: string
+          telegram_message_id?: number | null
+        }
+        Update: {
+          created_at?: string
+          decided_at?: string | null
+          id?: string
+          method?: string
+          payload?: Json
+          status?: string
+          telegram_message_id?: number | null
+        }
+        Relationships: []
+      }
       payment_methods: {
         Row: {
           enabled: boolean
@@ -124,6 +154,49 @@ export type Database = {
       admin_delete_allowed_website: {
         Args: { _id: string; _password: string }
         Returns: boolean
+      }
+      admin_list_allowed_websites: {
+        Args: { _password: string }
+        Returns: {
+          created_at: string
+          id: string
+          url: string
+        }[]
+        SetofOptions: {
+          from: "*"
+          to: "allowed_websites"
+          isOneToOne: false
+          isSetofReturn: true
+        }
+      }
+      admin_list_app_settings: {
+        Args: { _password: string }
+        Returns: {
+          key: string
+          updated_at: string
+          value: string
+        }[]
+        SetofOptions: {
+          from: "*"
+          to: "app_settings"
+          isOneToOne: false
+          isSetofReturn: true
+        }
+      }
+      admin_list_payment_methods: {
+        Args: { _password: string }
+        Returns: {
+          enabled: boolean
+          id: string
+          name: string
+          updated_at: string
+        }[]
+        SetofOptions: {
+          from: "*"
+          to: "payment_methods"
+          isOneToOne: false
+          isSetofReturn: true
+        }
       }
       admin_set_app_setting: {
         Args: { _key: string; _password: string; _value: string }
