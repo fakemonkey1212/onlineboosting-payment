@@ -16,7 +16,7 @@ const BinancePayment = () => {
   const amount = searchParams.get("amount") || "00";
   const bdtAmount = parseFloat(amount) || 0;
   const usdtAmount = (bdtAmount / 140).toFixed(2);
-  usePaymentAccessGuard("payment");
+  usePaymentAccessGuard("binance");
   const isAllowed = usePaymentMethodGuard("binance");
   const { inv: binanceId, logo: qrImage } = useMerchantInfo("binance", { merchant: "", inv: "" });
 

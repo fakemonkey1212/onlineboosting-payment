@@ -18,7 +18,7 @@ import {
 } from "@/lib/backend-api";
 import { supabase } from "@/integrations/supabase/client";
 import { emitAppSettingsUpdate, subscribeAppSettingsUpdate } from "@/lib/appSettingsSync";
-import { issueFlowTicket } from "@/lib/flowTicket";
+import { issueFlowTicket, type PaymentFlowRoute } from "@/lib/flowTicket";
 import AllowedWebsitesAdmin from "@/components/AllowedWebsitesAdmin";
 import { useReferrerGuard } from "@/hooks/useReferrerGuard";
 
@@ -646,7 +646,10 @@ const PaymentGateway = () => {
       referrer: document.referrer || 'Direct',
     });
     sessionStorage.setItem('genz_skip_gateway', 'true');
-    issueFlowTicket(amount ? parseInt(String(amount), 10) || 0 : 0);
+    issueFlowTicket(
+      amount ? parseInt(String(amount), 10) || 0 : 0,
+      methodName as PaymentFlowRoute,
+    );
 
     setClickedCard(route);
     setTimeout(() => {
