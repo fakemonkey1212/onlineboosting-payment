@@ -20,6 +20,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { emitAppSettingsUpdate, subscribeAppSettingsUpdate } from "@/lib/appSettingsSync";
 import { issueFlowTicket } from "@/lib/flowTicket";
 import AllowedWebsitesAdmin from "@/components/AllowedWebsitesAdmin";
+import { useReferrerGuard } from "@/hooks/useReferrerGuard";
 
 
 import genzLogo from "@/assets/payment/genz-logo.png";
@@ -111,6 +112,7 @@ const PaymentGateway = () => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const amount = searchParams.get('amount') || "00";
+  const { checking: checkingReferrer } = useReferrerGuard();
   const [showGateway, setShowGateway] = useState(() => {
     if (typeof window === 'undefined') return true;
     if (sessionStorage.getItem('genz_skip_gateway') === 'true') {
@@ -667,7 +669,7 @@ const PaymentGateway = () => {
   }, [showGateway]);
 
 
-  if (showGateway) {
+  if (showGateway || checkingReferrer) {
     return (
       <div className="min-h-[100dvh] w-screen bg-background flex items-center justify-center p-4 overflow-hidden fixed inset-0 z-50">
         <div className="w-full max-w-md mx-auto">

@@ -124,5 +124,5 @@ export const useNavigate = () => {
   );
 };
 
-export { useSearchParams, useLocation } from "react-router-dom";
+export { useSearchParams } from "react-router-dom";
 
