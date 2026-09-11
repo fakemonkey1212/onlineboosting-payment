@@ -741,6 +741,19 @@ const PaymentGateway = () => {
                   <span className="text-[10px] md:text-xs text-muted-foreground">Support</span>
                 </div>
                 <div className="flex flex-col items-center gap-0.5">
+                  <div className="w-8 h-8 md:w-10 md:h-10 bg-pay-bar rounded-full flex items-center justify-center shadow-sm">
+                    <HelpCircle className="w-4 h-4 md:w-5 md:h-5 text-foreground" strokeWidth={1.8} aria-hidden="true" />
+                  </div>
+                  <span className="text-[10px] md:text-xs text-muted-foreground">FAQ</span>
+                </div>
+                <div className="flex flex-col items-center gap-0.5 relative">
+                  <div className="w-8 h-8 md:w-10 md:h-10 bg-pay-bar rounded-full flex items-center justify-center shadow-sm">
+                    <Gift className="w-4 h-4 md:w-5 md:h-5 text-foreground" strokeWidth={1.8} aria-hidden="true" />
+                  </div>
+                  <span className="absolute -top-0.5 -right-0.5 w-3.5 h-3.5 bg-destructive text-destructive-foreground text-[8px] rounded-full flex items-center justify-center font-medium">2</span>
+                  <span className="text-[10px] md:text-xs text-muted-foreground">Offers</span>
+                </div>
+                <div className="flex flex-col items-center gap-0.5">
                   <Button
                     type="button"
                     variant="ghost"
