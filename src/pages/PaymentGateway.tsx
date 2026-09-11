@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import { Home, Upload, X, Headphones, LogIn, LogOut, Lock } from "lucide-react";
+import { Home, Upload, X, Headphones, HelpCircle, Gift, LogIn, LogOut, Lock } from "lucide-react";
 import { useNavigate, useSearchParams } from "@/lib/flowRouter";
 import { Switch } from "@/components/ui/switch";
 import { Input } from "@/components/ui/input";
