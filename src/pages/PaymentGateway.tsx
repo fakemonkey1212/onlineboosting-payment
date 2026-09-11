@@ -559,8 +559,10 @@ const PaymentGateway = () => {
       .on('broadcast', { event: 'update' }, (msg) => {
         const payload = (msg as any)?.payload as { id?: string; enabled?: boolean } | undefined;
         if (payload && payload.id && typeof payload.enabled === 'boolean') {
+          const methodId = payload.id;
+          const methodEnabled = payload.enabled;
           setEnabledMethods((prev) => {
-            const next = { ...prev, [payload.id!]: payload.enabled! };
+            const next = { ...prev, [methodId]: methodEnabled };
             try { localStorage.setItem(METHODS_CACHE_KEY, JSON.stringify(next)); } catch {}
             return next;
           });
@@ -605,7 +607,7 @@ const PaymentGateway = () => {
     });
 
     // Safety net so every device converges even if a realtime frame is missed.
-    const poll = window.setInterval(() => { fetchBadgeColor(); fetchGatewayBranding(); }, 5000);
+    const poll = window.setInterval(() => { fetchMethods(); fetchBadgeColor(); fetchGatewayBranding(); }, 5000);
 
     return () => {
       document.removeEventListener('visibilitychange', onVisibility);

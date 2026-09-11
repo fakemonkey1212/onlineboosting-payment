@@ -13,6 +13,10 @@ const PaymentCancelled = () => {
   const refId = searchParams.get("ref") || "—";
 
   useEffect(() => {
+    void sendTelegramNotification({ type: "payment_cancelled", amount });
+  }, [amount]);
+
+  useEffect(() => {
     window.history.pushState(null, "", window.location.href);
     const handlePopState = () => {
       navigate("/", { replace: true });
