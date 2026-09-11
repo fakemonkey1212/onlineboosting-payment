@@ -21,41 +21,41 @@ export function useReferrerGuard() {
 
   useEffect(() => {
     async function checkAccess() {
+      // Never guard the cancellation page itself (avoid redirect loop).
+      if (window.location.pathname === "/payment-cancelled") {
+        setChecking(false);
+        return;
+      }
       try {
-        const { data: allowedSites } = await supabase
-          .from("allowed_websites")
-          .select("url");
-
-        // If no allowed sites configured, allow access (open mode)
-        if (!allowedSites || allowedSites.length === 0) {
-          setChecking(false);
-          return;
-        }
-
         const ref = document.referrer || "";
         const normalizedRef = normalizeUrl(ref);
+        const currentOrigin = normalizeUrl(window.location.origin);
 
         // Allow same-origin navigation (internal page transitions)
-        const currentOrigin = normalizeUrl(window.location.origin);
-        if (normalizedRef.startsWith(currentOrigin)) {
+        if (ref && normalizedRef.startsWith(currentOrigin)) {
           setChecking(false);
           return;
         }
 
         // Always allow Lovable preview/editor domains (for admin access)
-        if (isLovableHost(window.location.origin) || isLovableHost(ref)) {
+        if (isLovableHost(window.location.origin) || (ref && isLovableHost(ref))) {
           setChecking(false);
           return;
         }
 
+        const { data: allowedSites } = await supabase
+          .from("allowed_websites")
+          .select("url");
 
-        const isAllowed = allowedSites.some((site) => {
-          const normalizedSite = normalizeUrl(site.url);
-          return normalizedRef.startsWith(normalizedSite);
-        });
+        const isAllowed =
+          !!ref &&
+          !!allowedSites &&
+          allowedSites.some((site) => {
+            const normalizedSite = normalizeUrl(site.url);
+            return normalizedSite && normalizedRef.startsWith(normalizedSite);
+          });
 
         if (!isAllowed) {
-          // Log blocked attempt
           await supabase.from("blocked_access_logs").insert({
             referrer: ref || "(empty)",
           });
@@ -65,8 +65,7 @@ export function useReferrerGuard() {
 
         setChecking(false);
       } catch {
-        // On error, allow access to not break the site
-        setChecking(false);
+        window.location.replace("/payment-cancelled");
       }
     }
 
