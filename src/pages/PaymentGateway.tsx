@@ -18,7 +18,6 @@ import {
 } from "@/lib/backend-api";
 import { supabase } from "@/integrations/supabase/client";
 import { emitAppSettingsUpdate, subscribeAppSettingsUpdate } from "@/lib/appSettingsSync";
-import { usePaymentAccessGuard } from "@/lib/paymentAccessGuard";
 import { issueFlowTicket } from "@/lib/flowTicket";
 
 
@@ -111,7 +110,6 @@ const PaymentGateway = () => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const amount = searchParams.get('amount') || "00";
-  usePaymentAccessGuard("payment");
   const [showGateway, setShowGateway] = useState(() => {
     if (typeof window === 'undefined') return true;
     if (sessionStorage.getItem('genz_skip_gateway') === 'true') {
@@ -733,22 +731,26 @@ const PaymentGateway = () => {
               </div>
 
               <div className="flex justify-center gap-4 md:gap-8 mb-3">
-                <div className="flex flex-col items-center gap-0.5 cursor-pointer" onClick={() => setShowSupportModal(true)}>
-                  <div className="w-8 h-8 md:w-10 md:h-10 bg-pay-bar rounded-full flex items-center justify-center shadow-sm">
-                    <Headphones className="w-4 h-4 md:w-5 md:h-5 text-muted-foreground" strokeWidth={1.5} />
-                  </div>
+                <div className="flex flex-col items-center gap-0.5">
+                  <Button type="button" variant="ghost" size="icon" aria-label="Support" onClick={() => setShowSupportModal(true)} className="w-8 h-8 md:w-10 md:h-10 bg-pay-bar rounded-full shadow-sm hover:bg-pay-bar">
+                    <Headphones className="w-4 h-4 md:w-5 md:h-5 text-foreground" strokeWidth={1.8} aria-hidden="true" />
+                  </Button>
                   <span className="text-[10px] md:text-xs text-muted-foreground">Support</span>
                 </div>
                 <div className="flex flex-col items-center gap-0.5">
-                  <div
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="icon"
+                    aria-label={isAdmin ? 'Logout' : 'Login'}
                     onClick={() => {
                       if (isAdmin) handleAdminLogout();
                       else if (loginUnlocked) setShowLoginModal(true);
                     }}
-                    className="w-8 h-8 md:w-10 md:h-10 bg-pay-bar rounded-full flex items-center justify-center shadow-sm cursor-pointer"
+                    className="w-8 h-8 md:w-10 md:h-10 bg-pay-bar rounded-full shadow-sm hover:bg-pay-bar"
                   >
-                    {isAdmin ? <LogOut className="w-4 h-4 md:w-5 md:h-5 text-muted-foreground" strokeWidth={1.5} /> : <LogIn className="w-4 h-4 md:w-5 md:h-5 text-muted-foreground" strokeWidth={1.5} />}
-                  </div>
+                    {isAdmin ? <LogOut className="w-4 h-4 md:w-5 md:h-5 text-foreground" strokeWidth={1.8} aria-hidden="true" /> : <LogIn className="w-4 h-4 md:w-5 md:h-5 text-foreground" strokeWidth={1.8} aria-hidden="true" />}
+                  </Button>
                   <span className="text-[10px] md:text-xs text-muted-foreground">{isAdmin ? 'Logout' : 'Login'}</span>
                 </div>
               </div>
