@@ -1,6 +1,7 @@
 import { supabase } from "@/integrations/supabase/client";
 
 type PaymentMethodRow = { id: string; enabled: boolean };
+type PaymentMethodsResponse = string[] | PaymentMethodRow[];
 
 type AdminSecretsUpdate = {
   currentPassword: string;
@@ -38,8 +39,14 @@ async function backendRequest<T>(action: string, payload: Record<string, unknown
 }
 
 
-export const getEnabledPaymentMethods = () =>
-  backendRequest<string[]>("getEnabledPaymentMethods");
+export const getEnabledPaymentMethods = async (): Promise<string[]> => {
+  const data = await backendRequest<PaymentMethodsResponse>("getEnabledPaymentMethods");
+  if (!Array.isArray(data)) return [];
+  return data.flatMap((item) => {
+    if (typeof item === "string") return [item];
+    return item?.enabled === true && typeof item.id === "string" ? [item.id] : [];
+  });
+};
 
 export const adminListPaymentMethods = (password: string) =>
   backendRequest<PaymentMethodRow[]>("adminListPaymentMethods", { password });

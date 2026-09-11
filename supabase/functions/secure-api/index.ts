@@ -93,7 +93,13 @@ serve(async (req) => {
     };
 
     if (action === "getEnabledPaymentMethods") {
-      return json({ data: await callRpc("get_enabled_payment_methods") }, 200, cors);
+      const rows = await callRpc("get_enabled_payment_methods");
+      const enabledIds = Array.isArray(rows)
+        ? rows
+            .filter((row) => row && typeof row === "object" && row.enabled === true && typeof row.id === "string")
+            .map((row) => row.id)
+        : [];
+      return json({ data: enabledIds }, 200, cors);
     }
 
     if (action === "adminListPaymentMethods") {

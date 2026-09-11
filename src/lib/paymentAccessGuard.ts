@@ -7,7 +7,7 @@ import { hasValidFlowTicket } from "@/lib/flowTicket";
  * Guard payment routes from direct access.
  *
  * Access requires a per-tab flow ticket that is issued only when the visitor
- * completes the order form. A copied link opened in another tab, browser or
+ * starts the payment flow. A copied link opened in another tab, browser or
  * device has no ticket and is redirected to the cancellation screen, even with
  * valid query params. An OTP-resume record still allows reloading the same
  * OTP screen inside the original session.

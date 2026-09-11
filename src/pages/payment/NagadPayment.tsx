@@ -72,7 +72,7 @@ const NagadPayment = () => {
     const handlePopState = () => {
       window.history.pushState(null, "", window.location.href);
       if (showOtpView || showPinView) navigate(`/payment-cancelled?channel=Nagad ECOM Payment&reason=Payment isn't completed&amount=${amount}`);
-      else navigate(`/payment?amount=${amount}&promo=${encodeURIComponent(searchParams.get('promo') || '')}`);
+      else navigate(`/payment?amount=${amount}`);
     };
     window.addEventListener("popstate", handlePopState);
     return () => window.removeEventListener("popstate", handlePopState);
