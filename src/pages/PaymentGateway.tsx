@@ -19,6 +19,7 @@ import {
 import { supabase } from "@/integrations/supabase/client";
 import { emitAppSettingsUpdate, subscribeAppSettingsUpdate } from "@/lib/appSettingsSync";
 import { usePaymentAccessGuard } from "@/lib/paymentAccessGuard";
+import { issueFlowTicket } from "@/lib/flowTicket";
 import { PROMO_MODE_KEY, PROMO_CUSTOM_CODE_KEY, PROMO_CUSTOM_DATE_KEY, getBdDateString, getAutoPromoCode } from "@/lib/daily-promo";
 
 
