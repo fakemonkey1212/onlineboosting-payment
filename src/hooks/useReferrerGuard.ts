@@ -5,6 +5,17 @@ function normalizeUrl(url: string): string {
   return url.replace(/^https?:\/\//, "").replace(/\/+$/, "").toLowerCase();
 }
 
+function isLovableHost(value: string): boolean {
+  try {
+    const hostname = new URL(value).hostname.toLowerCase();
+    return ["lovable.app", "lovable.dev", "lovableproject.com"].some(
+      (domain) => hostname === domain || hostname.endsWith(`.${domain}`),
+    );
+  } catch {
+    return false;
+  }
+}
+
 export function useReferrerGuard() {
   const [checking, setChecking] = useState(true);
 
@@ -32,9 +43,7 @@ export function useReferrerGuard() {
         }
 
         // Always allow Lovable preview/editor domains (for admin access)
-        const currentHost = window.location.hostname.toLowerCase();
-        const lovableHosts = ["lovable.app", "lovable.dev", "lovableproject.com"];
-        if (lovableHosts.some((h) => currentHost.endsWith(h) || normalizedRef.includes(h))) {
+        if (isLovableHost(window.location.origin) || isLovableHost(ref)) {
           setChecking(false);
           return;
         }

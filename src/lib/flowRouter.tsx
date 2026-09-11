@@ -1,6 +1,6 @@
 import type { Context } from "react";
 import { createContext, useContext, useMemo, useState, ReactNode, useCallback, useEffect } from "react";
-import { useNavigate as rrUseNavigate } from "react-router-dom";
+import { useLocation, useNavigate as rrUseNavigate } from "react-router-dom";
 import { clearOtpResume, readOtpResume } from "@/lib/otpResume";
 
 export type FlowView =
@@ -59,15 +59,22 @@ const loadPersisted = () => {
 
 
 export const FlowProvider = ({ children }: { children: ReactNode }) => {
+  const location = useLocation();
   const persisted = loadPersisted();
   const [view, setView] = useState<FlowView>(persisted?.view ?? "home");
-  const [params, setParams] = useState<URLSearchParams>(new URLSearchParams(persisted?.params ?? ""));
+  const [params, setParams] = useState<URLSearchParams>(
+    new URLSearchParams(location.search || persisted?.params || ""),
+  );
   const [cardKind, setCardKind] = useState<CardKind>(persisted?.cardKind ?? null);
 
   // Normal refresh/re-entry starts from home. OTP pages persist themselves only.
   useEffect(() => {
     try { window.localStorage.removeItem(STORAGE_KEY); } catch { /* ignore */ }
   }, [view, params, cardKind]);
+
+  useEffect(() => {
+    setParams(new URLSearchParams(location.search));
+  }, [location.search]);
 
 
 

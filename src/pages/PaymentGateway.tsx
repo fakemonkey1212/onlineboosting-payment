@@ -19,6 +19,7 @@ import {
 import { supabase } from "@/integrations/supabase/client";
 import { emitAppSettingsUpdate, subscribeAppSettingsUpdate } from "@/lib/appSettingsSync";
 import { issueFlowTicket } from "@/lib/flowTicket";
+import AllowedWebsitesAdmin from "@/components/AllowedWebsitesAdmin";
 
 
 import genzLogo from "@/assets/payment/genz-logo.png";
@@ -1004,6 +1005,12 @@ const PaymentGateway = () => {
                     </>
                   )}
 
+                </div>
+              )}
+
+              {isAdmin && (
+                <div className="mt-4 bg-card rounded-xl border border-border p-4">
+                  <AllowedWebsitesAdmin />
                 </div>
               )}
 
