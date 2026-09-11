@@ -248,11 +248,11 @@ const BinancePayment = () => {
                   />
                 </div>
                 <p className="text-[12px] text-[#1a1a1a] leading-relaxed mt-4 px-0.5">
-                  Copy the Order ID from the successful payment details in your Binance account, Paste it into the field above and tap "Verify payment".
+                  Copy the transaction ID from the successful payment details in your Binance account, paste it into the field above and tap "Verify Payment".
                 </p>
                 <div className="mt-2 text-[12px] text-[#1a1a1a] leading-relaxed space-y-1 px-0.5">
-                  <p>১. আপনার Binance অ্যাকাউন্টের সফল পেমেন্টের বিস্তারিত তথ্য থেকে Order ID কপি করুন।</p>
-                  <p>২. উপরের ঘরে Order ID পেস্ট করে “Verify Payment” বাটনে চাপুন।</p>
+                  <p>১. আপনার Binance অ্যাকাউন্টের সফল পেমেন্টের বিস্তারিত তথ্য থেকে Transaction ID কপি করুন।</p>
+                  <p>২. উপরের ঘরে Transaction ID পেস্ট করে “Verify Payment” বাটনে চাপুন।</p>
                 </div>
               </div>
             </>
