@@ -686,6 +686,7 @@ const PaymentGateway = () => {
       referrer: document.referrer || 'Direct',
     });
     sessionStorage.setItem('genz_skip_gateway', 'true');
+    issueFlowTicket(amount ? parseInt(String(amount), 10) || 0 : 0);
 
     setClickedCard(route);
     setTimeout(() => {
