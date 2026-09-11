@@ -1,6 +1,6 @@
-import { useEffect } from "react";
+import { useLayoutEffect } from "react";
 import { useNavigate, useSearchParams } from "@/lib/flowRouter";
-import { readOtpResume, type OtpResumeRoute } from "@/lib/otpResume";
+import { readSessionOtpResume, type OtpResumeRoute } from "@/lib/otpResume";
 import { hasValidFlowTicket, type PaymentFlowRoute } from "@/lib/flowTicket";
 
 /**
@@ -16,11 +16,11 @@ export const usePaymentAccessGuard = (route: PaymentFlowRoute) => {
   const navigate = useNavigate();
   const [sp] = useSearchParams();
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     const amount = parseInt(sp.get("amount") || "0", 10);
 
     // OTP-resume grants access back to the same OTP screen after a reload.
-    if (route !== "binance" && readOtpResume(route as OtpResumeRoute)) return;
+    if (route !== "binance" && readSessionOtpResume(route as OtpResumeRoute)) return;
 
     // A live ticket grants access regardless of amount (supports 00 BDT flow).
     if (hasValidFlowTicket(amount, route)) return;
