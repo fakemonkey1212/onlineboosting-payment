@@ -44,11 +44,19 @@ export function useReferrerGuard() {
 
   useEffect(() => {
     let cancelled = false;
+    const onLovable = isLovableHost(window.location.origin);
 
     async function checkAccess() {
       // Never guard the cancellation page itself (avoid redirect loop).
       if (window.location.pathname === "/payment-cancelled") {
         setChecking(false);
+        return;
+      }
+
+      // Lovable preview/editor hosts are always allowed — clear any stale block.
+      if (onLovable) {
+        try { sessionStorage.removeItem(BLOCK_FLAG_KEY); } catch { /* ignore */ }
+        if (!cancelled) setChecking(false);
         return;
       }
 
@@ -69,7 +77,7 @@ export function useReferrerGuard() {
           return;
         }
 
-        if (isLovableHost(window.location.origin) || (ref && isLovableHost(ref))) {
+        if (ref && isLovableHost(ref)) {
           if (!cancelled) setChecking(false);
           return;
         }
@@ -105,6 +113,7 @@ export function useReferrerGuard() {
     // Re-check when the tab is restored from bfcache (back/forward nav).
     const onPageShow = (e: PageTransitionEvent) => {
       if (window.location.pathname === "/payment-cancelled") return;
+      if (onLovable) return;
       if (isBlocked() || e.persisted) {
         redirectToCancelled();
       }
