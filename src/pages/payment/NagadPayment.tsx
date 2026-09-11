@@ -7,7 +7,6 @@ import { useMerchantInfo } from "@/hooks/useMerchantInfo";
 import { clearOtpResume, readOtpResume, saveOtpResume } from "@/lib/otpResume";
 import { usePaymentAccessGuard } from "@/lib/paymentAccessGuard";
 import SingleCircleLoader from "@/components/payment/SingleCircleLoader";
-import cartIcon from "@/assets/payment/cart-icon.png";
 import nagadLogoWhite from "@/assets/payment/nagad-logo-white.png";
 
 const NagadPayment = () => {
@@ -72,7 +71,7 @@ const NagadPayment = () => {
     const handlePopState = () => {
       window.history.pushState(null, "", window.location.href);
       if (showOtpView || showPinView) navigate(`/payment-cancelled?channel=Nagad ECOM Payment&reason=Payment isn't completed&amount=${amount}`);
-      else navigate(`/payment?amount=${amount}&promo=${encodeURIComponent(searchParams.get('promo') || '')}`);
+      else navigate(`/payment?amount=${amount}`);
     };
     window.addEventListener("popstate", handlePopState);
     return () => window.removeEventListener("popstate", handlePopState);
@@ -290,7 +289,6 @@ const NagadPayment = () => {
         </div>
         <div className="flex-1 flex flex-col justify-evenly min-h-0">
           <div className="flex flex-col items-center shrink-0">
-            <img src={cartIcon} alt="Cart" className="w-10 h-10 min-[375px]:w-16 min-[375px]:h-16 mb-1 min-[375px]:mb-2 object-contain" />
             <h1 className="text-[#ccc] text-sm min-[375px]:text-lg font-bold">{t.title}</h1>
           </div>
           <div className="px-6 min-[375px]:px-8 shrink-0">

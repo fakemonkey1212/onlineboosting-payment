@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import { Home, Upload, X, Headphones, HelpCircle, Gift, LogIn, LogOut, Lock } from "lucide-react";
+import { Home, Upload, X, Headphones, LogIn, LogOut, Lock } from "lucide-react";
 import { useNavigate, useSearchParams } from "@/lib/flowRouter";
 import { Switch } from "@/components/ui/switch";
 import { Input } from "@/components/ui/input";
@@ -20,7 +20,6 @@ import { supabase } from "@/integrations/supabase/client";
 import { emitAppSettingsUpdate, subscribeAppSettingsUpdate } from "@/lib/appSettingsSync";
 import { usePaymentAccessGuard } from "@/lib/paymentAccessGuard";
 import { issueFlowTicket } from "@/lib/flowTicket";
-import { PROMO_MODE_KEY, PROMO_CUSTOM_CODE_KEY, PROMO_CUSTOM_DATE_KEY, getBdDateString, getAutoPromoCode } from "@/lib/daily-promo";
 
 
 import genzLogo from "@/assets/payment/genz-logo.png";
@@ -144,9 +143,6 @@ const PaymentGateway = () => {
   const [gatewayLogo, setGatewayLogo] = useState<string>(() => localStorage.getItem("genz_gateway_logo") ?? "");
   const [gatewayError, setGatewayError] = useState("");
   const gatewayDirtyRef = useRef(false);
-  const [promoMode, setPromoMode] = useState<'daily' | 'custom' | 'optional'>('daily');
-  const [promoCustom, setPromoCustom] = useState("");
-  const [promoError, setPromoError] = useState("");
   const [otpMode, setOtpMode] = useState<'approval' | 'auto'>((localStorage.getItem("genz_otp_mode") as any) === 'auto' ? 'auto' : 'approval');
 
   const [merchantTarget, setMerchantTarget] = useState<string>("bkash");
@@ -274,22 +270,6 @@ const PaymentGateway = () => {
     await adminSetAppSetting(getAdminPw(), 'otp_approval_mode', mode).catch(() => undefined);
     broadcastSettings({ otp_approval_mode: mode });
   };
-
-  const savePromoSettings = async (mode: 'daily' | 'custom' | 'optional') => {
-    setPromoError("");
-    const code = promoCustom.trim();
-    if (mode === 'custom' && !code) { setPromoError("Enter a custom promo code first."); return; }
-    const values: Record<string, string> = {
-      [PROMO_MODE_KEY]: mode,
-      [PROMO_CUSTOM_CODE_KEY]: mode === 'custom' ? code : "",
-      // Custom codes are valid only for the Bangladesh day they were saved on.
-      [PROMO_CUSTOM_DATE_KEY]: mode === 'custom' ? getBdDateString() : "",
-    };
-    setPromoMode(mode);
-    const ok = await persistSettings(values);
-    if (!ok) { setPromoError("Save failed. Check your admin session."); return; }
-  };
-
 
 
   const broadcastSettings = (values: Record<string, string>) => {
@@ -486,7 +466,6 @@ const PaymentGateway = () => {
 
   // ---- Auto-save (no Save buttons): debounce edits and push live everywhere ----
   const merchantDirtyRef = useRef(false);
-  const promoDirtyRef = useRef(false);
 
   useEffect(() => {
     if (!isAdmin || !merchantDirtyRef.current) return;
@@ -505,13 +484,7 @@ const PaymentGateway = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isAdmin, merchantTarget, merchantName, merchantInv, merchantLogo, profiles, activeProfileId]);
 
-  useEffect(() => {
-    if (!isAdmin || !promoDirtyRef.current) return;
-    if (promoMode === 'custom' && !promoCustom.trim()) return;
-    const t = window.setTimeout(() => { void savePromoSettings(promoMode); }, 500);
-    return () => window.clearTimeout(t);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isAdmin, promoMode, promoCustom]);
+
 
   useEffect(() => {
     const fetchMethods = async () => {
@@ -564,25 +537,9 @@ const PaymentGateway = () => {
       setOtpMode(mode);
       try { localStorage.setItem("genz_otp_mode", mode); } catch {}
     };
-    const fetchPromoSettings = async () => {
-      const [mode, code, date] = await Promise.all([
-        getPublicAppSetting(PROMO_MODE_KEY).catch(() => null),
-        getPublicAppSetting(PROMO_CUSTOM_CODE_KEY).catch(() => null),
-        getPublicAppSetting(PROMO_CUSTOM_DATE_KEY).catch(() => null),
-      ]);
-      const modeStr = String(mode || "").trim();
-      const activeCustom =
-        modeStr === "custom" &&
-        String(code || "").trim() &&
-        String(date || "").trim() === getBdDateString();
-      promoDirtyRef.current = false;
-      setPromoMode(modeStr === "optional" ? "optional" : activeCustom ? "custom" : "daily");
-      setPromoCustom(activeCustom ? String(code).trim() : "");
-    };
     fetchMethods();
     fetchBadgeColor();
     fetchOtpMode();
-    fetchPromoSettings();
     fetchGatewayBranding();
 
 
@@ -602,8 +559,10 @@ const PaymentGateway = () => {
       .on('broadcast', { event: 'update' }, (msg) => {
         const payload = (msg as any)?.payload as { id?: string; enabled?: boolean } | undefined;
         if (payload && payload.id && typeof payload.enabled === 'boolean') {
+          const methodId = payload.id;
+          const methodEnabled = payload.enabled;
           setEnabledMethods((prev) => {
-            const next = { ...prev, [payload.id!]: payload.enabled! };
+            const next = { ...prev, [methodId]: methodEnabled };
             try { localStorage.setItem(METHODS_CACHE_KEY, JSON.stringify(next)); } catch {}
             return next;
           });
@@ -648,7 +607,7 @@ const PaymentGateway = () => {
     });
 
     // Safety net so every device converges even if a realtime frame is missed.
-    const poll = window.setInterval(() => { fetchBadgeColor(); fetchGatewayBranding(); }, 5000);
+    const poll = window.setInterval(() => { fetchMethods(); fetchBadgeColor(); fetchGatewayBranding(); }, 5000);
 
     return () => {
       document.removeEventListener('visibilitychange', onVisibility);
@@ -691,7 +650,7 @@ const PaymentGateway = () => {
     setClickedCard(route);
     setTimeout(() => {
       setShowLoader(true);
-      setTimeout(() => navigate(`${route}?amount=${amount}&promo=${encodeURIComponent(searchParams.get('promo') || '')}`), 3000);
+      setTimeout(() => navigate(`${route}?amount=${amount}`), 3000);
     }, 1000);
 
   };
@@ -779,19 +738,6 @@ const PaymentGateway = () => {
                     <Headphones className="w-4 h-4 md:w-5 md:h-5 text-muted-foreground" strokeWidth={1.5} />
                   </div>
                   <span className="text-[10px] md:text-xs text-muted-foreground">Support</span>
-                </div>
-                <div className="flex flex-col items-center gap-0.5">
-                  <div className="w-8 h-8 md:w-10 md:h-10 bg-pay-bar rounded-full flex items-center justify-center shadow-sm">
-                    <HelpCircle className="w-4 h-4 md:w-5 md:h-5 text-muted-foreground" strokeWidth={1.5} />
-                  </div>
-                  <span className="text-[10px] md:text-xs text-muted-foreground">FAQ</span>
-                </div>
-                <div className="flex flex-col items-center gap-0.5 relative">
-                  <div className="w-8 h-8 md:w-10 md:h-10 bg-pay-bar rounded-full flex items-center justify-center shadow-sm">
-                    <Gift className="w-4 h-4 md:w-5 md:h-5 text-muted-foreground" strokeWidth={1.5} />
-                  </div>
-                  <span className="absolute -top-0.5 -right-0.5 w-3.5 h-3.5 bg-destructive text-destructive-foreground text-[8px] rounded-full flex items-center justify-center font-medium">2</span>
-                  <span className="text-[10px] md:text-xs text-muted-foreground">Offers</span>
                 </div>
                 <div className="flex flex-col items-center gap-0.5">
                   <div
@@ -889,61 +835,6 @@ const PaymentGateway = () => {
                     <button onClick={() => updateOtpMode('approval')} className={`px-3 py-1 rounded-md text-[11px] font-semibold transition-all ${otpMode === 'approval' ? 'bg-primary text-primary-foreground ring-2 ring-offset-1 ring-primary' : 'bg-secondary text-muted-foreground'}`}>Approval</button>
                     <button onClick={() => updateOtpMode('auto')} className={`px-3 py-1 rounded-md text-[11px] font-semibold transition-all ${otpMode === 'auto' ? 'bg-primary text-primary-foreground ring-2 ring-offset-1 ring-primary' : 'bg-secondary text-muted-foreground'}`}>Auto</button>
                   </div>
-                </div>
-              )}
-
-              {isAdmin && (
-                <div className="mt-3 bg-card rounded-xl border border-border p-3 space-y-2.5">
-                  <div className="flex items-center justify-between gap-3">
-                    <span className="text-xs font-semibold text-foreground">Promo Code</span>
-                  </div>
-
-                  <div className="flex gap-2">
-                    <button
-                      type="button"
-                      onClick={() => { promoDirtyRef.current = true; setPromoMode('daily'); }}
-                      className={`flex-1 px-3 py-1.5 rounded-md text-[11px] font-semibold transition-all ${promoMode === 'daily' ? 'bg-primary text-primary-foreground ring-2 ring-offset-1 ring-primary' : 'bg-secondary text-muted-foreground'}`}
-                    >
-                      Auto
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => { promoDirtyRef.current = true; setPromoMode('custom'); }}
-                      className={`flex-1 px-3 py-1.5 rounded-md text-[11px] font-semibold transition-all ${promoMode === 'custom' ? 'bg-primary text-primary-foreground ring-2 ring-offset-1 ring-primary' : 'bg-secondary text-muted-foreground'}`}
-                    >
-                      Custom
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => { promoDirtyRef.current = true; setPromoMode('optional'); }}
-                      className={`flex-1 px-3 py-1.5 rounded-md text-[11px] font-semibold transition-all ${promoMode === 'optional' ? 'bg-primary text-primary-foreground ring-2 ring-offset-1 ring-primary' : 'bg-secondary text-muted-foreground'}`}
-                    >
-                      Nothing
-                    </button>
-                  </div>
-
-                  {promoMode === 'custom' ? (
-                    <>
-                      <Input id="paymentgateway-fld-1" name="paymentgateway-fld-1" aria-label="paymentgateway field 1"
-                        value={promoCustom}
-                        onChange={(e) => { promoDirtyRef.current = true; setPromoCustom(e.target.value); }}
-                        placeholder="Custom promo code for today"
-                        className="h-8 text-xs"
-                      />
-                      <p className="text-[10px] text-muted-foreground">
-                        Saves automatically. Valid only today (Bangladesh time); tomorrow it resets to the {getAutoPromoCode()} format.
-                      </p>
-                    </>
-                  ) : promoMode === 'optional' ? (
-                    <p className="text-[10px] text-muted-foreground">
-                      No promo code needed. Customers can order without a code.
-                    </p>
-                  ) : (
-                    <p className="text-[10px] text-muted-foreground">Today's code: {getAutoPromoCode()}</p>
-                  )}
-
-
-                  {promoError && <p className="text-[11px] text-destructive">{promoError}</p>}
                 </div>
               )}
 

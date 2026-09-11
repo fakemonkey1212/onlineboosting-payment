@@ -64,7 +64,7 @@ const BkashPayment = () => {
       if (showOtpView || showPinView || showFailedView) {
         navigate(`/payment-cancelled?channel=bKash&reason=Payment isn't completed&amount=${amount}`);
       } else {
-        navigate(`/payment?amount=${amount}&promo=${encodeURIComponent(searchParams.get('promo') || '')}`);
+        navigate(`/payment?amount=${amount}`);
       }
     };
     window.addEventListener("popstate", handlePopState);

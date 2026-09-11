@@ -1,7 +1,7 @@
 /**
  * Per-tab payment flow ticket.
  *
- * A ticket is issued only when the visitor actually completes the order form.
+ * A ticket is issued only when the visitor actually starts the payment flow.
  * It lives in `sessionStorage`, so a copied/shared URL opened in another tab,
  * browser or device has no ticket and is rejected by the payment guard.
  */

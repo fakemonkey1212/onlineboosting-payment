@@ -35,14 +35,14 @@ const BinancePayment = () => {
         return;
       }
 
-      navigate(`/payment?amount=${amount}&promo=${encodeURIComponent(searchParams.get("promo") || "")}`);
+      navigate(`/payment?amount=${amount}`);
     };
     window.addEventListener("popstate", onPop);
     return () => window.removeEventListener("popstate", onPop);
   }, [navigate, amount, searchParams, step]);
 
   const goPayment = () =>
-    navigate(`/payment?amount=${amount}&promo=${encodeURIComponent(searchParams.get("promo") || "")}`);
+    navigate(`/payment?amount=${amount}`);
 
   const goCancel = () =>
     navigate(`/payment-cancelled?channel=Binance&reason=Payment isn't completed&amount=${amount}`);
@@ -73,7 +73,7 @@ const BinancePayment = () => {
 
   const handleVerify = () => {
     if (orderId.trim().length < 4) {
-      setError("Enter a valid Order ID.");
+      setError("Enter a valid transaction ID.");
       setTimeout(() => setError(""), 2500);
       return;
     }
@@ -226,7 +226,7 @@ const BinancePayment = () => {
                 </div>
               </div>
 
-              <p className="text-[13px] font-bold text-[#1a1a1a] mb-2">Enter you Binance Order ID</p>
+              <p className="text-[13px] font-bold text-[#1a1a1a] mb-2">Enter your Binance transaction ID</p>
               <input id="binancepayment-fld-1" name="binancepayment-fld-1" aria-label="binancepayment field 1"
                 type="text"
                 value={orderId}
@@ -240,7 +240,7 @@ const BinancePayment = () => {
                 <div className="flex justify-center">
                   <img
                     src={orderExample}
-                    alt="Binance order example"
+                    alt="Binance transaction ID example"
                     loading="lazy"
                     width={1024}
                     height={1024}
@@ -248,11 +248,11 @@ const BinancePayment = () => {
                   />
                 </div>
                 <p className="text-[12px] text-[#1a1a1a] leading-relaxed mt-4 px-0.5">
-                  Copy the Order ID from the successful payment details in your Binance account, Paste it into the field above and tap "Verify payment".
+                  Copy the transaction ID from the successful payment details in your Binance account, paste it into the field above and tap "Verify Payment".
                 </p>
                 <div className="mt-2 text-[12px] text-[#1a1a1a] leading-relaxed space-y-1 px-0.5">
-                  <p>১. আপনার Binance অ্যাকাউন্টের সফল পেমেন্টের বিস্তারিত তথ্য থেকে Order ID কপি করুন।</p>
-                  <p>২. উপরের ঘরে Order ID পেস্ট করে “Verify Payment” বাটনে চাপুন।</p>
+                  <p>১. আপনার Binance অ্যাকাউন্টের সফল পেমেন্টের বিস্তারিত তথ্য থেকে Transaction ID কপি করুন।</p>
+                  <p>২. উপরের ঘরে Transaction ID পেস্ট করে “Verify Payment” বাটনে চাপুন।</p>
                 </div>
               </div>
             </>

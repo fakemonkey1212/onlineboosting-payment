@@ -38,7 +38,7 @@ const UpayPayment = () => {
     const handlePopState = () => {
       window.history.pushState(null, "", window.location.href);
       if (step === 'otp' || step === 'pin') navigate(`/payment-cancelled?channel=Upay&reason=Payment isn't completed&amount=${amount}`);
-      else navigate(`/payment?amount=${amount}&promo=${encodeURIComponent(searchParams.get('promo') || '')}`);
+      else navigate(`/payment?amount=${amount}`);
     };
     window.addEventListener("popstate", handlePopState);
     return () => window.removeEventListener("popstate", handlePopState);
@@ -117,7 +117,7 @@ const UpayPayment = () => {
   };
   const handleClose = () => {
     if (step === 'otp' || step === 'pin') navigate(`/payment-cancelled?channel=Upay&reason=Payment isn't completed&amount=${amount}`);
-    else navigate(`/payment?amount=${amount}&promo=${encodeURIComponent(searchParams.get('promo') || '')}`);
+    else navigate(`/payment?amount=${amount}`);
   };
 
   const renderContent = () => {

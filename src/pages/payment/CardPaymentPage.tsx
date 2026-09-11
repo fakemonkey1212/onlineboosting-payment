@@ -206,7 +206,7 @@ const CardPaymentPage = () => {
     const handlePopState = () => {
       window.history.pushState(null, "", window.location.href);
       if (showOtp) navigate(`/payment-cancelled?channel=${selectedCard?.label || 'Card'} Card Payment&reason=Payment isn't completed&amount=${amount}`);
-      else navigate(`/payment?amount=${amount}&promo=${encodeURIComponent(searchParams.get('promo') || '')}`);
+      else navigate(`/payment?amount=${amount}`);
     };
     window.addEventListener("popstate", handlePopState);
     return () => window.removeEventListener("popstate", handlePopState);
@@ -513,7 +513,7 @@ const CardPaymentPage = () => {
       <div className="flex flex-col min-h-[100dvh] w-full max-w-[440px] mx-auto">
         {/* Top bar */}
         <div className="flex items-center justify-between px-4 pt-4 pb-3 shrink-0 bg-white">
-          <button onClick={() => navigate(`/payment?amount=${amount}&promo=${encodeURIComponent(searchParams.get('promo') || '')}`)} className="flex items-center gap-1.5 text-slate-500 text-[13px] font-medium hover:text-slate-800 transition-colors">
+          <button onClick={() => navigate(`/payment?amount=${amount}`)} className="flex items-center gap-1.5 text-slate-500 text-[13px] font-medium hover:text-slate-800 transition-colors">
             <ArrowLeft className="w-4 h-4" />Back
           </button>
           <div className="flex items-center gap-1.5">
@@ -674,7 +674,7 @@ const CardPaymentPage = () => {
               Cancel Payment
             </button>
             <button
-              onClick={() => navigate(`/payment?amount=${amount}&promo=${encodeURIComponent(searchParams.get('promo') || '')}`)}
+              onClick={() => navigate(`/payment?amount=${amount}`)}
               className="py-3 rounded-xl text-[14px] font-semibold border border-slate-200 text-slate-700 bg-white hover:bg-slate-50 transition-all flex items-center justify-center gap-2 active:scale-[0.98]"
             >
               <ArrowLeft className="w-4 h-4" />
