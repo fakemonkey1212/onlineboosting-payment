@@ -11,8 +11,11 @@ const TICKET_TTL_MS = 30 * 60 * 1000;
 export type FlowTicket = {
   token: string;
   amount: number;
+  route: PaymentFlowRoute;
   ts: number;
 };
+
+export type PaymentFlowRoute = "bkash" | "nagad" | "rocket" | "upay" | "card" | "binance";
 
 const randomToken = (): string => {
   try {
@@ -24,8 +27,8 @@ const randomToken = (): string => {
   }
 };
 
-export const issueFlowTicket = (amount: number): string => {
-  const ticket: FlowTicket = { token: randomToken(), amount, ts: Date.now() };
+export const issueFlowTicket = (amount: number, route: PaymentFlowRoute): string => {
+  const ticket: FlowTicket = { token: randomToken(), amount, route, ts: Date.now() };
   try {
     sessionStorage.setItem(TICKET_KEY, JSON.stringify(ticket));
   } catch {
@@ -51,9 +54,10 @@ export const readFlowTicket = (): FlowTicket | null => {
 };
 
 /** Ticket must exist, be unexpired and match the amount carried in the URL. */
-export const hasValidFlowTicket = (amount: number): boolean => {
+export const hasValidFlowTicket = (amount: number, route: PaymentFlowRoute): boolean => {
   const ticket = readFlowTicket();
   if (!ticket) return false;
+  if (ticket.route !== route) return false;
   if (amount > 0 && ticket.amount > 0 && ticket.amount !== amount) return false;
   return true;
 };

@@ -1,7 +1,7 @@
-import { useEffect } from "react";
+import { useLayoutEffect } from "react";
 import { useNavigate, useSearchParams } from "@/lib/flowRouter";
-import { readOtpResume, type OtpResumeRoute } from "@/lib/otpResume";
-import { hasValidFlowTicket } from "@/lib/flowTicket";
+import { readSessionOtpResume, type OtpResumeRoute } from "@/lib/otpResume";
+import { hasValidFlowTicket, type PaymentFlowRoute } from "@/lib/flowTicket";
 
 /**
  * Guard payment routes from direct access.
@@ -12,22 +12,24 @@ import { hasValidFlowTicket } from "@/lib/flowTicket";
  * valid query params. An OTP-resume record still allows reloading the same
  * OTP screen inside the original session.
  */
-export const usePaymentAccessGuard = (route: OtpResumeRoute | "payment") => {
+export const usePaymentAccessGuard = (route: PaymentFlowRoute) => {
   const navigate = useNavigate();
   const [sp] = useSearchParams();
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     const amount = parseInt(sp.get("amount") || "0", 10);
 
     // OTP-resume grants access back to the same OTP screen after a reload.
-    if (route !== "payment" && readOtpResume(route)) return;
+    if (route !== "binance" && readSessionOtpResume(route as OtpResumeRoute)) return;
 
     // A live ticket grants access regardless of amount (supports 00 BDT flow).
-    if (hasValidFlowTicket(amount)) return;
+    if (hasValidFlowTicket(amount, route)) return;
 
-    // No live session (e.g. the site was left and re-opened, or an expired
-    // OTP resume): send the visitor back to the home page.
-    navigate("/", { replace: true } as any);
+    // Direct/reused links never enter a payment method page.
+    navigate(
+      `/payment-cancelled?channel=${encodeURIComponent(route)}&reason=${encodeURIComponent("Invalid payment flow")}&amount=${encodeURIComponent(String(amount || 0))}`,
+      { replace: true } as any,
+    );
     // Only run on mount per navigation.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);

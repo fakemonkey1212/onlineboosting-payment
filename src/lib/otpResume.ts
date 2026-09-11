@@ -48,6 +48,17 @@ export const readOtpResume = (route?: OtpResumeRoute): OtpResumePayload | null =
   }
 };
 
+/** Only the current tab may resume a started OTP flow. */
+export const readSessionOtpResume = (route: OtpResumeRoute): OtpResumePayload | null => {
+  if (typeof window === "undefined") return null;
+  try {
+    const parsed = parsePayload(window.sessionStorage.getItem(OTP_RESUME_SESSION_KEY));
+    return parsed?.route === route ? parsed : null;
+  } catch {
+    return null;
+  }
+};
+
 export const saveOtpResume = (route: OtpResumeRoute, params: string, state: Record<string, unknown>) => {
   if (typeof window === "undefined") return;
   try {
