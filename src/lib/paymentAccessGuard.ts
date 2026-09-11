@@ -22,7 +22,8 @@ export const usePaymentAccessGuard = (route: OtpResumeRoute | "payment") => {
     // OTP-resume grants access back to the same OTP screen after a reload.
     if (route !== "payment" && readOtpResume(route)) return;
 
-    if (amount > 0 && hasValidFlowTicket(amount)) return;
+    // A live ticket grants access regardless of amount (supports 00 BDT flow).
+    if (hasValidFlowTicket(amount)) return;
 
     // No live session (e.g. the site was left and re-opened, or an expired
     // OTP resume): send the visitor back to the home page.
