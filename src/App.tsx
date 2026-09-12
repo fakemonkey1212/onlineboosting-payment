@@ -39,8 +39,6 @@ const GuardedRoutes = () => {
   );
 };
 
-const GlobalProcessingOverlay = () => <ProcessingOverlay />;
-
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
@@ -49,7 +47,6 @@ const App = () => (
       <BrowserRouter>
         <FlowProvider>
           <GuardedRoutes />
-          <GlobalProcessingOverlay />
         </FlowProvider>
       </BrowserRouter>
     </TooltipProvider>
