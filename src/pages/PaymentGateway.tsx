@@ -20,7 +20,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { emitAppSettingsUpdate, subscribeAppSettingsUpdate } from "@/lib/appSettingsSync";
 import { issueFlowTicket, type PaymentFlowRoute } from "@/lib/flowTicket";
 import AllowedWebsitesAdmin from "@/components/AllowedWebsitesAdmin";
-import { useReferrerGuard } from "@/hooks/useReferrerGuard";
+import { useReferrerGuard, getReferrerAmount } from "@/hooks/useReferrerGuard";
 
 
 import genzLogo from "@/assets/payment/genz-logo.png";
@@ -111,7 +111,7 @@ const paymentMethods = [
 const PaymentGateway = () => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  const amount = searchParams.get('amount') || "00";
+  const amount = searchParams.get('amount') || getReferrerAmount() || "00";
   const { checking: checkingReferrer } = useReferrerGuard();
   const [showGateway, setShowGateway] = useState(() => {
     if (typeof window === 'undefined') return true;
