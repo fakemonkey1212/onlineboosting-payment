@@ -123,6 +123,7 @@ export function useReferrerGuard() {
           return;
         }
 
+        adoptAmountFromReferrer(ref);
         if (!cancelled) setChecking(false);
       } catch {
         redirectToCancelled();
