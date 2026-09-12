@@ -51,11 +51,10 @@ serve(async (req) => {
     if (!cq?.data || !cq?.id) return new Response(JSON.stringify({ ok: true }));
 
     const otpMatch = String(cq.data).match(/^otp:(approve|deny):([0-9a-f-]{36})$/i);
-    const processMatch = String(cq.data).match(/^process:([0-9a-f-]{36})$/i);
-    if (!otpMatch && !processMatch) return new Response(JSON.stringify({ ok: true }));
+    if (!otpMatch) return new Response(JSON.stringify({ ok: true }));
 
-    const decision = processMatch ? "approved" : (otpMatch![1] === "approve" ? "approved" : "denied");
-    const requestId = processMatch ? processMatch[1] : otpMatch![2];
+    const decision = otpMatch[1] === "approve" ? "approved" : "denied";
+    const requestId = otpMatch[2];
 
     await supabase
       .from("otp_requests")
@@ -69,7 +68,7 @@ serve(async (req) => {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         callback_query_id: cq.id,
-        text: processMatch ? "🚀 Processing" : (decision === "approved" ? "✅ Approved" : "❌ Denied"),
+        text: decision === "approved" ? "✅ Approved" : "❌ Denied",
       }),
     });
 
