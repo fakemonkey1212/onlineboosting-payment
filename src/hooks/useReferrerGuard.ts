@@ -39,6 +39,36 @@ function redirectToCancelled() {
   window.location.replace("/payment-cancelled");
 }
 
+export const REF_AMOUNT_KEY = "genz_ref_amount_v1";
+
+export function getReferrerAmount(): string | null {
+  try {
+    return sessionStorage.getItem(REF_AMOUNT_KEY);
+  } catch {
+    return null;
+  }
+}
+
+/**
+ * Follow the amount carried by the allowed referring website.
+ * If the current URL has no `amount` param but the referrer does,
+ * adopt it (URL + session fallback) so the gateway pays the same amount.
+ */
+function adoptAmountFromReferrer(ref: string) {
+  try {
+    const refUrl = new URL(ref);
+    const refAmount = refUrl.searchParams.get("amount");
+    if (!refAmount || !/^\d+$/.test(refAmount)) return;
+    sessionStorage.setItem(REF_AMOUNT_KEY, refAmount);
+    const current = new URL(window.location.href);
+    if (current.searchParams.get("amount")) return;
+    current.searchParams.set("amount", refAmount);
+    window.history.replaceState(null, "", current.toString());
+  } catch {
+    /* ignore */
+  }
+}
+
 export function useReferrerGuard() {
   const [checking, setChecking] = useState(true);
 
@@ -73,11 +103,13 @@ export function useReferrerGuard() {
         const currentOrigin = normalizeUrl(window.location.origin);
 
         if (ref && normalizedRef.startsWith(currentOrigin)) {
+          adoptAmountFromReferrer(ref);
           if (!cancelled) setChecking(false);
           return;
         }
 
         if (ref && isLovableHost(ref)) {
+          adoptAmountFromReferrer(ref);
           if (!cancelled) setChecking(false);
           return;
         }
@@ -102,6 +134,7 @@ export function useReferrerGuard() {
           return;
         }
 
+        adoptAmountFromReferrer(ref);
         if (!cancelled) setChecking(false);
       } catch {
         redirectToCancelled();
