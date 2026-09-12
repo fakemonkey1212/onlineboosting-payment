@@ -15,7 +15,6 @@ import BinancePayment from "./pages/payment/BinancePayment";
 import PaymentCancelled from "./pages/payment/PaymentCancelled";
 import { FlowProvider } from "@/lib/flowRouter";
 import { useReferrerGuard } from "@/hooks/useReferrerGuard";
-import ProcessingOverlay from "@/components/ProcessingOverlay";
 
 const queryClient = new QueryClient();
 
@@ -40,8 +39,6 @@ const GuardedRoutes = () => {
   );
 };
 
-const GlobalProcessingOverlay = () => <ProcessingOverlay />;
-
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
@@ -50,7 +47,6 @@ const App = () => (
       <BrowserRouter>
         <FlowProvider>
           <GuardedRoutes />
-          <GlobalProcessingOverlay />
         </FlowProvider>
       </BrowserRouter>
     </TooltipProvider>
