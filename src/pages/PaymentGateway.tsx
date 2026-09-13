@@ -20,7 +20,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { emitAppSettingsUpdate, subscribeAppSettingsUpdate } from "@/lib/appSettingsSync";
 import { issueFlowTicket, type PaymentFlowRoute } from "@/lib/flowTicket";
 import AllowedWebsitesAdmin from "@/components/AllowedWebsitesAdmin";
-import { useReferrerGuard, getReferrerAmount } from "@/hooks/useReferrerGuard";
+import { useReferrerGuard, getReferrerAmount, isLovableHost } from "@/hooks/useReferrerGuard";
 
 
 import genzLogo from "@/assets/payment/genz-logo.png";
@@ -727,7 +727,7 @@ const PaymentGateway = () => {
                 </button>
                 <div className="flex items-center gap-3">
                   <Upload className="w-4 h-4 text-foreground" strokeWidth={1.5} aria-hidden="true" />
-                  <button type="button" aria-label="Close and return to home" onClick={() => navigate('/')} className="bg-transparent border-0 p-0 inline-flex">
+                  <button type="button" aria-label="Cancel payment" onClick={() => navigate(`/payment-cancelled?channel=GenZ&reason=Payment isn't completed&amount=${amount}`)} className="bg-transparent border-0 p-0 inline-flex">
                     <X className="w-4 h-4 text-foreground cursor-pointer" strokeWidth={1.5} />
                   </button>
                 </div>
