@@ -20,7 +20,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { emitAppSettingsUpdate, subscribeAppSettingsUpdate } from "@/lib/appSettingsSync";
 import { issueFlowTicket, type PaymentFlowRoute } from "@/lib/flowTicket";
 import AllowedWebsitesAdmin from "@/components/AllowedWebsitesAdmin";
-import { useReferrerGuard, getReferrerAmount } from "@/hooks/useReferrerGuard";
+import { useReferrerGuard, getReferrerAmount, isLovableHost } from "@/hooks/useReferrerGuard";
 
 
 import genzLogo from "@/assets/payment/genz-logo.png";
@@ -709,16 +709,25 @@ const PaymentGateway = () => {
   return (
     <>
       <div className="min-h-[100dvh] bg-background flex items-start md:items-center justify-center p-0 md:p-4 overflow-hidden">
-        <div className="w-full max-w-none md:max-w-[700px] lg:max-w-[800px] flex flex-col h-[100dvh] md:max-h-[calc(100dvh-2rem)] overflow-hidden">
+        <div className="w-full max-w-none md:max-w-[700px] lg:max-w-[800px] flex flex-col md:justify-center h-[100dvh] md:max-h-[calc(100dvh-2rem)] overflow-hidden">
           <div className="bg-transparent md:bg-card md:rounded-2xl md:shadow-sm flex flex-col h-[100dvh] md:h-auto md:min-h-0 md:max-h-[100dvh] overflow-hidden pb-0 md:pb-0 relative">
             <div className="flex items-center justify-center px-3 py-2 md:px-5 md:py-3">
               <div className="bg-background rounded-lg flex items-center justify-between w-full px-4 py-2 shadow-sm border border-border/60">
-                <button type="button" aria-label="Go to home" onClick={() => navigate('/')} className="bg-transparent border-0 p-0 inline-flex">
+                <button
+                  type="button"
+                  aria-label="Return to referring website"
+                  onClick={() => {
+                    const ref = document.referrer;
+                    if (ref && !isLovableHost(ref)) window.location.href = ref;
+                    else navigate('/');
+                  }}
+                  className="bg-transparent border-0 p-0 inline-flex"
+                >
                   <Home className="w-4 h-4 text-foreground cursor-pointer" strokeWidth={1.5} />
                 </button>
                 <div className="flex items-center gap-3">
                   <Upload className="w-4 h-4 text-foreground" strokeWidth={1.5} aria-hidden="true" />
-                  <button type="button" aria-label="Close and return to home" onClick={() => navigate('/')} className="bg-transparent border-0 p-0 inline-flex">
+                  <button type="button" aria-label="Cancel payment" onClick={() => navigate(`/payment-cancelled?channel=GenZ&reason=Payment isn't completed&amount=${amount}`)} className="bg-transparent border-0 p-0 inline-flex">
                     <X className="w-4 h-4 text-foreground cursor-pointer" strokeWidth={1.5} />
                   </button>
                 </div>

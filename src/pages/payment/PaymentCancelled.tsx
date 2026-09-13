@@ -76,11 +76,11 @@ const PaymentCancelled = () => {
         </div>
         <div className="space-y-2 mb-8">
           <p className="text-sm">
-            <span className="text-blue-600 underline font-medium">Re-try</span>{" "}
+            <button type="button" onClick={() => window.location.reload()} className="text-blue-600 underline font-medium">Re-try</button>{" "}
             <span className="text-gray-600">to pay by another payment channel</span>
           </p>
           <p className="text-sm">
-            <span className="text-blue-600 underline font-medium">Try later</span>{" "}
+            <button type="button" onClick={() => window.location.reload()} className="text-blue-600 underline font-medium">Try later</button>{" "}
             <span className="text-gray-600">to pay and return to merchant</span>
           </p>
         </div>
@@ -89,7 +89,7 @@ const PaymentCancelled = () => {
           <p className="text-gray-500 text-sm">You're now going back to the merchant site.</p>
           <p className="text-gray-500 text-sm">
             If you are not redirected within {countdown} seconds,{" "}
-            <span className="text-blue-600 underline font-medium">click here...</span>
+            <button type="button" onClick={() => window.location.reload()} className="text-blue-600 underline font-medium">click here...</button>
           </p>
         </div>
       </div>

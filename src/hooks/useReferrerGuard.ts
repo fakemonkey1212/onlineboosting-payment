@@ -7,7 +7,7 @@ function normalizeUrl(url: string): string {
   return url.replace(/^https?:\/\//, "").replace(/\/+$/, "").toLowerCase();
 }
 
-function isLovableHost(value: string): boolean {
+export function isLovableHost(value: string): boolean {
   try {
     const hostname = new URL(value).hostname.toLowerCase();
     return ["lovable.app", "lovable.dev", "lovableproject.com"].some(
