@@ -25,7 +25,21 @@ const PaymentCancelled = () => {
   useEffect(() => {
     window.history.pushState(null, "", window.location.href);
     const handlePopState = () => {
-      navigate("/", { replace: true });
+      const allowedOrigin = getAllowedReferrerOrigin();
+      if (allowedOrigin) {
+        window.location.replace(allowedOrigin);
+      } else {
+        const ref = document.referrer;
+        if (ref) {
+          try {
+            window.location.replace(new URL(ref).origin);
+          } catch {
+            navigate("/", { replace: true });
+          }
+        } else {
+          navigate("/", { replace: true });
+        }
+      }
     };
     window.addEventListener("popstate", handlePopState);
     return () => window.removeEventListener("popstate", handlePopState);
