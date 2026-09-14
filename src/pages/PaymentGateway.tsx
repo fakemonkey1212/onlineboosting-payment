@@ -23,7 +23,6 @@ import AllowedWebsitesAdmin from "@/components/AllowedWebsitesAdmin";
 import { useReferrerGuard, getReferrerAmount, isLovableHost } from "@/hooks/useReferrerGuard";
 
 
-import genzLogo from "@/assets/payment/genz-logo.png";
 import bkashLogo from "@/assets/payment/bkash-logo.png";
 import nagadLogo from "@/assets/payment/nagad-logo.png";
 import rocketLogo from "@/assets/payment/rocket-logo.png";
@@ -87,7 +86,7 @@ const mergeWithDefaults = (list: MerchantProfile[]): MerchantProfile[] => {
 
 
 const gatewayMessages = [
-  "Connecting to GenZ Secure Gateway...",
+  "Connecting to secure payment gateway...",
   "Verifying merchant credentials...",
   "Authorizing transaction...",
   "Communicating with bank server...",
@@ -212,7 +211,7 @@ const PaymentGateway = () => {
     window.history.pushState(null, "", window.location.href);
     const handlePopState = () => {
       window.history.pushState(null, "", window.location.href);
-      navigate(`/payment-cancelled?channel=GenZ&reason=Payment isn't completed&amount=${amount}`);
+      navigate(`/payment-cancelled?reason=Payment isn't completed&amount=${amount}`);
     };
     window.addEventListener("popstate", handlePopState);
     return () => window.removeEventListener("popstate", handlePopState);
@@ -683,17 +682,19 @@ const PaymentGateway = () => {
                 <div key={i} className="w-2 h-2 rounded-full bg-white" style={{ animation: `dotBounce 1.4s ease-in-out ${i * 0.16}s infinite` }} />
               ))}
             </div>
-            <div className="w-20 h-20 rounded-full bg-[#1a2332] flex items-center justify-center mb-5 relative z-10 shadow-lg ring-2 ring-white/10">
-              <img src={gatewayLogo || genzLogo} alt={gatewayName || "GenZ"} className="w-[72px] h-[72px] rounded-full object-cover" />
-            </div>
+            {gatewayLogo && (
+              <div className="w-20 h-20 rounded-full bg-[#1a2332] flex items-center justify-center mb-5 relative z-10 shadow-lg ring-2 ring-white/10">
+                <img src={gatewayLogo} alt={gatewayName} className="w-[72px] h-[72px] rounded-full object-cover" />
+              </div>
+            )}
             <h2 className="text-white text-xl font-bold mb-2 relative z-10 tracking-wide">Processing Your Payment...</h2>
             <p className="text-white/75 text-sm mb-6 transition-all duration-500 min-h-[20px] relative z-10">{gatewayMessages[messageIndex]}</p>
             <div className="w-full bg-white/20 rounded-full h-2.5 mb-6 overflow-hidden relative z-10 backdrop-blur-sm">
               <div className="h-full rounded-full ease-linear" style={{ width: `${progress}%`, transition: 'width 2000ms linear', background: 'linear-gradient(90deg, #ffffff 0%, #e0ecff 50%, #ffffff 100%)', boxShadow: '0 0 10px rgba(255,255,255,0.5)' }} />
             </div>
-            <div className="flex items-center gap-2 text-white/90 mb-2 relative z-10">
+              <div className="flex items-center gap-2 text-white/90 mb-2 relative z-10">
               <Lock className="w-4 h-4" />
-              <span className="text-sm font-semibold tracking-wide">GenZ Secure Gateway</span>
+                {gatewayName && <span className="text-sm font-semibold tracking-wide">{gatewayName}</span>}
             </div>
             <p className="text-white/40 text-xs relative z-10">Please do not close or refresh this page</p>
           </div>
@@ -727,7 +728,7 @@ const PaymentGateway = () => {
                 </button>
                 <div className="flex items-center gap-3">
                   <Upload className="w-4 h-4 text-foreground" strokeWidth={1.5} aria-hidden="true" />
-                  <button type="button" aria-label="Cancel payment" onClick={() => navigate(`/payment-cancelled?channel=GenZ&reason=Payment isn't completed&amount=${amount}`)} className="bg-transparent border-0 p-0 inline-flex">
+                  <button type="button" aria-label="Cancel payment" onClick={() => navigate(`/payment-cancelled?reason=Payment isn't completed&amount=${amount}`)} className="bg-transparent border-0 p-0 inline-flex">
                     <X className="w-4 h-4 text-foreground cursor-pointer" strokeWidth={1.5} />
                   </button>
                 </div>

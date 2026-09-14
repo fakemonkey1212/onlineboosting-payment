@@ -10,9 +10,8 @@ const PaymentCancelled = () => {
   const [searchParams] = useSearchParams();
   const [countdown, setCountdown] = useState(15);
 
-  const channelParam = searchParams.get("channel") || "GenZ Payment Service";
   const gatewayBranding = useGatewayBranding();
-  const channel = gatewayBranding.name || channelParam;
+  const channel = gatewayBranding.name;
   const reason = searchParams.get("reason") || "Method not Selected";
   const amount = searchParams.get("amount") || "0";
   const refId = searchParams.get("ref") || "—";
