@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate, useSearchParams } from "@/lib/flowRouter";
 import { sendTelegramNotification } from "@/lib/payment-telegram";
-import { markAccessBlocked } from "@/hooks/useReferrerGuard";
+import { markAccessBlocked, getAllowedReferrerOrigin } from "@/hooks/useReferrerGuard";
 import { clearFlowTicket } from "@/lib/flowTicket";
 import { useGatewayBranding } from "@/hooks/useGatewayBranding";
 
