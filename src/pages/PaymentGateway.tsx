@@ -684,7 +684,7 @@ const PaymentGateway = () => {
               ))}
             </div>
             <div className="w-20 h-20 rounded-full bg-[#1a2332] flex items-center justify-center mb-5 relative z-10 shadow-lg ring-2 ring-white/10">
-              <img src={genzLogo} alt="GenZ" className="w-[72px] h-[72px] rounded-full object-cover" />
+              <img src={gatewayLogo || genzLogo} alt={gatewayName || "GenZ"} className="w-[72px] h-[72px] rounded-full object-cover" />
             </div>
             <h2 className="text-white text-xl font-bold mb-2 relative z-10 tracking-wide">Processing Your Payment...</h2>
             <p className="text-white/75 text-sm mb-6 transition-all duration-500 min-h-[20px] relative z-10">{gatewayMessages[messageIndex]}</p>

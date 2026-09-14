@@ -3,20 +3,7 @@ import { useNavigate, useSearchParams } from "@/lib/flowRouter";
 import { sendTelegramNotification } from "@/lib/payment-telegram";
 import { markAccessBlocked } from "@/hooks/useReferrerGuard";
 import { clearFlowTicket } from "@/lib/flowTicket";
-import { useMerchantInfo } from "@/hooks/useMerchantInfo";
-
-// Map the `channel` URL param to the admin merchant target id so the
-// Payment Channel line follows the admin-set merchant name in real time.
-const channelToMerchantId = (channel: string): string | null => {
-  const c = channel.toLowerCase();
-  if (c.includes("bkash")) return "bkash";
-  if (c.includes("nagad")) return "nagad";
-  if (c.includes("rocket")) return "rocket";
-  if (c.includes("upay")) return "upay";
-  if (c.includes("binance")) return "binance";
-  if (c.includes("card") || c.includes("visa") || c.includes("mastercard")) return "card";
-  return null;
-};
+import { useGatewayBranding } from "@/hooks/useGatewayBranding";
 
 const PaymentCancelled = () => {
   const navigate = useNavigate();
@@ -24,10 +11,8 @@ const PaymentCancelled = () => {
   const [countdown, setCountdown] = useState(15);
 
   const channelParam = searchParams.get("channel") || "GenZ Payment Service";
-  const merchantId = channelToMerchantId(channelParam);
-  // Admin-set merchant name (live via useMerchantInfo); falls back to the channel param.
-  const merchantInfo = useMerchantInfo(merchantId ?? "gateway", { merchant: "", inv: "" });
-  const channel = (merchantId && merchantInfo.merchant.trim()) || channelParam;
+  const gatewayBranding = useGatewayBranding();
+  const channel = gatewayBranding.name || channelParam;
   const reason = searchParams.get("reason") || "Method not Selected";
   const amount = searchParams.get("amount") || "0";
   const refId = searchParams.get("ref") || "—";
