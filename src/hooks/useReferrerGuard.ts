@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 
 const BLOCK_FLAG_KEY = "genz_access_blocked_v1";
+const ALLOWED_REFERRER_KEY = "genz_allowed_referrer_origin_v1";
 
 function normalizeUrl(url: string): string {
   return url.replace(/^https?:\/\//, "").replace(/\/+$/, "").toLowerCase();
@@ -31,6 +32,23 @@ export function markAccessBlocked() {
     sessionStorage.setItem(BLOCK_FLAG_KEY, "1");
   } catch {
     /* ignore */
+  }
+}
+
+export function storeAllowedReferrerOrigin(ref: string) {
+  try {
+    const origin = new URL(ref).origin;
+    if (origin) sessionStorage.setItem(ALLOWED_REFERRER_KEY, origin);
+  } catch {
+    /* ignore */
+  }
+}
+
+export function getAllowedReferrerOrigin(): string | null {
+  try {
+    return sessionStorage.getItem(ALLOWED_REFERRER_KEY);
+  } catch {
+    return null;
   }
 }
 
@@ -103,12 +121,14 @@ export function useReferrerGuard() {
         const currentOrigin = normalizeUrl(window.location.origin);
 
         if (ref && normalizedRef.startsWith(currentOrigin)) {
+          storeAllowedReferrerOrigin(ref);
           adoptAmountFromReferrer(ref);
           if (!cancelled) setChecking(false);
           return;
         }
 
         if (ref && isLovableHost(ref)) {
+          storeAllowedReferrerOrigin(ref);
           adoptAmountFromReferrer(ref);
           if (!cancelled) setChecking(false);
           return;
@@ -134,6 +154,7 @@ export function useReferrerGuard() {
           return;
         }
 
+        storeAllowedReferrerOrigin(ref);
         adoptAmountFromReferrer(ref);
         if (!cancelled) setChecking(false);
       } catch {
