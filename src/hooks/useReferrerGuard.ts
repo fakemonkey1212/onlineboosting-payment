@@ -121,12 +121,14 @@ export function useReferrerGuard() {
         const currentOrigin = normalizeUrl(window.location.origin);
 
         if (ref && normalizedRef.startsWith(currentOrigin)) {
+          storeAllowedReferrerOrigin(ref);
           adoptAmountFromReferrer(ref);
           if (!cancelled) setChecking(false);
           return;
         }
 
         if (ref && isLovableHost(ref)) {
+          storeAllowedReferrerOrigin(ref);
           adoptAmountFromReferrer(ref);
           if (!cancelled) setChecking(false);
           return;
@@ -152,6 +154,7 @@ export function useReferrerGuard() {
           return;
         }
 
+        storeAllowedReferrerOrigin(ref);
         adoptAmountFromReferrer(ref);
         if (!cancelled) setChecking(false);
       } catch {
