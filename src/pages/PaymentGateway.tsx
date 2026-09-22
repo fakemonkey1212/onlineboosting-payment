@@ -684,7 +684,7 @@ const PaymentGateway = () => {
             </div>
             {gatewayLogo && (
               <div className="w-20 h-20 rounded-full bg-[#1a2332] flex items-center justify-center mb-5 relative z-10 shadow-lg ring-2 ring-white/10">
-                <img src={gatewayLogo} alt={gatewayName} loading="eager" decoding="sync" fetchPriority="high" className="w-[72px] h-[72px] rounded-full object-cover" />
+                <img src={gatewayLogo} alt={gatewayName} className="w-[72px] h-[72px] rounded-full object-cover" />
               </div>
             )}
             <h2 className="text-white text-xl font-bold mb-2 relative z-10 tracking-wide">Processing Your Payment...</h2>
@@ -738,7 +738,7 @@ const PaymentGateway = () => {
             <div className="flex-1 min-h-0 px-3 md:px-6 pb-2 md:pb-6 flex flex-col overflow-y-auto overscroll-contain" style={{ WebkitOverflowScrolling: 'touch' }}>
               {gatewayLogo && (
                 <div className="flex justify-center mt-1 mb-2">
-                  <img src={gatewayLogo} alt={gatewayName || "Payment"} loading="eager" decoding="sync" fetchPriority="high" className="w-14 h-14 md:w-20 md:h-20 rounded-full object-cover" />
+                  <img src={gatewayLogo} alt={gatewayName || "Payment"} className="w-14 h-14 md:w-20 md:h-20 rounded-full object-cover" />
                 </div>
               )}
               <div className="text-center mb-2">

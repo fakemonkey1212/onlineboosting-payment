@@ -5,12 +5,6 @@ import { subscribeAppSettingsUpdate } from "@/lib/appSettingsSync";
 
 type Info = { merchant: string; inv: string; logo?: string };
 
-const preloadLogo = (logo?: string) => {
-  if (!logo || typeof window === "undefined") return;
-  const image = new Image();
-  image.src = logo;
-};
-
 /**
  * Reads admin-editable merchant name + invoice/ref from `app_settings`
  * via the public `get_public_app_setting` RPC. Values fall back to
@@ -40,7 +34,6 @@ export const useMerchantInfo = (methodId: string, defaults: Info): Info => {
     const logoKey = `logo_${methodId}`;
 
     const persist = (next: Info) => {
-      preloadLogo(next.logo);
       setInfo(next);
       try { localStorage.setItem(cacheKey, JSON.stringify(next)); } catch {}
     };
@@ -54,7 +47,6 @@ export const useMerchantInfo = (methodId: string, defaults: Info): Info => {
           inv: invKey in values ? (String(values[invKey]).trim() || "") : prev.inv,
           logo: logoKey in values ? (String(values[logoKey]).trim() || defaults.logo) : prev.logo,
         };
-        preloadLogo(next.logo);
         try { localStorage.setItem(cacheKey, JSON.stringify(next)); } catch {}
         return next;
       });
