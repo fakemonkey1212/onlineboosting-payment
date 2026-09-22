@@ -222,7 +222,7 @@ const BkashPayment = () => {
 
         {isLoading ? (
           <>
-            <div className="bg-[#E2136E] flex flex-col items-center justify-center" style={{ height: '370px' }}>
+            <div className="bg-[#E2136E] flex-1 flex flex-col items-center justify-center min-h-0">
               <div className="relative w-24 mb-3" style={{ height: '13px' }}>
                 <span className="absolute rounded-full animate-[dotRotate1_2.4s_linear_infinite]" style={{ width: '13px', height: '13px', backgroundColor: 'rgba(255,255,255,0.3)' }} />
                 <span className="absolute rounded-full animate-[dotRotate2_2.4s_linear_infinite]" style={{ width: '13px', height: '13px', backgroundColor: 'rgba(255,255,255,0.5)' }} />
@@ -238,7 +238,7 @@ const BkashPayment = () => {
           </>
         ) : showFailedView ? (
           <>
-            <div className="bg-[#E2136E] flex flex-col items-center justify-center relative" style={{ height: '370px' }}>
+            <div className="bg-[#E2136E] flex-1 flex flex-col items-center justify-center relative min-h-0">
               <div className="relative w-8 h-8 mb-4">
                 <svg width="32" height="32" viewBox="0 0 44 44" fill="none">
                   <path d="M 30.5 35 A 16 16 0 1 1 35 30.5" stroke="white" strokeWidth="2.5" strokeLinecap="round" fill="none" />
