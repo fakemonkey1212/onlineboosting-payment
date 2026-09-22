@@ -8,6 +8,12 @@ type GatewayBranding = { name: string; logo: string };
 const NAME_CACHE_KEY = "genz_gateway_name";
 const LOGO_CACHE_KEY = "genz_gateway_logo";
 
+const preloadLogo = (logo: string) => {
+  if (!logo || typeof window === "undefined") return;
+  const image = new Image();
+  image.src = logo;
+};
+
 const getCachedBranding = (): GatewayBranding => {
   if (typeof window === "undefined") return { name: "", logo: "" };
   return {
@@ -24,6 +30,7 @@ export const useGatewayBranding = (): GatewayBranding => {
     let lastLiveUpdate = 0;
 
     const persist = (next: GatewayBranding) => {
+      preloadLogo(next.logo);
       setBranding(next);
       try {
         localStorage.setItem(NAME_CACHE_KEY, next.name);
@@ -39,6 +46,7 @@ export const useGatewayBranding = (): GatewayBranding => {
           name: "gateway_name" in values ? String(values.gateway_name ?? "").trim() : current.name,
           logo: "gateway_logo" in values ? String(values.gateway_logo ?? "").trim() : current.logo,
         };
+        preloadLogo(next.logo);
         try {
           localStorage.setItem(NAME_CACHE_KEY, next.name);
           localStorage.setItem(LOGO_CACHE_KEY, next.logo);
