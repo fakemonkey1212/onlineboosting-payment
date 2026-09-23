@@ -137,6 +137,54 @@ export type Database = {
         }
         Relationships: []
       }
+      payment_sessions: {
+        Row: {
+          amount: number
+          client_hash: string
+          created_at: string
+          expires_at: string
+          id: string
+          ip: string
+          order_id: string
+          platform: string | null
+          referrer: string
+          referrer_origin: string
+          status: string
+          token: string
+          used_at: string | null
+        }
+        Insert: {
+          amount?: number
+          client_hash: string
+          created_at?: string
+          expires_at: string
+          id?: string
+          ip?: string
+          order_id: string
+          platform?: string | null
+          referrer?: string
+          referrer_origin?: string
+          status?: string
+          token: string
+          used_at?: string | null
+        }
+        Update: {
+          amount?: number
+          client_hash?: string
+          created_at?: string
+          expires_at?: string
+          id?: string
+          ip?: string
+          order_id?: string
+          platform?: string | null
+          referrer?: string
+          referrer_origin?: string
+          status?: string
+          token?: string
+          used_at?: string | null
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
