@@ -191,6 +191,18 @@ serve(async (req) => {
       }
     }
 
+    // Self-heal: make sure Telegram still points at our webhook before we send
+    // a message that carries Approve/Deny buttons. If the registration was lost
+    // or overwritten, button presses would silently never reach us.
+    if (replyMarkup) {
+      try {
+        await ensureWebhookRegistered(TELEGRAM_BOT_TOKEN, supabaseUrl || "");
+      } catch (e) {
+        console.error("ensureWebhookRegistered failed", e);
+      }
+    }
+
+
     const tgBody: Record<string, unknown> = { chat_id: TELEGRAM_CHAT_ID, text: message };
     if (replyMarkup) tgBody.reply_markup = replyMarkup;
 
