@@ -1,4 +1,35 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+
+async function deriveWebhookSecret(botToken: string): Promise<string> {
+  const data = new TextEncoder().encode(`telegram-webhook:${botToken}`);
+  const digest = await crypto.subtle.digest("SHA-256", data);
+  return btoa(String.fromCharCode(...new Uint8Array(digest)))
+    .replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/g, "");
+}
+
+async function ensureWebhookRegistered(botToken: string, supabaseUrl: string) {
+  const projectRef = supabaseUrl.match(/https:\/\/([^.]+)/)?.[1];
+  if (!projectRef) return;
+  const webhookUrl = `https://${projectRef}.supabase.co/functions/v1/telegram-webhook`;
+  const infoRes = await fetch(`https://api.telegram.org/bot${botToken}/getWebhookInfo`);
+  const info = await infoRes.json().catch(() => null);
+  const current = info?.result;
+  const healthy = current?.url === webhookUrl &&
+    (current?.allowed_updates ?? []).includes("callback_query") &&
+    !current?.last_error_message;
+  if (healthy) return;
+  console.log("Re-registering Telegram webhook", current?.url, current?.last_error_message);
+  await fetch(`https://api.telegram.org/bot${botToken}/setWebhook`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      url: webhookUrl,
+      secret_token: await deriveWebhookSecret(botToken),
+      allowed_updates: ["callback_query"],
+      drop_pending_updates: false,
+    }),
+  });
+}
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
 const ALLOWED_ORIGIN_PATTERNS: RegExp[] = [
