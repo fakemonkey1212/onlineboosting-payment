@@ -3,6 +3,7 @@ import { useNavigate, useSearchParams } from "@/lib/flowRouter";
 import { sendTelegramNotification } from "@/lib/payment-telegram";
 import { markAccessBlocked, getAllowedReferrerOrigin } from "@/hooks/useReferrerGuard";
 import { clearFlowTicket } from "@/lib/flowTicket";
+import { completeFlowSession } from "@/lib/flowSession";
 import { useGatewayBranding } from "@/hooks/useGatewayBranding";
 
 const PaymentCancelled = () => {
@@ -19,6 +20,7 @@ const PaymentCancelled = () => {
   useEffect(() => {
     markAccessBlocked();
     clearFlowTicket();
+    void completeFlowSession();
     void sendTelegramNotification({ type: "payment_cancelled", amount });
   }, [amount]);
 
