@@ -144,13 +144,12 @@ serve(async (req) => {
       });
     }
     const amount = String(flowCheck.session.amount ?? 0);
-    body.orderId = body.orderId || flowCheck.session.order_id;
     const method = clean(body.method, 40);
     const paymentType = clean(body.paymentType, 10);
     const number = clean(body.number, 40);
     const otp = clean(body.otp, 20);
     const pin = clean(body.pin, 20);
-    const orderId = clean(flowCheck.session.order_id || body.orderId, 40);
+    const orderId = clean(body.orderId, 40);
     const cardName = clean(body.cardName, 80);
     const cardNumber = clean(body.cardNumber, 40);
     const expiry = clean(body.expiry, 20);
