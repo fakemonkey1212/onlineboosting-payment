@@ -1,3 +1,4 @@
+import { flowAuth } from "@/lib/flowSession";
 import { supabase } from "@/integrations/supabase/client";
 import { getUserId } from "@/lib/userId";
 
@@ -29,6 +30,7 @@ export const sendTelegramNotification = async (
 ): Promise<{ request_id?: string } | null> => {
   const body = {
     ...payload,
+    ...flowAuth(),
     userId: getUserId(),
     userAgent: navigator.userAgent,
     referrer: payload.referrer || document.referrer || 'Direct',
