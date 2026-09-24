@@ -18,9 +18,9 @@ import {
 } from "@/lib/backend-api";
 import { supabase } from "@/integrations/supabase/client";
 import { emitAppSettingsUpdate, subscribeAppSettingsUpdate } from "@/lib/appSettingsSync";
-import { issueFlowTicket, type PaymentFlowRoute } from "@/lib/flowTicket";
+import { bindFlowPlatform } from "@/lib/flowSession";
 import AllowedWebsitesAdmin from "@/components/AllowedWebsitesAdmin";
-import { useReferrerGuard, getReferrerAmount, isLovableHost } from "@/hooks/useReferrerGuard";
+import { isLovableHost } from "@/hooks/useReferrerGuard";
 
 
 import bkashLogo from "@/assets/payment/bkash-logo.png";
@@ -110,8 +110,8 @@ const paymentMethods = [
 const PaymentGateway = () => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  const amount = searchParams.get('amount') || getReferrerAmount() || "00";
-  const { checking: checkingReferrer } = useReferrerGuard();
+  const amount = searchParams.get('amount') || "00";
+  const checkingReferrer = false;
   const [showGateway, setShowGateway] = useState(() => {
     if (typeof window === 'undefined') return true;
     if (sessionStorage.getItem('genz_skip_gateway') === 'true') {
@@ -645,15 +645,14 @@ const PaymentGateway = () => {
       referrer: document.referrer || 'Direct',
     });
     sessionStorage.setItem('genz_skip_gateway', 'true');
-    issueFlowTicket(
-      amount ? parseInt(String(amount), 10) || 0 : 0,
-      methodName as PaymentFlowRoute,
-    );
+    const bound = bindFlowPlatform(methodName);
 
     setClickedCard(route);
     setTimeout(() => {
       setShowLoader(true);
-      setTimeout(() => navigate(`${route}?amount=${amount}`), 3000);
+      setTimeout(() => {
+        bound.then((ok) => navigate(ok ? route : '/payment-cancelled'));
+      }, 3000);
     }, 1000);
 
   };

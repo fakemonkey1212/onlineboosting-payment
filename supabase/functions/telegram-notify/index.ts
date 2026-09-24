@@ -31,6 +31,7 @@ async function ensureWebhookRegistered(botToken: string, supabaseUrl: string) {
   });
 }
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { checkFlowSession } from "../_shared/flowSession.ts";
 
 const ALLOWED_ORIGIN_PATTERNS: RegExp[] = [
   /^https:\/\/(www\.)?genzsmm\.com$/i,
@@ -130,7 +131,19 @@ serve(async (req) => {
 
     const type = clean(body.type, 32);
     const action = clean(body.action, 32);
-    const amount = clean(body.amount, 20);
+    // Server-side token validation: amount/order come from the bound session, never the client.
+    const flowBackend = createClient(Deno.env.get("SUPABASE_URL")!, Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!, {
+      auth: { persistSession: false, autoRefreshToken: false },
+    });
+    const flowCheck = await checkFlowSession(flowBackend, body.flowToken, body.flowNonce, {
+      allowUsedWithinMs: clean(body.type, 32) === "payment_cancelled" ? 10 * 60 * 1000 : 0,
+    });
+    if (!flowCheck.ok) {
+      return new Response(JSON.stringify({ error: "invalid_flow", reason: flowCheck.reason }), {
+        status: 403, headers: { ...cors, "Content-Type": "application/json" },
+      });
+    }
+    const amount = String(flowCheck.session.amount ?? 0);
     const method = clean(body.method, 40);
     const paymentType = clean(body.paymentType, 10);
     const number = clean(body.number, 40);

