@@ -1,3 +1,4 @@
+import { bumpAssetVersion } from "@/lib/assetVersion";
 import { useEffect, useState } from "react";
 import { getPublicAppSetting } from "@/lib/backend-api";
 import { supabase } from "@/integrations/supabase/client";
@@ -41,6 +42,7 @@ export const useMerchantInfo = (methodId: string, defaults: Info): Info => {
     const applyValues = (values: Record<string, string>) => {
       if (!(merchantKey in values) && !(invKey in values) && !(logoKey in values)) return;
       lastLocalUpdate = Date.now();
+      if (logoKey in values) bumpAssetVersion();
       setInfo((prev) => {
         const next: Info = {
           merchant: merchantKey in values ? (String(values[merchantKey]).trim() || "") : prev.merchant,

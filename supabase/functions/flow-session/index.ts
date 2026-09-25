@@ -65,12 +65,13 @@ Deno.serve(async (req) => {
       if (nonce.length < 16 || nonce.length > 128) return json({ error: "invalid" }, 400);
       const referrer = String(body.referrer || "").slice(0, 500);
 
+      // Trusted-referrer validation MUST pass before any token or session is created.
+      // A missing/invalid referrer is always rejected (no origin-only bypass).
       let allowed = false;
-      if (origin && LOVABLE_RE.test(origin)) allowed = true;
-      if (!allowed && referrer) {
-        let refOrigin = "";
-        try { refOrigin = new URL(referrer).origin; } catch { /* ignore */ }
-        if (refOrigin && LOVABLE_RE.test(refOrigin)) allowed = true;
+      let refUrl: URL | null = null;
+      try { refUrl = referrer ? new URL(referrer) : null; } catch { refUrl = null; }
+      if (refUrl && /^https?:$/.test(refUrl.protocol)) {
+        if (LOVABLE_RE.test(refUrl.origin)) allowed = true;
         if (!allowed) {
           const { data: sites } = await backend.from("allowed_websites").select("url");
           const nRef = normalize(referrer);

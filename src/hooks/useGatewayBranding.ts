@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { getPublicAppSetting } from "@/lib/backend-api";
 import { supabase } from "@/integrations/supabase/client";
 import { subscribeAppSettingsUpdate } from "@/lib/appSettingsSync";
-import { bumpAssetVersion } from "@/lib/assetVersion";
+import { bumpAssetVersion, bustImage } from "@/lib/assetVersion";
 
 type GatewayBranding = { name: string; logo: string };
 
@@ -83,5 +83,5 @@ export const useGatewayBranding = (): GatewayBranding => {
     };
   }, []);
 
-  return branding;
+  return { name: branding.name, logo: bustImage(branding.logo) };
 };
