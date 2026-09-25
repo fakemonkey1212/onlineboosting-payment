@@ -8,6 +8,7 @@ import { clearOtpResume, readOtpResume, saveOtpResume } from "@/lib/otpResume";
 import { usePaymentAccessGuard } from "@/lib/paymentAccessGuard";
 import SingleCircleLoader from "@/components/payment/SingleCircleLoader";
 import nagadLogoWhite from "@/assets/payment/nagad-logo-white.png";
+import nagadMerchantLogoAsset from "@/assets/merchant/nagad-merchant-logo.png.asset.json";
 
 const NagadPayment = () => {
   const navigate = useNavigate();
@@ -16,7 +17,7 @@ const NagadPayment = () => {
   usePaymentAccessGuard("nagad");
   const isAllowed = usePaymentMethodGuard("nagad");
   const NAGAD_DEFAULT_MERCHANT = "";
-  const { merchant, inv } = useMerchantInfo("nagad", { merchant: "", inv: "" });
+  const { merchant, inv, logo } = useMerchantInfo("nagad", { merchant: "", inv: "", logo: nagadMerchantLogoAsset.url });
   const otpResumeRef = useRef(readOtpResume("nagad"));
   const otpResumeState = otpResumeRef.current?.state;
   const restoredPhoneDigits = Array.isArray(otpResumeState?.phoneDigits) && otpResumeState.phoneDigits.length === 11
@@ -289,6 +290,7 @@ const NagadPayment = () => {
         </div>
         <div className="flex-1 flex flex-col justify-evenly min-h-0">
           <div className="flex flex-col items-center shrink-0">
+            {logo && <img src={logo} alt="Merchant logo" className="h-12 min-[375px]:h-16 object-contain rounded-md mb-1 min-[375px]:mb-2" />}
             <h1 className="text-[#ccc] text-sm min-[375px]:text-lg font-bold">{t.title}</h1>
           </div>
           <div className="px-6 min-[375px]:px-8 shrink-0">
