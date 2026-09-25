@@ -127,10 +127,10 @@ export const useNavigate = () => {
         void completeFlowSession();
         target = "/payment-cancelled";
       } else if (path === "/" || path === "/payment") {
-        target = state ? `/p/${state.token}` : "/payment-cancelled";
+        target = state ? `/checkout/${state.token}` : "/payment-cancelled";
       } else {
         const method = path.replace(/^\/+/, "");
-        target = state ? `/p/${state.token}/${method}` : "/payment-cancelled";
+        target = state ? `/checkout/${method}/${state.token}` : "/payment-cancelled";
       }
       rr(target, opts);
       window.scrollTo(0, 0);

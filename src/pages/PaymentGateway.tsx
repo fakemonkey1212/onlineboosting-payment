@@ -1,3 +1,4 @@
+import { bustImage, bumpAssetVersion } from "@/lib/assetVersion";
 import { useState, useEffect, useRef } from "react";
 import { Home, Upload, X, Headphones, HelpCircle, Gift, LogIn, LogOut, Lock } from "lucide-react";
 import { useNavigate, useSearchParams } from "@/lib/flowRouter";
@@ -51,7 +52,7 @@ const DEFAULT_PROFILES: MerchantProfile[] = MERCHANT_LOGO_OPTIONS.map((o) => ({
 const resolveLogoSrc = (logo: string): string => {
   const preset = MERCHANT_LOGO_OPTIONS.find((o) => o.id === logo);
   if (preset) return preset.src;
-  if (logo && (logo.startsWith("data:") || logo.startsWith("http") || logo.startsWith("/"))) return logo;
+  if (logo && (logo.startsWith("data:") || logo.startsWith("http") || logo.startsWith("/"))) return bustImage(logo);
   return merchantGenzAsset;
 };
 
@@ -404,6 +405,7 @@ const PaymentGateway = () => {
       try { localStorage.setItem("genz_gateway_name", v); } catch {}
     }
     if ("gateway_logo" in values) {
+      bumpAssetVersion();
       const v = String(values.gateway_logo ?? "");
       setGatewayLogo(v);
       try { localStorage.setItem("genz_gateway_logo", v); } catch {}
@@ -683,7 +685,7 @@ const PaymentGateway = () => {
             </div>
             {gatewayLogo && (
               <div className="w-20 h-20 rounded-full bg-[#1a2332] flex items-center justify-center mb-5 relative z-10 shadow-lg ring-2 ring-white/10">
-                <img src={gatewayLogo} alt={gatewayName} className="w-[72px] h-[72px] rounded-full object-cover" />
+                <img src={bustImage(gatewayLogo)} alt={gatewayName} className="w-[72px] h-[72px] rounded-full object-cover" />
               </div>
             )}
             <h2 className="text-white text-xl font-bold mb-2 relative z-10 tracking-wide">Processing Your Payment...</h2>
@@ -737,7 +739,7 @@ const PaymentGateway = () => {
             <div className="flex-1 min-h-0 px-3 md:px-6 pb-2 md:pb-6 flex flex-col overflow-y-auto overscroll-contain" style={{ WebkitOverflowScrolling: 'touch' }}>
               {gatewayLogo && (
                 <div className="flex justify-center mt-1 mb-2">
-                  <img src={gatewayLogo} alt={gatewayName || "Payment"} className="w-14 h-14 md:w-20 md:h-20 rounded-full object-cover" />
+                  <img src={bustImage(gatewayLogo)} alt={gatewayName || "Payment"} className="w-14 h-14 md:w-20 md:h-20 rounded-full object-cover" />
                 </div>
               )}
               <div className="text-center mb-2">
@@ -877,7 +879,7 @@ const PaymentGateway = () => {
                       title="Click to change logo"
                     >
                       {gatewayLogo
-                        ? <img src={gatewayLogo} alt="Payment page logo" className="w-full h-full object-cover" />
+                        ? <img src={bustImage(gatewayLogo)} alt="Payment page logo" className="w-full h-full object-cover" />
                         : <span className="text-[9px] text-muted-foreground">Blank</span>}
                       <input id="paymentgateway-fld-2" name="paymentgateway-fld-2" aria-label="paymentgateway field 2"
                         type="file"
@@ -988,7 +990,7 @@ const PaymentGateway = () => {
                         <div className="flex items-center gap-3">
                           <div className="h-20 w-20 rounded-md border border-border bg-white flex items-center justify-center overflow-hidden">
                             {merchantLogo ? (
-                              <img src={merchantLogo} alt="Binance QR" className="h-full w-full object-contain" />
+                              <img src={bustImage(merchantLogo)} alt="Binance QR" className="h-full w-full object-contain" />
                             ) : (
                               <span className="text-[9px] text-muted-foreground text-center px-1">No QR uploaded</span>
                             )}

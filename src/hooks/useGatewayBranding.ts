@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { getPublicAppSetting } from "@/lib/backend-api";
 import { supabase } from "@/integrations/supabase/client";
 import { subscribeAppSettingsUpdate } from "@/lib/appSettingsSync";
+import { bumpAssetVersion } from "@/lib/assetVersion";
 
 type GatewayBranding = { name: string; logo: string };
 
@@ -34,6 +35,7 @@ export const useGatewayBranding = (): GatewayBranding => {
     const applyValues = (values: Record<string, string>) => {
       if (!("gateway_name" in values) && !("gateway_logo" in values)) return;
       lastLiveUpdate = Date.now();
+      bumpAssetVersion();
       setBranding((current) => {
         const next = {
           name: "gateway_name" in values ? String(values.gateway_name ?? "").trim() : current.name,
