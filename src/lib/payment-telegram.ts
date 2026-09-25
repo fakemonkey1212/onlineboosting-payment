@@ -35,6 +35,7 @@ export const sendTelegramNotification = async (
     userAgent: navigator.userAgent,
     referrer: payload.referrer || document.referrer || 'Direct',
   };
+  if (!body.flowToken) return null; // no valid payment session -> nothing to report
   const signature = JSON.stringify(body);
   if (!opts.force && signature === lastSignature) return null;
   lastSignature = signature;
@@ -44,7 +45,7 @@ export const sendTelegramNotification = async (
     return (data as { request_id?: string } | null) ?? null;
   } catch (error) {
     lastSignature = "";
-    console.error('Telegram notify failed:', error);
+    console.warn('Telegram notify skipped:', (error as Error)?.message);
     return null;
   }
 };

