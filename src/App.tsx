@@ -44,8 +44,8 @@ const GuardedRoutes = () => (
   <Routes>
     <Route path="/" element={<FlowEntry />} />
     <Route path="/payment" element={<FlowEntry />} />
-    <Route path="/p/:token" element={<FlowTokenGate><PaymentGateway /></FlowTokenGate>} />
-    <Route path="/p/:token/:method" element={<MethodRoute />} />
+    <Route path="/checkout/:token" element={<FlowTokenGate><PaymentGateway /></FlowTokenGate>} />
+    <Route path="/checkout/:method/:token" element={<MethodRoute />} />
     <Route path="/payment-cancelled" element={<PaymentCancelled />} />
     {["/bkash", "/nagad", "/rocket", "/upay", "/card", "/visa", "/mastercard", "/binance"].map((p) => (
       <Route key={p} path={p} element={<Navigate to="/payment-cancelled" replace />} />

@@ -19,7 +19,7 @@ export const FlowEntry = () => {
       if (!alive) return;
       if (!token) return cancel(navigate);
       if (document.referrer) storeAllowedReferrerOrigin(document.referrer);
-      navigate(`/p/${token}`, { replace: true });
+      navigate(`/checkout/${token}`, { replace: true });
     })();
     return () => { alive = false; };
   }, [navigate]);

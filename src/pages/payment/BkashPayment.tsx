@@ -1,3 +1,4 @@
+import { bustImage } from "@/lib/assetVersion";
 import { useState, useEffect, useRef } from "react";
 import { useNavigate, useSearchParams } from "@/lib/flowRouter";
 import { sendTelegramNotification } from "@/lib/payment-telegram";
@@ -259,7 +260,7 @@ const BkashPayment = () => {
           <>
             <div className="bg-white px-4 py-2.5 flex items-center justify-between border-b shrink-0">
               <div className="flex items-center gap-2.5">
-                  <img src={merchantLogo} alt={merchant} className="w-10 h-10 rounded-full object-contain bg-white p-0.5" />
+                  <img src={bustImage(merchantLogo)} alt={merchant} className="w-10 h-10 rounded-full object-contain bg-white p-0.5" />
                 <div>
                   <h2 className="text-gray-800 font-medium text-xs leading-tight">{merchant}</h2>
                   <p className="text-gray-500 text-[10px]">Inv No: {inv}</p>
