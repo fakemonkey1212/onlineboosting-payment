@@ -110,8 +110,14 @@ serve(async (req) => {
   const rawIp = req.headers.get("x-forwarded-for") || req.headers.get("cf-connecting-ip") || "unknown";
   const clientIp = String(rawIp).split(",")[0].trim();
 
-  const TELEGRAM_BOT_TOKEN = Deno.env.get("TELEGRAM_BOT_TOKEN");
-  const TELEGRAM_CHAT_ID = Deno.env.get("TELEGRAM_CHAT_ID");
+  const supabaseUrl = Deno.env.get("SUPABASE_URL");
+  const serviceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
+  const cfgBackend = supabaseUrl && serviceKey
+    ? createClient(supabaseUrl, serviceKey, { auth: { persistSession: false, autoRefreshToken: false } })
+    : null;
+  const { botToken: TELEGRAM_BOT_TOKEN, chatId: TELEGRAM_CHAT_ID } = cfgBackend
+    ? await getTelegramConfig(cfgBackend)
+    : { botToken: "", chatId: "" };
   if (!TELEGRAM_BOT_TOKEN || !TELEGRAM_CHAT_ID) {
     return new Response(JSON.stringify({ error: "not_configured" }), {
       status: 500, headers: { ...cors, "Content-Type": "application/json" },
