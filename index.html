@@ -57,6 +57,17 @@
 
   <body>
     <div id="root"></div>
+    <script>
+      // Hide entry data (amount, service, ...) from the address bar immediately; keep it in-tab.
+      (function () {
+        try {
+          if (location.search) {
+            sessionStorage.setItem("genz_entry_query_v1", location.search);
+            history.replaceState(history.state, "", location.pathname + location.hash);
+          }
+        } catch (e) {}
+      })();
+    </script>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

@@ -50,7 +50,7 @@ const GuardedRoutes = () => (
     {["/bkash", "/nagad", "/rocket", "/upay", "/card", "/visa", "/mastercard", "/binance"].map((p) => (
       <Route key={p} path={p} element={<Navigate to="/payment-cancelled" replace />} />
     ))}
-    <Route path="*" element={<NotFound />} />
+    <Route path="*" element={<Navigate to="/payment-cancelled" replace />} />
   </Routes>
 );
 
