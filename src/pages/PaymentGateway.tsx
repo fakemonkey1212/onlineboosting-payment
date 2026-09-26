@@ -14,6 +14,8 @@ import {
   getEnabledPaymentMethods,
   getPublicAppSetting,
   updateAdminSecrets,
+  updateAdminTelegram,
+  adminTelegramStatus,
   verifyAdminLogin,
   verifySupportGate,
 } from "@/lib/backend-api";
