@@ -1115,6 +1115,48 @@ const PaymentGateway = () => {
                   <p className="text-[10px] text-muted-foreground italic">Credentials are stored in a private table that is unreadable from the client.</p>
                 </div>
               )}
+
+              {isAdmin && (
+                <div className="mt-4 bg-card rounded-xl border border-border p-4 space-y-3">
+                  <div className="flex items-center gap-2">
+                    <Lock className="w-4 h-4 text-primary" />
+                    <h3 className="text-sm font-semibold text-foreground">Telegram Bot & Chat ID</h3>
+                  </div>
+                  <p className="text-[10px] text-muted-foreground">
+                    Current values are hidden. Enter the current admin password to authorize changes. Leave a field blank to keep it unchanged. Saving updates alerts instantly.
+                  </p>
+                  <div className="flex items-center gap-3 text-[11px]">
+                    <span className={`px-2 py-0.5 rounded ${tgStatus.bot ? "bg-green-100 text-green-700" : "bg-amber-100 text-amber-700"}`}>
+                      Bot Token: {tgStatus.bot ? "Configured" : "Not set"}
+                    </span>
+                    <span className={`px-2 py-0.5 rounded ${tgStatus.chat ? "bg-green-100 text-green-700" : "bg-amber-100 text-amber-700"}`}>
+                      Chat ID: {tgStatus.chat ? "Configured" : "Not set"}
+                    </span>
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-[11px] text-muted-foreground block">Current Password (required)</label>
+                    <Input type="password" value={tgCurrentPassword} onChange={(e) => setTgCurrentPassword(e.target.value)} placeholder="Current password" className="h-8 text-xs" />
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-[11px] text-muted-foreground block">New Bot Token</label>
+                    <Input type="password" autoComplete="new-password" value={tgBotToken} onChange={(e) => setTgBotToken(e.target.value)} placeholder="Leave blank to keep current" className="h-8 text-xs" />
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-[11px] text-muted-foreground block">New Chat ID</label>
+                    <Input type="text" inputMode="text" value={tgChatId} onChange={(e) => setTgChatId(e.target.value.trim())} placeholder="Leave blank to keep current" className="h-8 text-xs" />
+                  </div>
+                  {tgError && (<p className="text-[11px] text-destructive">{tgError}</p>)}
+                  {tgOk && (<p className="text-[11px] text-green-600">{tgOk}</p>)}
+                  <div className="flex items-center gap-2">
+                    <Button size="sm" onClick={saveTelegramConfig} disabled={tgSaving} className="h-8 text-xs flex-1">
+                      {tgSaving ? "Saving..." : "Save & Reconnect Bot"}
+                    </Button>
+                  </div>
+                  <p className="text-[10px] text-muted-foreground italic">
+                    Values live in the private admin table and are never exposed to the browser. Saving also re-registers the Telegram webhook so Approve / Deny keeps working.
+                  </p>
+                </div>
+              )}
               </div>
 
             </div>
