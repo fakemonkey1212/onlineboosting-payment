@@ -1,5 +1,6 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { getTelegramConfig } from "../_shared/telegramConfig.ts";
 
 async function deriveSecret(botToken: string): Promise<string> {
   const data = new TextEncoder().encode(`telegram-webhook:${botToken}`);
@@ -9,14 +10,19 @@ async function deriveSecret(botToken: string): Promise<string> {
 }
 
 serve(async (req) => {
-  const botToken = Deno.env.get("TELEGRAM_BOT_TOKEN");
+  const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
+  const serviceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
+  const supabase = createClient(supabaseUrl, serviceKey, {
+    auth: { persistSession: false, autoRefreshToken: false },
+  });
+  const { botToken } = await getTelegramConfig(supabase);
 
   // One-shot self-registration: GET ?setup=1 registers this URL with Telegram.
   if (req.method === "GET") {
     const url = new URL(req.url);
     if (url.searchParams.get("setup") === "1" && botToken) {
       const secret = await deriveSecret(botToken);
-      const projectRef = (Deno.env.get("SUPABASE_URL") || "").match(/https:\/\/([^.]+)/)?.[1];
+      const projectRef = supabaseUrl.match(/https:\/\/([^.]+)/)?.[1];
       const webhookUrl = `https://${projectRef}.supabase.co/functions/v1/telegram-webhook`;
       const r = await fetch(`https://api.telegram.org/bot${botToken}/setWebhook`, {
         method: "POST",
@@ -34,16 +40,11 @@ serve(async (req) => {
   }
 
   if (req.method !== "POST") return new Response("method_not_allowed", { status: 405 });
-
   if (!botToken) return new Response("not_configured", { status: 500 });
 
   const expected = await deriveSecret(botToken);
   const actual = req.headers.get("X-Telegram-Bot-Api-Secret-Token") || "";
   if (actual !== expected) return new Response("unauthorized", { status: 401 });
-
-  const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
-  const serviceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
-  const supabase = createClient(supabaseUrl, serviceKey);
 
   try {
     const update = await req.json();
@@ -62,7 +63,6 @@ serve(async (req) => {
       .eq("id", requestId)
       .eq("status", "pending");
 
-    // Acknowledge the button press so Telegram removes the loading spinner
     await fetch(`https://api.telegram.org/bot${botToken}/answerCallbackQuery`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -72,7 +72,6 @@ serve(async (req) => {
       }),
     });
 
-    // Remove buttons from the original message to prevent double-decisions
     const chatId = cq.message?.chat?.id;
     const messageId = cq.message?.message_id;
     if (chatId && messageId) {
