@@ -254,8 +254,23 @@ export type Database = {
         Args: { _enabled: boolean; _id: string; _password: string }
         Returns: boolean
       }
+      admin_telegram_status: {
+        Args: { _password: string }
+        Returns: {
+          bot_configured: boolean
+          chat_configured: boolean
+        }[]
+      }
       admin_update_allowed_website: {
         Args: { _id: string; _password: string; _url: string }
+        Returns: boolean
+      }
+      admin_update_telegram: {
+        Args: {
+          _current_password: string
+          _new_bot_token: string
+          _new_chat_id: string
+        }
         Returns: boolean
       }
       get_enabled_payment_methods: {

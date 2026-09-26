@@ -8,6 +8,13 @@
       "when": 1790151941248,
       "tag": "0000_payment_sessions",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1790415239291,
+      "tag": "0001_admin_telegram_secrets",
+      "breakpoints": true
     }
   ]
 }

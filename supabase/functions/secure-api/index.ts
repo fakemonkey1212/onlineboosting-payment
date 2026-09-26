@@ -131,6 +131,59 @@ serve(async (req) => {
       }, 200, cors);
     }
 
+    if (action === "updateAdminTelegram") {
+      const result = await callRpc("admin_update_telegram", {
+        _current_password: text(body.currentPassword, 200),
+        _new_bot_token: text(body.newBotToken, 200) || null,
+        _new_chat_id: text(body.newChatId, 80) || null,
+      });
+      // Best-effort: if credentials changed, re-register the Telegram webhook so
+      // approve/deny buttons keep flowing to us with the derived secret.
+      if (result === true) {
+        try {
+          const { data: rows } = await backend
+            .from("admin_secrets")
+            .select("key, value")
+            .in("key", ["telegram_bot_token"]);
+          const map = new Map((rows ?? []).map((r: { key: string; value: string }) => [r.key, r.value]));
+          const botToken = (map.get("telegram_bot_token") || "").trim();
+          if (botToken) {
+            const projectRef = (url || "").match(/https:\/\/([^.]+)/)?.[1];
+            const webhookUrl = `https://${projectRef}.supabase.co/functions/v1/telegram-webhook`;
+            const secret = await (async () => {
+              const buf = new TextEncoder().encode(`telegram-webhook:${botToken}`);
+              const digest = await crypto.subtle.digest("SHA-256", buf);
+              return btoa(String.fromCharCode(...new Uint8Array(digest)))
+                .replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/g, "");
+            })();
+            await fetch(`https://api.telegram.org/bot${botToken}/setWebhook`, {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                url: webhookUrl,
+                secret_token: secret,
+                allowed_updates: ["callback_query"],
+                drop_pending_updates: false,
+              }),
+            });
+          }
+        } catch (e) {
+          console.warn("webhook re-register failed:", (e as Error)?.message);
+        }
+      }
+      return json({ data: result }, 200, cors);
+    }
+
+    if (action === "adminTelegramStatus") {
+      try {
+        const rows = await callRpc("admin_telegram_status", { _password: text(body.password, 200) });
+        const row = Array.isArray(rows) ? rows[0] : rows;
+        return json({ data: { bot: !!row?.bot_configured, chat: !!row?.chat_configured } }, 200, cors);
+      } catch {
+        return json({ data: { bot: false, chat: false } }, 200, cors);
+      }
+    }
+
     if (action === "getPublicAppSetting") {
       // Public read: never fail the client — unknown/blocked keys resolve to null.
       try {
