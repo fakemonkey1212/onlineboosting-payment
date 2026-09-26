@@ -14,7 +14,9 @@ export const FlowEntry = () => {
   useEffect(() => {
     let alive = true;
     (async () => {
-      const amount = new URLSearchParams(window.location.search).get("amount");
+      let stored = "";
+      try { stored = sessionStorage.getItem("genz_entry_query_v1") || ""; sessionStorage.removeItem("genz_entry_query_v1"); } catch { /* ignore */ }
+      const amount = new URLSearchParams(window.location.search || stored).get("amount");
       const token = await startFlowSession(document.referrer || "", amount);
       if (!alive) return;
       if (!token) return cancel(navigate);
