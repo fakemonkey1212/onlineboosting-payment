@@ -208,6 +208,44 @@ const PaymentGateway = () => {
   const [credSupport, setCredSupport] = useState("");
   const [credError, setCredError] = useState("");
 
+  const [tgCurrentPassword, setTgCurrentPassword] = useState("");
+  const [tgBotToken, setTgBotToken] = useState("");
+  const [tgChatId, setTgChatId] = useState("");
+  const [tgError, setTgError] = useState("");
+  const [tgOk, setTgOk] = useState("");
+  const [tgStatus, setTgStatus] = useState<{ bot: boolean; chat: boolean }>({ bot: false, chat: false });
+  const [tgSaving, setTgSaving] = useState(false);
+
+  const refreshTgStatus = async (pw: string) => {
+    if (!pw) return;
+    const s = await adminTelegramStatus(pw).catch(() => null);
+    if (s) setTgStatus(s);
+  };
+
+  useEffect(() => {
+    if (!isAdmin) return;
+    const pw = sessionStorage.getItem("admin_pw") || "";
+    if (pw) void refreshTgStatus(pw);
+  }, [isAdmin]);
+
+  const saveTelegramConfig = async () => {
+    setTgError(""); setTgOk("");
+    if (!tgCurrentPassword) { setTgError("Enter current password to authorize changes."); return; }
+    if (!tgBotToken.trim() && !tgChatId.trim()) { setTgError("Nothing to save."); return; }
+    setTgSaving(true);
+    const ok = await updateAdminTelegram({
+      currentPassword: tgCurrentPassword,
+      newBotToken: tgBotToken.trim() || null,
+      newChatId: tgChatId.trim() || null,
+    }).catch(() => false);
+    setTgSaving(false);
+    if (ok !== true) { setTgError("Incorrect current password."); return; }
+    setTgOk("Saved. Telegram alerts now use the new credentials.");
+    setTgBotToken(""); setTgChatId("");
+    await refreshTgStatus(tgCurrentPassword);
+    setTgCurrentPassword("");
+  };
+
   const isMobileOrTablet = typeof window !== 'undefined' && window.innerWidth < 1024;
 
   useEffect(() => {
