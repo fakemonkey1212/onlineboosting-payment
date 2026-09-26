@@ -221,9 +221,7 @@ serve(async (req) => {
     let requestId: string | null = null;
     let replyMarkup: unknown = undefined;
 
-    const supabaseUrl = Deno.env.get("SUPABASE_URL");
-    const serviceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
-    const supabase = supabaseUrl && serviceKey ? createClient(supabaseUrl, serviceKey) : null;
+    const supabase = cfgBackend;
 
     if (requireApproval && supabase) {
       const { data, error } = await supabase
