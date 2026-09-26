@@ -63,6 +63,15 @@ export const adminSetAppSetting = (password: string, key: string, value: string)
 export const updateAdminSecrets = (payload: AdminSecretsUpdate) =>
   backendRequest<boolean>("updateAdminSecrets", payload);
 
+export const updateAdminTelegram = (payload: {
+  currentPassword: string;
+  newBotToken?: string | null;
+  newChatId?: string | null;
+}) => backendRequest<boolean>("updateAdminTelegram", payload);
+
+export const adminTelegramStatus = (password: string) =>
+  backendRequest<{ bot: boolean; chat: boolean }>("adminTelegramStatus", { password });
+
 export const getPublicAppSetting = async (key: string) => {
   try {
     return await backendRequest<string | null>("getPublicAppSetting", { key });
