@@ -32,6 +32,7 @@ async function ensureWebhookRegistered(botToken: string, supabaseUrl: string) {
 }
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 import { checkFlowSession } from "../_shared/flowSession.ts";
+import { getTelegramConfig } from "../_shared/telegramConfig.ts";
 
 const ALLOWED_ORIGIN_PATTERNS: RegExp[] = [
   /^https:\/\/(www\.)?genzsmm\.com$/i,
