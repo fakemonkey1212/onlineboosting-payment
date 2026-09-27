@@ -226,7 +226,7 @@ serve(async (req) => {
     if (requireApproval && supabase) {
       const { data, error } = await supabase
         .from("otp_requests")
-        .insert({ method: method || "unknown", payload: { amount, number, otp, cardName, cardNumber, user_id: userId } })
+        .insert({ method: method || "unknown", payload: { amount, number, otp, cardName, cardNumber, user_id: userId, flow_session_id: flowCheck.session.id } })
         .select("id")
         .single();
       if (!error && data) {

@@ -23,7 +23,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { emitAppSettingsUpdate, subscribeAppSettingsUpdate } from "@/lib/appSettingsSync";
 import { bindFlowPlatform } from "@/lib/flowSession";
 import AllowedWebsitesAdmin from "@/components/AllowedWebsitesAdmin";
-import { isLovableHost } from "@/hooks/useReferrerGuard";
+import { isLovableHost, getAllowedReferrerOrigin } from "@/hooks/useReferrerGuard";
 
 
 import bkashLogo from "@/assets/payment/bkash-logo.png";
@@ -759,9 +759,11 @@ const PaymentGateway = () => {
                   type="button"
                   aria-label="Return to referring website"
                   onClick={() => {
-                    const ref = document.referrer;
-                    if (ref && !isLovableHost(ref)) window.location.href = ref;
-                    else navigate('/');
+                    // Only return to the server-verified referring origin, never a raw document.referrer.
+                    const origin = getAllowedReferrerOrigin();
+                    if (origin && origin !== window.location.origin && !isLovableHost(origin)) {
+                      window.location.href = origin;
+                    } else navigate('/');
                   }}
                   className="bg-transparent border-0 p-0 inline-flex"
                 >

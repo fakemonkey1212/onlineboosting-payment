@@ -48,10 +48,12 @@ serve(async (req) => {
       });
     }
 
+    // Only return the status of a request that belongs to the caller's own payment session.
     const { data, error } = await supabase
       .from("otp_requests")
       .select("status")
       .eq("id", request_id)
+      .filter("payload->>flow_session_id", "eq", flowCheck.session.id)
       .maybeSingle();
 
     if (error || !data) {
