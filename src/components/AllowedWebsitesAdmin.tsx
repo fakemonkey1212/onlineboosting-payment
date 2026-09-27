@@ -24,13 +24,15 @@ const AllowedWebsitesAdmin = () => {
   const [logs, setLogs] = useState<BlockedLog[]>([]);
   const [showLogs, setShowLogs] = useState(false);
 
+  const getPw = () => sessionStorage.getItem("admin_pw") || "";
+
   const fetchWebsites = async () => {
-    const { data } = await supabase.from("allowed_websites").select("*").order("created_at", { ascending: true });
+    const { data } = await supabase.rpc("admin_list_allowed_websites", { _password: getPw() });
     if (data) setWebsites(data as AllowedWebsite[]);
   };
 
   const fetchLogs = async () => {
-    const { data } = await supabase.from("blocked_access_logs").select("*").order("blocked_at", { ascending: false }).limit(50);
+    const { data } = await supabase.rpc("admin_list_blocked_logs", { _password: getPw() });
     if (data) setLogs(data as BlockedLog[]);
   };
 
@@ -38,26 +40,17 @@ const AllowedWebsitesAdmin = () => {
     fetchWebsites();
     fetchLogs();
 
-    const channel = supabase
-      .channel("admin_realtime")
-      .on(
-        "postgres_changes",
-        { event: "*", schema: "public", table: "allowed_websites" },
-        () => fetchWebsites()
-      )
-      .on(
-        "postgres_changes",
-        { event: "*", schema: "public", table: "blocked_access_logs" },
-        () => fetchLogs()
-      )
-      .subscribe();
+    // Poll for updates instead of realtime table subscriptions, since the
+    // tables are no longer publicly readable.
+    const poll = window.setInterval(() => {
+      fetchWebsites();
+      fetchLogs();
+    }, 5000);
 
     return () => {
-      supabase.removeChannel(channel);
+      window.clearInterval(poll);
     };
   }, []);
-
-  const getPw = () => sessionStorage.getItem("admin_pw") || "";
 
   const addWebsite = async () => {
     const trimmed = newUrl.trim();

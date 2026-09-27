@@ -15,6 +15,13 @@
       "when": 1790415239291,
       "tag": "0001_admin_telegram_secrets",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1790468009005,
+      "tag": "0002_tighten_public_rls_policies",
+      "breakpoints": true
     }
   ]
 }
