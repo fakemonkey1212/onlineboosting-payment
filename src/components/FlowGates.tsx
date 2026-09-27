@@ -1,11 +1,19 @@
 import { ReactNode, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { startFlowSession, validateFlowSession } from "@/lib/flowSession";
-import { markAccessBlocked, storeAllowedReferrerOrigin } from "@/hooks/useReferrerGuard";
+import {
+  markAccessBlocked, storeAllowedReferrerOrigin, isAccessBlocked, clearAccessBlocked, exitToReferrer,
+} from "@/hooks/useReferrerGuard";
 
 const cancel = (navigate: ReturnType<typeof useNavigate>) => {
   markAccessBlocked();
   navigate("/payment-cancelled", { replace: true });
+};
+
+const isExternalReferrer = () => {
+  try {
+    return !!document.referrer && new URL(document.referrer).origin !== window.location.origin;
+  } catch { return false; }
 };
 
 /** First entry: asks the server for a brand-new single-use token, then shows only the token in the URL. */
@@ -13,6 +21,11 @@ export const FlowEntry = () => {
   const navigate = useNavigate();
   useEffect(() => {
     let alive = true;
+    // After a cancel, this tab may only restart via a fresh visit from an external referrer.
+    if (isAccessBlocked()) {
+      if (!isExternalReferrer()) { exitToReferrer(); return; }
+      clearAccessBlocked();
+    }
     (async () => {
       let stored = "";
       try { stored = sessionStorage.getItem("genz_entry_query_v1") || ""; sessionStorage.removeItem("genz_entry_query_v1"); } catch { /* ignore */ }
@@ -37,6 +50,8 @@ export const FlowTokenGate = ({ platform, children }: { platform?: string; child
   useEffect(() => {
     let alive = true;
     setOk(false);
+    // Returning to a flow page after the cancel page (Back button) → leave to the referrer.
+    if (isAccessBlocked()) { exitToReferrer(); return; }
     (async () => {
       const s = await validateFlowSession(token, platform);
       if (!alive) return;
@@ -44,7 +59,10 @@ export const FlowTokenGate = ({ platform, children }: { platform?: string; child
       if (s.referrerOrigin) storeAllowedReferrerOrigin(s.referrerOrigin);
       setOk(true);
     })();
-    const onShow = (e: PageTransitionEvent) => { if (e.persisted) window.location.reload(); };
+    const onShow = (e: PageTransitionEvent) => {
+      if (isAccessBlocked()) return exitToReferrer();
+      if (e.persisted) window.location.reload();
+    };
     window.addEventListener("pageshow", onShow);
     return () => { alive = false; window.removeEventListener("pageshow", onShow); };
   }, [token, platform, navigate]);

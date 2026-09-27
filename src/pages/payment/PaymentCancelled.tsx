@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate, useSearchParams } from "@/lib/flowRouter";
 import { sendTelegramNotification } from "@/lib/payment-telegram";
-import { markAccessBlocked, getAllowedReferrerOrigin } from "@/hooks/useReferrerGuard";
+import { markAccessBlocked, exitToReferrer } from "@/hooks/useReferrerGuard";
 import { clearFlowTicket } from "@/lib/flowTicket";
 import { completeFlowSession } from "@/lib/flowSession";
 import { useGatewayBranding } from "@/hooks/useGatewayBranding";
@@ -26,23 +26,7 @@ const PaymentCancelled = () => {
 
   useEffect(() => {
     window.history.pushState(null, "", window.location.href);
-    const handlePopState = () => {
-      const allowedOrigin = getAllowedReferrerOrigin();
-      if (allowedOrigin) {
-        window.location.replace(allowedOrigin);
-      } else {
-        const ref = document.referrer;
-        if (ref) {
-          try {
-            window.location.replace(new URL(ref).origin);
-          } catch {
-            navigate("/", { replace: true });
-          }
-        } else {
-          navigate("/", { replace: true });
-        }
-      }
-    };
+    const handlePopState = () => exitToReferrer();
     window.addEventListener("popstate", handlePopState);
     return () => window.removeEventListener("popstate", handlePopState);
   }, [navigate]);

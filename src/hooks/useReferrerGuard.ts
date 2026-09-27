@@ -38,10 +38,26 @@ export function markAccessBlocked() {
 export function storeAllowedReferrerOrigin(ref: string) {
   try {
     const origin = new URL(ref).origin;
-    if (origin) sessionStorage.setItem(ALLOWED_REFERRER_KEY, origin);
+    // Never store this site itself — "back" must leave to the real referring website.
+    if (origin && origin !== window.location.origin) sessionStorage.setItem(ALLOWED_REFERRER_KEY, origin);
   } catch {
     /* ignore */
   }
+}
+
+export function isAccessBlocked(): boolean {
+  try { return sessionStorage.getItem(BLOCK_FLAG_KEY) === "1"; } catch { return false; }
+}
+
+export function clearAccessBlocked() {
+  try { sessionStorage.removeItem(BLOCK_FLAG_KEY); } catch { /* ignore */ }
+}
+
+/** Leave to the referring website; if unknown, stay on the cancel page. */
+export function exitToReferrer() {
+  const origin = getAllowedReferrerOrigin();
+  if (origin && origin !== window.location.origin) window.location.replace(origin);
+  else if (window.location.pathname !== "/payment-cancelled") window.location.replace("/payment-cancelled");
 }
 
 export function getAllowedReferrerOrigin(): string | null {
