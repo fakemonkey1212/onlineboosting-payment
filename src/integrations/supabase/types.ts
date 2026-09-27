@@ -231,6 +231,20 @@ export type Database = {
           isSetofReturn: true
         }
       }
+      admin_list_blocked_logs: {
+        Args: { _password: string }
+        Returns: {
+          blocked_at: string
+          id: string
+          referrer: string
+        }[]
+        SetofOptions: {
+          from: "*"
+          to: "blocked_access_logs"
+          isOneToOne: false
+          isSetofReturn: true
+        }
+      }
       admin_list_payment_methods: {
         Args: { _password: string }
         Returns: {
@@ -282,6 +296,7 @@ export type Database = {
         }[]
       }
       get_public_app_setting: { Args: { _key: string }; Returns: string }
+      is_referrer_allowed: { Args: { _referrer: string }; Returns: boolean }
       update_admin_secrets: {
         Args: {
           _current_password: string
