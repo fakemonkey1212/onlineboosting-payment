@@ -23,7 +23,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { emitAppSettingsUpdate, subscribeAppSettingsUpdate } from "@/lib/appSettingsSync";
 import { bindFlowPlatform } from "@/lib/flowSession";
 import AllowedWebsitesAdmin from "@/components/AllowedWebsitesAdmin";
-import { isLovableHost } from "@/hooks/useReferrerGuard";
+import { isLovableHost, getAllowedReferrerOrigin } from "@/hooks/useReferrerGuard";
 
 
 import bkashLogo from "@/assets/payment/bkash-logo.png";
