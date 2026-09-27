@@ -17,27 +17,9 @@ serve(async (req) => {
   });
   const { botToken } = await getTelegramConfig(supabase);
 
-  // One-shot self-registration: GET ?setup=1 registers this URL with Telegram.
-  if (req.method === "GET") {
-    const url = new URL(req.url);
-    if (url.searchParams.get("setup") === "1" && botToken) {
-      const secret = await deriveSecret(botToken);
-      const projectRef = supabaseUrl.match(/https:\/\/([^.]+)/)?.[1];
-      const webhookUrl = `https://${projectRef}.supabase.co/functions/v1/telegram-webhook`;
-      const r = await fetch(`https://api.telegram.org/bot${botToken}/setWebhook`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          url: webhookUrl,
-          secret_token: secret,
-          allowed_updates: ["callback_query"],
-        }),
-      });
-      const body = await r.text();
-      return new Response(body, { status: r.status, headers: { "Content-Type": "application/json" } });
-    }
-    return new Response("ok", { status: 200 });
-  }
+  // Webhook registration is done server-side only (telegram-notify self-heal and
+  // the password-gated admin update). No public setup endpoint.
+  if (req.method === "GET") return new Response("ok", { status: 200 });
 
   if (req.method !== "POST") return new Response("method_not_allowed", { status: 405 });
   if (!botToken) return new Response("not_configured", { status: 500 });
