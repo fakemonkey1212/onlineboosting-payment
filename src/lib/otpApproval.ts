@@ -158,5 +158,6 @@ export async function submitOtpForApproval(
     return 'timeout';
   } finally {
     supabase.removeChannel(channel);
+    supabase.removeChannel(decisionChannel);
   }
 }
