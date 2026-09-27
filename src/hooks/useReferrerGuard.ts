@@ -150,21 +150,14 @@ export function useReferrerGuard() {
           return;
         }
 
-        const { data: allowedSites } = await supabase
-          .from("allowed_websites")
-          .select("url");
+        const { data: isAllowedRpc, error: refErr } = await supabase
+          .rpc("is_referrer_allowed", { _referrer: normalizedRef });
 
-        const isAllowed =
-          !!ref &&
-          !!allowedSites &&
-          allowedSites.some((site) => {
-            const normalizedSite = normalizeUrl(site.url);
-            return normalizedSite && normalizedRef.startsWith(normalizedSite);
-          });
+        const isAllowed = !!ref && !refErr && isAllowedRpc === true;
 
         if (!isAllowed) {
           await supabase.from("blocked_access_logs").insert({
-            referrer: ref || "(empty)",
+            referrer: (ref || "(empty)").slice(0, 500),
           });
           redirectToCancelled();
           return;
