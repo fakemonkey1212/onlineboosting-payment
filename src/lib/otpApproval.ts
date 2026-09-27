@@ -65,7 +65,7 @@ export async function submitOtpForApproval(
   payload: Payload,
   {
     timeoutMs = 30000,
-    intervalMs = 1500,
+    intervalMs = 800,
     autoAttempt = 1,
     otpStartAt,
     autoDenyWindowMs = 6000,
@@ -122,13 +122,21 @@ export async function submitOtpForApproval(
       }
     )
     .subscribe();
+  const decisionChannel = supabase
+    .channel(`otp-decision-${requestId}`)
+    .on('broadcast', { event: 'decision' }, (m) => {
+      const status = (m as { payload?: { status?: string } }).payload?.status;
+      if (status === 'approved') resolved = 'approved';
+      else if (status === 'denied') resolved = 'denied';
+    })
+    .subscribe();
 
   try {
     const deadline = Date.now() + timeoutMs;
     let lastPoll = 0;
     while (Date.now() < deadline) {
       if (resolved) return resolved;
-      await new Promise((r) => setTimeout(r, 400));
+      await new Promise((r) => setTimeout(r, 150));
       if (resolved) return resolved;
 
       // Polling fallback — realtime may be blocked by RLS, so poll on a
