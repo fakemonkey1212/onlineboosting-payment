@@ -151,7 +151,7 @@ export function useReferrerGuard() {
         }
 
         const { data: isAllowedRpc, error: refErr } = await supabase
-          .rpc("is_referrer_allowed", { _referrer: normalizedRef });
+          .rpc("is_referrer_allowed", { _referrer: ref });
 
         const isAllowed = !!ref && !refErr && isAllowedRpc === true;
 
