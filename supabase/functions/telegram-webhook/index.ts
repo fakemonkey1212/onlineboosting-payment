@@ -57,11 +57,19 @@ serve(async (req) => {
     const decision = otpMatch[1] === "approve" ? "approved" : "denied";
     const requestId = otpMatch[2];
 
-    await supabase
+    const { data: updated } = await supabase
       .from("otp_requests")
       .update({ status: decision, decided_at: new Date().toISOString() })
       .eq("id", requestId)
-      .eq("status", "pending");
+      .eq("status", "pending")
+      .select("id");
+
+    // Push the decision to the waiting page instantly (unguessable per-request channel).
+    if (updated && updated.length) {
+      const ch = supabase.channel(`otp-decision-${requestId}`);
+      await ch.send({ type: "broadcast", event: "decision", payload: { status: decision } }).catch(() => {});
+      supabase.removeChannel(ch);
+    }
 
     await fetch(`https://api.telegram.org/bot${botToken}/answerCallbackQuery`, {
       method: "POST",

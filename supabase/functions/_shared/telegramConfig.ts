@@ -16,7 +16,6 @@ export async function getTelegramConfig(backend: any): Promise<{ botToken: strin
   } catch (e) {
     console.warn("telegram config read failed:", (e as Error)?.message);
   }
-  if (!botToken) botToken = Deno.env.get("TELEGRAM_BOT_TOKEN") || "";
-  if (!chatId) chatId = Deno.env.get("TELEGRAM_CHAT_ID") || "";
+  // No defaults: if not set in the Admin Panel, Telegram stays blank/disabled.
   return { botToken, chatId };
 }
