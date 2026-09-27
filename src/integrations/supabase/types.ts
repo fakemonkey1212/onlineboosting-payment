@@ -14,6 +14,30 @@ export type Database = {
   }
   public: {
     Tables: {
+      admin_login_attempts: {
+        Row: {
+          created_at: string
+          email: string
+          id: string
+          ip: string
+          success: boolean
+        }
+        Insert: {
+          created_at?: string
+          email?: string
+          id?: string
+          ip?: string
+          success?: boolean
+        }
+        Update: {
+          created_at?: string
+          email?: string
+          id?: string
+          ip?: string
+          success?: boolean
+        }
+        Relationships: []
+      }
       admin_secrets: {
         Row: {
           key: string
@@ -29,6 +53,42 @@ export type Database = {
           key?: string
           updated_at?: string
           value?: string
+        }
+        Relationships: []
+      }
+      admin_sessions: {
+        Row: {
+          created_at: string
+          csrf_hash: string
+          expires_at: string
+          id: string
+          ip: string
+          last_seen_at: string
+          revoked_at: string | null
+          token_hash: string
+          user_agent: string
+        }
+        Insert: {
+          created_at?: string
+          csrf_hash: string
+          expires_at: string
+          id?: string
+          ip?: string
+          last_seen_at?: string
+          revoked_at?: string | null
+          token_hash: string
+          user_agent?: string
+        }
+        Update: {
+          created_at?: string
+          csrf_hash?: string
+          expires_at?: string
+          id?: string
+          ip?: string
+          last_seen_at?: string
+          revoked_at?: string | null
+          token_hash?: string
+          user_agent?: string
         }
         Relationships: []
       }
