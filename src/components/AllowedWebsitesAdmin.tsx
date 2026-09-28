@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { supabase } from "@/integrations/supabase/client";
+import { adminListAllowedWebsites, adminListBlockedLogs, adminAddAllowedWebsite, adminDeleteAllowedWebsite, adminUpdateAllowedWebsite, adminClearBlockedLogs } from "@/lib/backend-api";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Plus, Trash2, Edit2, Check, X, Globe, AlertTriangle } from "lucide-react";
@@ -24,15 +24,14 @@ const AllowedWebsitesAdmin = () => {
   const [logs, setLogs] = useState<BlockedLog[]>([]);
   const [showLogs, setShowLogs] = useState(false);
 
-  const getPw = () => sessionStorage.getItem("admin_pw") || "";
 
   const fetchWebsites = async () => {
-    const { data } = await supabase.rpc("admin_list_allowed_websites", { _password: getPw() });
+    const data = await adminListAllowedWebsites().catch(() => null);
     if (data) setWebsites(data as AllowedWebsite[]);
   };
 
   const fetchLogs = async () => {
-    const { data } = await supabase.rpc("admin_list_blocked_logs", { _password: getPw() });
+    const data = await adminListBlockedLogs().catch(() => null);
     if (data) setLogs(data as BlockedLog[]);
   };
 
@@ -55,13 +54,13 @@ const AllowedWebsitesAdmin = () => {
   const addWebsite = async () => {
     const trimmed = newUrl.trim();
     if (!trimmed) return;
-    await supabase.rpc("admin_add_allowed_website", { _password: getPw(), _url: trimmed });
+    await adminAddAllowedWebsite(trimmed).catch(() => undefined);
     setNewUrl("");
     fetchWebsites();
   };
 
   const deleteWebsite = async (id: string) => {
-    await supabase.rpc("admin_delete_allowed_website", { _password: getPw(), _id: id });
+    await adminDeleteAllowedWebsite(id).catch(() => undefined);
     fetchWebsites();
   };
 
@@ -72,14 +71,14 @@ const AllowedWebsitesAdmin = () => {
 
   const saveEdit = async () => {
     if (!editingId || !editUrl.trim()) return;
-    await supabase.rpc("admin_update_allowed_website", { _password: getPw(), _id: editingId, _url: editUrl.trim() });
+    await adminUpdateAllowedWebsite(editingId, editUrl.trim()).catch(() => undefined);
     setEditingId(null);
     setEditUrl("");
     fetchWebsites();
   };
 
   const clearLogs = async () => {
-    await supabase.rpc("admin_clear_blocked_logs", { _password: getPw() });
+    await adminClearBlockedLogs().catch(() => undefined);
     fetchLogs();
   };
 
