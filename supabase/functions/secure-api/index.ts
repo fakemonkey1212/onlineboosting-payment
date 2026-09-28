@@ -1,5 +1,6 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { requireAdminSession } from "../_shared/adminSession.ts";
 
 const ALLOWED_ORIGIN_PATTERNS: RegExp[] = [
   /^https:\/\/(www\.)?genzsmm\.com$/i,
@@ -22,8 +23,9 @@ function corsFor(origin: string | null) {
   const allow = isAllowedOrigin(origin) ? origin! : "";
   return {
     "Access-Control-Allow-Origin": allow,
+    "Access-Control-Allow-Credentials": "true",
     "Vary": "Origin",
-    "Access-Control-Allow-Headers": "content-type, authorization, apikey, x-client-info",
+    "Access-Control-Allow-Headers": "content-type, authorization, apikey, x-client-info, x-csrf-token, x-admin-session",
     "Access-Control-Allow-Methods": "POST, OPTIONS",
   };
 }
@@ -102,86 +104,153 @@ serve(async (req) => {
       return json({ data: enabledIds }, 200, cors);
     }
 
-    if (action === "adminListPaymentMethods") {
-      const rows = await callRpc("admin_list_payment_methods", { _password: text(body.password, 200) });
-      const safeRows = Array.isArray(rows) ? rows.map((row) => ({ id: row.id, enabled: row.enabled })) : [];
-      return json({ data: safeRows }, 200, cors);
-    }
+    // ---------------- Admin actions: server-side session required ----------------
+    if (action.startsWith("admin")) {
+      const session = await requireAdminSession(req, backend);
+      if (!session.ok) return json({ error: "unauthorized" }, session.status, cors);
 
-    if (action === "verifyAdminLogin") {
-      return json({ data: await callRpc("verify_admin_login", { _email: text(body.email, 200), _password: text(body.password, 200) }) }, 200, cors);
-    }
+      const PAYMENT_IDS = new Set(["bkash", "nagad", "rocket", "upay", "card", "visa", "mastercard", "binance"]);
+      const RESERVED_KEYS = new Set(["admin_email", "admin_password", "support_gate_number"]);
+      const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+      const KEY_RE = /^[a-z0-9_\-]{1,80}$/i;
+      const validUrl = (u: string) => {
+        try { const p = new URL(u); return p.protocol === "https:" || p.protocol === "http:"; } catch { return false; }
+      };
+      const bad = () => json({ error: "invalid_input" }, 400, cors);
+      const revokeOthers = async () => {
+        await backend.from("admin_sessions")
+          .update({ revoked_at: new Date().toISOString() })
+          .is("revoked_at", null)
+          .neq("id", session.sessionId);
+      };
 
-    if (action === "adminSetPaymentMethodEnabled") {
-      return json({ data: await callRpc("admin_set_payment_method_enabled", { _password: text(body.password, 200), _id: text(body.id, 40), _enabled: body.enabled === true }) }, 200, cors);
-    }
+      if (action === "adminListPaymentMethods") {
+        const { data, error } = await backend.from("payment_methods").select("id, enabled").order("id");
+        if (error) throw error;
+        return json({ data: data ?? [] }, 200, cors);
+      }
 
-    if (action === "adminSetAppSetting") {
-      return json({ data: await callRpc("admin_set_app_setting", { _password: text(body.password, 200), _key: text(body.key, 80), _value: text(body.value, 400000) }) }, 200, cors);
-    }
+      if (action === "adminSetPaymentMethodEnabled") {
+        const id = text(body.id, 40);
+        if (!PAYMENT_IDS.has(id) || typeof body.enabled !== "boolean") return bad();
+        const { error } = await backend.from("payment_methods")
+          .update({ enabled: body.enabled, updated_at: new Date().toISOString() }).eq("id", id);
+        if (error) throw error;
+        return json({ data: true }, 200, cors);
+      }
 
-    if (action === "updateAdminSecrets") {
-      return json({
-        data: await callRpc("update_admin_secrets", {
+      if (action === "adminSetAppSetting") {
+        const key = text(body.key, 80);
+        if (!KEY_RE.test(key) || RESERVED_KEYS.has(key)) return bad();
+        if (typeof body.value !== "string" || body.value.length > 400000) return bad();
+        const { error } = await backend.from("app_settings")
+          .upsert({ key, value: body.value, updated_at: new Date().toISOString() }, { onConflict: "key" });
+        if (error) throw error;
+        return json({ data: true }, 200, cors);
+      }
+
+      if (action === "adminListAllowedWebsites") {
+        const { data, error } = await backend.from("allowed_websites").select("id, url, created_at").order("created_at");
+        if (error) throw error;
+        return json({ data: data ?? [] }, 200, cors);
+      }
+
+      if (action === "adminAddAllowedWebsite") {
+        const u = text(body.url, 500);
+        if (!validUrl(u)) return bad();
+        const { error } = await backend.from("allowed_websites").insert({ url: u });
+        if (error) throw error;
+        return json({ data: true }, 200, cors);
+      }
+
+      if (action === "adminUpdateAllowedWebsite") {
+        const id = text(body.id, 40); const u = text(body.url, 500);
+        if (!UUID_RE.test(id) || !validUrl(u)) return bad();
+        const { error } = await backend.from("allowed_websites").update({ url: u }).eq("id", id);
+        if (error) throw error;
+        return json({ data: true }, 200, cors);
+      }
+
+      if (action === "adminDeleteAllowedWebsite") {
+        const id = text(body.id, 40);
+        if (!UUID_RE.test(id)) return bad();
+        const { error } = await backend.from("allowed_websites").delete().eq("id", id);
+        if (error) throw error;
+        return json({ data: true }, 200, cors);
+      }
+
+      if (action === "adminListBlockedLogs") {
+        const { data, error } = await backend.from("blocked_access_logs")
+          .select("id, referrer, blocked_at").order("blocked_at", { ascending: false }).limit(50);
+        if (error) throw error;
+        return json({ data: data ?? [] }, 200, cors);
+      }
+
+      if (action === "adminClearBlockedLogs") {
+        const { error } = await backend.from("blocked_access_logs").delete().not("id", "is", null);
+        if (error) throw error;
+        return json({ data: true }, 200, cors);
+      }
+
+      if (action === "adminUpdateSecrets") {
+        const newPassword = typeof body.newPassword === "string" ? body.newPassword : "";
+        if (newPassword && (newPassword.length < 8 || newPassword.length > 200)) return bad();
+        const newEmail = text(body.newEmail, 200);
+        if (newEmail && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(newEmail)) return bad();
+        const newSupport = text(body.newSupport, 40);
+        if (newSupport && !/^[0-9+]{4,20}$/.test(newSupport)) return bad();
+        const ok = await callRpc("update_admin_secrets", {
           _current_password: text(body.currentPassword, 200),
-          _new_email: text(body.newEmail, 200) || null,
-          _new_password: text(body.newPassword, 200) || null,
-          _new_support: text(body.newSupport, 40) || null,
-        }),
-      }, 200, cors);
-    }
+          _new_email: newEmail || null,
+          _new_password: newPassword || null,
+          _new_support: newSupport || null,
+        });
+        if (ok === true && (newPassword || newEmail)) await revokeOthers();
+        return json({ data: ok === true }, 200, cors);
+      }
 
-    if (action === "updateAdminTelegram") {
-      const result = await callRpc("admin_update_telegram", {
-        _current_password: text(body.currentPassword, 200),
-        _new_bot_token: text(body.newBotToken, 200) || null,
-        _new_chat_id: text(body.newChatId, 80) || null,
-      });
-      // Best-effort: if credentials changed, re-register the Telegram webhook so
-      // approve/deny buttons keep flowing to us with the derived secret.
-      if (result === true) {
-        try {
-          const { data: rows } = await backend
-            .from("admin_secrets")
-            .select("key, value")
-            .in("key", ["telegram_bot_token"]);
-          const map = new Map((rows ?? []).map((r: { key: string; value: string }) => [r.key, r.value]));
-          const botToken = (map.get("telegram_bot_token") || "").trim();
-          if (botToken) {
-            const projectRef = (url || "").match(/https:\/\/([^.]+)/)?.[1];
-            const webhookUrl = `https://${projectRef}.supabase.co/functions/v1/telegram-webhook`;
-            const secret = await (async () => {
-              const buf = new TextEncoder().encode(`telegram-webhook:${botToken}`);
-              const digest = await crypto.subtle.digest("SHA-256", buf);
-              return btoa(String.fromCharCode(...new Uint8Array(digest)))
+      if (action === "adminUpdateTelegram") {
+        const newBotToken = text(body.newBotToken, 200);
+        const newChatId = text(body.newChatId, 80);
+        if (newBotToken && !/^\d{5,15}:[A-Za-z0-9_-]{20,100}$/.test(newBotToken)) return bad();
+        if (newChatId && !/^-?\d{3,20}$|^@[A-Za-z0-9_]{4,64}$/.test(newChatId)) return bad();
+        const result = await callRpc("admin_update_telegram", {
+          _current_password: text(body.currentPassword, 200),
+          _new_bot_token: newBotToken || null,
+          _new_chat_id: newChatId || null,
+        });
+        // Best-effort: re-register the Telegram webhook with the derived secret.
+        if (result === true) {
+          try {
+            const { data: rows } = await backend.from("admin_secrets").select("key, value").eq("key", "telegram_bot_token");
+            const botToken = String(rows?.[0]?.value || "").trim();
+            if (botToken) {
+              const projectRef = (url || "").match(/https:\/\/([^.]+)/)?.[1];
+              const webhookUrl = `https://${projectRef}.supabase.co/functions/v1/telegram-webhook`;
+              const digest = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(`telegram-webhook:${botToken}`));
+              const secret = btoa(String.fromCharCode(...new Uint8Array(digest)))
                 .replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/g, "");
-            })();
-            await fetch(`https://api.telegram.org/bot${botToken}/setWebhook`, {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({
-                url: webhookUrl,
-                secret_token: secret,
-                allowed_updates: ["callback_query"],
-                drop_pending_updates: false,
-              }),
-            });
+              await fetch(`https://api.telegram.org/bot${botToken}/setWebhook`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ url: webhookUrl, secret_token: secret, allowed_updates: ["callback_query"], drop_pending_updates: false }),
+              });
+            }
+          } catch (e) {
+            console.warn("webhook re-register failed:", (e as Error)?.message);
           }
-        } catch (e) {
-          console.warn("webhook re-register failed:", (e as Error)?.message);
         }
+        return json({ data: result === true }, 200, cors);
       }
-      return json({ data: result }, 200, cors);
-    }
 
-    if (action === "adminTelegramStatus") {
-      try {
-        const rows = await callRpc("admin_telegram_status", { _password: text(body.password, 200) });
-        const row = Array.isArray(rows) ? rows[0] : rows;
-        return json({ data: { bot: !!row?.bot_configured, chat: !!row?.chat_configured } }, 200, cors);
-      } catch {
-        return json({ data: { bot: false, chat: false } }, 200, cors);
+      if (action === "adminTelegramStatus") {
+        const { data } = await backend.from("admin_secrets").select("key, value")
+          .in("key", ["telegram_bot_token", "telegram_chat_id"]);
+        const map = new Map((data ?? []).map((r: { key: string; value: string }) => [r.key, (r.value || "").trim()]));
+        return json({ data: { bot: !!map.get("telegram_bot_token"), chat: !!map.get("telegram_chat_id") } }, 200, cors);
       }
+
+      return json({ error: "unknown_action" }, 400, cors);
     }
 
     if (action === "getPublicAppSetting") {
