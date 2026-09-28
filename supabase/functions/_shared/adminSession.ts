@@ -59,7 +59,7 @@ export type AdminSessionCheck =
  * accompanied by a matching CSRF token (double submit). Slides last_seen_at.
  */
 // deno-lint-ignore no-explicit-any
-export async function requireAdminSession(req: Request, backend: any): Promise<AdminSessionCheck> {
+export async function requireAdminSession(req: Request, backend: any, opts: { csrf?: boolean } = {}): Promise<AdminSessionCheck> {
   const token = sessionTokenFrom(req);
   if (!token || token.length < 32 || token.length > 256) {
     return { ok: false, status: 401, reason: "no_session" };
@@ -84,6 +84,10 @@ export async function requireAdminSession(req: Request, backend: any): Promise<A
   }
 
   const csrf = (req.headers.get("x-csrf-token") || "").trim();
+  if (opts.csrf === false) {
+    await backend.from("admin_sessions").update({ last_seen_at: new Date().toISOString() }).eq("id", data.id);
+    return { ok: true, sessionId: String(data.id) };
+  }
   if (!csrf) return { ok: false, status: 403, reason: "csrf_missing" };
   const csrfHash = await sha256(csrf);
   if (!timingSafeEqual(csrfHash, String(data.csrf_hash))) {

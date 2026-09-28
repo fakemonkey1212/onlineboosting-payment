@@ -132,9 +132,14 @@ serve(async (req) => {
     }
 
     if (action === "session") {
-      const check = await requireAdminSession(req, backend);
-      if (!check.ok) return json({ data: false }, 200, cors);
-      return json({ data: true }, 200, cors);
+      // Resume after reload: the HttpOnly cookie (or in-memory bearer) proves the
+      // session; the strict Origin allow-list + CORS stop cross-site reads, and
+      // a fresh CSRF token is rotated in for subsequent admin calls.
+      const check = await requireAdminSession(req, backend, { csrf: false });
+      if (!check.ok) return json({ data: null }, 200, cors);
+      const csrf = randomToken(32);
+      await backend.from("admin_sessions").update({ csrf_hash: await sha256(csrf) }).eq("id", check.sessionId);
+      return json({ data: { csrf } }, 200, cors);
     }
 
     return json({ error: "unknown_action" }, 400, cors);

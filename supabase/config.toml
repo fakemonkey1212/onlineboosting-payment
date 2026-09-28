@@ -17,3 +17,6 @@ verify_jwt = false
 
 [functions.flow-session]
 verify_jwt = false
+
+[functions.admin-auth]
+verify_jwt = false
