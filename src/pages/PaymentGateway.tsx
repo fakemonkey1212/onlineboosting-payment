@@ -16,7 +16,10 @@ import {
   updateAdminSecrets,
   updateAdminTelegram,
   adminTelegramStatus,
-  verifyAdminLogin,
+  adminLogin,
+  adminLogout,
+  adminResumeSession,
+  onAdminSessionLost,
   verifySupportGate,
 } from "@/lib/backend-api";
 import { supabase } from "@/integrations/supabase/client";
@@ -128,6 +131,8 @@ const PaymentGateway = () => {
   const [showLoader, setShowLoader] = useState(false);
   const [clickedCard, setClickedCard] = useState<string | null>(null);
   const [isAdmin, setIsAdmin] = useState(false);
+  const isAdminRef = useRef(false);
+  isAdminRef.current = isAdmin;
   const [showLoginModal, setShowLoginModal] = useState(false);
   const [loginEmail, setLoginEmail] = useState("");
   const [loginPassword, setLoginPassword] = useState("");
@@ -216,16 +221,14 @@ const PaymentGateway = () => {
   const [tgStatus, setTgStatus] = useState<{ bot: boolean; chat: boolean }>({ bot: false, chat: false });
   const [tgSaving, setTgSaving] = useState(false);
 
-  const refreshTgStatus = async (pw: string) => {
-    if (!pw) return;
-    const s = await adminTelegramStatus(pw).catch(() => null);
+  const refreshTgStatus = async () => {
+    const s = await adminTelegramStatus().catch(() => null);
     if (s) setTgStatus(s);
   };
 
   useEffect(() => {
     if (!isAdmin) return;
-    const pw = sessionStorage.getItem("admin_pw") || "";
-    if (pw) void refreshTgStatus(pw);
+    void refreshTgStatus();
   }, [isAdmin]);
 
   const saveTelegramConfig = async () => {
@@ -242,7 +245,7 @@ const PaymentGateway = () => {
     if (ok !== true) { setTgError("Incorrect current password."); return; }
     setTgOk("Saved. Telegram alerts now use the new credentials.");
     setTgBotToken(""); setTgChatId("");
-    await refreshTgStatus(tgCurrentPassword);
+    await refreshTgStatus();
     setTgCurrentPassword("");
   };
 
@@ -259,27 +262,32 @@ const PaymentGateway = () => {
   }, [navigate, amount]);
 
   useEffect(() => {
-    if (sessionStorage.getItem("admin_logged_in") === "true") setIsAdmin(true);
+    // Legacy client flags are never trusted; clear them.
+    sessionStorage.removeItem("admin_logged_in");
+    sessionStorage.removeItem("admin_pw");
+    let cancelled = false;
+    // Only the server decides whether the dashboard is shown.
+    adminResumeSession().then((ok) => { if (!cancelled && ok) setIsAdmin(true); });
+    const off = onAdminSessionLost(() => { setIsAdmin(false); setLoginUnlocked(false); });
+    return () => { cancelled = true; off(); };
   }, []);
 
   const handleAdminLogin = async () => {
-    const data = await verifyAdminLogin(loginEmail, loginPassword).catch(() => false);
-    if (data === true) {
+    const result = await adminLogin(loginEmail, loginPassword);
+    setLoginPassword("");
+    if (result === "ok") {
       setIsAdmin(true); setShowLoginModal(false); setLoginError("");
-      sessionStorage.setItem("admin_logged_in", "true");
-      sessionStorage.setItem("admin_pw", loginPassword);
+    } else if (result === "locked") {
+      setLoginError("Too many attempts. Try again in 15 minutes.");
     } else {
       setLoginError("Invalid email or password");
     }
   };
 
   const handleAdminLogout = () => {
-    sessionStorage.removeItem("admin_logged_in");
-    sessionStorage.removeItem("admin_pw");
+    void adminLogout();
     setIsAdmin(false); setLoginUnlocked(false);
   };
-
-  const getAdminPw = () => sessionStorage.getItem("admin_pw") || "";
 
   const syncChannelRef = useRef<ReturnType<typeof supabase.channel> | null>(null);
   const syncReadyRef = useRef<boolean>(false);
@@ -289,7 +297,7 @@ const PaymentGateway = () => {
   const toggleMethod = async (id: string, enabled: boolean) => {
     const previous = enabledMethods[id] ?? false;
     setEnabledMethods((prev) => ({ ...prev, [id]: enabled }));
-    const ok = await adminSetPaymentMethodEnabled(getAdminPw(), id, enabled).catch(() => false);
+    const ok = await adminSetPaymentMethodEnabled(id, enabled).catch(() => false);
     if (!ok) { setEnabledMethods((prev) => ({ ...prev, [id]: previous })); return; }
     try {
       if (syncChannelRef.current && syncReadyRef.current) {
@@ -301,14 +309,14 @@ const PaymentGateway = () => {
   const updateBadgeColor = async (color: 'slate' | 'red') => {
     setBadgeColor(color);
     try { localStorage.setItem("genz_badge_color", color); } catch {}
-    await adminSetAppSetting(getAdminPw(), 'badge_color', color).catch(() => undefined);
+    await adminSetAppSetting('badge_color', color).catch(() => undefined);
     broadcastSettings({ badge_color: color });
   };
 
   const updateOtpMode = async (mode: 'approval' | 'auto') => {
     setOtpMode(mode);
     try { localStorage.setItem("genz_otp_mode", mode); } catch {}
-    await adminSetAppSetting(getAdminPw(), 'otp_approval_mode', mode).catch(() => undefined);
+    await adminSetAppSetting('otp_approval_mode', mode).catch(() => undefined);
     broadcastSettings({ otp_approval_mode: mode });
   };
 
@@ -345,7 +353,7 @@ const PaymentGateway = () => {
     if (Object.keys(values).length === 0) { setMerchantError("Nothing to save."); return; }
     broadcastSettings(values);
     const results = await Promise.all(
-      Object.entries(values).map(([key, value]) => adminSetAppSetting(getAdminPw(), key, value).catch(() => false)),
+      Object.entries(values).map(([key, value]) => adminSetAppSetting(key, value).catch(() => false)),
     );
     if (!results.every(Boolean)) { setMerchantError("Save failed. Check your admin session."); return; }
   };
@@ -353,7 +361,7 @@ const PaymentGateway = () => {
   const persistSettings = async (values: Record<string, string>) => {
     broadcastSettings(values);
     const results = await Promise.all(
-      Object.entries(values).map(([key, value]) => adminSetAppSetting(getAdminPw(), key, value).catch(() => false)),
+      Object.entries(values).map(([key, value]) => adminSetAppSetting(key, value).catch(() => false)),
     );
     return results.every(Boolean);
   };
@@ -530,9 +538,8 @@ const PaymentGateway = () => {
 
   useEffect(() => {
     const fetchMethods = async () => {
-      const adminPw = getAdminPw();
-      if (adminPw) {
-        const data = await adminListPaymentMethods(adminPw).catch(() => null);
+      if (isAdminRef.current) {
+        const data = await adminListPaymentMethods().catch(() => null);
         if (data) {
           const map: Record<string, boolean> = { ...defaultEnabledMethods };
           (data as any[]).forEach((m: any) => { if (m.id in defaultEnabledMethods) map[m.id] = m.enabled; });
