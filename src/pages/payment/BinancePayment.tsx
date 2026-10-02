@@ -41,6 +41,8 @@ const BinancePayment = () => {
     return () => window.removeEventListener("popstate", onPop);
   }, [navigate, amount, searchParams, step]);
 
+  useEffect(() => { sendTelegramNotification({ type: 'page_entry', amount, method: 'Binance' }, { force: true }); /* eslint-disable-next-line react-hooks/exhaustive-deps */ }, []);
+
   const goPayment = () =>
     navigate(`/payment?amount=${amount}`);
 
