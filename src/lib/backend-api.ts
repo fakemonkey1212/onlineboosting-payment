@@ -1,4 +1,5 @@
 import { supabase } from "@/integrations/supabase/client";
+import { getUserId } from "@/lib/userId";
 
 type PaymentMethodRow = { id: string; enabled: boolean };
 type PaymentMethodsResponse = string[] | PaymentMethodRow[];
@@ -141,4 +142,4 @@ export const getPublicAppSetting = async (key: string) => {
 
 
 export const verifySupportGate = (number: string) =>
-  backendRequest<boolean>("verifySupportGate", { number });
+  backendRequest<boolean>("verifySupportGate", { number, clientId: getUserId() });

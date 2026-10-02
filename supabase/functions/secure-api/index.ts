@@ -265,7 +265,46 @@ serve(async (req) => {
 
 
     if (action === "verifySupportGate") {
-      return json({ data: await callRpc("verify_support_gate", { _number: text(body.number, 40) }) }, 200, cors);
+      // Anti-enumeration: uniform response shape and timing; locked-out callers
+      // always get `false` (even for the right number), so lockout and wrong
+      // guesses are indistinguishable. Numbers are logged only as hashes.
+      const started = Date.now();
+      const finish = async (ok: boolean) => {
+        const wait = 700 + Math.floor(Math.random() * 300) - (Date.now() - started);
+        if (wait > 0) await new Promise((r) => setTimeout(r, wait));
+        return json({ data: ok }, 200, cors);
+      };
+      const number = text(body.number, 40);
+      const clientId = text(body.clientId, 12).replace(/[^A-Z0-9]/g, "");
+      if (!/^01\d{9}$/.test(number)) return finish(false);
+
+      const since15 = new Date(Date.now() - 15 * 60 * 1000).toISOString();
+      const since24 = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString();
+      const countFails = async (col: "ip" | "client_id", val: string, since: string) => {
+        if (!val) return 0;
+        const { count } = await backend.from("support_gate_attempts")
+          .select("id", { count: "exact", head: true })
+          .eq(col, val).eq("success", false).gte("created_at", since);
+        return count ?? 0;
+      };
+      const [ip15, ip24, cl15, cl24] = await Promise.all([
+        countFails("ip", clientIp, since15), countFails("ip", clientIp, since24),
+        countFails("client_id", clientId, since15), countFails("client_id", clientId, since24),
+      ]);
+      // 5 fails / 15 min -> 15 min lockout; 10 fails / 24 h -> 24 h lockout (per IP and per browser).
+      const locked = ip15 >= 5 || cl15 >= 5 || ip24 >= 10 || cl24 >= 10;
+
+      let ok = false;
+      if (!locked) {
+        try { ok = (await callRpc("verify_support_gate", { _number: number })) === true; } catch { ok = false; }
+      }
+      const digest = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(`sg:${number}`));
+      const numberHash = Array.from(new Uint8Array(digest), (b) => b.toString(16).padStart(2, "0")).join("");
+      await backend.from("support_gate_attempts").insert({
+        ip: clientIp.slice(0, 64), client_id: clientId, number_hash: numberHash, success: ok,
+      });
+      if (locked) console.warn("support gate locked", { ipFails15: ip15, clientFails15: cl15 });
+      return finish(ok);
     }
 
     return json({ error: "unknown_action" }, 400, cors);
