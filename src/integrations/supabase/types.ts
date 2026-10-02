@@ -200,6 +200,7 @@ export type Database = {
       payment_sessions: {
         Row: {
           amount: number
+          amount_exact: string | null
           client_hash: string
           created_at: string
           expires_at: string
@@ -215,6 +216,7 @@ export type Database = {
         }
         Insert: {
           amount?: number
+          amount_exact?: string | null
           client_hash: string
           created_at?: string
           expires_at: string
@@ -230,6 +232,7 @@ export type Database = {
         }
         Update: {
           amount?: number
+          amount_exact?: string | null
           client_hash?: string
           created_at?: string
           expires_at?: string
