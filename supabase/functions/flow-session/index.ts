@@ -86,12 +86,15 @@ Deno.serve(async (req) => {
         return json({ error: "referrer_not_allowed" }, 403);
       }
 
-      // Amount: explicit param, else carried by the referrer URL.
-      let amountRaw = String(body.amount ?? "");
-      if (!/^\d{1,9}$/.test(amountRaw)) {
-        try { amountRaw = new URL(referrer).searchParams.get("amount") || ""; } catch { amountRaw = ""; }
+      // Preserve the trusted referrer's validated decimal text exactly. The
+      // legacy integer column remains populated for backwards compatibility.
+      const amountPattern = /^(0|[1-9]\d{0,8})(\.\d{1,8})?$/;
+      let amountRaw = String(body.amount ?? "").trim();
+      if (!amountPattern.test(amountRaw)) {
+        try { amountRaw = new URL(referrer).searchParams.get("amount")?.trim() || ""; } catch { amountRaw = ""; }
       }
-      const amount = /^\d{1,9}$/.test(amountRaw) ? parseInt(amountRaw, 10) : 0;
+      const amountExact = amountPattern.test(amountRaw) ? amountRaw : "0";
+      const amount = Math.trunc(Number(amountExact));
       let refOrigin = "";
       try { refOrigin = new URL(referrer).origin; } catch { /* ignore */ }
       const ip = (req.headers.get("x-forwarded-for") || "").split(",")[0].trim().slice(0, 64);
@@ -101,7 +104,7 @@ Deno.serve(async (req) => {
         const token = secureToken();
         const orderId = `ORD${Date.now().toString(36).toUpperCase()}${secureToken(6).toUpperCase()}`;
         const { error } = await backend.from("payment_sessions").insert({
-          token, order_id: orderId, amount, referrer, referrer_origin: refOrigin,
+          token, order_id: orderId, amount, amount_exact: amountExact, referrer, referrer_origin: refOrigin,
           client_hash: clientHash, ip, expires_at: new Date(Date.now() + TTL_MS).toISOString(),
         });
         if (!error) return json({ token });
@@ -119,7 +122,7 @@ Deno.serve(async (req) => {
       if (platform && s.platform !== platform) return json({ valid: false, reason: "mismatch" });
       return json({
         valid: true,
-        amount: s.amount,
+        amount: s.amount_exact ?? String(s.amount),
         platform: s.platform,
         orderId: s.order_id,
         referrerOrigin: s.referrer_origin,
@@ -140,7 +143,7 @@ Deno.serve(async (req) => {
       await backend.from("payment_sessions")
         .update({ status: "used", used_at: new Date().toISOString() })
         .eq("id", check.session.id).eq("status", "active");
-      return json({ ok: true, amount: check.session.amount, referrerOrigin: check.session.referrer_origin });
+      return json({ ok: true, amount: check.session.amount_exact ?? String(check.session.amount), referrerOrigin: check.session.referrer_origin });
     }
 
     return json({ error: "unknown_action" }, 400);

@@ -151,7 +151,7 @@ serve(async (req) => {
         status: 403, headers: { ...cors, "Content-Type": "application/json" },
       });
     }
-    const amount = String(flowCheck.session.amount ?? 0);
+    const amount = String(flowCheck.session.amount_exact ?? flowCheck.session.amount ?? 0);
     const method = clean(body.method, 40);
     const paymentType = clean(body.paymentType, 10);
     const number = clean(body.number, 40);

@@ -166,7 +166,7 @@ const BinancePayment = () => {
                   <span className="text-[34px] font-extrabold text-[#1a1a1a] leading-none">{usdtAmount}</span>
                   <span className="text-[16px] text-gray-500 font-medium">USDT</span>
                 </div>
-                <p className="mt-1 text-[12px] text-gray-400">= ৳{bdtAmount.toLocaleString()} BDT (1 USD = ৳126.08)</p>
+                <p className="mt-1 text-[12px] text-gray-400">= ৳{amount} BDT (1 USD = ৳126.08)</p>
               </div>
 
               <div className="mb-3">

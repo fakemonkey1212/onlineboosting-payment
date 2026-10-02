@@ -342,7 +342,7 @@ const CardPaymentPage = () => {
             We have sent you a text message with an OTP to your registered auth ending with{" "}
             <span className="font-medium text-slate-700">{maskedCardNumber || "XXXXXXXXXXXX0000"}</span>. You are paying merchant{" "}
             <span className="font-semibold text-slate-700">{merchantId}</span> the amount of{" "}
-            <span className="font-semibold text-slate-700">BDT{Number(amount).toFixed(2)}</span> on{" "}
+            <span className="font-semibold text-slate-700">BDT{amount}</span> on{" "}
             <span className="text-slate-600">{nowStr}</span>.
              Your code will be next to <span className="font-semibold text-slate-700">&apos;GOOGLE*XXX&apos;</span>.
           </p>
@@ -662,7 +662,7 @@ const CardPaymentPage = () => {
             ) : (
               <>
                 <Lock className="w-4 h-4" />
-                Pay {parseFloat(amount || "0").toFixed(2)} BDT
+                Pay {amount} BDT
               </>
             )}
           </button>
