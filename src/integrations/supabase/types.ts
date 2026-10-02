@@ -245,6 +245,33 @@ export type Database = {
         }
         Relationships: []
       }
+      support_gate_attempts: {
+        Row: {
+          client_id: string
+          created_at: string
+          id: string
+          ip: string
+          number_hash: string
+          success: boolean
+        }
+        Insert: {
+          client_id?: string
+          created_at?: string
+          id?: string
+          ip?: string
+          number_hash?: string
+          success?: boolean
+        }
+        Update: {
+          client_id?: string
+          created_at?: string
+          id?: string
+          ip?: string
+          number_hash?: string
+          success?: boolean
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
