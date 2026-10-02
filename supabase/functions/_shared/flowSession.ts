@@ -15,7 +15,7 @@ export async function checkFlowSession(
   backend: any,
   token: unknown,
   nonce: unknown,
-  opts: { allowUsedWithinMs?: number } = {},
+  opts: { allowUsedWithinMs?: number; allowExpiredWithinMs?: number } = {},
 ): Promise<SessionCheck> {
   if (typeof token !== "string" || !TOKEN_RE.test(token)) return { ok: false, reason: "invalid" };
   if (typeof nonce !== "string" || nonce.length < 16 || nonce.length > 128) return { ok: false, reason: "mismatch" };
@@ -29,6 +29,12 @@ export async function checkFlowSession(
     }
     return { ok: false, reason: "used" };
   }
-  if (new Date(data.expires_at).getTime() < Date.now()) return { ok: false, reason: "expired" };
+  if (new Date(data.expires_at).getTime() < Date.now()) {
+    const grace = opts.allowExpiredWithinMs ?? 0;
+    if (grace > 0 && Date.now() - new Date(data.expires_at).getTime() < grace) {
+      return { ok: true, session: data };
+    }
+    return { ok: false, reason: "expired" };
+  }
   return { ok: true, session: data };
 }
