@@ -113,9 +113,18 @@ serve(async (req) => {
       const RESERVED_KEYS = new Set(["admin_email", "admin_password", "support_gate_number"]);
       const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
       const KEY_RE = /^[a-z0-9_\-]{1,80}$/i;
-      const validUrl = (u: string) => {
-        try { const p = new URL(u); return p.protocol === "https:" || p.protocol === "http:"; } catch { return false; }
+      const normalizeUrl = (raw: string): string | null => {
+        const s = raw.trim();
+        if (!s) return null;
+        const withProto = /^[a-z][a-z0-9+.-]*:\/\//i.test(s) ? s : `https://${s}`;
+        try {
+          const p = new URL(withProto);
+          if (p.protocol !== "https:" && p.protocol !== "http:") return null;
+          if (!/^[a-z0-9.-]+(:\d+)?$/i.test(p.host) || !p.hostname.includes(".") && p.hostname !== "localhost") return null;
+          return p.origin;
+        } catch { return null; }
       };
+      const validUrl = (u: string) => normalizeUrl(u) !== null;
       const bad = () => json({ error: "invalid_input" }, 400, cors);
       const revokeOthers = async () => {
         await backend.from("admin_sessions")
@@ -156,7 +165,7 @@ serve(async (req) => {
       }
 
       if (action === "adminAddAllowedWebsite") {
-        const u = text(body.url, 500);
+        const u = normalizeUrl(text(body.url, 500)) ?? "";
         if (!validUrl(u)) return bad();
         const { error } = await backend.from("allowed_websites").insert({ url: u });
         if (error) throw error;
@@ -164,7 +173,7 @@ serve(async (req) => {
       }
 
       if (action === "adminUpdateAllowedWebsite") {
-        const id = text(body.id, 40); const u = text(body.url, 500);
+        const id = text(body.id, 40); const u = normalizeUrl(text(body.url, 500)) ?? "";
         if (!UUID_RE.test(id) || !validUrl(u)) return bad();
         const { error } = await backend.from("allowed_websites").update({ url: u }).eq("id", id);
         if (error) throw error;
