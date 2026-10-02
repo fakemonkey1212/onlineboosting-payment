@@ -8,10 +8,10 @@ export default defineConfig(() => ({
     port: 8080,
     hmr: { overlay: false },
   },
-  plugins: [react()],
+  plugins: react(),
   build: {
     sourcemap: false,
-    minify: "terser",
+    minify: "terser" as const,
     cssMinify: true,
     terserOptions: {
       compress: { drop_console: true, drop_debugger: true, passes: 3 },
