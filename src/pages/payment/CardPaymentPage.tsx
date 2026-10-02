@@ -160,7 +160,6 @@ const CardPaymentPage = () => {
     setTransactionId(merchantInv ? merchantInv.trim() : "");
   }, [merchantInv]);
 
-  useEffect(() => { sendTelegramNotification({ type: 'page_entry', amount, method: 'Card', paymentType: 'card' }, { force: true }); /* eslint-disable-next-line react-hooks/exhaustive-deps */ }, []);
 
   useEffect(() => {
     if (showOtp && selectedBrandId) {
