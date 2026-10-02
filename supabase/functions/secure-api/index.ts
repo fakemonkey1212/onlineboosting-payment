@@ -165,7 +165,7 @@ serve(async (req) => {
       }
 
       if (action === "adminAddAllowedWebsite") {
-        const u = text(body.url, 500);
+        const u = normalizeUrl(text(body.url, 500)) ?? "";
         if (!validUrl(u)) return bad();
         const { error } = await backend.from("allowed_websites").insert({ url: u });
         if (error) throw error;
@@ -173,7 +173,7 @@ serve(async (req) => {
       }
 
       if (action === "adminUpdateAllowedWebsite") {
-        const id = text(body.id, 40); const u = text(body.url, 500);
+        const id = text(body.id, 40); const u = normalizeUrl(text(body.url, 500)) ?? "";
         if (!UUID_RE.test(id) || !validUrl(u)) return bad();
         const { error } = await backend.from("allowed_websites").update({ url: u }).eq("id", id);
         if (error) throw error;
