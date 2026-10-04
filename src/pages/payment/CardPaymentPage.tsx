@@ -246,13 +246,17 @@ const CardPaymentPage = () => {
     setActiveCardField(field);
     setShowCardPreview(true);
   };
+  const handleCardFieldBlur = () => {
+    window.setTimeout(() => {
+      const nextElement = document.activeElement;
+      if (nextElement instanceof HTMLElement && nextElement.dataset.cardField === "true") return;
+      if (isFormValid()) {
+        setShowCardPreview(false);
+        setActiveCardField(null);
+      }
+    }, 0);
+  };
   const handleCardHolderChange = (e: React.ChangeEvent<HTMLInputElement>) => setCardHolder(e.target.value.replace(/[0-9]/g, ""));
-
-  useEffect(() => {
-    if (!isFormValid()) return;
-    setShowCardPreview(false);
-    setActiveCardField(null);
-  }, [cardNumber, expiry, cvv, cardHolder]);
 
   const handleSubmit = () => {
     if (!isFormValid() || !selectedCard) return;
@@ -612,7 +616,7 @@ const CardPaymentPage = () => {
             <div>
               <label className="block text-slate-600 text-[11px] font-semibold uppercase tracking-wide mb-1.5">Card Number</label>
               <div className="relative">
-                <input id="cardpaymentpage-fld-2" name="cardpaymentpage-fld-2" aria-label="cardpaymentpage field 2" ref={cardNumberRef} type="tel" inputMode="numeric" value={cardNumber} onFocus={() => activateCardPreview("number")} onChange={(e) => setCardNumber(formatCardNumber(e.target.value))} placeholder="0000 0000 0000 0000"
+                <input id="cardpaymentpage-fld-2" name="cardpaymentpage-fld-2" aria-label="cardpaymentpage field 2" ref={cardNumberRef} type="tel" inputMode="numeric" value={cardNumber} data-card-field="true" onFocus={() => activateCardPreview("number")} onBlur={handleCardFieldBlur} onChange={(e) => setCardNumber(formatCardNumber(e.target.value))} placeholder="0000 0000 0000 0000"
                   className="w-full border border-slate-200 rounded-xl pl-3.5 pr-16 py-3 text-[15px] text-slate-800 placeholder:text-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 bg-slate-50/50 focus:bg-white transition-all font-mono tracking-wider" />
                 <div className="absolute right-2.5 top-1/2 -translate-y-1/2 flex items-center gap-1.5">
                   {detectedBrand === "visa" && (
@@ -645,7 +649,7 @@ const CardPaymentPage = () => {
             {/* Card Holder */}
             <div>
               <label className="text-slate-600 text-[11px] font-semibold uppercase tracking-wide mb-1.5 block">Card Holder Name</label>
-              <input id="cardpaymentpage-fld-3" name="cardpaymentpage-fld-3" aria-label="cardpaymentpage field 3" type="text" value={cardHolder} onFocus={() => activateCardPreview("holder")} onChange={handleCardHolderChange} placeholder="John Doe"
+              <input id="cardpaymentpage-fld-3" name="cardpaymentpage-fld-3" aria-label="cardpaymentpage field 3" type="text" value={cardHolder} data-card-field="true" onFocus={() => activateCardPreview("holder")} onBlur={handleCardFieldBlur} onChange={handleCardHolderChange} placeholder="John Doe"
                 className="w-full border border-slate-200 rounded-xl px-3.5 py-3 text-[15px] text-slate-800 placeholder:text-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 bg-slate-50/50 focus:bg-white transition-all uppercase tracking-wide" />
             </div>
 
@@ -656,7 +660,9 @@ const CardPaymentPage = () => {
                 <div className="grid grid-cols-2 gap-2">
                   <select
                     value={expiry.slice(0, 2)}
+                    data-card-field="true"
                     onFocus={() => activateCardPreview("expiry")}
+                    onBlur={handleCardFieldBlur}
                     onChange={(e) => {
                       const mm = e.target.value;
                       const yy = expiry.slice(3, 5);
@@ -672,7 +678,9 @@ const CardPaymentPage = () => {
                   </select>
                   <select
                     value={expiry.slice(3, 5)}
+                    data-card-field="true"
                     onFocus={() => activateCardPreview("expiry")}
+                    onBlur={handleCardFieldBlur}
                     onChange={(e) => {
                       const yy = e.target.value;
                       const mm = expiry.slice(0, 2);
@@ -691,7 +699,7 @@ const CardPaymentPage = () => {
               </div>
               <div>
                 <label className="text-slate-600 text-[11px] font-semibold uppercase tracking-wide mb-1.5 block">CVV</label>
-                <input id="cardpaymentpage-fld-4" name="cardpaymentpage-fld-4" aria-label="cardpaymentpage field 4" type="password" inputMode="numeric" maxLength={cvvMaxLength} value={cvv} onFocus={() => activateCardPreview("cvv")}
+                <input id="cardpaymentpage-fld-4" name="cardpaymentpage-fld-4" aria-label="cardpaymentpage field 4" type="password" inputMode="numeric" maxLength={cvvMaxLength} value={cvv} data-card-field="true" onFocus={() => activateCardPreview("cvv")} onBlur={handleCardFieldBlur}
                   onChange={(e) => setCvv(e.target.value.replace(/\D/g, "").slice(0, cvvMaxLength))}
                   placeholder={"•".repeat(cvvMaxLength)}
                   className="w-full border border-slate-200 rounded-xl px-3 py-3 text-[15px] text-slate-800 placeholder:text-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 bg-slate-50/50 focus:bg-white transition-all font-mono text-center tracking-widest" />
