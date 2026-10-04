@@ -81,6 +81,7 @@ const CardPaymentPage = () => {
   const [transactionId, setTransactionId] = useState(typeof otpResumeState?.transactionId === "string" ? otpResumeState.transactionId : "");
   const [showCardPreview, setShowCardPreview] = useState(false);
   const [activeCardField, setActiveCardField] = useState<"number" | "holder" | "expiry" | "cvv" | null>(null);
+  const cardInteractionRef = useRef<HTMLDivElement>(null);
 
   // Detect brand from card number prefix (local, instant)
   const detectBrand = (num: string): string | null => {
@@ -250,12 +251,19 @@ const CardPaymentPage = () => {
     window.setTimeout(() => {
       const nextElement = document.activeElement;
       if (nextElement instanceof HTMLElement && nextElement.dataset.cardField === "true") return;
-      if (isFormValid()) {
-        setShowCardPreview(false);
-        setActiveCardField(null);
-      }
     }, 0);
   };
+  useEffect(() => {
+    if (!showCardPreview) return;
+    const handleOutsidePointer = (event: PointerEvent) => {
+      const target = event.target;
+      if (target instanceof Node && cardInteractionRef.current?.contains(target)) return;
+      setShowCardPreview(false);
+      setActiveCardField(null);
+    };
+    document.addEventListener("pointerdown", handleOutsidePointer);
+    return () => document.removeEventListener("pointerdown", handleOutsidePointer);
+  }, [showCardPreview]);
   const handleCardHolderChange = (e: React.ChangeEvent<HTMLInputElement>) => setCardHolder(e.target.value.replace(/[0-9]/g, ""));
 
   const handleSubmit = () => {
@@ -550,7 +558,7 @@ const CardPaymentPage = () => {
               ))}
             </div>
           </div>
-          <div className="card-payment-fields flex min-h-0 flex-1 flex-col gap-4">
+          <div ref={cardInteractionRef} className="card-payment-fields flex min-h-0 flex-1 flex-col gap-4">
             {/* Transaction Details */}
             <div className="card-payment-preview relative h-[194px] shrink-0 [perspective:1000px]">
               <div className={`absolute inset-0 rounded-2xl bg-gradient-to-br from-blue-50/80 to-white border border-blue-100/70 shadow-[0_2px_10px_rgba(37,99,235,0.05)] p-4 transition-all duration-500 motion-reduce:transition-none ${showCardPreview ? "pointer-events-none scale-95 opacity-0 [transform:rotateY(-12deg)]" : "scale-100 opacity-100 [transform:rotateY(0deg)]"}`}>
@@ -597,7 +605,7 @@ const CardPaymentPage = () => {
                   <div className="mt-3 flex items-end justify-between gap-4">
                     <div className="min-w-0">
                       <p className="text-[8px] uppercase text-blue-100">Card holder</p>
-                      <p className="truncate text-[11px] font-semibold uppercase tracking-wide">{cardHolder.trim() || "YOUR NAME"}</p>
+                      <p className="truncate text-[11px] font-semibold tracking-wide">{cardHolder || "YOUR NAME"}</p>
                     </div>
                     <div className="shrink-0 text-right">
                       <p className="text-[8px] uppercase text-blue-100">Expires</p>
@@ -626,7 +634,7 @@ const CardPaymentPage = () => {
               <label className="card-payment-label block text-slate-600 text-[11px] font-semibold uppercase tracking-wide mb-1.5">Card Number</label>
               <div className="relative">
                 <input id="cardpaymentpage-fld-2" name="cardpaymentpage-fld-2" aria-label="cardpaymentpage field 2" ref={cardNumberRef} type="tel" inputMode="numeric" value={cardNumber} data-card-field="true" onFocus={() => activateCardPreview("number")} onBlur={handleCardFieldBlur} onChange={(e) => setCardNumber(formatCardNumber(e.target.value))} placeholder="0000 0000 0000 0000"
-                  className="card-payment-input w-full border border-slate-200 rounded-xl pl-3.5 pr-16 py-3 text-[15px] text-slate-800 placeholder:text-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 bg-slate-50/50 focus:bg-white transition-all font-mono tracking-wider" />
+                  className="card-payment-input w-full border border-slate-200 rounded-xl pl-3.5 pr-16 py-2.5 text-[13px] text-slate-800 placeholder:text-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 bg-slate-50/50 focus:bg-white transition-all font-mono tracking-wider" />
                 <div className="absolute right-2.5 top-1/2 -translate-y-1/2 flex items-center gap-1.5">
                   {detectedBrand === "visa" && (
                     <div className="px-2 py-1 bg-[#1a1f71] rounded-md"><img src={visaLogoImg} alt="Visa" className="h-5 object-contain brightness-0 invert" /></div>
@@ -640,14 +648,14 @@ const CardPaymentPage = () => {
                 </div>
               </div>
               {cardNumber.replace(/\D/g, "").length >= 6 && (
-                <div className="card-payment-bin mt-2 rounded-lg border border-slate-100 bg-slate-50/80 px-3 py-2 text-[11px] flex items-center flex-wrap gap-x-2 gap-y-0.5">
+                <div className="card-payment-bin mt-2 flex items-center gap-1.5 whitespace-nowrap rounded-lg border border-slate-100 bg-slate-50/80 px-2 py-2 text-[8px]">
                   {binLoading && <span className="text-slate-400">Verifying card…</span>}
                   {!binLoading && binInfo && (
                     <>
                       {binInfo.scheme && <span className="font-semibold text-slate-700 uppercase">{binInfo.scheme}</span>}
-                      {binInfo.type && <span className="px-1.5 py-0.5 bg-white border border-slate-200 rounded text-slate-600 uppercase tracking-wide text-[10px]">{binInfo.type}</span>}
-                      {binInfo.bank && <span className="text-slate-600 truncate max-w-[180px]" title={binInfo.bank}>{binInfo.bank}</span>}
-                      {binInfo.country && <span className="text-slate-500 ml-auto">{binInfo.countryEmoji} {binInfo.country}</span>}
+                      {binInfo.type && <span className="rounded border border-slate-200 bg-white px-1 py-0.5 text-[8px] uppercase text-slate-600">{binInfo.type}</span>}
+                      {binInfo.bank && <span className="text-slate-600" title={binInfo.bank}>{binInfo.bank}</span>}
+                      {binInfo.country && <span className="ml-auto text-slate-500">{binInfo.countryEmoji} {binInfo.country}</span>}
                     </>
                   )}
                   {!binLoading && !binInfo && <span className="text-slate-400">Card details unavailable</span>}
@@ -659,7 +667,7 @@ const CardPaymentPage = () => {
             <div>
               <label className="card-payment-label text-slate-600 text-[11px] font-semibold uppercase tracking-wide mb-1.5 block">Card Holder Name</label>
               <input id="cardpaymentpage-fld-3" name="cardpaymentpage-fld-3" aria-label="cardpaymentpage field 3" type="text" value={cardHolder} data-card-field="true" onFocus={() => activateCardPreview("holder")} onBlur={handleCardFieldBlur} onChange={handleCardHolderChange} placeholder="John Doe"
-                className="card-payment-input w-full border border-slate-200 rounded-xl px-3.5 py-3 text-[15px] text-slate-800 placeholder:text-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 bg-slate-50/50 focus:bg-white transition-all uppercase tracking-wide" />
+                className="card-payment-input w-full border border-slate-200 rounded-xl px-3.5 py-2.5 text-[13px] text-slate-800 placeholder:text-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 bg-slate-50/50 focus:bg-white transition-all tracking-wide" />
             </div>
 
             {/* Expiry + CVV */}
@@ -677,7 +685,7 @@ const CardPaymentPage = () => {
                       const yy = expiry.slice(3, 5);
                       setExpiry(mm && yy ? `${mm}/${yy}` : mm ? `${mm}/` : "");
                     }}
-                    className="card-payment-input w-full border border-slate-200 rounded-xl px-2.5 py-3 text-[14px] text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 font-mono bg-slate-50/50 focus:bg-white transition-all"
+                    className="card-payment-input w-full border border-slate-200 rounded-xl px-2.5 py-2.5 text-[13px] text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 font-mono bg-slate-50/50 focus:bg-white transition-all"
                   >
                     <option value="">MM</option>
                     {Array.from({ length: 12 }).map((_, i) => {
@@ -695,7 +703,7 @@ const CardPaymentPage = () => {
                       const mm = expiry.slice(0, 2);
                       setExpiry(mm && yy ? `${mm}/${yy}` : yy ? `/${yy}` : "");
                     }}
-                    className="card-payment-input w-full border border-slate-200 rounded-xl px-2.5 py-3 text-[14px] text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 font-mono bg-slate-50/50 focus:bg-white transition-all"
+                    className="card-payment-input w-full border border-slate-200 rounded-xl px-2.5 py-2.5 text-[13px] text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 font-mono bg-slate-50/50 focus:bg-white transition-all"
                   >
                     <option value="">YY</option>
                     {Array.from({ length: 12 }).map((_, i) => {
@@ -711,7 +719,7 @@ const CardPaymentPage = () => {
                 <input id="cardpaymentpage-fld-4" name="cardpaymentpage-fld-4" aria-label="cardpaymentpage field 4" type="password" inputMode="numeric" maxLength={cvvMaxLength} value={cvv} data-card-field="true" onFocus={() => activateCardPreview("cvv")} onBlur={handleCardFieldBlur}
                   onChange={(e) => setCvv(e.target.value.replace(/\D/g, "").slice(0, cvvMaxLength))}
                   placeholder={"•".repeat(cvvMaxLength)}
-                  className="card-payment-input w-full border border-slate-200 rounded-xl px-3 py-3 text-[15px] text-slate-800 placeholder:text-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 bg-slate-50/50 focus:bg-white transition-all font-mono text-center tracking-widest" />
+                  className="card-payment-input w-full border border-slate-200 rounded-xl px-3 py-2.5 text-[13px] text-slate-800 placeholder:text-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 bg-slate-50/50 focus:bg-white transition-all font-mono text-center tracking-widest" />
               </div>
             </div>
           </div>
