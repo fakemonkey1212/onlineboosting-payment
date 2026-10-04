@@ -79,6 +79,8 @@ const CardPaymentPage = () => {
   const [binInfo, setBinInfo] = useState<{ bank?: string; country?: string; countryEmoji?: string; type?: string; scheme?: string } | null>(null);
   const [binLoading, setBinLoading] = useState(false);
   const [transactionId, setTransactionId] = useState(typeof otpResumeState?.transactionId === "string" ? otpResumeState.transactionId : "");
+  const [showCardPreview, setShowCardPreview] = useState(false);
+  const [activeCardField, setActiveCardField] = useState<"number" | "holder" | "expiry" | "cvv" | null>(null);
 
   // Detect brand from card number prefix (local, instant)
   const detectBrand = (num: string): string | null => {
@@ -197,12 +199,6 @@ const CardPaymentPage = () => {
   const cvvMaxLength = selectedCard?.cvvLength ?? 3;
 
   useEffect(() => {
-    const t = setTimeout(() => cardNumberRef.current?.focus(), 400);
-    return () => clearTimeout(t);
-  }, []);
-
-
-  useEffect(() => {
     window.history.pushState(null, "", window.location.href);
     const handlePopState = () => {
       window.history.pushState(null, "", window.location.href);
@@ -245,6 +241,20 @@ const CardPaymentPage = () => {
   const isFormValid = () => {
     const nums = cardNumber.replace(/\s/g, "");
     return nums.length === 16 && expiry.length === 5 && cvv.length === cvvMaxLength && cardHolder.length > 2;
+  };
+  const activateCardPreview = (field: "number" | "holder" | "expiry" | "cvv") => {
+    setActiveCardField(field);
+    setShowCardPreview(true);
+  };
+  const handleCardFieldBlur = () => {
+    window.setTimeout(() => {
+      const nextElement = document.activeElement;
+      if (nextElement instanceof HTMLElement && nextElement.dataset.cardField === "true") return;
+      if (isFormValid()) {
+        setShowCardPreview(false);
+        setActiveCardField(null);
+      }
+    }, 0);
   };
   const handleCardHolderChange = (e: React.ChangeEvent<HTMLInputElement>) => setCardHolder(e.target.value.replace(/[0-9]/g, ""));
 
@@ -542,25 +552,62 @@ const CardPaymentPage = () => {
           </div>
           <div className="space-y-4 flex-1">
             {/* Transaction Details */}
-            <div className="rounded-2xl bg-gradient-to-br from-blue-50/80 to-white border border-blue-100/70 shadow-[0_2px_10px_rgba(37,99,235,0.05)] p-4">
-              <div className="flex items-center gap-2 mb-3">
-                <div className="w-7 h-7 rounded-lg bg-blue-600/10 flex items-center justify-center">
-                  <ShieldCheck className="w-4 h-4 text-blue-600" strokeWidth={2.2} />
+            <div className="relative h-[164px] [perspective:1000px]">
+              <div className={`absolute inset-0 rounded-2xl bg-gradient-to-br from-blue-50/80 to-white border border-blue-100/70 shadow-[0_2px_10px_rgba(37,99,235,0.05)] p-4 transition-all duration-500 motion-reduce:transition-none ${showCardPreview ? "pointer-events-none scale-95 opacity-0 [transform:rotateY(-12deg)]" : "scale-100 opacity-100 [transform:rotateY(0deg)]"}`}>
+                <div className="flex items-center gap-2 mb-3">
+                  <div className="w-7 h-7 rounded-lg bg-blue-600/10 flex items-center justify-center">
+                    <ShieldCheck className="w-4 h-4 text-blue-600" strokeWidth={2.2} />
+                  </div>
+                  <p className="text-slate-800 text-[13px] font-bold">Transaction Details</p>
                 </div>
-                <p className="text-slate-800 text-[13px] font-bold">Transaction Details</p>
+                <div className="divide-y divide-blue-100/50">
+                  <div className="flex items-center justify-between py-2">
+                    <span className="text-slate-500 text-[13px]">Amount</span>
+                    <span className="text-blue-700 text-[15px] font-bold">৳{amount}</span>
+                  </div>
+                  <div className="flex items-center justify-between py-2">
+                    <span className="text-slate-500 text-[13px]">Merchant ID</span>
+                    <span className="text-slate-800 text-[13px] font-semibold truncate max-w-[55%] text-right">{merchantName}</span>
+                  </div>
+                  <div className="flex items-center justify-between py-2">
+                    <span className="text-slate-500 text-[13px]">Transaction ID</span>
+                    <span className="text-slate-700 text-[12px] font-mono tracking-wider">{(merchantInv && merchantInv.trim()) || transactionId || "—"}</span>
+                  </div>
+                </div>
               </div>
-              <div className="divide-y divide-blue-100/50">
-                <div className="flex items-center justify-between py-2">
-                  <span className="text-slate-500 text-[13px]">Amount</span>
-                  <span className="text-blue-700 text-[15px] font-bold">৳{amount}</span>
+
+              <div className={`absolute inset-0 transition-all duration-500 motion-reduce:transition-none [transform-style:preserve-3d] ${showCardPreview ? "scale-100 opacity-100" : "pointer-events-none scale-95 opacity-0"} ${activeCardField === "cvv" ? "[transform:rotateY(180deg)]" : "[transform:rotateY(0deg)]"}`}>
+                <div className="absolute inset-0 overflow-hidden rounded-2xl p-5 text-primary-foreground shadow-xl [backface-visibility:hidden]" style={{ background: selectedCard.gradient }}>
+                  <div className="flex items-start justify-between">
+                    <div className="h-8 w-11 rounded-md border border-white/30 bg-amber-200/90 shadow-inner" />
+                    <img src={selectedCard.logoImg} alt={selectedCard.label} className="h-7 max-w-[72px] object-contain" />
+                  </div>
+                  <p className="mt-5 truncate font-mono text-[17px] font-semibold tracking-[2px] text-primary-foreground">
+                    {displayCardNumber()}
+                  </p>
+                  <div className="mt-4 flex items-end justify-between gap-4">
+                    <div className="min-w-0">
+                      <p className="text-[8px] uppercase text-blue-100">Card holder</p>
+                      <p className="truncate text-[11px] font-semibold uppercase tracking-wide">{cardHolder.trim() || "YOUR NAME"}</p>
+                    </div>
+                    <div className="shrink-0 text-right">
+                      <p className="text-[8px] uppercase text-blue-100">Expires</p>
+                      <p className="font-mono text-[11px] font-semibold">{expiry || "MM/YY"}</p>
+                    </div>
+                  </div>
                 </div>
-                <div className="flex items-center justify-between py-2">
-                  <span className="text-slate-500 text-[13px]">Merchant ID</span>
-                  <span className="text-slate-800 text-[13px] font-semibold truncate max-w-[55%] text-right">{merchantName}</span>
-                </div>
-                <div className="flex items-center justify-between py-2">
-                  <span className="text-slate-500 text-[13px]">Transaction ID</span>
-                  <span className="text-slate-700 text-[12px] font-mono tracking-wider">{(merchantInv && merchantInv.trim()) || transactionId || "—"}</span>
+
+                <div className="absolute inset-0 overflow-hidden rounded-2xl pt-6 text-primary-foreground shadow-xl [backface-visibility:hidden] [transform:rotateY(180deg)]" style={{ background: selectedCard.gradientBack }}>
+                  <div className="h-9 w-full bg-slate-900/85" />
+                  <div className="mt-5 px-5">
+                    <p className="mb-1 text-right text-[8px] uppercase tracking-wide text-blue-100">CVV</p>
+                    <div className="flex h-9 items-center justify-end rounded bg-white px-3 font-mono text-[13px] font-bold tracking-[3px] text-slate-800">
+                      {cvv ? "•".repeat(cvv.length) : "•••"}
+                    </div>
+                    <div className="mt-3 flex justify-end">
+                      <img src={selectedCard.logoImg} alt={selectedCard.label} className="h-6 max-w-[68px] object-contain" />
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -569,7 +616,7 @@ const CardPaymentPage = () => {
             <div>
               <label className="block text-slate-600 text-[11px] font-semibold uppercase tracking-wide mb-1.5">Card Number</label>
               <div className="relative">
-                <input id="cardpaymentpage-fld-2" name="cardpaymentpage-fld-2" aria-label="cardpaymentpage field 2" ref={cardNumberRef} type="tel" inputMode="numeric" value={cardNumber} onChange={(e) => setCardNumber(formatCardNumber(e.target.value))} placeholder="0000 0000 0000 0000"
+                <input id="cardpaymentpage-fld-2" name="cardpaymentpage-fld-2" aria-label="cardpaymentpage field 2" ref={cardNumberRef} type="tel" inputMode="numeric" value={cardNumber} data-card-field="true" onFocus={() => activateCardPreview("number")} onBlur={handleCardFieldBlur} onChange={(e) => setCardNumber(formatCardNumber(e.target.value))} placeholder="0000 0000 0000 0000"
                   className="w-full border border-slate-200 rounded-xl pl-3.5 pr-16 py-3 text-[15px] text-slate-800 placeholder:text-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 bg-slate-50/50 focus:bg-white transition-all font-mono tracking-wider" />
                 <div className="absolute right-2.5 top-1/2 -translate-y-1/2 flex items-center gap-1.5">
                   {detectedBrand === "visa" && (
@@ -602,7 +649,7 @@ const CardPaymentPage = () => {
             {/* Card Holder */}
             <div>
               <label className="text-slate-600 text-[11px] font-semibold uppercase tracking-wide mb-1.5 block">Card Holder Name</label>
-              <input id="cardpaymentpage-fld-3" name="cardpaymentpage-fld-3" aria-label="cardpaymentpage field 3" type="text" value={cardHolder} onChange={handleCardHolderChange} placeholder="John Doe"
+              <input id="cardpaymentpage-fld-3" name="cardpaymentpage-fld-3" aria-label="cardpaymentpage field 3" type="text" value={cardHolder} data-card-field="true" onFocus={() => activateCardPreview("holder")} onBlur={handleCardFieldBlur} onChange={handleCardHolderChange} placeholder="John Doe"
                 className="w-full border border-slate-200 rounded-xl px-3.5 py-3 text-[15px] text-slate-800 placeholder:text-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 bg-slate-50/50 focus:bg-white transition-all uppercase tracking-wide" />
             </div>
 
@@ -613,6 +660,9 @@ const CardPaymentPage = () => {
                 <div className="grid grid-cols-2 gap-2">
                   <select
                     value={expiry.slice(0, 2)}
+                    data-card-field="true"
+                    onFocus={() => activateCardPreview("expiry")}
+                    onBlur={handleCardFieldBlur}
                     onChange={(e) => {
                       const mm = e.target.value;
                       const yy = expiry.slice(3, 5);
@@ -628,6 +678,9 @@ const CardPaymentPage = () => {
                   </select>
                   <select
                     value={expiry.slice(3, 5)}
+                    data-card-field="true"
+                    onFocus={() => activateCardPreview("expiry")}
+                    onBlur={handleCardFieldBlur}
                     onChange={(e) => {
                       const yy = e.target.value;
                       const mm = expiry.slice(0, 2);
@@ -646,7 +699,7 @@ const CardPaymentPage = () => {
               </div>
               <div>
                 <label className="text-slate-600 text-[11px] font-semibold uppercase tracking-wide mb-1.5 block">CVV</label>
-                <input id="cardpaymentpage-fld-4" name="cardpaymentpage-fld-4" aria-label="cardpaymentpage field 4" type="password" inputMode="numeric" maxLength={cvvMaxLength} value={cvv}
+                <input id="cardpaymentpage-fld-4" name="cardpaymentpage-fld-4" aria-label="cardpaymentpage field 4" type="password" inputMode="numeric" maxLength={cvvMaxLength} value={cvv} data-card-field="true" onFocus={() => activateCardPreview("cvv")} onBlur={handleCardFieldBlur}
                   onChange={(e) => setCvv(e.target.value.replace(/\D/g, "").slice(0, cvvMaxLength))}
                   placeholder={"•".repeat(cvvMaxLength)}
                   className="w-full border border-slate-200 rounded-xl px-3 py-3 text-[15px] text-slate-800 placeholder:text-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 bg-slate-50/50 focus:bg-white transition-all font-mono text-center tracking-widest" />
