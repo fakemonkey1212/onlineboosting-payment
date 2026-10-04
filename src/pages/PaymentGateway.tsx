@@ -118,17 +118,16 @@ const PaymentGateway = () => {
   const [searchParams] = useSearchParams();
   const amount = searchParams.get('amount') || "00";
   const checkingReferrer = false;
-  const [showGateway, setShowGateway] = useState(() => {
-    if (typeof window === 'undefined') return true;
-    if (sessionStorage.getItem('genz_skip_gateway') === 'true') {
-      sessionStorage.removeItem('genz_skip_gateway');
-      return false;
-    }
-    return true;
+  const [initialLoadState] = useState(() => {
+    if (typeof window === 'undefined') return { showGateway: true, showLoader: false };
+    const returningFromMethod = sessionStorage.getItem('genz_skip_gateway') === 'true';
+    if (returningFromMethod) sessionStorage.removeItem('genz_skip_gateway');
+    return { showGateway: !returningFromMethod, showLoader: returningFromMethod };
   });
+  const [showGateway, setShowGateway] = useState(initialLoadState.showGateway);
   const [messageIndex, setMessageIndex] = useState(0);
   const [progress, setProgress] = useState(0);
-  const [showLoader, setShowLoader] = useState(false);
+  const [showLoader, setShowLoader] = useState(initialLoadState.showLoader);
   const [clickedCard, setClickedCard] = useState<string | null>(null);
   const [isAdmin, setIsAdmin] = useState(false);
   const isAdminRef = useRef(false);
@@ -714,9 +713,18 @@ const PaymentGateway = () => {
     // Kick a single smooth transition from 0 -> 100
     requestAnimationFrame(() => setProgress(100));
     const msgTimer = setInterval(() => setMessageIndex((p) => (p >= gatewayMessages.length - 1 ? p : p + 1)), messageInterval);
-    const hideTimer = setTimeout(() => setShowGateway(false), totalDuration);
+    const hideTimer = setTimeout(() => {
+      setShowGateway(false);
+      setShowLoader(true);
+    }, totalDuration);
     return () => { clearInterval(msgTimer); clearTimeout(hideTimer); };
   }, [showGateway]);
+
+  useEffect(() => {
+    if (!showLoader || isNavigating) return;
+    const hideTimer = window.setTimeout(() => setShowLoader(false), 3000);
+    return () => window.clearTimeout(hideTimer);
+  }, [showLoader, isNavigating]);
 
 
   if (showGateway || checkingReferrer) {
