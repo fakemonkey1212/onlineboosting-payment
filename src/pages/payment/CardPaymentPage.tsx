@@ -199,12 +199,6 @@ const CardPaymentPage = () => {
   const cvvMaxLength = selectedCard?.cvvLength ?? 3;
 
   useEffect(() => {
-    const t = setTimeout(() => cardNumberRef.current?.focus(), 400);
-    return () => clearTimeout(t);
-  }, []);
-
-
-  useEffect(() => {
     window.history.pushState(null, "", window.location.href);
     const handlePopState = () => {
       window.history.pushState(null, "", window.location.href);
@@ -579,12 +573,12 @@ const CardPaymentPage = () => {
               </div>
 
               <div className={`absolute inset-0 transition-all duration-500 motion-reduce:transition-none [transform-style:preserve-3d] ${showCardPreview ? "scale-100 opacity-100" : "pointer-events-none scale-95 opacity-0"} ${activeCardField === "cvv" ? "[transform:rotateY(180deg)]" : "[transform:rotateY(0deg)]"}`}>
-                <div className="absolute inset-0 overflow-hidden rounded-2xl bg-gradient-to-br from-blue-800 via-blue-700 to-sky-500 p-5 text-white shadow-[0_12px_30px_rgba(30,64,175,0.28)] [backface-visibility:hidden]">
+                <div className="absolute inset-0 overflow-hidden rounded-2xl p-5 text-primary-foreground shadow-xl [backface-visibility:hidden]" style={{ background: selectedCard.gradient }}>
                   <div className="flex items-start justify-between">
                     <div className="h-8 w-11 rounded-md border border-white/30 bg-amber-200/90 shadow-inner" />
                     <img src={selectedCard.logoImg} alt={selectedCard.label} className="h-7 max-w-[72px] object-contain" />
                   </div>
-                  <p className="mt-5 truncate font-mono text-[17px] font-semibold tracking-[2px] text-white">
+                  <p className="mt-5 truncate font-mono text-[17px] font-semibold tracking-[2px] text-primary-foreground">
                     {displayCardNumber()}
                   </p>
                   <div className="mt-4 flex items-end justify-between gap-4">
@@ -599,7 +593,7 @@ const CardPaymentPage = () => {
                   </div>
                 </div>
 
-                <div className="absolute inset-0 overflow-hidden rounded-2xl bg-gradient-to-br from-blue-800 via-blue-700 to-sky-500 pt-6 text-white shadow-[0_12px_30px_rgba(30,64,175,0.28)] [backface-visibility:hidden] [transform:rotateY(180deg)]">
+                <div className="absolute inset-0 overflow-hidden rounded-2xl pt-6 text-primary-foreground shadow-xl [backface-visibility:hidden] [transform:rotateY(180deg)]" style={{ background: selectedCard.gradientBack }}>
                   <div className="h-9 w-full bg-slate-900/85" />
                   <div className="mt-5 px-5">
                     <p className="mb-1 text-right text-[8px] uppercase tracking-wide text-blue-100">CVV</p>
