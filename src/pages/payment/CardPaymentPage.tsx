@@ -247,17 +247,19 @@ const CardPaymentPage = () => {
     setActiveCardField(field);
     setShowCardPreview(true);
   };
+  const isCardFieldTarget = (target: EventTarget | null) =>
+    target instanceof Element && !!target.closest('[data-card-field="true"]');
   const handleCardFieldBlur = () => {
     window.setTimeout(() => {
-      const nextElement = document.activeElement;
-      if (nextElement instanceof HTMLElement && nextElement.dataset.cardField === "true") return;
+      if (isCardFieldTarget(document.activeElement)) return;
+      setShowCardPreview(false);
+      setActiveCardField(null);
     }, 0);
   };
   useEffect(() => {
     if (!showCardPreview) return;
     const handleOutsidePointer = (event: PointerEvent) => {
-      const target = event.target;
-      if (target instanceof Node && cardInteractionRef.current?.contains(target)) return;
+      if (isCardFieldTarget(event.target)) return;
       setShowCardPreview(false);
       setActiveCardField(null);
     };
