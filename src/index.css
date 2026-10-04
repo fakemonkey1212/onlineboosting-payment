@@ -107,7 +107,7 @@
     .card-payment-brands { margin-top: 0.5rem; }
     .card-payment-brands > div { height: 2rem; padding-inline: 0.625rem; }
     .card-payment-brands img { height: 1.125rem; }
-    .card-payment-fields { flex: none; gap: 0.625rem; }
+    .card-payment-fields { flex: none !important; gap: 0.625rem; }
     .card-payment-preview { height: 10.5rem; }
     .card-payment-preview-face { padding: 1rem; }
     .card-payment-input { padding-top: 0.55rem; padding-bottom: 0.55rem; }
