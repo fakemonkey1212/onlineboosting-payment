@@ -110,7 +110,7 @@
   gap: 0.625rem;
 }
 
-@media (max-height: 840px) {
+@media (max-height: 760px) {
     .card-payment-topbar { padding-top: 0.625rem; padding-bottom: 0.5rem; }
     .card-payment-sheet { padding-bottom: 0.625rem; }
     .card-payment-heading { margin-bottom: 0.625rem; }
@@ -274,3 +274,13 @@
     .card-otp-header > div:last-child span { display: none; }
     .card-otp-footer > div:first-child span { max-width: 12rem; }
 }
+
+/* Let the Transaction Details / animated card box absorb free vertical space */
+.card-payment-preview {
+  height: auto !important;
+  flex: 1 1 12.5rem;
+  min-height: 7.5rem;
+  max-height: 15.5rem;
+}
+.card-payment-preview-face { display: flex; flex-direction: column; justify-content: space-between; }
+.card-payment-transaction { display: flex; flex-direction: column; justify-content: center; }
