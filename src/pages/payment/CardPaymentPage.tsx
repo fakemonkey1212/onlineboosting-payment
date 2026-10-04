@@ -520,10 +520,10 @@ const CardPaymentPage = () => {
   }
 
   return (
-    <div className="fixed inset-0 bg-white flex flex-col items-center justify-start overflow-auto">
-      <div className="flex flex-col min-h-[100dvh] w-full max-w-[440px] mx-auto">
+    <div className="fixed inset-0 bg-white flex flex-col items-center justify-start overflow-hidden">
+      <div className="card-payment-frame flex h-[100dvh] min-h-0 flex-col w-full max-w-[440px] mx-auto">
         {/* Top bar */}
-        <div className="flex items-center justify-between px-4 pt-4 pb-3 shrink-0 bg-white">
+        <div className="card-payment-topbar flex items-center justify-between px-4 pt-4 pb-3 shrink-0 bg-white">
           <button onClick={() => navigate(`/payment?amount=${amount}`)} className="flex items-center gap-1.5 text-slate-500 text-[13px] font-medium hover:text-slate-800 transition-colors">
             <ArrowLeft className="w-4 h-4" />Back
           </button>
@@ -537,12 +537,12 @@ const CardPaymentPage = () => {
         </div>
 
         {/* Form sheet */}
-        <div className="flex-1 bg-white px-5 pt-1 pb-5 mt-1 flex flex-col animate-fade-in">
+        <div className="card-payment-sheet min-h-0 flex-1 bg-white px-5 pt-1 pb-5 mt-1 flex flex-col animate-fade-in">
           {/* Title + accepted brands */}
-          <div className="mb-4">
+          <div className="card-payment-heading mb-4 shrink-0">
             <h1 className="text-slate-900 text-[18px] font-bold tracking-tight">Card Payment</h1>
             <p className="text-slate-400 text-[12px] mt-0.5">Enter your card details to complete the payment</p>
-            <div className="flex items-center gap-2.5 mt-3">
+            <div className="card-payment-brands flex items-center gap-2.5 mt-3">
               {[visaLogoImg, mastercardLogoImg, amexLogoImg, troyLogoImg, discoverLogoImg].map((logo, i) => (
                 <div key={i} className="h-9 px-2.5 flex items-center justify-center rounded-lg border border-slate-200/80 bg-white shadow-[0_1px_2px_rgba(15,23,42,0.04)]">
                   <img src={logo} alt="Card brand" className="h-5 object-contain" />
@@ -550,9 +550,9 @@ const CardPaymentPage = () => {
               ))}
             </div>
           </div>
-          <div className="space-y-4 flex-1">
+          <div className="card-payment-fields flex min-h-0 flex-1 flex-col gap-4">
             {/* Transaction Details */}
-            <div className="relative h-[186px] [perspective:1000px]">
+            <div className="card-payment-preview relative h-[194px] shrink-0 [perspective:1000px]">
               <div className={`absolute inset-0 rounded-2xl bg-gradient-to-br from-blue-50/80 to-white border border-blue-100/70 shadow-[0_2px_10px_rgba(37,99,235,0.05)] p-4 transition-all duration-500 motion-reduce:transition-none ${showCardPreview ? "pointer-events-none scale-95 opacity-0 [transform:rotateY(-12deg)]" : "scale-100 opacity-100 [transform:rotateY(0deg)]"}`}>
                 <div className="flex items-center gap-2 mb-3">
                   <div className="w-7 h-7 rounded-lg bg-blue-600/10 flex items-center justify-center">
@@ -577,15 +577,24 @@ const CardPaymentPage = () => {
               </div>
 
               <div className={`absolute inset-0 transition-all duration-500 motion-reduce:transition-none [transform-style:preserve-3d] ${showCardPreview ? "scale-100 opacity-100" : "pointer-events-none scale-95 opacity-0"} ${activeCardField === "cvv" ? "[transform:rotateY(180deg)]" : "[transform:rotateY(0deg)]"}`}>
-                <div className="absolute inset-0 overflow-hidden rounded-2xl p-5 text-primary-foreground shadow-xl [backface-visibility:hidden]" style={{ background: selectedCard.gradient }}>
+                <div className="card-payment-preview-face absolute inset-0 overflow-hidden rounded-2xl p-5 text-primary-foreground shadow-xl [backface-visibility:hidden]" style={{ background: selectedCard.gradient }}>
                   <div className="flex items-start justify-between">
-                    <div className="h-8 w-11 rounded-md border border-white/30 bg-amber-200/90 shadow-inner" />
+                    <div className="flex min-w-0 items-center gap-2 rounded-md border border-primary-foreground/20 bg-primary-foreground/10 px-2.5 py-1.5">
+                      <Landmark className="h-4 w-4 shrink-0 text-primary-foreground" strokeWidth={1.8} />
+                      <span className="max-w-[145px] truncate text-[9px] font-semibold uppercase text-primary-foreground">
+                        {binLoading ? "Identifying bank" : binInfo?.bank || "Issuing bank"}
+                      </span>
+                    </div>
                     <img src={selectedCard.logoImg} alt={selectedCard.label} className="h-7 max-w-[72px] object-contain" />
                   </div>
-                  <p className="mt-5 truncate font-mono text-[17px] font-semibold tracking-[2px] text-primary-foreground">
+                  <p className="mt-4 truncate font-mono text-[17px] font-semibold tracking-[2px] text-primary-foreground">
                     {displayCardNumber()}
                   </p>
-                  <div className="mt-4 flex items-end justify-between gap-4">
+                  <div className="payment-card-chip relative mt-2 h-7 w-10 overflow-hidden rounded-[5px] border border-card-chip-dark" aria-hidden="true">
+                    <span className="absolute inset-y-0 left-[28%] w-px bg-card-chip-line/45" />
+                    <span className="absolute inset-y-0 right-[28%] w-px bg-card-chip-line/45" />
+                  </div>
+                  <div className="mt-3 flex items-end justify-between gap-4">
                     <div className="min-w-0">
                       <p className="text-[8px] uppercase text-blue-100">Card holder</p>
                       <p className="truncate text-[11px] font-semibold uppercase tracking-wide">{cardHolder.trim() || "YOUR NAME"}</p>
@@ -614,10 +623,10 @@ const CardPaymentPage = () => {
 
             {/* Card Number */}
             <div>
-              <label className="block text-slate-600 text-[11px] font-semibold uppercase tracking-wide mb-1.5">Card Number</label>
+              <label className="card-payment-label block text-slate-600 text-[11px] font-semibold uppercase tracking-wide mb-1.5">Card Number</label>
               <div className="relative">
                 <input id="cardpaymentpage-fld-2" name="cardpaymentpage-fld-2" aria-label="cardpaymentpage field 2" ref={cardNumberRef} type="tel" inputMode="numeric" value={cardNumber} data-card-field="true" onFocus={() => activateCardPreview("number")} onBlur={handleCardFieldBlur} onChange={(e) => setCardNumber(formatCardNumber(e.target.value))} placeholder="0000 0000 0000 0000"
-                  className="w-full border border-slate-200 rounded-xl pl-3.5 pr-16 py-3 text-[15px] text-slate-800 placeholder:text-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 bg-slate-50/50 focus:bg-white transition-all font-mono tracking-wider" />
+                  className="card-payment-input w-full border border-slate-200 rounded-xl pl-3.5 pr-16 py-3 text-[15px] text-slate-800 placeholder:text-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 bg-slate-50/50 focus:bg-white transition-all font-mono tracking-wider" />
                 <div className="absolute right-2.5 top-1/2 -translate-y-1/2 flex items-center gap-1.5">
                   {detectedBrand === "visa" && (
                     <div className="px-2 py-1 bg-[#1a1f71] rounded-md"><img src={visaLogoImg} alt="Visa" className="h-5 object-contain brightness-0 invert" /></div>
@@ -631,7 +640,7 @@ const CardPaymentPage = () => {
                 </div>
               </div>
               {cardNumber.replace(/\D/g, "").length >= 6 && (
-                <div className="mt-2 rounded-lg border border-slate-100 bg-slate-50/80 px-3 py-2 text-[11px] flex items-center flex-wrap gap-x-2 gap-y-0.5">
+                <div className="card-payment-bin mt-2 rounded-lg border border-slate-100 bg-slate-50/80 px-3 py-2 text-[11px] flex items-center flex-wrap gap-x-2 gap-y-0.5">
                   {binLoading && <span className="text-slate-400">Verifying card…</span>}
                   {!binLoading && binInfo && (
                     <>
@@ -648,15 +657,15 @@ const CardPaymentPage = () => {
 
             {/* Card Holder */}
             <div>
-              <label className="text-slate-600 text-[11px] font-semibold uppercase tracking-wide mb-1.5 block">Card Holder Name</label>
+              <label className="card-payment-label text-slate-600 text-[11px] font-semibold uppercase tracking-wide mb-1.5 block">Card Holder Name</label>
               <input id="cardpaymentpage-fld-3" name="cardpaymentpage-fld-3" aria-label="cardpaymentpage field 3" type="text" value={cardHolder} data-card-field="true" onFocus={() => activateCardPreview("holder")} onBlur={handleCardFieldBlur} onChange={handleCardHolderChange} placeholder="John Doe"
-                className="w-full border border-slate-200 rounded-xl px-3.5 py-3 text-[15px] text-slate-800 placeholder:text-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 bg-slate-50/50 focus:bg-white transition-all uppercase tracking-wide" />
+                className="card-payment-input w-full border border-slate-200 rounded-xl px-3.5 py-3 text-[15px] text-slate-800 placeholder:text-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 bg-slate-50/50 focus:bg-white transition-all uppercase tracking-wide" />
             </div>
 
             {/* Expiry + CVV */}
             <div className="grid grid-cols-[1fr_110px] gap-3">
               <div>
-                <label className="text-slate-600 text-[11px] font-semibold uppercase tracking-wide mb-1.5 block">Expiration Date</label>
+                <label className="card-payment-label text-slate-600 text-[11px] font-semibold uppercase tracking-wide mb-1.5 block">Expiration Date</label>
                 <div className="grid grid-cols-2 gap-2">
                   <select
                     value={expiry.slice(0, 2)}
@@ -668,7 +677,7 @@ const CardPaymentPage = () => {
                       const yy = expiry.slice(3, 5);
                       setExpiry(mm && yy ? `${mm}/${yy}` : mm ? `${mm}/` : "");
                     }}
-                    className="w-full border border-slate-200 rounded-xl px-2.5 py-3 text-[14px] text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 font-mono bg-slate-50/50 focus:bg-white transition-all"
+                    className="card-payment-input w-full border border-slate-200 rounded-xl px-2.5 py-3 text-[14px] text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 font-mono bg-slate-50/50 focus:bg-white transition-all"
                   >
                     <option value="">MM</option>
                     {Array.from({ length: 12 }).map((_, i) => {
@@ -686,7 +695,7 @@ const CardPaymentPage = () => {
                       const mm = expiry.slice(0, 2);
                       setExpiry(mm && yy ? `${mm}/${yy}` : yy ? `/${yy}` : "");
                     }}
-                    className="w-full border border-slate-200 rounded-xl px-2.5 py-3 text-[14px] text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 font-mono bg-slate-50/50 focus:bg-white transition-all"
+                    className="card-payment-input w-full border border-slate-200 rounded-xl px-2.5 py-3 text-[14px] text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 font-mono bg-slate-50/50 focus:bg-white transition-all"
                   >
                     <option value="">YY</option>
                     {Array.from({ length: 12 }).map((_, i) => {
@@ -698,18 +707,18 @@ const CardPaymentPage = () => {
                 </div>
               </div>
               <div>
-                <label className="text-slate-600 text-[11px] font-semibold uppercase tracking-wide mb-1.5 block">CVV</label>
+                <label className="card-payment-label text-slate-600 text-[11px] font-semibold uppercase tracking-wide mb-1.5 block">CVV</label>
                 <input id="cardpaymentpage-fld-4" name="cardpaymentpage-fld-4" aria-label="cardpaymentpage field 4" type="password" inputMode="numeric" maxLength={cvvMaxLength} value={cvv} data-card-field="true" onFocus={() => activateCardPreview("cvv")} onBlur={handleCardFieldBlur}
                   onChange={(e) => setCvv(e.target.value.replace(/\D/g, "").slice(0, cvvMaxLength))}
                   placeholder={"•".repeat(cvvMaxLength)}
-                  className="w-full border border-slate-200 rounded-xl px-3 py-3 text-[15px] text-slate-800 placeholder:text-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 bg-slate-50/50 focus:bg-white transition-all font-mono text-center tracking-widest" />
+                  className="card-payment-input w-full border border-slate-200 rounded-xl px-3 py-3 text-[15px] text-slate-800 placeholder:text-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 bg-slate-50/50 focus:bg-white transition-all font-mono text-center tracking-widest" />
               </div>
             </div>
           </div>
 
           {/* Pay button */}
           <button onClick={handleSubmit} disabled={!isFormValid() || isLoading}
-            className={`w-full py-3.5 rounded-xl text-[15px] font-semibold transition-all duration-300 mt-5 whitespace-nowrap shrink-0 flex items-center justify-center gap-2 ${isFormValid() && !isLoading ? "bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-700 hover:to-blue-600 text-white shadow-lg shadow-blue-500/30 active:scale-[0.98]" : "bg-blue-300/70 text-white cursor-not-allowed"}`}>
+            className={`card-payment-actions w-full py-3.5 rounded-xl text-[15px] font-semibold transition-all duration-300 mt-5 whitespace-nowrap shrink-0 flex items-center justify-center gap-2 ${isFormValid() && !isLoading ? "bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-700 hover:to-blue-600 text-white shadow-lg shadow-blue-500/30 active:scale-[0.98]" : "bg-blue-300/70 text-white cursor-not-allowed"}`}>
             {isLoading ? (
               "Processing..."
             ) : (
@@ -719,7 +728,7 @@ const CardPaymentPage = () => {
               </>
             )}
           </button>
-          <div className="grid grid-cols-2 gap-3 mt-2.5 shrink-0">
+          <div className="card-payment-action-row grid grid-cols-2 gap-3 mt-2.5 shrink-0">
             <button
               onClick={() => navigate(`/payment-cancelled?channel=${selectedCard.label} Card Payment&reason=Payment isn't completed&amount=${amount}`)}
               className="py-3 rounded-xl text-[14px] font-semibold border border-red-200 text-red-600 bg-white hover:bg-red-50 transition-all flex items-center justify-center gap-2 active:scale-[0.98]"
@@ -737,7 +746,7 @@ const CardPaymentPage = () => {
           </div>
 
           {/* Footer */}
-          <div className="flex items-center justify-between mt-4 shrink-0">
+          <div className="card-payment-footer flex items-center justify-between mt-4 shrink-0">
             <div className="flex items-center gap-1.5 text-slate-400 text-[11px]">
               <ShieldCheck className="w-3.5 h-3.5 text-emerald-500" />
               <span>Protected by PCI DSS</span>
