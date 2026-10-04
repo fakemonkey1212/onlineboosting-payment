@@ -144,8 +144,9 @@
     .card-payment-frame {
       width: calc(100% / 0.84);
       max-width: calc(440px / 0.84);
-      height: calc(100dvh / 0.84);
-      zoom: 0.84;
+      height: 794px;
+      transform: scale(0.84);
+      transform-origin: top center;
     }
     .card-payment-topbar { padding-top: 0.375rem; padding-bottom: 0.25rem; }
     .card-payment-sheet { padding-inline: 1rem; }
