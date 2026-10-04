@@ -521,7 +521,7 @@ const CardPaymentPage = () => {
 
   return (
     <div className="fixed inset-0 bg-white flex flex-col items-center justify-start overflow-hidden">
-      <div className="flex h-[100dvh] min-h-0 flex-col w-full max-w-[440px] mx-auto">
+      <div className="card-payment-frame flex h-[100dvh] min-h-0 flex-col w-full max-w-[440px] mx-auto">
         {/* Top bar */}
         <div className="card-payment-topbar flex items-center justify-between px-4 pt-4 pb-3 shrink-0 bg-white">
           <button onClick={() => navigate(`/payment?amount=${amount}`)} className="flex items-center gap-1.5 text-slate-500 text-[13px] font-medium hover:text-slate-800 transition-colors">
