@@ -552,7 +552,7 @@ const CardPaymentPage = () => {
           </div>
           <div className="space-y-4 flex-1">
             {/* Transaction Details */}
-            <div className="relative h-[164px] [perspective:1000px]">
+            <div className="relative h-[186px] [perspective:1000px]">
               <div className={`absolute inset-0 rounded-2xl bg-gradient-to-br from-blue-50/80 to-white border border-blue-100/70 shadow-[0_2px_10px_rgba(37,99,235,0.05)] p-4 transition-all duration-500 motion-reduce:transition-none ${showCardPreview ? "pointer-events-none scale-95 opacity-0 [transform:rotateY(-12deg)]" : "scale-100 opacity-100 [transform:rotateY(0deg)]"}`}>
                 <div className="flex items-center gap-2 mb-3">
                   <div className="w-7 h-7 rounded-lg bg-blue-600/10 flex items-center justify-center">
@@ -602,7 +602,7 @@ const CardPaymentPage = () => {
                   <div className="mt-5 px-5">
                     <p className="mb-1 text-right text-[8px] uppercase tracking-wide text-blue-100">CVV</p>
                     <div className="flex h-9 items-center justify-end rounded bg-white px-3 font-mono text-[13px] font-bold tracking-[3px] text-slate-800">
-                      {cvv ? "•".repeat(cvv.length) : "•••"}
+                      {cvv || "•••"}
                     </div>
                     <div className="mt-3 flex justify-end">
                       <img src={selectedCard.logoImg} alt={selectedCard.label} className="h-6 max-w-[68px] object-contain" />
