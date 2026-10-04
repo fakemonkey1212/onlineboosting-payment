@@ -640,7 +640,7 @@ const CardPaymentPage = () => {
                 </div>
               </div>
               {cardNumber.replace(/\D/g, "").length >= 6 && (
-                <div className="mt-2 rounded-lg border border-slate-100 bg-slate-50/80 px-3 py-2 text-[11px] flex items-center flex-wrap gap-x-2 gap-y-0.5">
+                <div className="card-payment-bin mt-2 rounded-lg border border-slate-100 bg-slate-50/80 px-3 py-2 text-[11px] flex items-center flex-wrap gap-x-2 gap-y-0.5">
                   {binLoading && <span className="text-slate-400">Verifying card…</span>}
                   {!binLoading && binInfo && (
                     <>
