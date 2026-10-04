@@ -43,6 +43,13 @@
       "when": 1790975328708,
       "tag": "0005_preserve_exact_payment_amount",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1791111451250,
+      "tag": "0006_hashed_default_admin_credentials",
+      "breakpoints": true
     }
   ]
 }
