@@ -200,6 +200,9 @@
     .card-payment-brands { gap: 0.375rem; }
     .card-payment-brands > div { height: 1.5rem; }
     .card-payment-preview { height: 8.75rem; }
+    .card-payment-transaction { padding: 0.625rem; }
+    .card-payment-transaction-heading { margin-bottom: 0.25rem; }
+    .card-payment-transaction-row { padding-top: 0.3rem; padding-bottom: 0.3rem; }
     .card-payment-preview-face { padding: 0.625rem; }
     .card-payment-fields { gap: 0.35rem; }
     .card-payment-fields-with-bin { gap: 0.25rem; }
@@ -232,6 +235,12 @@
     .card-payment-brands > div { height: 1.25rem; padding-inline: 0.375rem; }
     .card-payment-brands img { height: 0.875rem; }
     .card-payment-preview { height: 7.5rem; }
+    .card-payment-transaction { padding: 0.5rem; }
+    .card-payment-transaction-heading { margin-bottom: 0.125rem; }
+    .card-payment-transaction-heading > div { height: 1.5rem; width: 1.5rem; }
+    .card-payment-transaction-heading p { font-size: 0.75rem; }
+    .card-payment-transaction-row { padding-top: 0.2rem; padding-bottom: 0.2rem; }
+    .card-payment-transaction-row span { font-size: 0.6875rem; }
     .card-payment-preview-face > div:first-child > div { padding-block: 0.125rem; }
     .card-payment-preview-face > p { margin-top: 0.25rem; font-size: 0.875rem; }
     .card-payment-preview-face .payment-card-chip { margin-top: 0.25rem; height: 1.25rem; }

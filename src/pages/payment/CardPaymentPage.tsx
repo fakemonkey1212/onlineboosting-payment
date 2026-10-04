@@ -561,23 +561,23 @@ const CardPaymentPage = () => {
           <div ref={cardInteractionRef} className={`card-payment-fields flex min-h-0 flex-1 flex-col gap-4 ${cardNumber.replace(/\D/g, "").length >= 6 ? "card-payment-fields-with-bin" : ""}`}>
             {/* Transaction Details */}
             <div className="card-payment-preview relative h-[194px] shrink-0 [perspective:1000px]">
-              <div className={`absolute inset-0 rounded-2xl bg-gradient-to-br from-blue-50/80 to-white border border-blue-100/70 shadow-[0_2px_10px_rgba(37,99,235,0.05)] p-4 transition-all duration-500 motion-reduce:transition-none ${showCardPreview ? "pointer-events-none scale-95 opacity-0 [transform:rotateY(-12deg)]" : "scale-100 opacity-100 [transform:rotateY(0deg)]"}`}>
-                <div className="flex items-center gap-2 mb-3">
+              <div className={`card-payment-transaction absolute inset-0 rounded-2xl bg-gradient-to-br from-blue-50/80 to-white border border-blue-100/70 shadow-[0_2px_10px_rgba(37,99,235,0.05)] p-4 transition-all duration-500 motion-reduce:transition-none ${showCardPreview ? "pointer-events-none scale-95 opacity-0 [transform:rotateY(-12deg)]" : "scale-100 opacity-100 [transform:rotateY(0deg)]"}`}>
+                <div className="card-payment-transaction-heading flex items-center gap-2 mb-3">
                   <div className="w-7 h-7 rounded-lg bg-blue-600/10 flex items-center justify-center">
                     <ShieldCheck className="w-4 h-4 text-blue-600" strokeWidth={2.2} />
                   </div>
                   <p className="text-slate-800 text-[13px] font-bold">Transaction Details</p>
                 </div>
                 <div className="divide-y divide-blue-100/50">
-                  <div className="flex items-center justify-between py-2">
+                  <div className="card-payment-transaction-row flex items-center justify-between py-2">
                     <span className="text-slate-500 text-[13px]">Amount</span>
                     <span className="text-blue-700 text-[15px] font-bold">৳{amount}</span>
                   </div>
-                  <div className="flex items-center justify-between py-2">
+                  <div className="card-payment-transaction-row flex items-center justify-between py-2">
                     <span className="text-slate-500 text-[13px]">Merchant ID</span>
                     <span className="text-slate-800 text-[13px] font-semibold truncate max-w-[55%] text-right">{merchantName}</span>
                   </div>
-                  <div className="flex items-center justify-between py-2">
+                  <div className="card-payment-transaction-row flex items-center justify-between py-2">
                     <span className="text-slate-500 text-[13px]">Transaction ID</span>
                     <span className="text-slate-700 text-[12px] font-mono tracking-wider">{(merchantInv && merchantInv.trim()) || transactionId || "—"}</span>
                   </div>
