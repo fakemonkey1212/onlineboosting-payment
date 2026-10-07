@@ -12,6 +12,7 @@ import {
   adminSetAppSetting,
   adminSetPaymentMethodEnabled,
   getEnabledPaymentMethods,
+  readEnabledPaymentMethods,
   getPublicAppSetting,
   updateAdminSecrets,
   updateAdminTelegram,
@@ -144,8 +145,14 @@ const PaymentGateway = () => {
   const [supportNumber, setSupportNumber] = useState("");
   const [loginUnlocked, setLoginUnlocked] = useState(false);
   const METHODS_CACHE_KEY = "genz_enabled_methods_v1";
-  const [enabledMethods, setEnabledMethods] = useState<Record<string, boolean>>({});
-  const [methodsLoaded, setMethodsLoaded] = useState(false);
+  const [enabledMethods, setEnabledMethods] = useState<Record<string, boolean>>(() => {
+    const ids = readEnabledPaymentMethods();
+    if (!ids) return {};
+    const map: Record<string, boolean> = {};
+    Object.keys(defaultEnabledMethods).forEach((id) => { map[id] = ids.includes(id); });
+    return map;
+  });
+  const [methodsLoaded, setMethodsLoaded] = useState(() => readEnabledPaymentMethods() !== null);
   const [badgeColor, setBadgeColor] = useState<'slate' | 'red'>(readDisplaySetting("badge_color") === 'red' ? 'red' : 'slate');
   const [gatewayName, setGatewayName] = useState<string>(() => readDisplaySetting("gateway_name") ?? "");
   const [gatewayLogo, setGatewayLogo] = useState<string>(() => readDisplaySetting("gateway_logo") ?? "");
