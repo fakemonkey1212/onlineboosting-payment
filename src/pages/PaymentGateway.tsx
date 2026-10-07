@@ -711,6 +711,12 @@ const PaymentGateway = () => {
     setClickedCard(route);
     // With reduced motion there is no zoom to wait for.
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) finishSelectionZoom(route);
+    // Safety net: if the zoom never reports completion (e.g. already zoomed out
+    // from a desktop hover, or the animation event is swallowed), start the
+    // loader once the zoom duration has elapsed.
+    if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      selectionTimerRef.current = setTimeout(() => finishSelectionZoom(route), 1100);
+    }
 
   };
 
