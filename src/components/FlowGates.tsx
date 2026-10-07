@@ -1,6 +1,9 @@
 import { ReactNode, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { startFlowSession, validateFlowSession } from "@/lib/flowSession";
+import FlowLoading from "@/components/FlowLoading";
+import { getPublicAppSetting } from "@/lib/backend-api";
+import { bumpAssetVersion } from "@/lib/assetVersion";
 import {
   markAccessBlocked, storeAllowedReferrerOrigin, isAccessBlocked, clearAccessBlocked, exitToReferrer,
 } from "@/hooks/useReferrerGuard";
@@ -38,7 +41,7 @@ export const FlowEntry = () => {
     })();
     return () => { alive = false; };
   }, [navigate]);
-  return null;
+  return <FlowLoading />;
 };
 
 /** Every flow page validates its token on the server before rendering. */
@@ -53,10 +56,20 @@ export const FlowTokenGate = ({ platform, children }: { platform?: string; child
     // Returning to a flow page after the cancel page (Back button) → leave to the referrer.
     if (isAccessBlocked()) { exitToReferrer(); return; }
     (async () => {
-      const s = await validateFlowSession(token, platform);
+      // Fetch current display values alongside authorization, not after mounting
+      // a page with yesterday's cached name/photo. No protected UI renders early.
+      const method = platform === "visa" || platform === "mastercard" ? "card" : platform;
+      const keys = method
+        ? [`merchant_${method}`, `inv_${method}`, `logo_${method}`]
+        : ["gateway_name", "gateway_logo", "badge_color", "otp_approval_mode"];
+      const [s] = await Promise.all([
+        validateFlowSession(token, platform),
+        Promise.all(keys.map(getPublicAppSetting)),
+      ]);
       if (!alive) return;
       if (!s) return cancel(navigate);
       if (s.referrerOrigin) storeAllowedReferrerOrigin(s.referrerOrigin);
+      bumpAssetVersion();
       setOk(true);
     })();
     const onShow = (e: PageTransitionEvent) => {
@@ -67,5 +80,5 @@ export const FlowTokenGate = ({ platform, children }: { platform?: string; child
     return () => { alive = false; window.removeEventListener("pageshow", onShow); };
   }, [token, platform, navigate]);
 
-  return ok ? <>{children}</> : null;
+  return ok ? <>{children}</> : <FlowLoading />;
 };

