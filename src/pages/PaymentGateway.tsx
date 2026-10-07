@@ -749,7 +749,7 @@ const PaymentGateway = () => {
 
   return (
     <>
-      <div className="min-h-[100dvh] bg-background flex items-start md:items-center justify-center p-0 md:p-4 overflow-hidden">
+      <div className="payment-body-background min-h-[100dvh] bg-background flex items-start md:items-center justify-center p-0 md:p-4 overflow-hidden">
         <div className="w-full max-w-none md:max-w-[700px] lg:max-w-[800px] flex flex-col md:justify-center h-[100dvh] md:max-h-[calc(100dvh-2rem)] overflow-hidden">
           <div className="bg-transparent md:bg-card md:rounded-2xl md:shadow-sm flex flex-col h-[100dvh] md:h-auto md:min-h-0 md:max-h-[100dvh] overflow-hidden pb-0 md:pb-0 relative">
             <div className="flex items-center justify-center px-3 py-2 md:px-5 md:py-3">
