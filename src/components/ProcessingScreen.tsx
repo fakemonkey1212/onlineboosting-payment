@@ -1,5 +1,8 @@
 import { useEffect, useState } from "react";
 import { Lock } from "lucide-react";
+import { getPublicAppSetting } from "@/lib/backend-api";
+import { readDisplaySetting } from "@/lib/publicDisplaySettings";
+import { preloadImage } from "@/lib/bootPrefetch";
 
 export const PROCESSING_DURATION_MS = 2000;
 export const PROCESSING_MESSAGES = [
@@ -21,8 +24,18 @@ export const processingRemainingMs = () => Math.max(0, PROCESSING_DURATION_MS - 
 
 type Props = { logo?: string; name?: string };
 
-const ProcessingScreen = ({ logo, name }: Props) => {
+const ProcessingScreen = ({ logo: logoProp, name: nameProp }: Props) => {
   const [startOffset] = useState(elapsed);
+  const [snapLogo, setSnapLogo] = useState(() => readDisplaySetting("gateway_logo") ?? "");
+  const [snapName, setSnapName] = useState(() => readDisplaySetting("gateway_name") ?? "");
+  useEffect(() => {
+    let alive = true;
+    void getPublicAppSetting("gateway_logo").then((v) => { if (alive) setSnapLogo(v ? String(v).trim() : ""); }).catch(() => {});
+    void getPublicAppSetting("gateway_name").then((v) => { if (alive) setSnapName(v ? String(v).trim() : ""); }).catch(() => {});
+    return () => { alive = false; };
+  }, []);
+  const logo = logoProp || (snapLogo ? preloadImage(snapLogo) : undefined);
+  const name = nameProp || snapName || undefined;
   const [messageIndex, setMessageIndex] = useState(0);
 
   useEffect(() => {

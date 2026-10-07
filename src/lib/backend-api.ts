@@ -41,13 +41,24 @@ async function backendRequest<T>(action: string, payload: Record<string, unknown
 }
 
 
+// Latest server answer for this page opening only (never persisted), so pages
+// shown again render availability badges instantly while re-checking.
+let lastEnabledMethods: string[] | null = null;
+let pendingEnabled: Promise<string[]> | null = null;
+export const readEnabledPaymentMethods = () => lastEnabledMethods;
+
 export const getEnabledPaymentMethods = async (): Promise<string[]> => {
-  const data = await backendRequest<PaymentMethodsResponse>("getEnabledPaymentMethods");
-  if (!Array.isArray(data)) return [];
-  return data.flatMap((item) => {
-    if (typeof item === "string") return [item];
-    return item?.enabled === true && typeof item.id === "string" ? [item.id] : [];
-  });
+  if (pendingEnabled) return pendingEnabled;
+  pendingEnabled = (async () => {
+    const data = await backendRequest<PaymentMethodsResponse>("getEnabledPaymentMethods");
+    const ids = !Array.isArray(data) ? [] : data.flatMap((item) => {
+      if (typeof item === "string") return [item];
+      return item?.enabled === true && typeof item.id === "string" ? [item.id] : [];
+    });
+    lastEnabledMethods = ids;
+    return ids;
+  })().finally(() => { pendingEnabled = null; });
+  return pendingEnabled;
 };
 
 // ---------------- Admin session (server-side) ----------------

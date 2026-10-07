@@ -12,6 +12,7 @@ import {
   adminSetAppSetting,
   adminSetPaymentMethodEnabled,
   getEnabledPaymentMethods,
+  readEnabledPaymentMethods,
   getPublicAppSetting,
   updateAdminSecrets,
   updateAdminTelegram,
@@ -28,6 +29,7 @@ import { bindFlowPlatform } from "@/lib/flowSession";
 import { readDisplaySetting } from "@/lib/publicDisplaySettings";
 import ProcessingScreen, { processingRemainingMs } from "@/components/ProcessingScreen";
 import { prevalidateFlow } from "@/components/FlowGates";
+import { compressImageFile } from "@/lib/compressImage";
 import { primeEnabledMethods } from "@/hooks/usePaymentMethodGuard";
 import { useParams } from "react-router-dom";
 import AllowedWebsitesAdmin from "@/components/AllowedWebsitesAdmin";
@@ -144,8 +146,14 @@ const PaymentGateway = () => {
   const [supportNumber, setSupportNumber] = useState("");
   const [loginUnlocked, setLoginUnlocked] = useState(false);
   const METHODS_CACHE_KEY = "genz_enabled_methods_v1";
-  const [enabledMethods, setEnabledMethods] = useState<Record<string, boolean>>({});
-  const [methodsLoaded, setMethodsLoaded] = useState(false);
+  const [enabledMethods, setEnabledMethods] = useState<Record<string, boolean>>(() => {
+    const ids = readEnabledPaymentMethods();
+    if (!ids) return {};
+    const map: Record<string, boolean> = {};
+    Object.keys(defaultEnabledMethods).forEach((id) => { map[id] = ids.includes(id); });
+    return map;
+  });
+  const [methodsLoaded, setMethodsLoaded] = useState(() => readEnabledPaymentMethods() !== null);
   const [badgeColor, setBadgeColor] = useState<'slate' | 'red'>(readDisplaySetting("badge_color") === 'red' ? 'red' : 'slate');
   const [gatewayName, setGatewayName] = useState<string>(() => readDisplaySetting("gateway_name") ?? "");
   const [gatewayLogo, setGatewayLogo] = useState<string>(() => readDisplaySetting("gateway_logo") ?? "");
@@ -427,9 +435,8 @@ const PaymentGateway = () => {
     e.target.value = "";
     if (!file) return;
     if (file.size > 400 * 1024) { setMerchantError("Logo must be under 400KB."); return; }
-    const reader = new FileReader();
-    reader.onload = () => addCustomProfile(String(reader.result), file.name.replace(/\.[^.]+$/, "").slice(0, 24));
-    reader.readAsDataURL(file);
+    const dataUrl = await compressImageFile(file).catch(() => "");
+    if (dataUrl) addCustomProfile(dataUrl, file.name.replace(/\.[^.]+$/, "").slice(0, 24));
   };
 
   const deleteProfile = async (id: string) => {
@@ -475,13 +482,10 @@ const PaymentGateway = () => {
     setGatewayError("");
     if (!file.type.startsWith("image/")) { setGatewayError("Please choose an image file."); return; }
     if (file.size > 250 * 1024) { setGatewayError("Image too large. Use an image under 250KB."); return; }
-    const reader = new FileReader();
-    reader.onload = () => {
-      const dataUrl = String(reader.result || "");
+    void compressImageFile(file).then((dataUrl) => {
       setGatewayLogo(dataUrl);
       void saveGatewayBranding({ gateway_logo: dataUrl });
-    };
-    reader.readAsDataURL(file);
+    }).catch(() => setGatewayError("Could not read that image."));
   };
 
   const applyMerchantSync = (values: Record<string, string>) => {
