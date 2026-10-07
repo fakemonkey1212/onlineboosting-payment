@@ -694,7 +694,7 @@ const PaymentGateway = () => {
     }, 3000);
   };
 
-  const handlePaymentSelect = (route: string) => {
+  const handlePaymentSelect = (route: string, alreadyZoomed = false) => {
     if (isNavigating) return;
     setIsNavigating(true);
     const methodName = route.replace('/', '');
@@ -711,10 +711,12 @@ const PaymentGateway = () => {
     setClickedCard(route);
     // With reduced motion there is no zoom to wait for.
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) finishSelectionZoom(route);
-    // Safety net: if the zoom never reports completion (e.g. already zoomed out
-    // from a desktop hover, or the animation event is swallowed), start the
-    // loader once the zoom duration has elapsed.
-    if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    // On desktop the hover has usually already completed the zoom-out, so the
+    // loader should start right away instead of re-running the zoom.
+    else if (alreadyZoomed) finishSelectionZoom(route);
+    // Safety net: if the zoom never reports completion, start the loader once
+    // the zoom duration has elapsed.
+    else {
       selectionTimerRef.current = setTimeout(() => finishSelectionZoom(route), 1100);
     }
 
