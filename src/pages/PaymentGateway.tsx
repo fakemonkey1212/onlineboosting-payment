@@ -689,11 +689,21 @@ const PaymentGateway = () => {
     if (selectionTimerRef.current) clearTimeout(selectionTimerRef.current);
   }, []);
 
-  // Loader appears together with the zoom-out; the next page is validated in the
-  // background meanwhile so it opens instantly when the loader finishes.
-  const finishSelectionZoom = (_route: string) => {};
+  // Mobile: the zoom-out finishes first, then the loader appears. Desktop hover has
+  // usually completed the zoom already, so the loader starts on click. The next page
+  // is validated in the background meanwhile so it opens instantly afterwards.
+  const pendingRouteRef = useRef<string | null>(null);
+  const finishSelectionZoom = (route: string) => {
+    if (selectionLoaderStartedRef.current || pendingRouteRef.current !== route) return;
+    selectionLoaderStartedRef.current = true;
+    if (selectionTimerRef.current) clearTimeout(selectionTimerRef.current);
+    setShowLoader(true);
+    const isCard = cardTypes.includes(route.replace('/', ''));
+    const minDelay = new Promise((r) => { selectionTimerRef.current = setTimeout(r, isCard ? 800 : 3000); });
+    void Promise.all([selectedBindingRef.current, minDelay]).then(([ok]) => navigate(ok ? route : '/payment-cancelled'));
+  };
 
-  const handlePaymentSelect = (route: string, _alreadyZoomed = false) => {
+  const handlePaymentSelect = (route: string, alreadyZoomed = false) => {
     if (isNavigating) return;
     setIsNavigating(true);
     const methodName = route.replace('/', '');
@@ -706,13 +716,14 @@ const PaymentGateway = () => {
       referrer: document.referrer || 'Direct',
     });
     sessionStorage.setItem('genz_skip_gateway', 'true');
+    pendingRouteRef.current = route;
     setClickedCard(route);
-    setShowLoader(true);
     selectedBindingRef.current = bindFlowPlatform(methodName)
       .then((ok) => (ok ? prevalidateFlow(flowToken, methodName) : false))
       .catch(() => false);
-    const minDelay = new Promise((r) => { selectionTimerRef.current = setTimeout(r, isCard ? 800 : 3000); });
-    void Promise.all([selectedBindingRef.current, minDelay]).then(([ok]) => navigate(ok ? route : '/payment-cancelled'));
+    if (alreadyZoomed || window.matchMedia('(prefers-reduced-motion: reduce)').matches) finishSelectionZoom(route);
+    // Safety net if the zoom-end event never fires.
+    else selectionTimerRef.current = setTimeout(() => finishSelectionZoom(route), 1100);
   };
 
 

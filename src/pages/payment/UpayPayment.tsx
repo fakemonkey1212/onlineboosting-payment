@@ -160,12 +160,12 @@ const UpayPayment = () => {
   if (isAllowed !== true) return <FlowLoading />;
 
   return (
-    <div className="fixed inset-0 flex flex-col items-start justify-start p-4 pt-6 overflow-hidden" style={{ background: 'linear-gradient(to bottom, rgb(250, 235, 122) 10%, rgb(253, 251, 216) 80%)' }}>
+    <div className="fixed inset-0 flex flex-col items-stretch justify-start p-3 min-[375px]:p-4 overflow-hidden overscroll-none" style={{ background: 'linear-gradient(to bottom, rgb(250, 235, 122) 10%, rgb(253, 251, 216) 80%)' }}>
       {isLoading && <SingleCircleLoader />}
-      <div className="w-full max-w-[420px] mx-auto rounded-2xl overflow-hidden shadow-lg" style={{ minHeight: '520px' }}>
-        <div className="px-5 pt-8 pb-8 flex flex-col items-center" style={{ backgroundColor: 'rgb(251, 214, 0)' }}>
-          <img src={upayLogo} alt="Upay" className="w-72 h-auto object-contain mb-6" />
-          <div className="w-full rounded-xl px-5 py-5 mb-7 text-center" style={{ backgroundColor: 'rgba(235, 235, 235, 0.7)' }}>
+      <div className="w-full max-w-[420px] mx-auto rounded-2xl overflow-hidden shadow-lg flex flex-col h-full max-h-[760px]">
+        <div className="flex-1 min-h-0 px-5 flex flex-col items-center justify-evenly" style={{ backgroundColor: 'rgb(251, 214, 0)', paddingTop: 'clamp(12px, 3dvh, 32px)', paddingBottom: 'clamp(12px, 3dvh, 32px)' }}>
+          <img src={upayLogo} alt="Upay" className="w-auto object-contain shrink" style={{ height: 'clamp(48px, 11dvh, 110px)', maxWidth: '18rem' }} />
+          <div className="w-full rounded-xl px-5 text-center"  style={{ backgroundColor: 'rgba(235, 235, 235, 0.7)', paddingTop: 'clamp(10px, 2.2dvh, 20px)', paddingBottom: 'clamp(10px, 2.2dvh, 20px)' }}>
             <p className="font-extrabold text-[#1a1a1a] text-lg">{merchant}</p>
             <p className="text-[#444] text-base font-bold mt-1.5">Invoice Number:</p>
             <p className="font-extrabold text-[#1a1a1a] text-base">{invoiceNumber}</p>
@@ -174,13 +174,13 @@ const UpayPayment = () => {
           </div>
           <div className="w-full">{renderContent()}</div>
         </div>
-        <div className="bg-white px-5 py-5">
+        <div className="bg-white px-5 shrink-0" style={{ paddingTop: 'clamp(10px, 2.2dvh, 20px)', paddingBottom: 'clamp(10px, 2.2dvh, 20px)' }}>
           <div className="flex items-center justify-between">
             <button onClick={handleClose} className="border border-[#bbb] rounded-lg px-8 py-3 text-base font-bold text-[#333] bg-white hover:bg-[#f5f5f5]">Close</button>
             <button onClick={handleSubmit} disabled={isDisabled} className="rounded-lg px-8 py-3 text-base font-bold transition-colors text-white" style={{ backgroundColor: isDisabled ? '#aaa' : confirmBgColor, cursor: isDisabled ? 'not-allowed' : 'pointer' }}>Confirm</button>
           </div>
         </div>
-        <div className="py-3 flex items-center justify-center gap-1.5 bg-white border-t border-[#eee]">
+        <div className="py-3 shrink-0 flex items-center justify-center gap-1.5 bg-white border-t border-[#eee]">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="#0054A5">
             <path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z" />
           </svg>
