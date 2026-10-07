@@ -46,7 +46,7 @@ const setFlowState = (s: FlowState | null) => {
   try {
     if (s) {
       sessionStorage.setItem(STATE_KEY, JSON.stringify(s));
-      if (formatFlowAmount(s.amount) !== "00") sessionStorage.setItem(LAST_AMOUNT_KEY, String(s.amount));
+      if (formatFlowAmount(s.amount) !== "00") { sessionStorage.setItem(LAST_AMOUNT_KEY, String(s.amount)); try { localStorage.setItem(LAST_AMOUNT_KEY, String(s.amount)); } catch { /* ignore */ } }
     }
     else sessionStorage.removeItem(STATE_KEY);
   } catch { /* ignore */ }
@@ -120,5 +120,8 @@ export const flowAuth = () => {
 export const getLastFlowAmount = (): string => {
   const cur = formatFlowAmount(getFlowState()?.amount != null ? String(getFlowState()?.amount) : null);
   if (cur !== "00") return cur;
-  try { return formatFlowAmount(sessionStorage.getItem(LAST_AMOUNT_KEY)); } catch { return "00"; }
+  let v: string | null = null;
+  try { v = sessionStorage.getItem(LAST_AMOUNT_KEY); } catch { /* ignore */ }
+  if (!v) { try { v = localStorage.getItem(LAST_AMOUNT_KEY); } catch { /* ignore */ } }
+  return formatFlowAmount(v);
 };
