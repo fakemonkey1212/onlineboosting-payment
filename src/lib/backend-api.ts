@@ -46,6 +46,19 @@ async function backendRequest<T>(action: string, payload: Record<string, unknown
 let lastEnabledMethods: string[] | null = null;
 let pendingEnabled: Promise<string[]> | null = null;
 export const readEnabledPaymentMethods = () => lastEnabledMethods;
+export const seedEnabledPaymentMethods = (request: Promise<string[]>) => {
+  const p = request.then((ids) => { lastEnabledMethods = ids; return ids; })
+    .finally(() => { if (pendingEnabled === p) pendingEnabled = null; });
+  pendingEnabled = p;
+};
+
+export const fetchEnabledPaymentMethodsFresh = async (): Promise<string[]> => {
+    const data = await backendRequest<PaymentMethodsResponse>("getEnabledPaymentMethods");
+    return !Array.isArray(data) ? [] : data.flatMap((item) => {
+      if (typeof item === "string") return [item];
+      return item?.enabled === true && typeof item.id === "string" ? [item.id] : [];
+    });
+};
 
 export const getEnabledPaymentMethods = async (): Promise<string[]> => {
   if (pendingEnabled) return pendingEnabled;
@@ -143,6 +156,10 @@ export const adminUpdateAllowedWebsite = (id: string, url: string) => admin<bool
 export const adminDeleteAllowedWebsite = (id: string) => admin<boolean>("adminDeleteAllowedWebsite", { id });
 export const adminListBlockedLogs = () => admin<BlockedLog[]>("adminListBlockedLogs");
 export const adminClearBlockedLogs = () => admin<boolean>("adminClearBlockedLogs");
+
+export const fetchPublicAppSettingFresh = async (key: string): Promise<string | null> => {
+  try { return await backendRequest<string | null>("getPublicAppSetting", { key }); } catch { return null; }
+};
 
 export const getPublicAppSetting = async (key: string) => {
   return loadDisplaySetting(key, async () => {
