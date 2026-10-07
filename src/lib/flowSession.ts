@@ -7,6 +7,7 @@ import { supabase } from "@/integrations/supabase/client";
  */
 const NONCE_KEY = "genz_flow_nonce_v1";
 const STATE_KEY = "genz_flow_session_v1";
+const LAST_AMOUNT_KEY = "genz_flow_last_amount_v1";
 const PARAMS_KEY = "genz_flow_params_v1";
 
 export type FlowState = {
@@ -43,7 +44,10 @@ export const getFlowState = (): FlowState | null => {
 
 const setFlowState = (s: FlowState | null) => {
   try {
-    if (s) sessionStorage.setItem(STATE_KEY, JSON.stringify(s));
+    if (s) {
+      sessionStorage.setItem(STATE_KEY, JSON.stringify(s));
+      if (formatFlowAmount(s.amount) !== "00") sessionStorage.setItem(LAST_AMOUNT_KEY, String(s.amount));
+    }
     else sessionStorage.removeItem(STATE_KEY);
   } catch { /* ignore */ }
 };
@@ -110,4 +114,11 @@ export const completeFlowSession = async (): Promise<void> => {
 export const flowAuth = () => {
   const s = getFlowState();
   return { flowToken: s?.token ?? "", flowNonce: getFlowNonce() };
+};
+
+/** Exact amount of the most recent server-validated session in this tab (for the Cancel page). */
+export const getLastFlowAmount = (): string => {
+  const cur = formatFlowAmount(getFlowState()?.amount != null ? String(getFlowState()?.amount) : null);
+  if (cur !== "00") return cur;
+  try { return formatFlowAmount(sessionStorage.getItem(LAST_AMOUNT_KEY)); } catch { return "00"; }
 };
