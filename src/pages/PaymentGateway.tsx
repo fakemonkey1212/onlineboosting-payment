@@ -748,7 +748,7 @@ const PaymentGateway = () => {
 
 
   if (showGateway || checkingReferrer) {
-    return <ProcessingScreen logo={gatewayLogo ? bustImage(gatewayLogo) : undefined} name={gatewayName} />;
+    return <ProcessingScreen />;
   }
 
   return (
