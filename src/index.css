@@ -37,6 +37,7 @@
 
     --pay-bar: 213 47% 90%;
     --pay-text: 216 88% 40%;
+    --payment-pattern-fade: linear-gradient(to bottom, transparent 0%, hsl(0 0% 0% / 0.25) 30%, hsl(0 0% 0% / 0.65) 65%, hsl(0 0% 0%) 100%);
 
     --card-chip-light: 48 100% 77%;
     --card-chip: 43 94% 56%;
@@ -77,6 +78,24 @@
 }
 
 @layer components {
+  .payment-body-background {
+    position: relative;
+    isolation: isolate;
+  }
+
+  .payment-body-background::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    background-image: url("/__l5e/assets-v1/1e89da15-7230-44c7-8a79-c5ae293f1ab5/payment-body-pattern.png");
+    background-repeat: repeat;
+    background-size: 400px 400px;
+    -webkit-mask-image: var(--payment-pattern-fade);
+    mask-image: var(--payment-pattern-fade);
+  }
+
   .payment-card-chip {
     background: var(--gradient-card-chip);
     box-shadow: var(--shadow-card-chip);
