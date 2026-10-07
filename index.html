@@ -26,6 +26,16 @@
           }
         } catch (e) {}
       })();
+      // Start the fresh admin display request before the app code downloads (never cached).
+      (function () {
+        try {
+          window.__displayBundle = fetch("%VITE_SUPABASE_URL%/functions/v1/secure-api", {
+            method: "POST", cache: "no-store",
+            headers: { "Content-Type": "application/json", apikey: "%VITE_SUPABASE_PUBLISHABLE_KEY%", Authorization: "Bearer %VITE_SUPABASE_PUBLISHABLE_KEY%" },
+            body: '{"action":"getPublicDisplayBundle"}'
+          }).then(function (r) { return r.ok ? r.json() : null; }).catch(function () { return null; });
+        } catch (e) {}
+      })();
     </script>
     <script type="module" src="/src/main.tsx"></script>
   </body>

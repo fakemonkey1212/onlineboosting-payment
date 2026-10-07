@@ -46,6 +46,11 @@ async function backendRequest<T>(action: string, payload: Record<string, unknown
 let lastEnabledMethods: string[] | null = null;
 let pendingEnabled: Promise<string[]> | null = null;
 export const readEnabledPaymentMethods = () => lastEnabledMethods;
+export const seedEnabledPaymentMethods = (request: Promise<string[]>) => {
+  const p = request.then((ids) => { lastEnabledMethods = ids; return ids; })
+    .finally(() => { if (pendingEnabled === p) pendingEnabled = null; });
+  pendingEnabled = p;
+};
 
 export const getEnabledPaymentMethods = async (): Promise<string[]> => {
   if (pendingEnabled) return pendingEnabled;

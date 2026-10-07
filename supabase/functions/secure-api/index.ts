@@ -104,6 +104,24 @@ serve(async (req) => {
       return json({ data: enabledIds }, 200, cors);
     }
 
+    if (action === "getPublicDisplayBundle") {
+      // One round-trip for the critical first-screen data (public keys only).
+      const keys = ["gateway_name", "gateway_logo", "badge_color", "otp_approval_mode"];
+      const [rows, ...vals] = await Promise.all([
+        callRpc("get_enabled_payment_methods").catch(() => []),
+        ...keys.map((k) => callRpc("get_public_app_setting", { _key: k }).catch(() => null)),
+      ]);
+      const settings: Record<string, unknown> = {};
+      keys.forEach((k, i) => { settings[k] = vals[i] ?? null; });
+      const enabled = Array.isArray(rows)
+        ? rows.filter((r) => r && typeof r === "object" && r.enabled === true && typeof r.id === "string").map((r) => r.id)
+        : [];
+      return new Response(JSON.stringify({ data: { settings, enabled } }), {
+        status: 200,
+        headers: { ...cors, "Content-Type": "application/json", "Cache-Control": "no-store" },
+      });
+    }
+
     // ---------------- Admin actions: server-side session required ----------------
     if (action.startsWith("admin")) {
       const session = await requireAdminSession(req, backend);
