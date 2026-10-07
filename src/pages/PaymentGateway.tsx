@@ -884,6 +884,11 @@ const PaymentGateway = () => {
                     return (
                       <div
                         key={method.id}
+                        onPointerEnter={(event) => {
+                          if (event.pointerType === 'mouse' && window.matchMedia('(hover: hover) and (pointer: fine)').matches && !isAdmin && isEnabled) {
+                            handlePaymentSelect(method.route);
+                          }
+                        }}
                         onClick={() => !isAdmin && isEnabled && handlePaymentSelect(method.route)}
                         className={`relative ${isAdmin ? '' : 'group'} bg-transparent md:bg-card rounded-lg border border-border flex items-center justify-center h-[80px] md:h-[96px] overflow-hidden ${isEnabled && !isAdmin ? 'cursor-pointer touch-manipulation' : ''} ${methodsLoaded && !isEnabled ? 'cursor-not-allowed' : ''} ${isNavigating ? 'pointer-events-none' : ''}`}
                       >
