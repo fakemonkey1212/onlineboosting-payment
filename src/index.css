@@ -37,7 +37,7 @@
 
     --pay-bar: 213 47% 90%;
     --pay-text: 216 88% 40%;
-    --payment-pattern-fade: linear-gradient(to bottom, transparent 0%, hsl(0 0% 0% / 0.25) 30%, hsl(0 0% 0% / 0.65) 65%, hsl(0 0% 0%) 100%);
+    --payment-pattern-fade: linear-gradient(to bottom, hsl(0 0% 0%) 0%, hsl(0 0% 0% / 0.65) 35%, hsl(0 0% 0% / 0.25) 70%, transparent 100%);
 
     --card-chip-light: 48 100% 77%;
     --card-chip: 43 94% 56%;
