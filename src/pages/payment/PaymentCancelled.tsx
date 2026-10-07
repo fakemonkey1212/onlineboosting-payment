@@ -53,7 +53,7 @@ const PaymentCancelled = () => {
   }, []);
 
   return (
-    <div className="fixed inset-0 h-[100dvh] bg-white flex flex-col items-center justify-center px-4 overflow-hidden overscroll-none touch-none">
+    <div className="fixed inset-0 h-[100dvh] bg-white flex flex-col items-center justify-start pt-[8dvh] px-4 overflow-hidden overscroll-none touch-none">
       <div className="w-full max-w-lg text-center [@media(max-height:620px)]:scale-90">
         <h1 className="text-2xl font-bold text-gray-900 mb-2">Redirecting to the Merchant Site</h1>
         <p className="text-sm text-blue-500 mb-5">This may take a few seconds</p>
