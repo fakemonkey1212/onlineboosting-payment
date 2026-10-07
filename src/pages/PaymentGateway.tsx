@@ -694,7 +694,7 @@ const PaymentGateway = () => {
     }, 3000);
   };
 
-  const handlePaymentSelect = (route: string) => {
+  const handlePaymentSelect = (route: string, alreadyZoomed = false) => {
     if (isNavigating) return;
     setIsNavigating(true);
     const methodName = route.replace('/', '');
@@ -711,6 +711,14 @@ const PaymentGateway = () => {
     setClickedCard(route);
     // With reduced motion there is no zoom to wait for.
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) finishSelectionZoom(route);
+    // On desktop the hover has usually already completed the zoom-out, so the
+    // loader should start right away instead of re-running the zoom.
+    else if (alreadyZoomed) finishSelectionZoom(route);
+    // Safety net: if the zoom never reports completion, start the loader once
+    // the zoom duration has elapsed.
+    else {
+      selectionTimerRef.current = setTimeout(() => finishSelectionZoom(route), 1100);
+    }
 
   };
 
@@ -884,13 +892,20 @@ const PaymentGateway = () => {
                     return (
                       <div
                         key={method.id}
-                        onPointerEnter={(event) => {
-                          if (event.pointerType === 'mouse' && window.matchMedia('(hover: hover) and (pointer: fine)').matches && !isAdmin && isEnabled) {
-                            handlePaymentSelect(method.route);
+                        onClick={(event) => {
+                          if (isAdmin || !isEnabled) return;
+                          const logo = event.currentTarget.querySelector('.payment-method-logo') as HTMLElement | null;
+                          let alreadyZoomed = false;
+                          if (logo) {
+                            const m = getComputedStyle(logo).transform.match(/^matrix\(([^)]+)\)$/);
+                            if (m) {
+                              const v = m[1].split(',').map(parseFloat);
+                              alreadyZoomed = v.length >= 4 && Math.abs(v[0] - v[3]) < 0.001 && Math.abs(v[0] - 0.9) < 0.01;
+                            }
                           }
+                          handlePaymentSelect(method.route, alreadyZoomed);
                         }}
-                        onClick={() => !isAdmin && isEnabled && handlePaymentSelect(method.route)}
-                        className={`relative ${isAdmin ? '' : 'group'} bg-transparent md:bg-card rounded-lg border border-border flex items-center justify-center h-[80px] md:h-[96px] overflow-hidden ${isEnabled && !isAdmin ? 'cursor-pointer touch-manipulation' : ''} ${methodsLoaded && !isEnabled ? 'cursor-not-allowed' : ''} ${isNavigating ? 'pointer-events-none' : ''}`}
+                        className={`payment-method-tile relative ${isAdmin ? '' : 'group'} bg-transparent md:bg-card rounded-lg border border-border flex items-center justify-center h-[80px] md:h-[96px] overflow-hidden ${isEnabled && !isAdmin ? 'cursor-pointer touch-manipulation' : ''} ${methodsLoaded && !isEnabled ? 'cursor-not-allowed' : ''} ${isNavigating ? 'pointer-events-none' : ''}`}
                       >
                         <img
                           src={method.logo}
@@ -898,7 +913,7 @@ const PaymentGateway = () => {
                           onAnimationEnd={(event) => {
                             if (event.animationName === 'payment-method-zoom' && clickedCard === method.route) finishSelectionZoom(method.route);
                           }}
-                          className={`${method.h} object-contain ${methodsLoaded && !isEnabled ? 'opacity-50' : ''} ${isEnabled && !isAdmin && clickedCard === method.route ? 'payment-method-selected' : ''}`}
+                          className={`payment-method-logo ${method.h} object-contain ${methodsLoaded && !isEnabled ? 'opacity-50' : ''} ${isEnabled && !isAdmin && clickedCard === method.route ? 'payment-method-selected' : ''}`}
                         />
                         {showBadge && (
                           <div className={`absolute top-1.5 right-1.5 text-[10px] md:text-[11px] px-2.5 py-[4px] rounded-[4px] font-semibold tracking-wide whitespace-nowrap text-center leading-none flex items-center justify-center shadow-sm text-white ${badgeColor === 'red' ? 'bg-red-400/80' : 'bg-slate-400/80'}`}>

@@ -107,7 +107,6 @@
 }
 
 @keyframes payment-method-zoom {
-  from { transform: scale(1); }
   to { transform: scale(0.9); }
 }
 
@@ -116,8 +115,20 @@
   will-change: transform;
 }
 
+/* Desktop: hovering only zooms the method out — it must not select it. */
+@media (hover: hover) and (pointer: fine) {
+  .payment-method-tile.cursor-pointer .payment-method-logo {
+    transition: transform 1000ms cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .payment-method-tile.cursor-pointer:hover .payment-method-logo {
+    transform: scale(0.9);
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .payment-method-selected { animation: none; }
+  .payment-method-tile.cursor-pointer .payment-method-logo { transition: none; }
+  .payment-method-tile.cursor-pointer:hover .payment-method-logo { transform: none; }
 }
 
 .card-payment-fields-with-bin {
