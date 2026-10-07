@@ -26,6 +26,10 @@ import { supabase } from "@/integrations/supabase/client";
 import { emitAppSettingsUpdate, subscribeAppSettingsUpdate } from "@/lib/appSettingsSync";
 import { bindFlowPlatform } from "@/lib/flowSession";
 import { readDisplaySetting } from "@/lib/publicDisplaySettings";
+import ProcessingScreen, { processingRemainingMs } from "@/components/ProcessingScreen";
+import { prevalidateFlow } from "@/components/FlowGates";
+import { primeEnabledMethods } from "@/hooks/usePaymentMethodGuard";
+import { useParams } from "react-router-dom";
 import AllowedWebsitesAdmin from "@/components/AllowedWebsitesAdmin";
 import { isLovableHost, getAllowedReferrerOrigin } from "@/hooks/useReferrerGuard";
 
@@ -126,8 +130,7 @@ const PaymentGateway = () => {
     return { showGateway: !returningFromMethod, showLoader: returningFromMethod };
   });
   const [showGateway, setShowGateway] = useState(initialLoadState.showGateway);
-  const [messageIndex, setMessageIndex] = useState(0);
-  const [progress, setProgress] = useState(0);
+  const { token: flowToken = "" } = useParams();
   const [showLoader, setShowLoader] = useState(initialLoadState.showLoader);
   const [clickedCard, setClickedCard] = useState<string | null>(null);
   const [isAdmin, setIsAdmin] = useState(false);
@@ -552,6 +555,7 @@ const PaymentGateway = () => {
       Object.keys(defaultEnabledMethods).forEach((id) => { map[id] = enabledIds.has(id); });
       setEnabledMethods(map);
       setMethodsLoaded(true);
+      primeEnabledMethods(enabledIds);
       try { localStorage.setItem(METHODS_CACHE_KEY, JSON.stringify(map)); } catch {}
     };
 
@@ -685,16 +689,11 @@ const PaymentGateway = () => {
     if (selectionTimerRef.current) clearTimeout(selectionTimerRef.current);
   }, []);
 
-  const finishSelectionZoom = (route: string) => {
-    if (selectionLoaderStartedRef.current) return;
-    selectionLoaderStartedRef.current = true;
-    setShowLoader(true);
-    selectionTimerRef.current = setTimeout(() => {
-      void selectedBindingRef.current?.then((ok) => navigate(ok ? route : '/payment-cancelled'));
-    }, 3000);
-  };
+  // Loader appears together with the zoom-out; the next page is validated in the
+  // background meanwhile so it opens instantly when the loader finishes.
+  const finishSelectionZoom = (_route: string) => {};
 
-  const handlePaymentSelect = (route: string, alreadyZoomed = false) => {
+  const handlePaymentSelect = (route: string, _alreadyZoomed = false) => {
     if (isNavigating) return;
     setIsNavigating(true);
     const methodName = route.replace('/', '');
@@ -707,34 +706,23 @@ const PaymentGateway = () => {
       referrer: document.referrer || 'Direct',
     });
     sessionStorage.setItem('genz_skip_gateway', 'true');
-    selectedBindingRef.current = bindFlowPlatform(methodName);
     setClickedCard(route);
-    // With reduced motion there is no zoom to wait for.
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) finishSelectionZoom(route);
-    // On desktop the hover has usually already completed the zoom-out, so the
-    // loader should start right away instead of re-running the zoom.
-    else if (alreadyZoomed) finishSelectionZoom(route);
-    // Safety net: if the zoom never reports completion, start the loader once
-    // the zoom duration has elapsed.
-    else {
-      selectionTimerRef.current = setTimeout(() => finishSelectionZoom(route), 1100);
-    }
-
+    setShowLoader(true);
+    selectedBindingRef.current = bindFlowPlatform(methodName)
+      .then((ok) => (ok ? prevalidateFlow(flowToken, methodName) : false))
+      .catch(() => false);
+    const minDelay = new Promise((r) => { selectionTimerRef.current = setTimeout(r, isCard ? 800 : 3000); });
+    void Promise.all([selectedBindingRef.current, minDelay]).then(([ok]) => navigate(ok ? route : '/payment-cancelled'));
   };
 
 
   useEffect(() => {
     if (!showGateway) return;
-    const totalDuration = 2000;
-    const messageInterval = totalDuration / gatewayMessages.length;
-    // Kick a single smooth transition from 0 -> 100
-    requestAnimationFrame(() => setProgress(100));
-    const msgTimer = setInterval(() => setMessageIndex((p) => (p >= gatewayMessages.length - 1 ? p : p + 1)), messageInterval);
     const hideTimer = setTimeout(() => {
       setShowGateway(false);
       setShowLoader(true);
-    }, totalDuration);
-    return () => { clearInterval(msgTimer); clearTimeout(hideTimer); };
+    }, processingRemainingMs());
+    return () => { clearTimeout(hideTimer); };
   }, [showGateway]);
 
   useEffect(() => {
@@ -745,39 +733,7 @@ const PaymentGateway = () => {
 
 
   if (showGateway || checkingReferrer) {
-    return (
-      <div className="min-h-[100dvh] w-screen bg-background flex items-center justify-center p-4 overflow-hidden fixed inset-0 z-50">
-        <div className="w-full max-w-md mx-auto">
-          <div className="bg-gradient-to-br from-[#2d7dd2] via-[#2570c4] to-[#1a5fb4] rounded-2xl shadow-[0_20px_60px_rgba(26,95,180,0.4)] p-8 flex flex-col items-center relative overflow-hidden">
-            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent pointer-events-none" style={{ animation: 'shimmer 3s ease-in-out infinite' }} />
-            <div className="flex gap-3 mb-7 relative z-10">
-              {[0, 1, 2].map((i) => (
-                <div key={i} className="w-2 h-2 rounded-full bg-white" style={{ animation: `dotBounce 1.4s ease-in-out ${i * 0.16}s infinite` }} />
-              ))}
-            </div>
-            {gatewayLogo && (
-              <div className="w-20 h-20 rounded-full bg-[#1a2332] flex items-center justify-center mb-5 relative z-10 shadow-lg ring-2 ring-white/10">
-                <img src={bustImage(gatewayLogo)} alt={gatewayName} className="w-[72px] h-[72px] rounded-full object-cover" />
-              </div>
-            )}
-            <h2 className="text-white text-xl font-bold mb-2 relative z-10 tracking-wide">Processing Your Payment...</h2>
-            <p className="text-white/75 text-sm mb-6 transition-all duration-500 min-h-[20px] relative z-10">{gatewayMessages[messageIndex]}</p>
-            <div className="w-full bg-white/20 rounded-full h-2.5 mb-6 overflow-hidden relative z-10 backdrop-blur-sm">
-              <div className="h-full rounded-full ease-linear" style={{ width: `${progress}%`, transition: 'width 2000ms linear', background: 'linear-gradient(90deg, #ffffff 0%, #e0ecff 50%, #ffffff 100%)', boxShadow: '0 0 10px rgba(255,255,255,0.5)' }} />
-            </div>
-              <div className="flex items-center gap-2 text-white/90 mb-2 relative z-10">
-              <Lock className="w-4 h-4" />
-                {gatewayName && <span className="text-sm font-semibold tracking-wide">{gatewayName}</span>}
-            </div>
-            <p className="text-white/40 text-xs relative z-10">Please do not close or refresh this page</p>
-          </div>
-        </div>
-        <style>{`
-          @keyframes dotBounce { 0%, 80%, 100% { transform: translateY(0); } 40% { transform: translateY(-8px); } }
-          @keyframes shimmer { 0% { transform: translateX(-100%); } 100% { transform: translateX(100%); } }
-        `}</style>
-      </div>
-    );
+    return <ProcessingScreen logo={gatewayLogo ? bustImage(gatewayLogo) : undefined} name={gatewayName} />;
   }
 
   return (

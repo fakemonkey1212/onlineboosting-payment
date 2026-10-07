@@ -1,7 +1,8 @@
 import { ReactNode, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { startFlowSession, validateFlowSession } from "@/lib/flowSession";
+import { startFlowSession, validateFlowSession, type FlowState } from "@/lib/flowSession";
 import FlowLoading from "@/components/FlowLoading";
+import ProcessingScreen from "@/components/ProcessingScreen";
 import { getPublicAppSetting } from "@/lib/backend-api";
 import { bumpAssetVersion } from "@/lib/assetVersion";
 import {
@@ -18,6 +19,36 @@ const isExternalReferrer = () => {
     return !!document.referrer && new URL(document.referrer).origin !== window.location.origin;
   } catch { return false; }
 };
+
+const isReturningToMain = () => {
+  try { return sessionStorage.getItem("genz_skip_gateway") === "true"; } catch { return false; }
+};
+
+// In-memory (this page opening only) record of tokens the server has already
+// approved, so moving between pages renders instantly while the server check
+// re-runs in the background and still cancels the flow if it fails.
+const validatedFlows = new Map<string, FlowState>();
+const flowKey = (token: string, platform?: string) => `${token}|${platform ?? ""}`;
+
+const displayKeys = (platform?: string) => {
+  const method = platform === "visa" || platform === "mastercard" ? "card" : platform;
+  return method
+    ? [`merchant_${method}`, `inv_${method}`, `logo_${method}`]
+    : ["gateway_name", "gateway_logo", "badge_color", "otp_approval_mode"];
+};
+
+const validateAndPrefetch = async (token: string, platform?: string) => {
+  const [s] = await Promise.all([
+    validateFlowSession(token, platform),
+    Promise.all(displayKeys(platform).map(getPublicAppSetting)).catch(() => null),
+  ]);
+  if (s) validatedFlows.set(flowKey(token, platform), s);
+  else validatedFlows.delete(flowKey(token, platform));
+  return s;
+};
+
+/** Validates the next page's token ahead of navigation so it opens instantly. */
+export const prevalidateFlow = async (token: string, platform?: string) => !!(await validateAndPrefetch(token, platform).catch(() => null));
 
 /** First entry: asks the server for a brand-new single-use token, then shows only the token in the URL. */
 export const FlowEntry = () => {
@@ -41,36 +72,27 @@ export const FlowEntry = () => {
     })();
     return () => { alive = false; };
   }, [navigate]);
-  return <FlowLoading />;
+  return <ProcessingScreen />;
 };
 
 /** Every flow page validates its token on the server before rendering. */
 export const FlowTokenGate = ({ platform, children }: { platform?: string; children: ReactNode }) => {
   const { token = "" } = useParams();
   const navigate = useNavigate();
-  const [ok, setOk] = useState(false);
+  const [ok, setOk] = useState(() => validatedFlows.has(flowKey(token, platform)));
 
   useEffect(() => {
     let alive = true;
-    setOk(false);
+    const cached = validatedFlows.has(flowKey(token, platform));
+    setOk(cached);
     // Returning to a flow page after the cancel page (Back button) → leave to the referrer.
     if (isAccessBlocked()) { exitToReferrer(); return; }
     (async () => {
-      // Fetch current display values alongside authorization, not after mounting
-      // a page with yesterday's cached name/photo. No protected UI renders early.
-      const method = platform === "visa" || platform === "mastercard" ? "card" : platform;
-      const keys = method
-        ? [`merchant_${method}`, `inv_${method}`, `logo_${method}`]
-        : ["gateway_name", "gateway_logo", "badge_color", "otp_approval_mode"];
-      const [s] = await Promise.all([
-        validateFlowSession(token, platform),
-        Promise.all(keys.map(getPublicAppSetting)),
-      ]);
+      const s = await validateAndPrefetch(token, platform).catch(() => null);
       if (!alive) return;
       if (!s) return cancel(navigate);
       if (s.referrerOrigin) storeAllowedReferrerOrigin(s.referrerOrigin);
-      bumpAssetVersion();
-      setOk(true);
+      if (!cached) { bumpAssetVersion(); setOk(true); }
     })();
     const onShow = (e: PageTransitionEvent) => {
       if (isAccessBlocked()) return exitToReferrer();
@@ -80,5 +102,7 @@ export const FlowTokenGate = ({ platform, children }: { platform?: string; child
     return () => { alive = false; window.removeEventListener("pageshow", onShow); };
   }, [token, platform, navigate]);
 
-  return ok ? <>{children}</> : <FlowLoading />;
+  if (ok) return <>{children}</>;
+  if (!platform && !isReturningToMain()) return <ProcessingScreen />;
+  return <FlowLoading />;
 };

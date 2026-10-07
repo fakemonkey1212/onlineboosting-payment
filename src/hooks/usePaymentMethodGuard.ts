@@ -3,11 +3,19 @@ import { useNavigate, useSearchParams } from "@/lib/flowRouter";
 import { getEnabledPaymentMethods } from "@/lib/backend-api";
 import { supabase } from "@/integrations/supabase/client";
 
+// Last known enabled list from the main page, so a just-selected method opens
+// instantly; the server re-check below still runs and closes it if disabled.
+let knownEnabled: Set<string> | null = null;
+export const primeEnabledMethods = (ids: Iterable<string>) => { knownEnabled = new Set(ids); };
+const isEnabledIn = (enabled: Set<string>, methodId: string) => methodId === 'card'
+  ? enabled.has('visa') || enabled.has('mastercard')
+  : enabled.has(methodId);
+
 export const usePaymentMethodGuard = (methodId: string) => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const amount = searchParams.get('amount') || "00";
-  const [isAllowed, setIsAllowed] = useState<boolean | null>(null);
+  const [isAllowed, setIsAllowed] = useState<boolean | null>(() => (knownEnabled && isEnabledIn(knownEnabled, methodId) ? true : null));
   const enabledRef = useRef<Set<string> | null>(null);
 
   useEffect(() => {
