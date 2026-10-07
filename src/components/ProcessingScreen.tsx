@@ -3,9 +3,10 @@ import { Lock } from "lucide-react";
 
 export const PROCESSING_DURATION_MS = 2000;
 export const PROCESSING_MESSAGES = [
-  "Connecting to secure server...",
-  "Verifying payment details...",
-  "Encrypting transaction...",
+  "Connecting to secure payment gateway...",
+  "Verifying merchant credentials...",
+  "Authorizing transaction...",
+  "Communicating with bank server...",
   "Finalizing secure gateway...",
 ];
 
