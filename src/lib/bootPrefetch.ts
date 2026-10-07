@@ -1,4 +1,4 @@
-import { getEnabledPaymentMethods, getPublicAppSetting, seedEnabledPaymentMethods } from "@/lib/backend-api";
+import { fetchEnabledPaymentMethodsFresh, fetchPublicAppSettingFresh, getPublicAppSetting, seedEnabledPaymentMethods } from "@/lib/backend-api";
 import { bustImage } from "@/lib/assetVersion";
 import { seedDisplaySetting } from "@/lib/publicDisplaySettings";
 
@@ -27,13 +27,13 @@ export const prefetchPublicDisplay = () => {
   const bundle: Promise<Bundle> = started ?? Promise.resolve(null);
   KEYS.forEach((k) => seedDisplaySetting(k, bundle.then((b) => {
     const s = b?.data?.settings;
-    if (!s) return getPublicAppSetting(k);
+    if (!s) return fetchPublicAppSettingFresh(k);
     const v = s[k];
     return v == null ? null : String(v);
   })));
   seedEnabledPaymentMethods(bundle.then((b) => {
     const e = b?.data?.enabled;
-    return Array.isArray(e) ? e.filter((x): x is string => typeof x === "string") : getEnabledPaymentMethods();
+    return Array.isArray(e) ? e.filter((x): x is string => typeof x === "string") : fetchEnabledPaymentMethodsFresh();
   }));
   void bundle.then(() => getPublicAppSetting("gateway_logo")).then((logo) => { if (logo) preloadImage(String(logo).trim()); }).catch(() => {});
 };
