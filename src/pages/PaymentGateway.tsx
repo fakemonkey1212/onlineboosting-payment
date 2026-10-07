@@ -141,17 +141,14 @@ const PaymentGateway = () => {
   const [supportNumber, setSupportNumber] = useState("");
   const [loginUnlocked, setLoginUnlocked] = useState(false);
   const METHODS_CACHE_KEY = "genz_enabled_methods_v1";
-  const cachedMethods: Record<string, boolean> | null = (() => {
-    try { return JSON.parse(localStorage.getItem(METHODS_CACHE_KEY) || "null"); } catch { return null; }
-  })();
-  const [enabledMethods, setEnabledMethods] = useState<Record<string, boolean>>(cachedMethods ?? {});
-  const [methodsLoaded, setMethodsLoaded] = useState<boolean>(!!cachedMethods);
+  const [enabledMethods, setEnabledMethods] = useState<Record<string, boolean>>({});
+  const [methodsLoaded, setMethodsLoaded] = useState(false);
   const [badgeColor, setBadgeColor] = useState<'slate' | 'red'>(readDisplaySetting("badge_color") === 'red' ? 'red' : 'slate');
   const [gatewayName, setGatewayName] = useState<string>(() => readDisplaySetting("gateway_name") ?? "");
   const [gatewayLogo, setGatewayLogo] = useState<string>(() => readDisplaySetting("gateway_logo") ?? "");
   const [gatewayError, setGatewayError] = useState("");
   const gatewayDirtyRef = useRef(false);
-  const [otpMode, setOtpMode] = useState<'approval' | 'auto'>((localStorage.getItem("genz_otp_mode") as any) === 'auto' ? 'auto' : 'approval');
+  const [otpMode, setOtpMode] = useState<'approval' | 'auto'>(readDisplaySetting("otp_approval_mode") === 'auto' ? 'auto' : 'approval');
 
   const [merchantTarget, setMerchantTarget] = useState<string>("bkash");
   const [merchantName, setMerchantName] = useState("");
