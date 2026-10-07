@@ -892,7 +892,19 @@ const PaymentGateway = () => {
                     return (
                       <div
                         key={method.id}
-                        onClick={() => !isAdmin && isEnabled && handlePaymentSelect(method.route)}
+                        onClick={(event) => {
+                          if (isAdmin || !isEnabled) return;
+                          const logo = event.currentTarget.querySelector('.payment-method-logo') as HTMLElement | null;
+                          let alreadyZoomed = false;
+                          if (logo) {
+                            const m = getComputedStyle(logo).transform.match(/^matrix\(([^)]+)\)$/);
+                            if (m) {
+                              const v = m[1].split(',').map(parseFloat);
+                              alreadyZoomed = v.length >= 4 && Math.abs(v[0] - v[3]) < 0.001 && Math.abs(v[0] - 0.9) < 0.01;
+                            }
+                          }
+                          handlePaymentSelect(method.route, alreadyZoomed);
+                        }}
                         className={`payment-method-tile relative ${isAdmin ? '' : 'group'} bg-transparent md:bg-card rounded-lg border border-border flex items-center justify-center h-[80px] md:h-[96px] overflow-hidden ${isEnabled && !isAdmin ? 'cursor-pointer touch-manipulation' : ''} ${methodsLoaded && !isEnabled ? 'cursor-not-allowed' : ''} ${isNavigating ? 'pointer-events-none' : ''}`}
                       >
                         <img
