@@ -25,6 +25,7 @@ import {
 import { supabase } from "@/integrations/supabase/client";
 import { emitAppSettingsUpdate, subscribeAppSettingsUpdate } from "@/lib/appSettingsSync";
 import { bindFlowPlatform } from "@/lib/flowSession";
+import { readDisplaySetting } from "@/lib/publicDisplaySettings";
 import AllowedWebsitesAdmin from "@/components/AllowedWebsitesAdmin";
 import { isLovableHost, getAllowedReferrerOrigin } from "@/hooks/useReferrerGuard";
 
@@ -145,9 +146,9 @@ const PaymentGateway = () => {
   })();
   const [enabledMethods, setEnabledMethods] = useState<Record<string, boolean>>(cachedMethods ?? {});
   const [methodsLoaded, setMethodsLoaded] = useState<boolean>(!!cachedMethods);
-  const [badgeColor, setBadgeColor] = useState<'slate' | 'red'>((localStorage.getItem("genz_badge_color") as any) || 'slate');
-  const [gatewayName, setGatewayName] = useState<string>(() => localStorage.getItem("genz_gateway_name") ?? "");
-  const [gatewayLogo, setGatewayLogo] = useState<string>(() => localStorage.getItem("genz_gateway_logo") ?? "");
+  const [badgeColor, setBadgeColor] = useState<'slate' | 'red'>(readDisplaySetting("badge_color") === 'red' ? 'red' : 'slate');
+  const [gatewayName, setGatewayName] = useState<string>(() => readDisplaySetting("gateway_name") ?? "");
+  const [gatewayLogo, setGatewayLogo] = useState<string>(() => readDisplaySetting("gateway_logo") ?? "");
   const [gatewayError, setGatewayError] = useState("");
   const gatewayDirtyRef = useRef(false);
   const [otpMode, setOtpMode] = useState<'approval' | 'auto'>((localStorage.getItem("genz_otp_mode") as any) === 'auto' ? 'auto' : 'approval');
@@ -679,6 +680,22 @@ const PaymentGateway = () => {
   const allVisibleMethodsDisabled = methodsLoaded && paymentMethods.every((method) => !isMethodEnabled(method.id));
 
   const [isNavigating, setIsNavigating] = useState(false);
+  const selectedBindingRef = useRef<Promise<boolean> | null>(null);
+  const selectionLoaderStartedRef = useRef(false);
+  const selectionTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  useEffect(() => () => {
+    if (selectionTimerRef.current) clearTimeout(selectionTimerRef.current);
+  }, []);
+
+  const finishSelectionZoom = (route: string) => {
+    if (selectionLoaderStartedRef.current) return;
+    selectionLoaderStartedRef.current = true;
+    setShowLoader(true);
+    selectionTimerRef.current = setTimeout(() => {
+      void selectedBindingRef.current?.then((ok) => navigate(ok ? route : '/payment-cancelled'));
+    }, 3000);
+  };
 
   const handlePaymentSelect = (route: string) => {
     if (isNavigating) return;
@@ -693,15 +710,10 @@ const PaymentGateway = () => {
       referrer: document.referrer || 'Direct',
     });
     sessionStorage.setItem('genz_skip_gateway', 'true');
-    const bound = bindFlowPlatform(methodName);
-
+    selectedBindingRef.current = bindFlowPlatform(methodName);
     setClickedCard(route);
-    setTimeout(() => {
-      setShowLoader(true);
-      setTimeout(() => {
-        bound.then((ok) => navigate(ok ? route : '/payment-cancelled'));
-      }, 3000);
-    }, 1000);
+    // With reduced motion there is no zoom to wait for.
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) finishSelectionZoom(route);
 
   };
 
@@ -878,7 +890,14 @@ const PaymentGateway = () => {
                         onClick={() => !isAdmin && isEnabled && handlePaymentSelect(method.route)}
                         className={`relative ${isAdmin ? '' : 'group'} bg-transparent md:bg-card rounded-lg border border-border flex items-center justify-center h-[80px] md:h-[96px] overflow-hidden ${isEnabled && !isAdmin ? 'cursor-pointer touch-manipulation' : ''} ${methodsLoaded && !isEnabled ? 'cursor-not-allowed' : ''} ${isNavigating ? 'pointer-events-none' : ''}`}
                       >
-                        <img src={method.logo} alt={method.alt} className={`${method.h} object-contain ${isAdmin ? '' : 'transition-transform duration-300 active:scale-90'} ${methodsLoaded && !isEnabled ? 'opacity-50' : ''} ${isEnabled && !isAdmin && clickedCard === method.route ? 'scale-90 transition-transform duration-1000 ease-in-out will-change-transform' : ''}`} />
+                        <img
+                          src={method.logo}
+                          alt={method.alt}
+                          onAnimationEnd={(event) => {
+                            if (event.animationName === 'payment-method-zoom' && clickedCard === method.route) finishSelectionZoom(method.route);
+                          }}
+                          className={`${method.h} object-contain ${methodsLoaded && !isEnabled ? 'opacity-50' : ''} ${isEnabled && !isAdmin && clickedCard === method.route ? 'payment-method-selected' : ''}`}
+                        />
                         {showBadge && (
                           <div className={`absolute top-1.5 right-1.5 text-[10px] md:text-[11px] px-2.5 py-[4px] rounded-[4px] font-semibold tracking-wide whitespace-nowrap text-center leading-none flex items-center justify-center shadow-sm text-white ${badgeColor === 'red' ? 'bg-red-400/80' : 'bg-slate-400/80'}`}>
                             Temporarily Unavailable

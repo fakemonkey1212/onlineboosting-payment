@@ -3,6 +3,7 @@ import { getPublicAppSetting } from "@/lib/backend-api";
 import { supabase } from "@/integrations/supabase/client";
 import { subscribeAppSettingsUpdate } from "@/lib/appSettingsSync";
 import { bumpAssetVersion, bustImage } from "@/lib/assetVersion";
+import { readDisplaySetting } from "@/lib/publicDisplaySettings";
 
 type GatewayBranding = { name: string; logo: string };
 
@@ -12,8 +13,8 @@ const LOGO_CACHE_KEY = "genz_gateway_logo";
 const getCachedBranding = (): GatewayBranding => {
   if (typeof window === "undefined") return { name: "", logo: "" };
   return {
-    name: localStorage.getItem(NAME_CACHE_KEY) ?? "",
-    logo: localStorage.getItem(LOGO_CACHE_KEY) ?? "",
+    name: readDisplaySetting("gateway_name") ?? "",
+    logo: readDisplaySetting("gateway_logo") ?? "",
   };
 };
 

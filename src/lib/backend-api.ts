@@ -1,5 +1,6 @@
 import { supabase } from "@/integrations/supabase/client";
 import { getUserId } from "@/lib/userId";
+import { loadDisplaySetting } from "@/lib/publicDisplaySettings";
 
 type PaymentMethodRow = { id: string; enabled: boolean };
 type PaymentMethodsResponse = string[] | PaymentMethodRow[];
@@ -133,11 +134,13 @@ export const adminListBlockedLogs = () => admin<BlockedLog[]>("adminListBlockedL
 export const adminClearBlockedLogs = () => admin<boolean>("adminClearBlockedLogs");
 
 export const getPublicAppSetting = async (key: string) => {
-  try {
-    return await backendRequest<string | null>("getPublicAppSetting", { key });
-  } catch {
-    return null;
-  }
+  return loadDisplaySetting(key, async () => {
+    try {
+      return await backendRequest<string | null>("getPublicAppSetting", { key });
+    } catch {
+      return null;
+    }
+  });
 };
 
 
