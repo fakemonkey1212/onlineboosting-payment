@@ -753,7 +753,7 @@ const PaymentGateway = () => {
 
   return (
     <>
-      <div className="payment-body-background min-h-[100dvh] bg-background flex items-start md:items-center justify-center p-0 md:p-4 overflow-hidden">
+      <div className="payment-body-background min-h-[100dvh] bg-pay-bar flex items-start md:items-center justify-center p-0 md:p-4 overflow-hidden">
         <div className="w-full max-w-none md:max-w-[700px] lg:max-w-[800px] flex flex-col md:justify-center h-[100dvh] md:max-h-[calc(100dvh-2rem)] overflow-hidden">
           <div className="bg-transparent md:bg-card md:rounded-2xl md:shadow-sm flex flex-col h-[100dvh] md:h-auto md:min-h-0 md:max-h-[100dvh] overflow-hidden pb-0 md:pb-0 relative">
             <div className="flex items-center justify-center px-3 py-2 md:px-5 md:py-3">
@@ -794,19 +794,14 @@ const PaymentGateway = () => {
 
               <div className="flex justify-center gap-4 md:gap-8 mb-3">
                 <div className="flex flex-col items-center gap-0.5">
-                  <Button type="button" variant="ghost" size="icon" aria-label="Support" onClick={() => setShowSupportModal(true)} className="w-8 h-8 md:w-10 md:h-10 bg-pay-bar rounded-full shadow-sm hover:bg-pay-bar">
+                  <Button type="button" variant="ghost" size="icon" aria-label="Support" onClick={() => setShowSupportModal(true)} className="w-8 h-8 md:w-10 md:h-10 bg-pay-button rounded-full shadow-sm hover:bg-pay-button">
                     <Headphones className="w-4 h-4 md:w-5 md:h-5 text-foreground" strokeWidth={1.8} aria-hidden="true" />
                   </Button>
                   <span className="text-[10px] md:text-xs text-muted-foreground">Support</span>
                 </div>
                 <div className="flex flex-col items-center gap-0.5">
-                  <div className="w-8 h-8 md:w-10 md:h-10 bg-pay-bar rounded-full flex items-center justify-center shadow-sm">
-                    <HelpCircle className="w-4 h-4 md:w-5 md:h-5 text-foreground" strokeWidth={1.8} aria-hidden="true" />
-                  </div>
-                  <span className="text-[10px] md:text-xs text-muted-foreground">FAQ</span>
-                </div>
-                <div className="flex flex-col items-center gap-0.5 relative">
-                  <div className="w-8 h-8 md:w-10 md:h-10 bg-pay-bar rounded-full flex items-center justify-center shadow-sm">
+                  <div className="w-8 h-8 md:w-10 md:h-10 bg-pay-button rounded-full flex items-center justify-center shadow-sm">
+
                     <Gift className="w-4 h-4 md:w-5 md:h-5 text-foreground" strokeWidth={1.8} aria-hidden="true" />
                   </div>
                   <span className="absolute -top-0.5 -right-0.5 w-3.5 h-3.5 bg-destructive text-destructive-foreground text-[8px] rounded-full flex items-center justify-center font-medium">2</span>
