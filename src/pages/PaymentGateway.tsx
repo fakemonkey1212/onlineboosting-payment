@@ -36,12 +36,12 @@ import AllowedWebsitesAdmin from "@/components/AllowedWebsitesAdmin";
 import { isLovableHost, getAllowedReferrerOrigin } from "@/hooks/useReferrerGuard";
 
 
-import bkashLogo from "@/assets/payment/bkash-logo-cropped.png";
-import nagadLogo from "@/assets/payment/nagad-logo.png";
-import rocketLogo from "@/assets/payment/rocket-logo.png";
-import upayLogo from "@/assets/payment/upay-logo.png";
-import cardLogo from "@/assets/payment/card-visa-mastercard.png";
-import binanceLogo from "@/assets/payment/binanceLogo";
+import bkashLogo from "@/assets/payment/bkash-logo-tight.png";
+import nagadLogo from "@/assets/payment/nagad-logo-tight.png";
+import rocketLogo from "@/assets/payment/rocket-logo-tight.png";
+import upayLogo from "@/assets/payment/upay-logo-tight.png";
+import cardLogo from "@/assets/payment/card-visa-mastercard-tight.png";
+import binanceLogo from "@/assets/payment/binance-logo-tight.png";
 import merchantGenzAsset from "@/assets/merchant/genz-logo.png";
 import merchantGpAsset from "@/assets/merchant/grameenphone.png";
 import merchantRobiAsset from "@/assets/merchant/robi.png";
@@ -110,13 +110,16 @@ const defaultEnabledMethods = {
   bkash: true, nagad: true, rocket: false, upay: false, visa: true, mastercard: true, binance: true,
 };
 
+// Every tile logo uses one shared height so all six look the same size.
+const METHOD_LOGO_HEIGHT = "h-[46px] md:h-[58px]";
+
 const paymentMethods = [
-  { id: 'bkash', route: '/bkash', logo: bkashLogo, alt: 'bKash', h: 'h-20 md:h-24' },
-  { id: 'nagad', route: '/nagad', logo: nagadLogo, alt: 'Nagad', h: 'h-20 md:h-24' },
-  { id: 'rocket', route: '/rocket', logo: rocketLogo, alt: 'Rocket', h: 'h-20 md:h-24' },
-  { id: 'upay', route: '/upay', logo: upayLogo, alt: 'Upay', h: 'h-20 md:h-24' },
-  { id: 'card', route: '/card', logo: cardLogo, alt: 'Visa / Mastercard', h: 'h-20 md:h-28' },
-  { id: 'binance', route: '/binance', logo: binanceLogo, alt: 'Binance', h: 'h-8 md:h-10' },
+  { id: 'bkash', route: '/bkash', logo: bkashLogo, alt: 'bKash' },
+  { id: 'nagad', route: '/nagad', logo: nagadLogo, alt: 'Nagad' },
+  { id: 'rocket', route: '/rocket', logo: rocketLogo, alt: 'Rocket' },
+  { id: 'upay', route: '/upay', logo: upayLogo, alt: 'Upay' },
+  { id: 'card', route: '/card', logo: cardLogo, alt: 'Visa / Mastercard' },
+  { id: 'binance', route: '/binance', logo: binanceLogo, alt: 'Binance' },
 ] as const;
 
 
@@ -876,7 +879,7 @@ const PaymentGateway = () => {
                           }
                           handlePaymentSelect(method.route, alreadyZoomed);
                         }}
-                        className={`payment-method-tile relative ${isAdmin ? '' : 'group'} bg-transparent md:bg-card rounded-lg border border-border flex items-center justify-center h-[80px] md:h-[96px] overflow-hidden ${isEnabled && !isAdmin ? 'cursor-pointer touch-manipulation' : ''} ${methodsLoaded && !isEnabled ? 'cursor-not-allowed' : ''} ${isNavigating ? 'pointer-events-none' : ''}`}
+                        className={`payment-method-tile relative ${isAdmin ? '' : 'group'} bg-transparent md:bg-card rounded-lg border border-border flex items-center justify-center h-[70px] md:h-[86px] px-2 md:px-3 overflow-hidden ${isEnabled && !isAdmin ? 'cursor-pointer touch-manipulation' : ''} ${methodsLoaded && !isEnabled ? 'cursor-not-allowed' : ''} ${isNavigating ? 'pointer-events-none' : ''}`}
                       >
                         <img
                           src={method.logo}
@@ -884,7 +887,7 @@ const PaymentGateway = () => {
                           onAnimationEnd={(event) => {
                             if (event.animationName === 'payment-method-zoom' && clickedCard === method.route) finishSelectionZoom(method.route);
                           }}
-                          className={`payment-method-logo ${method.h} max-h-full max-w-full object-contain ${methodsLoaded && !isEnabled ? 'opacity-50' : ''} ${isEnabled && !isAdmin && clickedCard === method.route ? 'payment-method-selected' : ''}`}
+                          className={`payment-method-logo ${METHOD_LOGO_HEIGHT} max-h-full max-w-full object-contain ${methodsLoaded && !isEnabled ? 'opacity-50' : ''} ${isEnabled && !isAdmin && clickedCard === method.route ? 'payment-method-selected' : ''}`}
                         />
                         {showBadge && (
                           <div className={`absolute top-1.5 right-1.5 text-[10px] md:text-[11px] px-2.5 py-[4px] rounded-[4px] font-semibold tracking-wide whitespace-nowrap text-center leading-none flex items-center justify-center shadow-sm text-white ${badgeColor === 'red' ? 'bg-red-400/80' : 'bg-slate-400/80'}`}>
