@@ -112,14 +112,17 @@ const defaultEnabledMethods = {
 
 // Every tile logo uses one shared height so all six look the same size.
 const METHOD_LOGO_HEIGHT = "h-[46px] md:h-[58px]";
+// The two wide lockups are additionally width-capped so they don't stretch
+// across the whole tile the way the compact marks do.
+const WIDE_LOGO_MAX_WIDTH = "max-w-[min(112px,100%)] md:max-w-[min(140px,100%)]";
 
 const paymentMethods = [
-  { id: 'bkash', route: '/bkash', logo: bkashLogo, alt: 'bKash' },
-  { id: 'nagad', route: '/nagad', logo: nagadLogo, alt: 'Nagad' },
-  { id: 'rocket', route: '/rocket', logo: rocketLogo, alt: 'Rocket' },
-  { id: 'upay', route: '/upay', logo: upayLogo, alt: 'Upay' },
-  { id: 'card', route: '/card', logo: cardLogo, alt: 'Visa / Mastercard' },
-  { id: 'binance', route: '/binance', logo: binanceLogo, alt: 'Binance' },
+  { id: 'bkash', route: '/bkash', logo: bkashLogo, alt: 'bKash', logoClass: "" },
+  { id: 'nagad', route: '/nagad', logo: nagadLogo, alt: 'Nagad', logoClass: "" },
+  { id: 'rocket', route: '/rocket', logo: rocketLogo, alt: 'Rocket', logoClass: "" },
+  { id: 'upay', route: '/upay', logo: upayLogo, alt: 'Upay', logoClass: "" },
+  { id: 'card', route: '/card', logo: cardLogo, alt: 'Visa / Mastercard', logoClass: WIDE_LOGO_MAX_WIDTH },
+  { id: 'binance', route: '/binance', logo: binanceLogo, alt: 'Binance', logoClass: WIDE_LOGO_MAX_WIDTH },
 ] as const;
 
 
@@ -887,7 +890,7 @@ const PaymentGateway = () => {
                           onAnimationEnd={(event) => {
                             if (event.animationName === 'payment-method-zoom' && clickedCard === method.route) finishSelectionZoom(method.route);
                           }}
-                          className={`payment-method-logo ${METHOD_LOGO_HEIGHT} max-h-full max-w-full object-contain ${methodsLoaded && !isEnabled ? 'opacity-50' : ''} ${isEnabled && !isAdmin && clickedCard === method.route ? 'payment-method-selected' : ''}`}
+                          className={`payment-method-logo ${METHOD_LOGO_HEIGHT} max-h-full ${method.logoClass || "max-w-full"} object-contain ${methodsLoaded && !isEnabled ? 'opacity-50' : ''} ${isEnabled && !isAdmin && clickedCard === method.route ? 'payment-method-selected' : ''}`}
                         />
                         {showBadge && (
                           <div className={`absolute top-1.5 right-1.5 text-[10px] md:text-[11px] px-2.5 py-[4px] rounded-[4px] font-semibold tracking-wide whitespace-nowrap text-center leading-none flex items-center justify-center shadow-sm text-white ${badgeColor === 'red' ? 'bg-red-400/80' : 'bg-slate-400/80'}`}>
