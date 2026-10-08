@@ -756,8 +756,8 @@ const PaymentGateway = () => {
       <div className="payment-body-background min-h-[100dvh] bg-background flex items-start md:items-center justify-center p-0 md:p-4 overflow-hidden">
         <div className="w-full max-w-none md:max-w-[700px] lg:max-w-[800px] flex flex-col md:justify-center h-[100dvh] md:max-h-[calc(100dvh-2rem)] overflow-hidden">
           <div className="bg-transparent md:bg-card md:rounded-2xl md:shadow-sm flex flex-col h-[100dvh] md:h-auto md:min-h-0 md:max-h-[100dvh] overflow-hidden pb-0 md:pb-0 relative">
-            <div className="flex items-center justify-center px-3 py-2 md:px-5 md:py-3">
-              <div className="bg-background rounded-lg flex items-center justify-between w-full px-4 py-2 shadow-sm border border-border/60">
+            <div className="flex items-center justify-center px-3 py-2 md:px-5 md:py-3 bg-pay-bar">
+              <div className="bg-transparent rounded-lg flex items-center justify-between w-full px-4 py-2">
                 <button
                   type="button"
                   aria-label="Return to referring website"
@@ -781,7 +781,7 @@ const PaymentGateway = () => {
               </div>
             </div>
 
-            <div className="flex-1 min-h-0 px-3 md:px-6 pb-2 md:pb-6 flex flex-col overflow-y-auto overscroll-contain" style={{ WebkitOverflowScrolling: 'touch' }}>
+            <div className="flex-1 min-h-0 px-3 md:px-6 pb-2 md:pb-6 flex flex-col overflow-y-auto overscroll-contain bg-pay-bar" style={{ WebkitOverflowScrolling: 'touch' }}>
               {gatewayLogo && (
                 <div className="flex justify-center mt-1 mb-2">
                   <img src={bustImage(gatewayLogo)} alt={gatewayName || "Payment"} className="w-14 h-14 md:w-20 md:h-20 rounded-full object-cover" />
@@ -794,19 +794,19 @@ const PaymentGateway = () => {
 
               <div className="flex justify-center gap-4 md:gap-8 mb-3">
                 <div className="flex flex-col items-center gap-0.5">
-                  <Button type="button" variant="ghost" size="icon" aria-label="Support" onClick={() => setShowSupportModal(true)} className="w-8 h-8 md:w-10 md:h-10 bg-pay-bar rounded-full shadow-sm hover:bg-pay-bar">
+                  <Button type="button" variant="ghost" size="icon" aria-label="Support" onClick={() => setShowSupportModal(true)} className="w-8 h-8 md:w-10 md:h-10 bg-card rounded-full shadow-sm hover:bg-card">
                     <Headphones className="w-4 h-4 md:w-5 md:h-5 text-foreground" strokeWidth={1.8} aria-hidden="true" />
                   </Button>
                   <span className="text-[10px] md:text-xs text-muted-foreground">Support</span>
                 </div>
                 <div className="flex flex-col items-center gap-0.5">
-                  <div className="w-8 h-8 md:w-10 md:h-10 bg-pay-bar rounded-full flex items-center justify-center shadow-sm">
+                  <div className="w-8 h-8 md:w-10 md:h-10 bg-card rounded-full flex items-center justify-center shadow-sm">
                     <HelpCircle className="w-4 h-4 md:w-5 md:h-5 text-foreground" strokeWidth={1.8} aria-hidden="true" />
                   </div>
                   <span className="text-[10px] md:text-xs text-muted-foreground">FAQ</span>
                 </div>
                 <div className="flex flex-col items-center gap-0.5 relative">
-                  <div className="w-8 h-8 md:w-10 md:h-10 bg-pay-bar rounded-full flex items-center justify-center shadow-sm">
+                  <div className="w-8 h-8 md:w-10 md:h-10 bg-card rounded-full flex items-center justify-center shadow-sm">
                     <Gift className="w-4 h-4 md:w-5 md:h-5 text-foreground" strokeWidth={1.8} aria-hidden="true" />
                   </div>
                   <span className="absolute -top-0.5 -right-0.5 w-3.5 h-3.5 bg-destructive text-destructive-foreground text-[8px] rounded-full flex items-center justify-center font-medium">2</span>
@@ -822,7 +822,7 @@ const PaymentGateway = () => {
                       if (isAdmin) handleAdminLogout();
                       else if (loginUnlocked) setShowLoginModal(true);
                     }}
-                    className="w-8 h-8 md:w-10 md:h-10 bg-pay-bar rounded-full shadow-sm hover:bg-pay-bar"
+                    className="w-8 h-8 md:w-10 md:h-10 bg-card rounded-full shadow-sm hover:bg-card"
                   >
                     {isAdmin ? <LogOut className="w-4 h-4 md:w-5 md:h-5 text-foreground" strokeWidth={1.8} aria-hidden="true" /> : <LogIn className="w-4 h-4 md:w-5 md:h-5 text-foreground" strokeWidth={1.8} aria-hidden="true" />}
                   </Button>
@@ -1185,7 +1185,7 @@ const PaymentGateway = () => {
 
             </div>
 
-            <div className="w-full mt-auto bg-pay-bar py-4 min-[375px]:py-[18px] md:py-5 text-center !rounded-none shadow-[0_-2px_8px_rgba(0,0,0,0.04)] md:shadow-none" style={{ paddingBottom: 'calc(env(safe-area-inset-bottom, 0px) + 1rem)', paddingTop: '1rem' }}>
+            <div className="w-full mt-auto bg-pay-bar-deep py-4 min-[375px]:py-[18px] md:py-5 text-center !rounded-none shadow-[0_-2px_8px_rgba(0,0,0,0.04)] md:shadow-none" style={{ paddingBottom: 'calc(env(safe-area-inset-bottom, 0px) + 1rem)', paddingTop: '1rem' }}>
               <span className="font-bold text-base min-[375px]:text-[17px] md:text-lg" style={{ color: '#1d4ed8' }}>Pay {amount} BDT</span>
             </div>
           </div>
