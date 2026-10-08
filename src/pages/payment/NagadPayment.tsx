@@ -283,7 +283,7 @@ const NagadPayment = () => {
     <div className="fixed inset-0 flex flex-col bg-gray-300 overflow-hidden">
       {isLoading && <SingleCircleLoader />}
       <div className="w-full h-full flex flex-col overflow-hidden border-4 min-[375px]:border-[8px] border-black" style={{ background: 'linear-gradient(180deg, #C41E3A 0%, #8B0000 100%)' }}>
-        <div className="flex justify-end p-1.5 min-[375px]:p-2 shrink-0">
+        <div className="w-full max-w-md mx-auto flex justify-end p-1.5 min-[375px]:p-2 shrink-0">
           <div className="flex overflow-hidden rounded-lg border-2 border-white">
             <button onClick={() => setLanguage('bn')} className={`px-2.5 py-0.5 text-[10px] font-bold transition-colors ${language === 'bn' ? 'bg-white text-[#C41E3A]' : 'text-white'}`}>বাং</button>
             <button onClick={() => setLanguage('en')} className={`px-2.5 py-0.5 text-[10px] font-bold transition-colors ${language === 'en' ? 'bg-white text-[#C41E3A]' : 'text-white'}`}>Eng</button>
@@ -294,7 +294,7 @@ const NagadPayment = () => {
             <img src={nagadCart.url} alt="Cart" className="h-12 min-[375px]:h-16 w-auto mb-1 object-contain" />
             <h1 className="text-[#ccc] text-sm min-[375px]:text-lg font-bold">{t.title}</h1>
           </div>
-          <div className="px-6 min-[375px]:px-8 shrink-0">
+          <div className="w-full max-w-md mx-auto px-6 min-[375px]:px-8 shrink-0">
             <div className="space-y-0.5 min-[375px]:space-y-1.5">
               <div className="flex"><span className="text-[#ccc] font-bold text-xs min-[375px]:text-sm w-24 min-[375px]:w-32">{t.invoiceNo}</span><span className="text-[#ccc] font-bold text-xs min-[375px]:text-sm">{inv}</span></div>
               <div className="flex"><span className="text-[#ccc] font-bold text-xs min-[375px]:text-sm w-24 min-[375px]:w-32">{t.totalAmount}</span><span className="text-[#ccc] font-bold text-xs min-[375px]:text-sm">BDT {amount}</span></div>
