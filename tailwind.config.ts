@@ -58,7 +58,6 @@ export default {
           ring: "hsl(var(--sidebar-ring))",
         },
         "pay-bar": "hsl(var(--pay-bar))",
-        "pay-button": "hsl(var(--pay-button))",
         "pay-text": "hsl(var(--pay-text))",
         "card-chip": "hsl(var(--card-chip))",
         "card-chip-dark": "hsl(var(--card-chip-dark))",
