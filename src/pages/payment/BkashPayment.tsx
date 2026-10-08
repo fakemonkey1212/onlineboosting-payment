@@ -276,7 +276,7 @@ const BkashPayment = () => {
             {showCancelView ? (
               <>
                 <div className="bg-[#E2136E] px-5 flex flex-col items-center justify-center" style={{ height: '310px' }}>
-                  <RaisedHandIcon className="w-6 h-6 text-white mb-3" strokeWidth={1.5} />
+                  <RaisedHandIcon className="w-6 h-6 text-white mb-3" strokeWidth={2.25} />
                   <p className="text-white text-center text-xs font-medium">Are you sure you want to cancel this payment?</p>
                 </div>
                 <div className="bg-white px-4 py-2 flex gap-3 shrink-0">
