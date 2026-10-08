@@ -162,7 +162,7 @@ const UpayPayment = () => {
   return (
     <div className="fixed inset-0 flex flex-col items-stretch justify-start p-3 min-[375px]:p-4 overflow-hidden overscroll-none" style={{ background: 'linear-gradient(to bottom, rgb(250, 235, 122) 10%, rgb(253, 251, 216) 80%)' }}>
       {isLoading && <SingleCircleLoader />}
-      <div className="w-full max-w-[420px] mx-auto rounded-2xl overflow-hidden shadow-lg flex flex-col h-full max-h-[760px]">
+      <div className="w-full max-w-[420px] mx-auto rounded-2xl overflow-hidden shadow-lg flex flex-col h-full">
         <div className="flex-1 min-h-0 px-5 flex flex-col items-center justify-evenly" style={{ backgroundColor: 'rgb(251, 214, 0)', paddingTop: 'clamp(12px, 3dvh, 32px)', paddingBottom: 'clamp(12px, 3dvh, 32px)' }}>
           <img src={upayLogo} alt="Upay" className="w-auto object-contain shrink" style={{ height: 'clamp(48px, 11dvh, 110px)', maxWidth: '18rem' }} />
           <div className="w-full rounded-xl px-5 text-center"  style={{ backgroundColor: 'rgba(235, 235, 235, 0.7)', paddingTop: 'clamp(10px, 2.2dvh, 20px)', paddingBottom: 'clamp(10px, 2.2dvh, 20px)' }}>
