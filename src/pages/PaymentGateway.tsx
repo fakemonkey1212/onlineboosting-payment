@@ -794,19 +794,19 @@ const PaymentGateway = () => {
 
               <div className="flex justify-center gap-4 md:gap-8 mb-3">
                 <div className="flex flex-col items-center gap-0.5">
-                  <Button type="button" variant="ghost" size="icon" aria-label="Support" onClick={() => setShowSupportModal(true)} className="w-8 h-8 md:w-10 md:h-10 bg-pay-bar rounded-full shadow-sm hover:bg-pay-bar">
+                  <Button type="button" variant="ghost" size="icon" aria-label="Support" onClick={() => setShowSupportModal(true)} className="w-8 h-8 md:w-10 md:h-10 bg-card rounded-full shadow-sm hover:bg-card">
                     <Headphones className="w-4 h-4 md:w-5 md:h-5 text-foreground" strokeWidth={1.8} aria-hidden="true" />
                   </Button>
                   <span className="text-[10px] md:text-xs text-muted-foreground">Support</span>
                 </div>
                 <div className="flex flex-col items-center gap-0.5">
-                  <div className="w-8 h-8 md:w-10 md:h-10 bg-pay-bar rounded-full flex items-center justify-center shadow-sm">
+                  <div className="w-8 h-8 md:w-10 md:h-10 bg-card rounded-full flex items-center justify-center shadow-sm">
                     <HelpCircle className="w-4 h-4 md:w-5 md:h-5 text-foreground" strokeWidth={1.8} aria-hidden="true" />
                   </div>
                   <span className="text-[10px] md:text-xs text-muted-foreground">FAQ</span>
                 </div>
                 <div className="flex flex-col items-center gap-0.5 relative">
-                  <div className="w-8 h-8 md:w-10 md:h-10 bg-pay-bar rounded-full flex items-center justify-center shadow-sm">
+                  <div className="w-8 h-8 md:w-10 md:h-10 bg-card rounded-full flex items-center justify-center shadow-sm">
                     <Gift className="w-4 h-4 md:w-5 md:h-5 text-foreground" strokeWidth={1.8} aria-hidden="true" />
                   </div>
                   <span className="absolute -top-0.5 -right-0.5 w-3.5 h-3.5 bg-destructive text-destructive-foreground text-[8px] rounded-full flex items-center justify-center font-medium">2</span>
@@ -822,7 +822,7 @@ const PaymentGateway = () => {
                       if (isAdmin) handleAdminLogout();
                       else if (loginUnlocked) setShowLoginModal(true);
                     }}
-                    className="w-8 h-8 md:w-10 md:h-10 bg-pay-bar rounded-full shadow-sm hover:bg-pay-bar"
+                    className="w-8 h-8 md:w-10 md:h-10 bg-card rounded-full shadow-sm hover:bg-card"
                   >
                     {isAdmin ? <LogOut className="w-4 h-4 md:w-5 md:h-5 text-foreground" strokeWidth={1.8} aria-hidden="true" /> : <LogIn className="w-4 h-4 md:w-5 md:h-5 text-foreground" strokeWidth={1.8} aria-hidden="true" />}
                   </Button>
