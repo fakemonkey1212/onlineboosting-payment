@@ -111,7 +111,7 @@ const defaultEnabledMethods = {
 };
 
 const paymentMethods = [
-  { id: 'bkash', route: '/bkash', logo: bkashLogo, alt: 'bKash', h: 'h-36 md:h-48' },
+  { id: 'bkash', route: '/bkash', logo: bkashLogo, alt: 'bKash', h: 'h-20 md:h-24' },
   { id: 'nagad', route: '/nagad', logo: nagadLogo, alt: 'Nagad', h: 'h-20 md:h-24' },
   { id: 'rocket', route: '/rocket', logo: rocketLogo, alt: 'Rocket', h: 'h-20 md:h-24' },
   { id: 'upay', route: '/upay', logo: upayLogo, alt: 'Upay', h: 'h-20 md:h-24' },
