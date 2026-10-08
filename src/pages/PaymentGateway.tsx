@@ -36,7 +36,7 @@ import AllowedWebsitesAdmin from "@/components/AllowedWebsitesAdmin";
 import { isLovableHost, getAllowedReferrerOrigin } from "@/hooks/useReferrerGuard";
 
 
-import bkashLogo from "@/assets/payment/bkash-logo.png";
+import bkashLogo from "@/assets/payment/bkash-logo-cropped.png";
 import nagadLogo from "@/assets/payment/nagad-logo.png";
 import rocketLogo from "@/assets/payment/rocket-logo.png";
 import upayLogo from "@/assets/payment/upay-logo.png";
