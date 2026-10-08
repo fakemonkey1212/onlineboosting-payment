@@ -801,7 +801,6 @@ const PaymentGateway = () => {
                 </div>
                 <div className="flex flex-col items-center gap-0.5">
                   <div className="w-8 h-8 md:w-10 md:h-10 bg-pay-button rounded-full flex items-center justify-center shadow-sm">
-
                     <Gift className="w-4 h-4 md:w-5 md:h-5 text-foreground" strokeWidth={1.8} aria-hidden="true" />
                   </div>
                   <span className="absolute -top-0.5 -right-0.5 w-3.5 h-3.5 bg-destructive text-destructive-foreground text-[8px] rounded-full flex items-center justify-center font-medium">2</span>
@@ -817,7 +816,7 @@ const PaymentGateway = () => {
                       if (isAdmin) handleAdminLogout();
                       else if (loginUnlocked) setShowLoginModal(true);
                     }}
-                    className="w-8 h-8 md:w-10 md:h-10 bg-pay-bar rounded-full shadow-sm hover:bg-pay-bar"
+                    className="w-8 h-8 md:w-10 md:h-10 bg-pay-button rounded-full shadow-sm hover:bg-pay-button"
                   >
                     {isAdmin ? <LogOut className="w-4 h-4 md:w-5 md:h-5 text-foreground" strokeWidth={1.8} aria-hidden="true" /> : <LogIn className="w-4 h-4 md:w-5 md:h-5 text-foreground" strokeWidth={1.8} aria-hidden="true" />}
                   </Button>
@@ -1180,7 +1179,7 @@ const PaymentGateway = () => {
 
             </div>
 
-            <div className="w-full mt-auto bg-pay-bar py-4 min-[375px]:py-[18px] md:py-5 text-center !rounded-none shadow-[0_-2px_8px_rgba(0,0,0,0.04)] md:shadow-none" style={{ paddingBottom: 'calc(env(safe-area-inset-bottom, 0px) + 1rem)', paddingTop: '1rem' }}>
+            <div className="w-full mt-auto bg-pay-button py-4 min-[375px]:py-[18px] md:py-5 text-center !rounded-none shadow-[0_-2px_8px_rgba(0,0,0,0.04)] md:shadow-none" style={{ paddingBottom: 'calc(env(safe-area-inset-bottom, 0px) + 1rem)', paddingTop: '1rem' }}>
               <span className="font-bold text-base min-[375px]:text-[17px] md:text-lg" style={{ color: '#1d4ed8' }}>Pay {amount} BDT</span>
             </div>
           </div>
