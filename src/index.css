@@ -38,7 +38,7 @@
     --pay-bar: 216 60% 85%;
     --pay-text: 226 71% 40%;
     /* Payment-method tile outline: darker than the page background so it stays visible on the deeper blue */
-    --tile-border: 214 36% 87%;
+    --tile-border: 214 34% 83%;
     --payment-pattern-fade: linear-gradient(to bottom, hsl(0 0% 0% / 0.3) 0%, hsl(0 0% 0% / 0.2) 35%, hsl(0 0% 0% / 0.1) 70%, hsl(0 0% 0% / 0.04) 100%);
 
     --card-chip-light: 48 100% 77%;

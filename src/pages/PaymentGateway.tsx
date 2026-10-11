@@ -854,7 +854,7 @@ const PaymentGateway = () => {
                     </div>
                   </div>
                 )}
-                <div className="grid grid-cols-2 md:grid-cols-3 gap-3 md:gap-4 px-1 md:px-2">
+                <div className="grid grid-cols-2 md:grid-cols-3 gap-[13px] md:gap-[18px] px-1 md:px-2">
                   {paymentMethods.map((method) => {
                     const isEnabled = isMethodEnabled(method.id);
                     const showBadge = methodsLoaded && !isEnabled && !isAdmin;
@@ -882,7 +882,7 @@ const PaymentGateway = () => {
                           }
                           handlePaymentSelect(method.route, alreadyZoomed);
                         }}
-                        className={`payment-method-tile relative ${isAdmin ? '' : 'group'} bg-transparent md:bg-card rounded-lg border border-tile-border flex items-center justify-center h-[70px] md:h-[86px] px-2 md:px-3 overflow-hidden ${isEnabled && !isAdmin ? 'cursor-pointer touch-manipulation' : ''} ${methodsLoaded && !isEnabled ? 'cursor-not-allowed' : ''} ${isNavigating ? 'pointer-events-none' : ''}`}
+                        className={`payment-method-tile relative ${isAdmin ? '' : 'group'} bg-transparent md:bg-card rounded-lg border border-tile-border flex items-center justify-center h-[66px] md:h-[81px] px-2 md:px-3 overflow-hidden ${isEnabled && !isAdmin ? 'cursor-pointer touch-manipulation' : ''} ${methodsLoaded && !isEnabled ? 'cursor-not-allowed' : ''} ${isNavigating ? 'pointer-events-none' : ''}`}
                       >
                         <img
                           src={method.logo}
