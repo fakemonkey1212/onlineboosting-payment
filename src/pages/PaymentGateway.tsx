@@ -840,7 +840,7 @@ const PaymentGateway = () => {
                 মোবাইল ব্যাংকিং
               </button>
 
-              <div className="relative overflow-hidden">
+              <div className="relative shrink-0 overflow-hidden">
                 {methodsLoaded && allVisibleMethodsDisabled && !isAdmin && (
                   <div className="absolute inset-0 z-10 flex items-center justify-center rounded-xl pointer-events-none select-none" style={{ transform: 'rotate(-18deg)' }}>
                     <div className="flex flex-col items-center gap-1">
@@ -854,7 +854,7 @@ const PaymentGateway = () => {
                     </div>
                   </div>
                 )}
-                <div className="grid grid-cols-2 md:grid-cols-3 gap-[14px] md:gap-[20px] px-2 md:px-4">
+                <div className="grid grid-cols-2 md:grid-cols-3 gap-[13px] md:gap-[18px] px-1 md:px-2">
                   {paymentMethods.map((method) => {
                     const isEnabled = isMethodEnabled(method.id);
                     const showBadge = methodsLoaded && !isEnabled && !isAdmin;
