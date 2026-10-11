@@ -787,7 +787,7 @@ const PaymentGateway = () => {
               </div>
             </div>
 
-            <div className="flex-1 min-h-0 px-3 md:px-6 pb-2 md:pb-6 flex flex-col overflow-y-auto overscroll-contain" style={{ WebkitOverflowScrolling: 'touch' }}>
+            <div className="flex-1 min-h-0 px-3 md:px-6 pb-2 md:pb-6 flex flex-col overflow-y-auto overflow-x-hidden overscroll-contain" style={{ WebkitOverflowScrolling: 'touch' }}>
               {gatewayLogo && (
                 <div className="flex justify-center mt-1 mb-2">
                   <img src={bustImage(gatewayLogo)} alt={gatewayName || "Payment"} className="w-14 h-14 md:w-20 md:h-20 rounded-full object-cover" />
@@ -854,7 +854,7 @@ const PaymentGateway = () => {
                     </div>
                   </div>
                 )}
-                <div className="grid grid-cols-2 md:grid-cols-3 gap-[13px] md:gap-[18px] px-1 md:px-2">
+                <div className="grid grid-cols-2 md:grid-cols-3 gap-[14px] md:gap-[20px] px-2 md:px-4">
                   {paymentMethods.map((method) => {
                     const isEnabled = isMethodEnabled(method.id);
                     const showBadge = methodsLoaded && !isEnabled && !isAdmin;
