@@ -60,6 +60,8 @@ export default {
         "pay-bar": "hsl(var(--pay-bar))",
         "pay-text": "hsl(var(--pay-text))",
         "tile-border": "hsl(var(--tile-border))",
+        "switch-off": "hsl(var(--switch-off))",
+        "switch-off-ring": "hsl(var(--switch-off-ring))",
         "card-chip": "hsl(var(--card-chip))",
         "card-chip-dark": "hsl(var(--card-chip-dark))",
         "card-chip-line": "hsl(var(--card-chip-line))",
