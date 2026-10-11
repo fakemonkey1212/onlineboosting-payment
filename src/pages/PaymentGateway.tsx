@@ -790,7 +790,7 @@ const PaymentGateway = () => {
             <div className="flex-1 min-h-0 px-3 md:px-6 pb-2 md:pb-6 flex flex-col overflow-y-auto overflow-x-hidden overscroll-contain" style={{ WebkitOverflowScrolling: 'touch' }}>
               {gatewayLogo && (
                 <div className="flex justify-center mt-1 mb-2 min-w-0 shrink-0">
-                  <img src={bustImage(gatewayLogo)} alt={gatewayName || "Payment"} className="w-auto h-auto max-w-full max-h-12 md:max-h-16 object-contain" />
+                  <img src={bustImage(gatewayLogo)} alt={gatewayName || "Payment"} className="w-auto h-auto max-w-full max-h-4 md:max-h-[21px] object-contain" />
                 </div>
               )}
               <div className="text-center mb-2">
