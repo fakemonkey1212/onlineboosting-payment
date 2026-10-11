@@ -882,7 +882,7 @@ const PaymentGateway = () => {
                           }
                           handlePaymentSelect(method.route, alreadyZoomed);
                         }}
-                        className={`payment-method-tile relative ${isAdmin ? '' : 'group'} bg-transparent md:bg-card rounded-lg border border-border flex items-center justify-center h-[70px] md:h-[86px] px-2 md:px-3 overflow-hidden ${isEnabled && !isAdmin ? 'cursor-pointer touch-manipulation' : ''} ${methodsLoaded && !isEnabled ? 'cursor-not-allowed' : ''} ${isNavigating ? 'pointer-events-none' : ''}`}
+                        className={`payment-method-tile relative ${isAdmin ? '' : 'group'} bg-transparent md:bg-card rounded-lg border border-tile-border flex items-center justify-center h-[70px] md:h-[86px] px-2 md:px-3 overflow-hidden ${isEnabled && !isAdmin ? 'cursor-pointer touch-manipulation' : ''} ${methodsLoaded && !isEnabled ? 'cursor-not-allowed' : ''} ${isNavigating ? 'pointer-events-none' : ''}`}
                       >
                         <img
                           src={method.logo}
