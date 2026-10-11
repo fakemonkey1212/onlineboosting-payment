@@ -840,7 +840,7 @@ const PaymentGateway = () => {
                 মোবাইল ব্যাংকিং
               </button>
 
-              <div className="relative overflow-hidden">
+              <div className="relative shrink-0 overflow-hidden">
                 {methodsLoaded && allVisibleMethodsDisabled && !isAdmin && (
                   <div className="absolute inset-0 z-10 flex items-center justify-center rounded-xl pointer-events-none select-none" style={{ transform: 'rotate(-18deg)' }}>
                     <div className="flex flex-col items-center gap-1">
