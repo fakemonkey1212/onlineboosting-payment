@@ -1192,7 +1192,7 @@ const PaymentGateway = () => {
             </div>
 
             <div className="w-full mt-auto bg-pay-bar py-4 min-[375px]:py-[18px] md:py-5 text-center !rounded-none shadow-[0_-2px_8px_rgba(0,0,0,0.04)] md:shadow-none" style={{ paddingBottom: 'calc(env(safe-area-inset-bottom, 0px) + 1rem)', paddingTop: '1rem' }}>
-              <span className="font-bold text-base min-[375px]:text-[17px] md:text-lg" style={{ color: '#1d4ed8' }}>Pay {amount} BDT</span>
+              <span className="font-bold text-base min-[375px]:text-[17px] md:text-lg" style={{ color: 'hsl(var(--pay-text))' }}>Pay {amount} BDT</span>
             </div>
           </div>
         </div>
