@@ -264,7 +264,7 @@ const BkashPayment = () => {
             <div className="bg-white px-4 py-2.5 flex items-center justify-between border-b shrink-0">
               <div className="flex items-center gap-2.5">
                 <div className="w-10 h-10 shrink-0 rounded-full bg-white flex items-center justify-center overflow-hidden">
-                  <img src={bustImage(merchantLogo)} alt={merchant} className="w-full h-full object-contain" />
+                  <img src={bustImage(merchantLogo)} alt={merchant} className="w-[70%] h-[70%] object-fill" />
                 </div>
                 <div>
                   <h2 className="text-gray-800 font-medium text-xs leading-tight">{merchant}</h2>
