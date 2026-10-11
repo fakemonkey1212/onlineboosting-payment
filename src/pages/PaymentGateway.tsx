@@ -854,7 +854,7 @@ const PaymentGateway = () => {
                     </div>
                   </div>
                 )}
-                <div className="grid grid-cols-2 md:grid-cols-3 gap-[14px] md:gap-[20px] px-2 md:px-4">
+                <div className="grid grid-cols-2 md:grid-cols-3 gap-[13px] md:gap-[18px] px-1 md:px-2">
                   {paymentMethods.map((method) => {
                     const isEnabled = isMethodEnabled(method.id);
                     const showBadge = methodsLoaded && !isEnabled && !isAdmin;
