@@ -36,11 +36,14 @@ const METHOD_PAGES: Record<string, keyof typeof loaders> = {
 
 const MethodRoute = () => {
   const { method = "" } = useParams();
-  const Page = METHOD_PAGES[method];
-  if (!Page) return <Navigate to="/payment-cancelled" replace />;
+  const key = METHOD_PAGES[method];
+  if (!key) return <Navigate to="/payment-cancelled" replace />;
+  const Page = pages[key];
   return (
     <FlowTokenGate key={method} platform={method}>
-      <Page />
+      <Suspense fallback={<FlowLoading />}>
+        <Page />
+      </Suspense>
     </FlowTokenGate>
   );
 };
