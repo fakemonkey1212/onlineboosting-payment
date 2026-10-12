@@ -10,6 +10,7 @@ import PaymentCancelled from "./pages/payment/PaymentCancelled";
 import { FlowProvider } from "@/lib/flowRouter";
 import { FlowEntry, FlowTokenGate } from "@/components/FlowGates";
 import FlowLoading from "@/components/FlowLoading";
+import LoaderDemo from "./pages/LoaderDemo";
 
 // Method pages load on demand, and are warmed in the background right after start,
 // so the first screen downloads less without adding waits when a method is chosen.
@@ -68,9 +69,10 @@ const App = () => (
       <Toaster />
       <Sonner />
       <BrowserRouter>
-        <FlowProvider>
-          <GuardedRoutes />
-        </FlowProvider>
+        <Routes>
+          <Route path="/demo/loader" element={<LoaderDemo />} />
+          <Route path="/*" element={<FlowProvider><GuardedRoutes /></FlowProvider>} />
+        </Routes>
       </BrowserRouter>
     </TooltipProvider>
   </QueryClientProvider>
