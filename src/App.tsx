@@ -21,7 +21,7 @@ const loaders = {
   card: () => import("./pages/payment/CardPaymentPage"),
   binance: () => import("./pages/payment/BinancePayment"),
 };
-const pages = Object.fromEntries(Object.entries(loaders).map(([k, l]) => [k, lazy(l)]));
+const pages = Object.fromEntries(Object.entries(loaders).map(([k, l]) => [k, lazy(l)])) as Record<keyof typeof loaders, React.LazyExoticComponent<() => JSX.Element>>;
 if (typeof window !== "undefined") {
   const warm = () => Object.values(loaders).forEach((l) => void l().catch(() => {}));
   (window.requestIdleCallback ?? ((cb: () => void) => setTimeout(cb, 300)))(warm);
