@@ -42,7 +42,6 @@
     /* Admin payment-method toggle: the OFF track must read clearly against both the page and white cards */
     --switch-off: 215 22% 42%;
     --switch-off-ring: 215 25% 30%;
-    --main-loader: 145 63% 42%;
     --payment-pattern-fade: linear-gradient(to bottom, hsl(0 0% 0% / 0.3) 0%, hsl(0 0% 0% / 0.2) 35%, hsl(0 0% 0% / 0.1) 70%, hsl(0 0% 0% / 0.04) 100%);
 
     --card-chip-light: 48 100% 77%;
@@ -132,8 +131,7 @@
 }
 
 @keyframes payment-method-zoom {
-  from { transform: scale(1); }
-  to { transform: scale(1.08); }
+  to { transform: scale(0.9); }
 }
 
 .payment-method-selected {

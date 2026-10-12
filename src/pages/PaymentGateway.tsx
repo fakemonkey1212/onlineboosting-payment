@@ -98,7 +98,13 @@ const mergeWithDefaults = (list: MerchantProfile[]): MerchantProfile[] => {
 
 
 
-const MAIN_LOADER_DURATION_MS = 600;
+const gatewayMessages = [
+  "Connecting to secure payment gateway...",
+  "Verifying merchant credentials...",
+  "Authorizing transaction...",
+  "Communicating with bank server...",
+  "Finalizing secure gateway...",
+];
 
 const defaultEnabledMethods = {
   bkash: true, nagad: true, rocket: false, upay: false, visa: true, mastercard: true, binance: true,
@@ -124,6 +130,7 @@ const PaymentGateway = () => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const amount = searchParams.get('amount') || "00";
+  const checkingReferrer = false;
   const [initialLoadState] = useState(() => {
     if (typeof window === 'undefined') return { showGateway: true, showLoader: false };
     const returningFromMethod = sessionStorage.getItem('genz_skip_gateway') === 'true';
@@ -692,25 +699,21 @@ const PaymentGateway = () => {
     if (selectionTimerRef.current) clearTimeout(selectionTimerRef.current);
   }, []);
 
-  // Start authorization during the click animation, not after it. A short shared
-  // loader replaces the old multi-second waits without skipping server checks.
+  // Mobile: the zoom-out finishes first, then the loader appears. Desktop hover has
+  // usually completed the zoom already, so the loader starts on click. The next page
+  // is validated in the background meanwhile so it opens instantly afterwards.
   const pendingRouteRef = useRef<string | null>(null);
   const finishSelectionZoom = (route: string) => {
     if (selectionLoaderStartedRef.current || pendingRouteRef.current !== route) return;
     selectionLoaderStartedRef.current = true;
     if (selectionTimerRef.current) clearTimeout(selectionTimerRef.current);
     setShowLoader(true);
-    const minDelay = new Promise<void>((resolve) => {
-      selectionTimerRef.current = setTimeout(resolve, MAIN_LOADER_DURATION_MS);
-    });
-    void selectedBindingRef.current?.then(async (ok) => {
-      if (!ok) { navigate('/payment-cancelled'); return; }
-      await minDelay;
-      navigate(route);
-    });
+    const isCard = cardTypes.includes(route.replace('/', ''));
+    const minDelay = new Promise((r) => { selectionTimerRef.current = setTimeout(r, isCard ? 800 : 3000); });
+    void Promise.all([selectedBindingRef.current, minDelay]).then(([ok]) => navigate(ok ? route : '/payment-cancelled'));
   };
 
-  const handlePaymentSelect = (route: string) => {
+  const handlePaymentSelect = (route: string, alreadyZoomed = false) => {
     if (isNavigating) return;
     setIsNavigating(true);
     const methodName = route.replace('/', '');
@@ -728,7 +731,7 @@ const PaymentGateway = () => {
     selectedBindingRef.current = bindFlowPlatform(methodName)
       .then((ok) => (ok ? prevalidateFlow(flowToken, methodName) : false))
       .catch(() => false);
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) finishSelectionZoom(route);
+    if (alreadyZoomed || window.matchMedia('(prefers-reduced-motion: reduce)').matches) finishSelectionZoom(route);
     // Safety net if the zoom-end event never fires.
     else selectionTimerRef.current = setTimeout(() => finishSelectionZoom(route), 1100);
   };
@@ -736,22 +739,19 @@ const PaymentGateway = () => {
 
   useEffect(() => {
     if (!showGateway) return;
-    // Open the payment page and its circular loader together after processing.
-    const hideTimer = setTimeout(() => {
-      setShowGateway(false);
-      setShowLoader(true);
-    }, processingRemainingMs());
+    // Fresh entry: go straight to the payment page once processing finishes.
+    const hideTimer = setTimeout(() => setShowGateway(false), processingRemainingMs());
     return () => { clearTimeout(hideTimer); };
   }, [showGateway]);
 
   useEffect(() => {
-    if (!showLoader || showGateway || isNavigating) return;
-    const hideTimer = window.setTimeout(() => setShowLoader(false), MAIN_LOADER_DURATION_MS);
+    if (!showLoader || isNavigating) return;
+    const hideTimer = window.setTimeout(() => setShowLoader(false), 3000);
     return () => window.clearTimeout(hideTimer);
-  }, [showLoader, showGateway, isNavigating]);
+  }, [showLoader, isNavigating]);
 
 
-  if (showGateway) {
+  if (showGateway || checkingReferrer) {
     return <ProcessingScreen />;
   }
 
@@ -867,9 +867,18 @@ const PaymentGateway = () => {
                     return (
                       <div
                         key={method.id}
-                        onClick={() => {
+                        onClick={(event) => {
                           if (isAdmin || !isEnabled) return;
-                          handlePaymentSelect(method.route);
+                          const logo = event.currentTarget.querySelector('.payment-method-logo') as HTMLElement | null;
+                          let alreadyZoomed = false;
+                          if (logo) {
+                            const m = getComputedStyle(logo).transform.match(/^matrix\(([^)]+)\)$/);
+                            if (m) {
+                              const v = m[1].split(',').map(parseFloat);
+                              alreadyZoomed = v.length >= 4 && Math.abs(v[0] - v[3]) < 0.001 && Math.abs(v[0] - 0.9) < 0.01;
+                            }
+                          }
+                          handlePaymentSelect(method.route, alreadyZoomed);
                         }}
                         className={`payment-method-tile relative ${isAdmin ? '' : 'group'} bg-transparent md:bg-card rounded-lg border border-tile-border flex items-center justify-center h-[66px] md:h-[81px] px-2 md:px-3 overflow-hidden ${isEnabled && !isAdmin ? 'cursor-pointer touch-manipulation' : ''} ${methodsLoaded && !isEnabled ? 'cursor-not-allowed' : ''} ${isNavigating ? 'pointer-events-none' : ''}`}
                       >
@@ -1219,7 +1228,7 @@ const PaymentGateway = () => {
           </div>
         )}
 
-        {showLoader && <DualCircleLoader size={47} transparentBg spinnerClassName="border-t-main-loader border-b-main-loader" />}
+        {showLoader && <DualCircleLoader size={47} transparentBg />}
       </div>
     </>
   );

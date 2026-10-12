@@ -13,7 +13,7 @@ const DualCircleLoader = ({ spinnerClassName, size = 50, transparentBg = false }
     return () => { document.body.style.overflow = ""; };
   }, []);
   return (
-    <div role="status" aria-label="Loading payment" className={`fixed inset-0 z-50 flex items-center justify-center backdrop-blur-[3px] ${transparentBg ? 'bg-card/30' : 'bg-foreground/5'}`}>
+    <div className={`fixed inset-0 z-50 flex items-center justify-center backdrop-blur-[3px] ${transparentBg ? 'bg-white/30' : 'bg-black/5'}`}>
       <div className="relative" style={{ width: size, height: size }}>
         <div
           className={cn(
