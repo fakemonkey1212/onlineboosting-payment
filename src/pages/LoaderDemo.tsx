@@ -31,7 +31,7 @@ const LoaderDemo = () => {
           <RotateCcw /> Replay
         </Button>
       </section>
-      {stage === "circular" && <div role="status" aria-label="Loading sample payment page"><DualCircleLoader size={47} /></div>}
+      {stage === "circular" && <div className="fixed inset-0" role="status" aria-label="Loading sample payment page"><DualCircleLoader size={47} /></div>}
     </main>
   );
 };
