@@ -1,50 +1,41 @@
-import { lazy, Suspense } from "react";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, Navigate, useParams } from "react-router-dom";
 
+import NotFound from "./pages/NotFound";
 import PaymentGateway from "./pages/PaymentGateway";
+import BkashPayment from "./pages/payment/BkashPayment";
+import NagadPayment from "./pages/payment/NagadPayment";
+import RocketPayment from "./pages/payment/RocketPayment";
+import UpayPayment from "./pages/payment/UpayPayment";
+import CardPaymentPage from "./pages/payment/CardPaymentPage";
+import BinancePayment from "./pages/payment/BinancePayment";
 import PaymentCancelled from "./pages/payment/PaymentCancelled";
 import { FlowProvider } from "@/lib/flowRouter";
 import { FlowEntry, FlowTokenGate } from "@/components/FlowGates";
-import FlowLoading from "@/components/FlowLoading";
-import LoaderDemo from "./pages/LoaderDemo";
-
-// Method pages load on demand, and are warmed in the background right after start,
-// so the first screen downloads less without adding waits when a method is chosen.
-const loaders = {
-  bkash: () => import("./pages/payment/BkashPayment"),
-  nagad: () => import("./pages/payment/NagadPayment"),
-  rocket: () => import("./pages/payment/RocketPayment"),
-  upay: () => import("./pages/payment/UpayPayment"),
-  card: () => import("./pages/payment/CardPaymentPage"),
-  binance: () => import("./pages/payment/BinancePayment"),
-};
-const pages = Object.fromEntries(Object.entries(loaders).map(([k, l]) => [k, lazy(l)])) as Record<keyof typeof loaders, React.LazyExoticComponent<() => JSX.Element>>;
-if (typeof window !== "undefined") {
-  const warm = () => Object.values(loaders).forEach((l) => void l().catch(() => {}));
-  (window.requestIdleCallback ?? ((cb: () => void) => setTimeout(cb, 300)))(warm);
-}
 
 const queryClient = new QueryClient();
 
-const METHOD_PAGES: Record<string, keyof typeof loaders> = {
-  bkash: "bkash", nagad: "nagad", rocket: "rocket", upay: "upay",
-  card: "card", visa: "card", mastercard: "card", binance: "binance",
+const METHOD_PAGES: Record<string, () => JSX.Element> = {
+  bkash: () => <BkashPayment />,
+  nagad: () => <NagadPayment />,
+  rocket: () => <RocketPayment />,
+  upay: () => <UpayPayment />,
+  card: () => <CardPaymentPage />,
+  visa: () => <CardPaymentPage />,
+  mastercard: () => <CardPaymentPage />,
+  binance: () => <BinancePayment />,
 };
 
 const MethodRoute = () => {
   const { method = "" } = useParams();
-  const key = METHOD_PAGES[method];
-  if (!key) return <Navigate to="/payment-cancelled" replace />;
-  const Page = pages[key];
+  const Page = METHOD_PAGES[method];
+  if (!Page) return <Navigate to="/payment-cancelled" replace />;
   return (
     <FlowTokenGate key={method} platform={method}>
-      <Suspense fallback={<FlowLoading />}>
-        <Page />
-      </Suspense>
+      <Page />
     </FlowTokenGate>
   );
 };
@@ -69,10 +60,9 @@ const App = () => (
       <Toaster />
       <Sonner />
       <BrowserRouter>
-        <Routes>
-          <Route path="/demo/loader" element={<LoaderDemo />} />
-          <Route path="/*" element={<FlowProvider><GuardedRoutes /></FlowProvider>} />
-        </Routes>
+        <FlowProvider>
+          <GuardedRoutes />
+        </FlowProvider>
       </BrowserRouter>
     </TooltipProvider>
   </QueryClientProvider>

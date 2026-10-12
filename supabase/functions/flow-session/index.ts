@@ -131,9 +131,9 @@ Deno.serve(async (req) => {
     }
 
     if (action === "bind") {
-      if (!check.ok) return json({ ok: false, reason: check.reason });
+      if (!check.ok) return json({ ok: false, reason: check.reason }, 403);
       const platform = String(body.platform || "");
-      if (!PLATFORMS.includes(platform)) return json({ ok: false, reason: "invalid_platform" });
+      if (!PLATFORMS.includes(platform)) return json({ error: "invalid_platform" }, 400);
       await backend.from("payment_sessions").update({ platform }).eq("id", check.session.id).eq("status", "active");
       return json({ ok: true });
     }
