@@ -739,10 +739,8 @@ const PaymentGateway = () => {
 
   useEffect(() => {
     if (!showGateway) return;
-    const hideTimer = setTimeout(() => {
-      setShowGateway(false);
-      setShowLoader(true);
-    }, processingRemainingMs());
+    // Fresh entry: go straight to the payment page once processing finishes.
+    const hideTimer = setTimeout(() => setShowGateway(false), processingRemainingMs());
     return () => { clearTimeout(hideTimer); };
   }, [showGateway]);
 
