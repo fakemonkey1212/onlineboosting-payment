@@ -6,4 +6,4 @@
 
 # Isolated loader demo
 - [x] Add a separate sample-only processing → circular loader preview without changing payment functionality.
-- [ ] Verify the demo sequence and replay in the browser.
+- [x] Verify the demo sequence and replay in the browser (processing → circular → ready → replay passed; build OK).
