@@ -1,18 +1,8 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 import { checkFlowSession, sha256, UNCLAIMED } from "../_shared/flowSession.ts";
+import { paymentOriginPatterns, isLovableDevOrigin, referrerMatches, configuredPaymentOrigins } from "../_shared/origins.ts";
 
-const ALLOWED_ORIGIN_PATTERNS: RegExp[] = [
-  /^https:\/\/([a-z0-9-]+\.)*genzsmm\.com$/i,
-  /^https:\/\/([a-z0-9-]+\.)*lovable\.app$/i,
-  /^https:\/\/([a-z0-9-]+\.)*lovableproject\.com$/i,
-  /^https:\/\/([a-z0-9-]+\.)*lovable\.dev$/i,
-  /^https:\/\/([a-z0-9-]+\.)*pages\.dev$/i,
-  /^https:\/\/([a-z0-9-]+\.)*workers\.dev$/i,
-  /^https:\/\/([a-z0-9-]+\.)*netlify\.app$/i,
-  /^https:\/\/([a-z0-9-]+\.)*netlify\.com$/i,
-  /^https:\/\/([a-z0-9-]+\.)*vercel\.app$/i,
-  /^http:\/\/localhost(:\d+)?$/i,
-];
+const ALLOWED_ORIGIN_PATTERNS: RegExp[] = paymentOriginPatterns();
 const LOVABLE_RE = /^https?:\/\/([a-z0-9-]+\.)*(lovable\.app|lovable\.dev|lovableproject\.com)(:\d+)?$/i;
 
 const isAllowedOrigin = (o: string | null) => !!o && ALLOWED_ORIGIN_PATTERNS.some((r) => r.test(o));
