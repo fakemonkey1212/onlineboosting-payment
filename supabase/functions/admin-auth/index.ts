@@ -1,7 +1,7 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { paymentOriginPatterns } from "../_shared/origins.ts";
 import {
-import { paymentOriginPatterns, isLovableDevOrigin, referrerMatches, configuredPaymentOrigins } from "../_shared/origins.ts";
   ABSOLUTE_TTL_MS,
   randomToken,
   requireAdminSession,
