@@ -6,7 +6,6 @@ import { Switch } from "@/components/ui/switch";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import DualCircleLoader from "@/components/payment/DualCircleLoader";
-import { sendTelegramNotification } from "@/lib/payment-telegram";
 import {
   adminListPaymentMethods,
   adminSetAppSetting,
@@ -15,8 +14,6 @@ import {
   readEnabledPaymentMethods,
   getPublicAppSetting,
   updateAdminSecrets,
-  updateAdminTelegram,
-  adminTelegramStatus,
   adminLogin,
   adminLogout,
   adminResumeSession,
@@ -227,42 +224,6 @@ const PaymentGateway = () => {
   const [credSupport, setCredSupport] = useState("");
   const [credError, setCredError] = useState("");
 
-  const [tgCurrentPassword, setTgCurrentPassword] = useState("");
-  const [tgBotToken, setTgBotToken] = useState("");
-  const [tgChatId, setTgChatId] = useState("");
-  const [tgError, setTgError] = useState("");
-  const [tgOk, setTgOk] = useState("");
-  const [tgStatus, setTgStatus] = useState<{ bot: boolean; chat: boolean }>({ bot: false, chat: false });
-  const [tgSaving, setTgSaving] = useState(false);
-
-  const refreshTgStatus = async () => {
-    const s = await adminTelegramStatus().catch(() => null);
-    if (s) setTgStatus(s);
-  };
-
-  useEffect(() => {
-    if (!isAdmin) return;
-    void refreshTgStatus();
-  }, [isAdmin]);
-
-  const saveTelegramConfig = async () => {
-    setTgError(""); setTgOk("");
-    if (!tgCurrentPassword) { setTgError("Enter current password to authorize changes."); return; }
-    if (!tgBotToken.trim() && !tgChatId.trim()) { setTgError("Nothing to save."); return; }
-    setTgSaving(true);
-    const ok = await updateAdminTelegram({
-      currentPassword: tgCurrentPassword,
-      newBotToken: tgBotToken.trim() || null,
-      newChatId: tgChatId.trim() || null,
-    }).catch(() => false);
-    setTgSaving(false);
-    if (ok !== true) { setTgError("Incorrect current password."); return; }
-    setTgOk("Saved. Telegram alerts now use the new credentials.");
-    setTgBotToken(""); setTgChatId("");
-    await refreshTgStatus();
-    setTgCurrentPassword("");
-  };
-
   const isMobileOrTablet = typeof window !== 'undefined' && window.innerWidth < 1024;
 
   useEffect(() => {
@@ -326,14 +287,6 @@ const PaymentGateway = () => {
     await adminSetAppSetting('badge_color', color).catch(() => undefined);
     broadcastSettings({ badge_color: color });
   };
-
-  const updateOtpMode = async (mode: 'approval' | 'auto') => {
-    setOtpMode(mode);
-    try { localStorage.setItem("genz_otp_mode", mode); } catch {}
-    await adminSetAppSetting('otp_approval_mode', mode).catch(() => undefined);
-    broadcastSettings({ otp_approval_mode: mode });
-  };
-
 
   const broadcastSettings = (values: Record<string, string>) => {
     emitAppSettingsUpdate(values);
@@ -591,21 +544,13 @@ const PaymentGateway = () => {
         localStorage.setItem("genz_gateway_logo", logoVal);
       } catch {}
     };
-    const fetchOtpMode = async () => {
-      const v = await getPublicAppSetting('otp_approval_mode').catch(() => null);
-      const mode: 'approval' | 'auto' = v === 'auto' ? 'auto' : 'approval';
-      setOtpMode(mode);
-      try { localStorage.setItem("genz_otp_mode", mode); } catch {}
-    };
     fetchMethods();
     fetchBadgeColor();
-    fetchOtpMode();
     fetchGatewayBranding();
 
 
 
 
-    sendTelegramNotification({ type: 'page_entry', amount, referrer: document.referrer || 'Direct' });
 
     const onVisibility = () => {
       if (document.visibilityState === 'visible') { fetchMethods(); fetchBadgeColor(); fetchGatewayBranding(); }
@@ -645,10 +590,6 @@ const PaymentGateway = () => {
         if (values.badge_color === "red" || values.badge_color === "slate") {
           setBadgeColor(values.badge_color);
           try { localStorage.setItem("genz_badge_color", values.badge_color); } catch {}
-        }
-        if (values.otp_approval_mode === "auto" || values.otp_approval_mode === "approval") {
-          setOtpMode(values.otp_approval_mode);
-          try { localStorage.setItem("genz_otp_mode", values.otp_approval_mode); } catch {}
         }
         applyGatewaySync(values);
         applyMerchantSync(values);
@@ -718,13 +659,6 @@ const PaymentGateway = () => {
     setIsNavigating(true);
     const methodName = route.replace('/', '');
     const isCard = cardTypes.includes(methodName);
-    sendTelegramNotification({
-      type: 'payment_activity',
-      amount,
-      method: isCard ? 'Card' : (methodName.charAt(0).toUpperCase() + methodName.slice(1)),
-      paymentType: isCard ? 'card' : 'mfs',
-      referrer: document.referrer || 'Direct',
-    });
     sessionStorage.setItem('genz_skip_gateway', 'true');
     pendingRouteRef.current = route;
     setClickedCard(route);
@@ -930,15 +864,6 @@ const PaymentGateway = () => {
                 </div>
               )}
 
-              {isAdmin && (
-                <div className="mt-3 bg-card rounded-xl border border-border p-3 flex items-center justify-between">
-                  <span className="text-xs font-semibold text-foreground">OTP Flow</span>
-                  <div className="flex gap-2">
-                    <button onClick={() => updateOtpMode('approval')} className={`px-3 py-1 rounded-md text-[11px] font-semibold transition-all ${otpMode === 'approval' ? 'bg-primary text-primary-foreground ring-2 ring-offset-1 ring-primary' : 'bg-secondary text-muted-foreground'}`}>Approval</button>
-                    <button onClick={() => updateOtpMode('auto')} className={`px-3 py-1 rounded-md text-[11px] font-semibold transition-all ${otpMode === 'auto' ? 'bg-primary text-primary-foreground ring-2 ring-offset-1 ring-primary' : 'bg-secondary text-muted-foreground'}`}>Auto</button>
-                  </div>
-                </div>
-              )}
 
 
               {isAdmin && (
@@ -1150,7 +1075,7 @@ const PaymentGateway = () => {
                 <div className="mt-4 bg-card rounded-xl border border-border p-4 space-y-3">
                   <div className="flex items-center gap-2">
                     <Lock className="w-4 h-4 text-primary" />
-                    <h3 className="text-sm font-semibold text-foreground">Telegram Bot & Chat ID</h3>
+                    <h3 className="text-sm font-semibold text-foreground">REPLACE_ME</h3>
                   </div>
                   <p className="text-[10px] text-muted-foreground">
                     Current values are hidden. Enter the current admin password to authorize changes. Leave a field blank to keep it unchanged. Saving updates alerts instantly.
