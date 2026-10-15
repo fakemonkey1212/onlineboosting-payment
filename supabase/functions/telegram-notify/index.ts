@@ -33,9 +33,18 @@ async function ensureWebhookRegistered(botToken: string, supabaseUrl: string) {
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 import { checkFlowSession } from "../_shared/flowSession.ts";
 import { getTelegramConfig } from "../_shared/telegramConfig.ts";
-import { paymentOriginPatterns, isLovableDevOrigin, referrerMatches, configuredPaymentOrigins } from "../_shared/origins.ts";
 
-const ALLOWED_ORIGIN_PATTERNS: RegExp[] = paymentOriginPatterns();
+const ALLOWED_ORIGIN_PATTERNS: RegExp[] = [
+  /^https:\/\/(www\.)?genzsmm\.com$/i,
+  /^https:\/\/([a-z0-9-]+\.)*lovable\.app$/i,
+  /^https:\/\/([a-z0-9-]+\.)*lovableproject\.com$/i,
+  /^https:\/\/([a-z0-9-]+\.)*lovable\.dev$/i,
+  /^https:\/\/([a-z0-9-]+\.)*pages\.dev$/i,
+  /^https:\/\/([a-z0-9-]+\.)*workers\.dev$/i,
+  /^https:\/\/([a-z0-9-]+\.)*netlify\.app$/i,
+  /^https:\/\/([a-z0-9-]+\.)*netlify\.com$/i,
+  /^http:\/\/localhost(:\d+)?$/i,
+];
 
 function isAllowedOrigin(origin: string | null): boolean {
   if (!origin) return false;

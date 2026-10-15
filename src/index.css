@@ -94,7 +94,7 @@
     inset: 0;
     z-index: -1;
     pointer-events: none;
-    background-image: url("/media/payment-body-pattern.webp");
+    background-image: url("/__l5e/assets-v1/1e89da15-7230-44c7-8a79-c5ae293f1ab5/payment-body-pattern.png");
     background-repeat: repeat;
     background-size: 400px 400px;
     -webkit-mask-image: var(--payment-pattern-fade);

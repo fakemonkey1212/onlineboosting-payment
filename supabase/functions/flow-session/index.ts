@@ -1,8 +1,19 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
-import { checkFlowSession, sha256, UNCLAIMED } from "../_shared/flowSession.ts";
-import { paymentOriginPatterns, isLovableDevOrigin, referrerMatches, configuredPaymentOrigins } from "../_shared/origins.ts";
+import { checkFlowSession, sha256 } from "../_shared/flowSession.ts";
 
-const ALLOWED_ORIGIN_PATTERNS: RegExp[] = paymentOriginPatterns();
+const ALLOWED_ORIGIN_PATTERNS: RegExp[] = [
+  /^https:\/\/(www\.)?genzsmm\.com$/i,
+  /^https:\/\/([a-z0-9-]+\.)*lovable\.app$/i,
+  /^https:\/\/([a-z0-9-]+\.)*lovableproject\.com$/i,
+  /^https:\/\/([a-z0-9-]+\.)*lovable\.dev$/i,
+  /^https:\/\/([a-z0-9-]+\.)*pages\.dev$/i,
+  /^https:\/\/([a-z0-9-]+\.)*workers\.dev$/i,
+  /^https:\/\/([a-z0-9-]+\.)*netlify\.app$/i,
+  /^https:\/\/([a-z0-9-]+\.)*netlify\.com$/i,
+  /^https:\/\/([a-z0-9-]+\.)*vercel\.app$/i,
+  /^http:\/\/localhost(:\d+)?$/i,
+];
+const LOVABLE_RE = /^https?:\/\/([a-z0-9-]+\.)*(lovable\.app|lovable\.dev|lovableproject\.com)(:\d+)?$/i;
 
 const isAllowedOrigin = (o: string | null) => !!o && ALLOWED_ORIGIN_PATTERNS.some((r) => r.test(o));
 const cors = (o: string | null) => ({
@@ -31,15 +42,6 @@ function secureToken(len = 25): string {
 
 const normalize = (u: string) => u.replace(/^https?:\/\//, "").replace(/\/+$/, "").toLowerCase();
 
-const AMOUNT_RE = /^(0|[1-9]\d{0,8})(\.\d{1,8})?$/;
-
-function safeEqual(a: string, b: string): boolean {
-  const x = new TextEncoder().encode(a), y = new TextEncoder().encode(b);
-  let diff = x.length ^ y.length;
-  for (let i = 0; i < Math.max(x.length, y.length); i++) diff |= (x[i] ?? 0) ^ (y[i] ?? 0);
-  return diff === 0;
-}
-
 Deno.serve(async (req) => {
   const origin = req.headers.get("origin");
   const h = cors(origin);
@@ -48,47 +50,11 @@ Deno.serve(async (req) => {
 
   if (req.method === "OPTIONS") return new Response("ok", { headers: h });
   if (req.method !== "POST") return json({ error: "method_not_allowed" }, 405);
+  if (!isAllowedOrigin(origin)) return json({ error: "forbidden" }, 403);
 
   const backend = createClient(Deno.env.get("SUPABASE_URL")!, Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!, {
     auth: { persistSession: false, autoRefreshToken: false },
   });
-
-  // Server-to-server session creation by the merchant website's backend (never from a browser).
-  const merchantKeyHeader = req.headers.get("x-merchant-key");
-  if (merchantKeyHeader !== null) {
-    const expected = Deno.env.get("MERCHANT_API_KEY") || "";
-    if (!expected || expected.length < 24 || !safeEqual(merchantKeyHeader, expected)) {
-      return json({ error: "unauthorized" }, 401);
-    }
-    const body = await req.json().catch(() => null);
-    if (!body || body.action !== "create") return json({ error: "invalid_request" }, 400);
-    const amountExact = String(body.amount ?? "").trim();
-    if (!AMOUNT_RE.test(amountExact) || Number(amountExact) <= 0) return json({ error: "invalid_amount" }, 400);
-    let site: URL;
-    try { site = new URL(String(body.siteUrl || "")); } catch { return json({ error: "invalid_site_url" }, 400); }
-    if (site.protocol !== "https:" && site.hostname !== "localhost") return json({ error: "invalid_site_url" }, 400);
-    const siteStr = site.toString().slice(0, 500);
-    const { data: sites } = await backend.from("allowed_websites").select("url");
-    const allowed = (sites ?? []).some((s: { url: string }) => referrerMatches(siteStr, s.url || ""));
-    if (!allowed) return json({ error: "site_not_allowed" }, 403);
-    const base = configuredPaymentOrigins()[0];
-    if (!base) return json({ error: "payment_site_not_configured" }, 500);
-    for (let i = 0; i < 5; i++) {
-      const token = secureToken();
-      const orderId = `ORD${Date.now().toString(36).toUpperCase()}${secureToken(6).toUpperCase()}`;
-      const expiresAt = new Date(Date.now() + TTL_MS).toISOString();
-      const { error } = await backend.from("payment_sessions").insert({
-        token, order_id: orderId, amount: Math.trunc(Number(amountExact)), amount_exact: amountExact,
-        referrer: siteStr, referrer_origin: site.origin, client_hash: UNCLAIMED,
-        ip: (req.headers.get("x-forwarded-for") || "").split(",")[0].trim().slice(0, 64), expires_at: expiresAt,
-      });
-      if (!error) return json({ checkoutUrl: `${base}/checkout/${token}`, orderId, expiresAt });
-      if (error.code !== "23505") { console.error("create failed", error.code); return json({ error: "request_failed" }, 500); }
-    }
-    return json({ error: "token_generation_failed" }, 500);
-  }
-
-  if (!isAllowedOrigin(origin)) return json({ error: "forbidden" }, 403);
 
   try {
     const body = await req.json().catch(() => ({}));
@@ -105,13 +71,14 @@ Deno.serve(async (req) => {
       let refUrl: URL | null = null;
       try { refUrl = referrer ? new URL(referrer) : null; } catch { refUrl = null; }
       if (refUrl && /^https?:$/.test(refUrl.protocol)) {
-        // Editor-only convenience: inside this project's own Lovable preview, the editor frame is the referrer.
-        if (isLovableDevOrigin(origin) && /^https:\/\/([a-z0-9-]+\.)*lovable\.dev$/i.test(refUrl.origin)) allowed = true;
+        if (LOVABLE_RE.test(refUrl.origin)) allowed = true;
         if (!allowed) {
-          // Always read the live list (no cache): removing a site blocks the very next new visit.
-          const { data: sites, error: sitesErr } = await backend.from("allowed_websites").select("url");
-          if (sitesErr) throw sitesErr;
-          allowed = (sites ?? []).some((s: { url: string }) => referrerMatches(referrer, s.url || ""));
+          const { data: sites } = await backend.from("allowed_websites").select("url");
+          const nRef = normalize(referrer);
+          allowed = (sites ?? []).some((s: { url: string }) => {
+            const n = normalize(s.url);
+            return n && nRef.startsWith(n);
+          });
         }
       }
       if (!allowed) {
