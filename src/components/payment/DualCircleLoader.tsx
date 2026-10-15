@@ -7,7 +7,7 @@ type DualCircleLoaderProps = {
   transparentBg?: boolean;
 };
 
-const DualCircleLoader = ({ spinnerClassName, size = 50, transparentBg = false }: DualCircleLoaderProps) => {
+const DualCircleLoader = ({ spinnerClassName, size = 40, transparentBg = false }: DualCircleLoaderProps) => {
   useEffect(() => {
     document.body.style.overflow = "hidden";
     return () => { document.body.style.overflow = ""; };
