@@ -20,14 +20,14 @@ const DualCircleLoader = ({ spinnerClassName, size = 40, transparentBg = false }
             "absolute inset-0 rounded-full border-[5px] border-transparent border-t-[#2196F3] border-b-[#2196F3]",
             spinnerClassName,
           )}
-          style={{ animation: "spin-loader 0.9s linear infinite" }}
+          style={{ animation: "spin-loader 0.62s linear infinite" }}
         />
         <div
           className={cn(
             "absolute inset-[7px] rounded-full border-[5px] border-transparent border-t-[#2196F3] border-b-[#2196F3]",
             spinnerClassName,
           )}
-          style={{ animation: "spin-loader-reverse 0.7s linear infinite" }}
+          style={{ animation: "spin-loader-reverse 0.5s linear infinite" }}
         />
       </div>
       <style>{`
