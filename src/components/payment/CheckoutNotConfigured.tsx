@@ -1,11 +1,12 @@
 import { useNavigate, useSearchParams } from "@/lib/flowRouter";
+import type { PaymentFlowRoute } from "@/lib/flowTicket";
 import { usePaymentAccessGuard } from "@/lib/paymentAccessGuard";
 import { usePaymentMethodGuard } from "@/hooks/usePaymentMethodGuard";
 import FlowLoading from "@/components/FlowLoading";
 
 type Props = {
   /** Route platform id, e.g. "bkash" — used for access + availability checks. */
-  platform: string;
+  platform: PaymentFlowRoute;
   /** Human label shown on the cancel screen, e.g. "bKash". */
   channel: string;
 };

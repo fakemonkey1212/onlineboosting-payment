@@ -1113,7 +1113,7 @@ const PaymentGateway = () => {
           </div>
         )}
 
-        {showLoader && <DualCircleLoader size={47} transparentBg />}
+        {showLoader && <DualCircleLoader size={40} transparentBg />}
       </div>
     </>
   );
