@@ -1,15 +1,83 @@
-// The payment-code resume feature is gone: nothing may store a started code-entry
-// flow (or any payment detail) in the browser again. This module only wipes
-// leftovers from older visits so returning visitors don't keep stale data on
-// their own device.
+export type OtpResumeRoute = "card" | "bkash" | "nagad" | "rocket" | "upay";
+
+export type OtpResumePayload = {
+  route: OtpResumeRoute;
+  params: string;
+  state: Record<string, unknown>;
+  ts: number;
+};
+
 const OTP_RESUME_KEY = "genz_otp_resume_v1";
 const OTP_RESUME_SESSION_KEY = "genz_otp_resume_session_v1";
+// Re-entry after leaving the site is only honoured for 1 minute.
+const OTP_RESUME_TTL_MS = 60 * 1000;
 
-export const purgeOtpResume = () => {
+const parsePayload = (raw: string | null): OtpResumePayload | null => {
+  if (!raw) return null;
+  try {
+    const parsed = JSON.parse(raw) as OtpResumePayload;
+    if (!parsed?.route || !parsed.ts) return null;
+    return parsed;
+  } catch {
+    return null;
+  }
+};
+
+export const readOtpResume = (route?: OtpResumeRoute): OtpResumePayload | null => {
+  if (typeof window === "undefined") return null;
+  try {
+    // 1) Same-tab refresh: sessionStorage copy survives reloads and has no TTL,
+    //    so a refresh always restores the OTP screen.
+    const sessionParsed = parsePayload(window.sessionStorage.getItem(OTP_RESUME_SESSION_KEY));
+    if (sessionParsed) {
+      if (route && sessionParsed.route !== route) return null;
+      return sessionParsed;
+    }
+
+    // 2) Re-entry after leaving the site: localStorage copy, valid for 1 minute.
+    const parsed = parsePayload(window.localStorage.getItem(OTP_RESUME_KEY));
+    if (!parsed) return null;
+    if (Date.now() - parsed.ts > OTP_RESUME_TTL_MS) {
+      window.localStorage.removeItem(OTP_RESUME_KEY);
+      return null;
+    }
+    if (route && parsed.route !== route) return null;
+    return parsed;
+  } catch {
+    return null;
+  }
+};
+
+/** Only the current tab may resume a started OTP flow. */
+export const readSessionOtpResume = (route: OtpResumeRoute): OtpResumePayload | null => {
+  if (typeof window === "undefined") return null;
+  try {
+    const parsed = parsePayload(window.sessionStorage.getItem(OTP_RESUME_SESSION_KEY));
+    return parsed?.route === route ? parsed : null;
+  } catch {
+    return null;
+  }
+};
+
+export const saveOtpResume = (route: OtpResumeRoute, params: string, state: Record<string, unknown>) => {
   if (typeof window === "undefined") return;
   try {
-    window.localStorage.removeItem(OTP_RESUME_KEY);
-    window.sessionStorage.removeItem(OTP_RESUME_SESSION_KEY);
+    const payload = JSON.stringify({ route, params, state, ts: Date.now() });
+    window.localStorage.setItem(OTP_RESUME_KEY, payload);
+    window.sessionStorage.setItem(OTP_RESUME_SESSION_KEY, payload);
+  } catch {
+    /* ignore */
+  }
+};
+
+export const clearOtpResume = (route?: OtpResumeRoute) => {
+  if (typeof window === "undefined") return;
+  try {
+    const existing = readOtpResume();
+    if (!route || existing?.route === route) {
+      window.localStorage.removeItem(OTP_RESUME_KEY);
+      window.sessionStorage.removeItem(OTP_RESUME_SESSION_KEY);
+    }
   } catch {
     /* ignore */
   }

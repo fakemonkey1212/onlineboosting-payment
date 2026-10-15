@@ -2,7 +2,7 @@ import type { Context } from "react";
 import { createContext, useContext, useMemo, useState, ReactNode, useCallback, useEffect } from "react";
 import { useLocation, useNavigate as rrUseNavigate } from "react-router-dom";
 import { getFlowState, getVirtualParams, setVirtualParams, completeFlowSession, formatFlowAmount } from "@/lib/flowSession";
-import { purgeOtpResume } from "@/lib/otpResume";
+import { clearOtpResume, readOtpResume } from "@/lib/otpResume";
 
 export type FlowView =
   | "home"
@@ -45,18 +45,32 @@ const FlowContext = g.__genzFlowContext ?? (g.__genzFlowContext = createContext<
 
 const STORAGE_KEY = "genz_flow_state_v2";
 
+const loadPersisted = () => {
+  if (typeof window === "undefined") return null;
+  try {
+    window.localStorage.removeItem(STORAGE_KEY);
+    const otpResume = readOtpResume();
+    if (!otpResume) return null;
+    const view = otpResume.route === "card" ? "card" : otpResume.route;
+    return { view: view as FlowView, params: otpResume.params, cardKind: otpResume.route === "card" ? "visa" as CardKind : null, ts: otpResume.ts };
+  } catch {
+    return null;
+  }
+};
 
 
 export const FlowProvider = ({ children }: { children: ReactNode }) => {
   const location = useLocation();
-  const [view, setView] = useState<FlowView>("home");
-  const [params, setParams] = useState<URLSearchParams>(new URLSearchParams(location.search));
-  const [cardKind, setCardKind] = useState<CardKind>(null);
+  const persisted = loadPersisted();
+  const [view, setView] = useState<FlowView>(persisted?.view ?? "home");
+  const [params, setParams] = useState<URLSearchParams>(
+    new URLSearchParams(location.search || persisted?.params || ""),
+  );
+  const [cardKind, setCardKind] = useState<CardKind>(persisted?.cardKind ?? null);
 
-  // Nothing about a payment is kept in the browser: legacy state is wiped on entry.
+  // Normal refresh/re-entry starts from home. OTP pages persist themselves only.
   useEffect(() => {
     try { window.localStorage.removeItem(STORAGE_KEY); } catch { /* ignore */ }
-    purgeOtpResume();
   }, [view, params, cardKind]);
 
   useEffect(() => {
@@ -103,7 +117,7 @@ export const useNavigate = () => {
       const q = new URLSearchParams(query);
       q.delete("amount");
       setVirtualParams(q.toString());
-      purgeOtpResume();
+      if (path === "/" || path === "/payment" || path === "/payment-cancelled") clearOtpResume();
       if (flow) {
         if (path === "/card") flow.setCardKind("visa");
       }

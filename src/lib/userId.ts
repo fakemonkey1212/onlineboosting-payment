@@ -1,5 +1,5 @@
-// Persistent short browser identifier used only to throttle repeated support-gate
-// attempts. It carries no payment information.
+// Persistent short user identifier for correlating Telegram notifications
+// with a specific browser session.
 const KEY = "genz_user_id";
 
 export function getUserId(): string {

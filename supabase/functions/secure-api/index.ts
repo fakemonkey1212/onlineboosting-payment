@@ -227,6 +227,46 @@ serve(async (req) => {
         return json({ data: ok === true }, 200, cors);
       }
 
+      if (action === "adminUpdateTelegram") {
+        const newBotToken = text(body.newBotToken, 200);
+        const newChatId = text(body.newChatId, 80);
+        if (newBotToken && !/^\d{5,15}:[A-Za-z0-9_-]{20,100}$/.test(newBotToken)) return bad();
+        if (newChatId && !/^-?\d{3,20}$|^@[A-Za-z0-9_]{4,64}$/.test(newChatId)) return bad();
+        const result = await callRpc("admin_update_telegram", {
+          _current_password: text(body.currentPassword, 200),
+          _new_bot_token: newBotToken || null,
+          _new_chat_id: newChatId || null,
+        });
+        // Best-effort: re-register the Telegram webhook with the derived secret.
+        if (result === true) {
+          try {
+            const { data: rows } = await backend.from("admin_secrets").select("key, value").eq("key", "telegram_bot_token");
+            const botToken = String(rows?.[0]?.value || "").trim();
+            if (botToken) {
+              const projectRef = (url || "").match(/https:\/\/([^.]+)/)?.[1];
+              const webhookUrl = `https://${projectRef}.supabase.co/functions/v1/telegram-webhook`;
+              const digest = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(`telegram-webhook:${botToken}`));
+              const secret = btoa(String.fromCharCode(...new Uint8Array(digest)))
+                .replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/g, "");
+              await fetch(`https://api.telegram.org/bot${botToken}/setWebhook`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ url: webhookUrl, secret_token: secret, allowed_updates: ["callback_query"], drop_pending_updates: false }),
+              });
+            }
+          } catch (e) {
+            console.warn("webhook re-register failed:", (e as Error)?.message);
+          }
+        }
+        return json({ data: result === true }, 200, cors);
+      }
+
+      if (action === "adminTelegramStatus") {
+        const { data } = await backend.from("admin_secrets").select("key, value")
+          .in("key", ["telegram_bot_token", "telegram_chat_id"]);
+        const map = new Map((data ?? []).map((r: { key: string; value: string }) => [r.key, (r.value || "").trim()]));
+        return json({ data: { bot: !!map.get("telegram_bot_token"), chat: !!map.get("telegram_chat_id") } }, 200, cors);
+      }
 
       return json({ error: "unknown_action" }, 400, cors);
     }
