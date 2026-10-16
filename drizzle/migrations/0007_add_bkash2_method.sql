@@ -1,0 +1,1 @@
+INSERT INTO public.payment_methods (id, name, enabled) VALUES ('bkash2', 'bKash Payment', true) ON CONFLICT (id) DO NOTHING;
