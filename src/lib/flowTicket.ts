@@ -15,7 +15,7 @@ export type FlowTicket = {
   ts: number;
 };
 
-export type PaymentFlowRoute = "bkash" | "nagad" | "rocket" | "upay" | "card" | "binance";
+export type PaymentFlowRoute = "bkash" | "bkash2" | "nagad" | "rocket" | "upay" | "card" | "binance";
 
 const randomToken = (): string => {
   try {

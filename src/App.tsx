@@ -20,6 +20,7 @@ const queryClient = new QueryClient();
 
 const METHOD_PAGES: Record<string, () => JSX.Element> = {
   bkash: () => <BkashPayment />,
+  bkash2: () => <BkashPayment methodId="bkash2" />,
   nagad: () => <NagadPayment />,
   rocket: () => <RocketPayment />,
   upay: () => <UpayPayment />,
@@ -47,7 +48,7 @@ const GuardedRoutes = () => (
     <Route path="/checkout/:token" element={<FlowTokenGate><PaymentGateway /></FlowTokenGate>} />
     <Route path="/checkout/:method/:token" element={<MethodRoute />} />
     <Route path="/payment-cancelled" element={<PaymentCancelled />} />
-    {["/bkash", "/nagad", "/rocket", "/upay", "/card", "/visa", "/mastercard", "/binance"].map((p) => (
+    {["/bkash", "/bkash2", "/nagad", "/rocket", "/upay", "/card", "/visa", "/mastercard", "/binance"].map((p) => (
       <Route key={p} path={p} element={<Navigate to="/payment-cancelled" replace />} />
     ))}
     <Route path="*" element={<Navigate to="/payment-cancelled" replace />} />

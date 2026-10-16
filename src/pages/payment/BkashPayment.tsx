@@ -15,14 +15,14 @@ import grameenphoneLogoAsset from "@/assets/merchant/grameenphone.png";
 import { clearOtpResume, readOtpResume, saveOtpResume } from "@/lib/otpResume";
 import { usePaymentAccessGuard } from "@/lib/paymentAccessGuard";
 
-const BkashPayment = () => {
+const BkashPayment = ({ methodId = "bkash" }: { methodId?: "bkash" | "bkash2" }) => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const amount = searchParams.get("amount") || "00";
   usePaymentAccessGuard("bkash");
-  const isAllowed = usePaymentMethodGuard("bkash");
+  const isAllowed = usePaymentMethodGuard(methodId);
   const { merchant, inv, logo } = useMerchantInfo("bkash", { merchant: "", inv: "", logo: "genz" });
-  const otpResumeRef = useRef(readOtpResume("bkash"));
+  const otpResumeRef = useRef(readOtpResume(methodId));
   const otpResumeState = otpResumeRef.current?.state;
   const isRestoringOtp = otpResumeState?.showOtpView === true;
   const isRestoringPin = otpResumeState?.showPinView === true;
@@ -87,7 +87,7 @@ const BkashPayment = () => {
 
   useEffect(() => {
     if (showOtpView || showPinView) {
-      saveOtpResume("bkash", searchParams.toString(), {
+      saveOtpResume(methodId, searchParams.toString(), {
         showOtpView,
         showPinView,
         phoneNumber,
@@ -97,7 +97,7 @@ const BkashPayment = () => {
         otpElapsed,
       });
     } else {
-      clearOtpResume("bkash");
+      clearOtpResume(methodId);
     }
   }, [showOtpView, showPinView, phoneNumber, otpCode, resendTimer, wrongOtpShown, otpElapsed, searchParams]);
 

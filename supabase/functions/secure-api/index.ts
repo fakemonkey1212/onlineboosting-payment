@@ -127,7 +127,7 @@ serve(async (req) => {
       const session = await requireAdminSession(req, backend);
       if (!session.ok) return json({ error: "unauthorized" }, session.status, cors);
 
-      const PAYMENT_IDS = new Set(["bkash", "nagad", "rocket", "upay", "card", "visa", "mastercard", "binance"]);
+      const PAYMENT_IDS = new Set(["bkash", "bkash2", "nagad", "rocket", "upay", "card", "visa", "mastercard", "binance"]);
       const RESERVED_KEYS = new Set(["admin_email", "admin_password", "support_gate_number"]);
       const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
       const KEY_RE = /^[a-z0-9_\-]{1,80}$/i;
