@@ -119,7 +119,7 @@ const WIDE_LOGO_MAX_WIDTH = "max-w-[min(112px,100%)] md:max-w-[min(140px,100%)]"
 
 const paymentMethods = [
   { id: 'bkash', route: '/bkash', logo: bkashLogo, alt: 'bKash', logoClass: "" },
-  { id: 'bkash2', route: '/bkash2', logo: bkashPaymentLogo.url, alt: 'bKash Payment', logoClass: WIDE_LOGO_MAX_WIDTH },
+  { id: 'bkash2', route: '/bkash2', logo: bkashPaymentLogo.url, alt: 'bKash Payment', logoClass: 'max-w-full' },
   { id: 'nagad', route: '/nagad', logo: nagadLogo, alt: 'Nagad', logoClass: "" },
   { id: 'rocket', route: '/rocket', logo: rocketLogo, alt: 'Rocket', logoClass: "" },
   { id: 'upay', route: '/upay', logo: upayLogo, alt: 'Upay', logoClass: "" },
