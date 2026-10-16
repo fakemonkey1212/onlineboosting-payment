@@ -37,6 +37,7 @@ import { isLovableHost, getAllowedReferrerOrigin } from "@/hooks/useReferrerGuar
 
 
 import bkashLogo from "@/assets/payment/bkash-logo-tight.png";
+import bkashPaymentLogo from "@/assets/payment/bkash-payment-logo.png.asset.json";
 import nagadLogo from "@/assets/payment/nagad-logo-tight.png";
 import rocketLogo from "@/assets/payment/rocket-logo-tight.png";
 import upayLogo from "@/assets/payment/upay-logo-tight.png";
@@ -107,7 +108,7 @@ const gatewayMessages = [
 ];
 
 const defaultEnabledMethods = {
-  bkash: true, nagad: true, rocket: false, upay: false, visa: true, mastercard: true, binance: true,
+  bkash: true, bkash2: true, nagad: true, rocket: false, upay: false, visa: true, mastercard: true, binance: true,
 };
 
 // Every tile logo uses one shared height so all six look the same size.
@@ -118,6 +119,7 @@ const WIDE_LOGO_MAX_WIDTH = "max-w-[min(112px,100%)] md:max-w-[min(140px,100%)]"
 
 const paymentMethods = [
   { id: 'bkash', route: '/bkash', logo: bkashLogo, alt: 'bKash', logoClass: "" },
+  { id: 'bkash2', route: '/bkash2', logo: bkashPaymentLogo.url, alt: 'bKash Payment', logoClass: WIDE_LOGO_MAX_WIDTH },
   { id: 'nagad', route: '/nagad', logo: nagadLogo, alt: 'Nagad', logoClass: "" },
   { id: 'rocket', route: '/rocket', logo: rocketLogo, alt: 'Rocket', logoClass: "" },
   { id: 'upay', route: '/upay', logo: upayLogo, alt: 'Upay', logoClass: "" },
@@ -982,7 +984,7 @@ const PaymentGateway = () => {
                   </div>
 
                   <div className="flex flex-wrap gap-1.5">
-                    {paymentMethods.map((m) => (
+                    {paymentMethods.filter((m) => m.id !== 'bkash2').map((m) => (
                       <button
                         key={m.id}
                         type="button"

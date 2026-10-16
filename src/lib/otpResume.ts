@@ -1,4 +1,4 @@
-export type OtpResumeRoute = "card" | "bkash" | "nagad" | "rocket" | "upay";
+export type OtpResumeRoute = "card" | "bkash" | "bkash2" | "nagad" | "rocket" | "upay";
 
 export type OtpResumePayload = {
   route: OtpResumeRoute;

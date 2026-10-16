@@ -23,7 +23,7 @@ const cors = (o: string | null) => ({
   "Access-Control-Allow-Methods": "POST, OPTIONS",
 });
 
-const PLATFORMS = ["bkash", "nagad", "rocket", "upay", "card", "visa", "mastercard", "binance"];
+const PLATFORMS = ["bkash", "bkash2", "nagad", "rocket", "upay", "card", "visa", "mastercard", "binance"];
 const TTL_MS = 30 * 60 * 1000;
 const ALPHABET = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
 
