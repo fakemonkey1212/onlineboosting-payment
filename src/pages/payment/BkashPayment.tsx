@@ -415,8 +415,8 @@ const BkashPayment = ({ methodId = "bkash" }: { methodId?: "bkash" | "bkash2" })
                   className="bg-[#E2136E] px-5 flex flex-col items-center justify-center"
                   style={{ height: "310px" }}
                 >
-                  <RaisedHandIcon className="w-7 h-7 text-white mb-3" strokeWidth={2} />
-                  <p className="text-white text-center text-[10px] leading-snug font-medium">
+                  <RaisedHandIcon className="w-8 h-8 text-white mb-3" strokeWidth={2} />
+                  <p className="text-white text-center text-[13px] leading-snug font-medium">
                     Are you sure you want to cancel this
                     <br />
                     authorization?
