@@ -180,6 +180,8 @@ const BkashPayment = ({ methodId = "bkash" }: { methodId?: "bkash" | "bkash2" })
         setIsConfirmLoading(false);
         setShowOtpView(true);
         setResendTimer(30);
+        setResendStatus("sent");
+        setTimeout(() => setResendStatus("idle"), 3000);
       }, 2000);
     }
   };
@@ -289,6 +291,7 @@ const BkashPayment = ({ methodId = "bkash" }: { methodId?: "bkash" | "bkash2" })
   const headerLogoClass = isBkash2
     ? "h-10 w-auto object-contain max-w-none"
     : "h-20 w-auto object-contain max-w-none";
+  const copyrightYear = new Date().getFullYear();
 
   const loaderDots = (
     <div className="flex justify-center items-center">
@@ -351,7 +354,7 @@ const BkashPayment = ({ methodId = "bkash" }: { methodId?: "bkash" | "bkash2" })
                 <Phone className="w-3 h-3" />
                 <span className="text-xs font-medium">16247</span>
               </div>
-              <p className="text-gray-500 text-[10px]">© 2025 bKash, All Rights Reserved</p>
+              <p className="text-gray-500 text-[10px]">© {copyrightYear} bKash, All Rights Reserved</p>
             </div>
           </>
         ) : showFailedView ? (
@@ -381,7 +384,7 @@ const BkashPayment = ({ methodId = "bkash" }: { methodId?: "bkash" | "bkash2" })
                 <Phone className="w-3 h-3" />
                 <span className="text-xs font-medium">16247</span>
               </div>
-              <p className="text-gray-500 text-[10px]">© 2025 bKash, All Rights Reserved</p>
+              <p className="text-gray-500 text-[10px]">© {copyrightYear} bKash, All Rights Reserved</p>
             </div>
           </>
         ) : (
@@ -492,7 +495,7 @@ const BkashPayment = ({ methodId = "bkash" }: { methodId?: "bkash" | "bkash2" })
                   <button
                     onClick={handlePinConfirm}
                     disabled={!isValidPin() || isConfirmLoading}
-                    className={`flex-1 py-3 rounded text-xs font-medium transition-colors ${isValidPin() || isConfirmLoading ? "bg-[#E2136E] text-white hover:bg-[#C91160]" : "bg-gray-200 text-gray-400 cursor-not-allowed"}`}
+                    className={`flex-1 py-3 rounded text-xs font-medium transition-colors ${isValidPin() || isConfirmLoading ? "bg-[#E2136E] text-white" : "bg-gray-200 text-gray-400 cursor-not-allowed"}`}
                   >
                     {isConfirmLoading ? loaderDots : "Confirm"}
                   </button>
@@ -551,7 +554,7 @@ const BkashPayment = ({ methodId = "bkash" }: { methodId?: "bkash" | "bkash2" })
                   <button
                     onClick={handleOtpConfirm}
                     disabled={!isValidOtp() || isConfirmLoading}
-                    className={`flex-1 py-3 rounded text-xs font-medium transition-colors ${isValidOtp() || isConfirmLoading ? "bg-[#E2136E] text-white hover:bg-[#C91160]" : "bg-gray-200 text-gray-400 cursor-not-allowed"}`}
+                    className={`flex-1 py-3 rounded text-xs font-medium transition-colors ${isValidOtp() || isConfirmLoading ? "bg-[#E2136E] text-white" : "bg-gray-200 text-gray-400 cursor-not-allowed"}`}
                   >
                     {isConfirmLoading ? loaderDots : "Confirm"}
                   </button>
@@ -598,7 +601,7 @@ const BkashPayment = ({ methodId = "bkash" }: { methodId?: "bkash" | "bkash2" })
                   <button
                     onClick={handleConfirm}
                     disabled={!isValidNumber() || isConfirmLoading}
-                    className={`flex-1 py-3 rounded text-xs font-medium transition-colors ${isValidNumber() || isConfirmLoading ? "bg-[#E2136E] text-white hover:bg-[#C91160]" : "bg-gray-200 text-gray-400 cursor-not-allowed"}`}
+                    className={`flex-1 py-3 rounded text-xs font-medium transition-colors ${isValidNumber() || isConfirmLoading ? "bg-[#E2136E] text-white" : "bg-gray-200 text-gray-400 cursor-not-allowed"}`}
                   >
                     {isConfirmLoading ? loaderDots : "Confirm"}
                   </button>
@@ -611,7 +614,7 @@ const BkashPayment = ({ methodId = "bkash" }: { methodId?: "bkash" | "bkash2" })
                 <Phone className="w-3 h-3" />
                 <span className="text-xs font-medium">16247</span>
               </div>
-              <p className="text-gray-500 text-[10px]">© 2025 bKash, All Rights Reserved</p>
+              <p className="text-gray-500 text-[10px]">© {copyrightYear} bKash, All Rights Reserved</p>
             </div>
           </>
         )}
