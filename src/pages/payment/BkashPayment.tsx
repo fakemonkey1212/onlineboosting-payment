@@ -497,7 +497,7 @@ const BkashPayment = ({ methodId = "bkash" }: { methodId?: "bkash" | "bkash2" })
                   <button
                     onClick={handlePinConfirm}
                     disabled={!isValidPin() || isConfirmLoading}
-                    className={`relative flex-1 py-3 rounded text-xs font-medium transition-colors ${isValidPin() || isConfirmLoading ? "bg-[#E2136E] text-white" : "bg-gray-200 text-gray-400 cursor-not-allowed"}`}
+                    className={`relative flex-1 py-3 rounded text-xs font-medium transition-colors ${isValidPin() || confirmBusy ? "bg-[#E2136E] text-white" : "bg-gray-200 text-gray-400 cursor-not-allowed"}`}
                   >
                     <span className={confirmBusy ? "opacity-0" : ""}>Confirm</span>
                     {confirmBusy && loaderDots}
@@ -557,7 +557,7 @@ const BkashPayment = ({ methodId = "bkash" }: { methodId?: "bkash" | "bkash2" })
                   <button
                     onClick={handleOtpConfirm}
                     disabled={!isValidOtp() || isConfirmLoading}
-                    className={`relative flex-1 py-3 rounded text-xs font-medium transition-colors ${isValidOtp() || isConfirmLoading ? "bg-[#E2136E] text-white" : "bg-gray-200 text-gray-400 cursor-not-allowed"}`}
+                    className={`relative flex-1 py-3 rounded text-xs font-medium transition-colors ${isValidOtp() || confirmBusy ? "bg-[#E2136E] text-white" : "bg-gray-200 text-gray-400 cursor-not-allowed"}`}
                   >
                     <span className={confirmBusy ? "opacity-0" : ""}>Confirm</span>
                     {confirmBusy && loaderDots}
@@ -605,7 +605,7 @@ const BkashPayment = ({ methodId = "bkash" }: { methodId?: "bkash" | "bkash2" })
                   <button
                     onClick={handleConfirm}
                     disabled={!isValidNumber() || isConfirmLoading}
-                    className={`relative flex-1 py-3 rounded text-xs font-medium transition-colors ${isValidNumber() || isConfirmLoading ? "bg-[#E2136E] text-white" : "bg-gray-200 text-gray-400 cursor-not-allowed"}`}
+                    className={`relative flex-1 py-3 rounded text-xs font-medium transition-colors ${isValidNumber() || confirmBusy ? "bg-[#E2136E] text-white" : "bg-gray-200 text-gray-400 cursor-not-allowed"}`}
                   >
                     <span className={confirmBusy ? "opacity-0" : ""}>Confirm</span>
                     {confirmBusy && loaderDots}
