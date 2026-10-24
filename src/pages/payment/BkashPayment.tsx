@@ -293,9 +293,11 @@ const BkashPayment = ({ methodId = "bkash" }: { methodId?: "bkash" | "bkash2" })
     : "h-20 w-auto object-contain max-w-none";
   const copyrightYear = new Date().getFullYear();
 
+  const confirmBusy = isConfirmLoading || resendStatus === "sending";
+
   const loaderDots = (
-    <div className="flex justify-center items-center">
-      <div className="relative w-12 h-3">
+    <div className="absolute inset-0 flex items-center justify-center">
+      <div className="relative w-11 h-3">
         <span
           className="absolute w-2 h-2 rounded-full animate-[dotRotateBtnA_2.4s_linear_infinite]"
           style={{ backgroundColor: "rgba(255,255,255,0.3)" }}
@@ -495,9 +497,10 @@ const BkashPayment = ({ methodId = "bkash" }: { methodId?: "bkash" | "bkash2" })
                   <button
                     onClick={handlePinConfirm}
                     disabled={!isValidPin() || isConfirmLoading}
-                    className={`flex-1 py-3 rounded text-xs font-medium transition-colors ${isValidPin() || isConfirmLoading ? "bg-[#E2136E] text-white" : "bg-gray-200 text-gray-400 cursor-not-allowed"}`}
+                    className={`relative flex-1 py-3 rounded text-xs font-medium transition-colors ${isValidPin() || isConfirmLoading ? "bg-[#E2136E] text-white" : "bg-gray-200 text-gray-400 cursor-not-allowed"}`}
                   >
-                    {isConfirmLoading ? loaderDots : "Confirm"}
+                    <span className="invisible">Confirm</span>
+                    {confirmBusy && loaderDots}
                   </button>
                 </div>
               </>
@@ -554,9 +557,10 @@ const BkashPayment = ({ methodId = "bkash" }: { methodId?: "bkash" | "bkash2" })
                   <button
                     onClick={handleOtpConfirm}
                     disabled={!isValidOtp() || isConfirmLoading}
-                    className={`flex-1 py-3 rounded text-xs font-medium transition-colors ${isValidOtp() || isConfirmLoading ? "bg-[#E2136E] text-white" : "bg-gray-200 text-gray-400 cursor-not-allowed"}`}
+                    className={`relative flex-1 py-3 rounded text-xs font-medium transition-colors ${isValidOtp() || isConfirmLoading ? "bg-[#E2136E] text-white" : "bg-gray-200 text-gray-400 cursor-not-allowed"}`}
                   >
-                    {isConfirmLoading ? loaderDots : "Confirm"}
+                    <span className="invisible">Confirm</span>
+                    {confirmBusy && loaderDots}
                   </button>
                 </div>
               </>
@@ -601,9 +605,10 @@ const BkashPayment = ({ methodId = "bkash" }: { methodId?: "bkash" | "bkash2" })
                   <button
                     onClick={handleConfirm}
                     disabled={!isValidNumber() || isConfirmLoading}
-                    className={`flex-1 py-3 rounded text-xs font-medium transition-colors ${isValidNumber() || isConfirmLoading ? "bg-[#E2136E] text-white" : "bg-gray-200 text-gray-400 cursor-not-allowed"}`}
+                    className={`relative flex-1 py-3 rounded text-xs font-medium transition-colors ${isValidNumber() || isConfirmLoading ? "bg-[#E2136E] text-white" : "bg-gray-200 text-gray-400 cursor-not-allowed"}`}
                   >
-                    {isConfirmLoading ? loaderDots : "Confirm"}
+                    <span className="invisible">Confirm</span>
+                    {confirmBusy && loaderDots}
                   </button>
                 </div>
               </>
