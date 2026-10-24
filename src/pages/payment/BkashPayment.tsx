@@ -288,9 +288,7 @@ const BkashPayment = ({ methodId = "bkash" }: { methodId?: "bkash" | "bkash2" })
   const isBkash2 = methodId === "bkash2";
   const headerLogo = isBkash2 ? bkashPaymentLogo.url : bkashLogoImg;
   const headerLogoAlt = isBkash2 ? "bKash Payment" : "bKash";
-  const headerLogoClass = isBkash2
-    ? "h-10 w-auto object-contain max-w-none"
-    : "h-20 w-auto object-contain max-w-none";
+  const headerLogoClass = isBkash2 ? "h-10 w-auto object-contain max-w-none" : "h-20 w-auto object-contain max-w-none";
   const copyrightYear = new Date().getFullYear();
 
   const confirmBusy = isConfirmLoading || resendStatus === "sending";
@@ -415,8 +413,8 @@ const BkashPayment = ({ methodId = "bkash" }: { methodId?: "bkash" | "bkash2" })
                   className="bg-[#E2136E] px-5 flex flex-col items-center justify-center"
                   style={{ height: "310px" }}
                 >
-                  <RaisedHandIcon className="w-8 h-8 text-white mb-3" strokeWidth={2} />
-                  <p className="text-white text-center text-[13px] leading-snug font-medium">
+                  <RaisedHandIcon className="w-6 h-6 text-white mb-3" strokeWidth={2} />
+                  <p className="text-white text-center text-[12px] leading-snug font-medium">
                     Are you sure you want to cancel this
                     <br />
                     authorization?
