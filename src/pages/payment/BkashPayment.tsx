@@ -329,7 +329,8 @@ const BkashPayment = ({ methodId = "bkash" }: { methodId?: "bkash" | "bkash2" })
         {isLoading ? (
           <>
             <div className="bg-[#E2136E] flex-1 flex flex-col items-center justify-center min-h-0">
-              <div className="relative w-24 mb-3" style={{ height: "13px" }}>
+              {/* width = dot track (66px max left + 13px dot) so the dots sit dead-centre above the text */}
+              <div className="relative mb-3" style={{ height: "13px", width: "79px" }}>
                 <span
                   className="absolute rounded-full animate-[dotRotate1_1.8s_linear_infinite]"
                   style={{ width: "13px", height: "13px", backgroundColor: "rgba(255,255,255,0.3)" }}
