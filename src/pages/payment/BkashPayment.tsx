@@ -297,19 +297,19 @@ const BkashPayment = ({ methodId = "bkash" }: { methodId?: "bkash" | "bkash2" })
     <div className="absolute inset-0 flex items-center justify-center">
       <div className="relative w-11 h-3">
         <span
-          className="absolute w-2 h-2 rounded-full animate-[dotRotateBtnA_2.4s_linear_infinite]"
+          className="absolute w-2 h-2 rounded-full animate-[dotRotateBtnA_1.8s_linear_infinite]"
           style={{ backgroundColor: "rgba(255,255,255,0.3)" }}
         />
         <span
-          className="absolute w-2 h-2 rounded-full animate-[dotRotateBtnB_2.4s_linear_infinite]"
+          className="absolute w-2 h-2 rounded-full animate-[dotRotateBtnB_1.8s_linear_infinite]"
           style={{ backgroundColor: "rgba(255,255,255,0.5)" }}
         />
         <span
-          className="absolute w-2 h-2 rounded-full animate-[dotRotateBtnC_2.4s_linear_infinite]"
+          className="absolute w-2 h-2 rounded-full animate-[dotRotateBtnC_1.8s_linear_infinite]"
           style={{ backgroundColor: "rgba(255,255,255,0.7)" }}
         />
         <span
-          className="absolute w-2 h-2 rounded-full animate-[dotRotateBtnD_2.4s_linear_infinite]"
+          className="absolute w-2 h-2 rounded-full animate-[dotRotateBtnD_1.8s_linear_infinite]"
           style={{ backgroundColor: "rgba(255,255,255,1)" }}
         />
       </div>
@@ -331,19 +331,19 @@ const BkashPayment = ({ methodId = "bkash" }: { methodId?: "bkash" | "bkash2" })
             <div className="bg-[#E2136E] flex-1 flex flex-col items-center justify-center min-h-0">
               <div className="relative w-24 mb-3" style={{ height: "13px" }}>
                 <span
-                  className="absolute rounded-full animate-[dotRotate1_2.4s_linear_infinite]"
+                  className="absolute rounded-full animate-[dotRotate1_1.8s_linear_infinite]"
                   style={{ width: "13px", height: "13px", backgroundColor: "rgba(255,255,255,0.3)" }}
                 />
                 <span
-                  className="absolute rounded-full animate-[dotRotate2_2.4s_linear_infinite]"
+                  className="absolute rounded-full animate-[dotRotate2_1.8s_linear_infinite]"
                   style={{ width: "13px", height: "13px", backgroundColor: "rgba(255,255,255,0.5)" }}
                 />
                 <span
-                  className="absolute rounded-full animate-[dotRotate3_2.4s_linear_infinite]"
+                  className="absolute rounded-full animate-[dotRotate3_1.8s_linear_infinite]"
                   style={{ width: "13px", height: "13px", backgroundColor: "rgba(255,255,255,0.7)" }}
                 />
                 <span
-                  className="absolute rounded-full animate-[dotRotate4_2.4s_linear_infinite]"
+                  className="absolute rounded-full animate-[dotRotate4_1.8s_linear_infinite]"
                   style={{ width: "13px", height: "13px", backgroundColor: "rgba(255,255,255,1)" }}
                 />
               </div>
