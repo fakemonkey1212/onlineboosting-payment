@@ -8,7 +8,6 @@ export type FlowView =
   | "home"
   | "payment"
   | "bkash"
-  | "bkash2"
   | "nagad"
   | "rocket"
   | "upay"
@@ -20,7 +19,6 @@ const routeToView: Record<string, FlowView> = {
   "/": "home",
   "/payment": "payment",
   "/bkash": "bkash",
-  "/bkash2": "bkash2",
   "/nagad": "nagad",
   "/rocket": "rocket",
   "/upay": "upay",

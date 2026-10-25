@@ -10,13 +10,13 @@ import { Phone } from "lucide-react";
 import RaisedHandIcon from "@/components/icons/RaisedHandIcon";
 import genzLogo from "@/assets/payment/genz-logo.png";
 import bkashLogoImg from "@/assets/payment/bkash-logo.png";
-import bkashPaymentLogo from "@/assets/payment/bkash-payment-logo.png.asset.json";
 import robiLogoAsset from "@/assets/merchant/robi.png";
 import grameenphoneLogoAsset from "@/assets/merchant/grameenphone.png";
 import { clearOtpResume, readOtpResume, saveOtpResume } from "@/lib/otpResume";
 import { usePaymentAccessGuard } from "@/lib/paymentAccessGuard";
 
-const BkashPayment = ({ methodId = "bkash" }: { methodId?: "bkash" | "bkash2" }) => {
+const BkashPayment = () => {
+  const methodId = "bkash";
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const amount = searchParams.get("amount") || "00";
@@ -284,11 +284,6 @@ const BkashPayment = ({ methodId = "bkash" }: { methodId?: "bkash" | "bkash2" })
           ? grameenphoneLogoAsset
           : genzLogo;
 
-  // The bKash Payment variant shows its own brand mark in the flow header.
-  const isBkash2 = methodId === "bkash2";
-  const headerLogo = isBkash2 ? bkashPaymentLogo.url : bkashLogoImg;
-  const headerLogoAlt = isBkash2 ? "bKash Payment" : "bKash";
-  const headerLogoClass = isBkash2 ? "h-10 w-auto object-contain max-w-none" : "h-20 w-auto object-contain max-w-none";
   const copyrightYear = new Date().getFullYear();
 
   const confirmBusy = isConfirmLoading || resendStatus === "sending";
@@ -323,7 +318,7 @@ const BkashPayment = ({ methodId = "bkash" }: { methodId?: "bkash" | "bkash2" })
         style={{ height: "490px", minHeight: "490px", maxHeight: "490px" }}
       >
         <div className="bg-white flex justify-center items-center border-b shrink-0 leading-none h-14 overflow-hidden">
-          <img src={headerLogo} alt={headerLogoAlt} className={headerLogoClass} />
+          <img src={bkashLogoImg} alt="bKash" className="h-20 w-auto object-contain max-w-none" />
         </div>
 
         {isLoading ? (
