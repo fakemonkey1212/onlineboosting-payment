@@ -1,4 +1,4 @@
-import { supabase } from "@/integrations/supabase/client";
+import { invokeApi, apiBase, apiHeaders } from "@/lib/apiClient";
 import { getUserId } from "@/lib/userId";
 import { loadDisplaySetting } from "@/lib/publicDisplaySettings";
 
@@ -18,7 +18,7 @@ async function backendRequest<T>(action: string, payload: Record<string, unknown
   let lastError: unknown = null;
 
   for (let attempt = 0; attempt < 3; attempt++) {
-    const { data, error } = await supabase.functions.invoke("secure-api", {
+    const { data, error } = await invokeApi("secure-api", {
       body: { action, ...payload },
     });
 
@@ -83,18 +83,12 @@ let adminCsrf = "";
 const listeners = new Set<() => void>();
 export const onAdminSessionLost = (fn: () => void) => { listeners.add(fn); return () => listeners.delete(fn); };
 
-const FN_BASE = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1`;
-const ANON = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY;
 
 async function adminFetch<T>(fn: string, body: Record<string, unknown>): Promise<T> {
-  const headers: Record<string, string> = {
-    "Content-Type": "application/json",
-    apikey: ANON,
-    Authorization: `Bearer ${ANON}`,
-  };
+  const headers: Record<string, string> = apiHeaders();
   if (adminToken) headers["x-admin-session"] = adminToken;
   if (adminCsrf) headers["x-csrf-token"] = adminCsrf;
-  const res = await fetch(`${FN_BASE}/${fn}`, {
+  const res = await fetch(`${apiBase()}/${fn}`, {
     method: "POST",
     credentials: "include",
     headers,
@@ -174,3 +168,6 @@ export const getPublicAppSetting = async (key: string) => {
 
 export const verifySupportGate = (number: string) =>
   backendRequest<boolean>("verifySupportGate", { number, clientId: getUserId() });
+
+export type BinInfo = { bank?: string; country?: string; countryEmoji?: string; type?: string; scheme?: string };
+export const lookupCardBin = (bin: string) => backendRequest<BinInfo | null>("binLookup", { bin });

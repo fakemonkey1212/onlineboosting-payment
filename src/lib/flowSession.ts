@@ -1,4 +1,4 @@
-import { supabase } from "@/integrations/supabase/client";
+import { invokeApi } from "@/lib/apiClient";
 
 /**
  * Server-issued, single-use payment flow session.
@@ -66,7 +66,7 @@ export const formatFlowAmount = (amount: string | undefined | null) => {
 };
 
 async function call<T>(action: string, payload: Record<string, unknown>): Promise<T | null> {
-  const { data, error } = await supabase.functions.invoke("flow-session", {
+  const { data, error } = await invokeApi("flow-session", {
     body: { action, nonce: getFlowNonce(), ...payload },
   });
   if (error) return null;

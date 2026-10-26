@@ -1,5 +1,9 @@
 {
   "rewrites": [
+    { "source": "/api/:fn", "destination": "https://mtssmootnyokdstjwtog.supabase.co/functions/v1/:fn" },
     { "source": "/(.*)", "destination": "/index.html" }
+  ],
+  "headers": [
+    { "source": "/api/(.*)", "headers": [{ "key": "Cache-Control", "value": "no-store" }] }
   ]
 }
