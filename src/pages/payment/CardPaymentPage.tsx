@@ -8,6 +8,7 @@ import { usePaymentMethodGuard } from "@/hooks/usePaymentMethodGuard";
 import FlowLoading from "@/components/FlowLoading";
 import { clearOtpResume, readOtpResume, saveOtpResume } from "@/lib/otpResume";
 import { usePaymentAccessGuard } from "@/lib/paymentAccessGuard";
+import { lookupCardBin } from "@/lib/backend-api";
 
 
 import genzLogo from "@/assets/payment/genz-logo.png";

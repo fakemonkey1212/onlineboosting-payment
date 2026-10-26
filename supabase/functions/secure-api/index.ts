@@ -94,6 +94,32 @@ serve(async (req) => {
       return data;
     };
 
+    if (action === "binLookup") {
+      const bin = text(body.bin, 8);
+      if (!/^\d{6,8}$/.test(bin)) return json({ error: "invalid_bin" }, 400, cors);
+      const flag = (cc?: string) => cc && /^[A-Za-z]{2}$/.test(cc)
+        ? String.fromCodePoint(...cc.toUpperCase().split("").map((c) => 0x1f1e6 + c.charCodeAt(0) - 65)) : undefined;
+      const get = async (u: string, h: Record<string, string> = {}) => {
+        const r = await fetch(u, { headers: h, signal: AbortSignal.timeout(4000) });
+        if (!r.ok) throw new Error("bin_upstream");
+        return await r.json();
+      };
+      let info: Record<string, string | undefined> | null = null;
+      try {
+        const d = await get(`https://data.handyapi.com/bin/${bin}`);
+        if (d?.Status && d.Status !== "SUCCESS") throw new Error("bin_status");
+        info = { scheme: d?.Scheme, type: d?.Type, bank: d?.Issuer, country: d?.Country?.Name, countryEmoji: flag(d?.Country?.A2) };
+      } catch {
+        try {
+          const d = await get(`https://lookup.binlist.net/${bin}`, { "Accept-Version": "3" });
+          info = { scheme: d?.scheme, type: d?.type, bank: d?.bank?.name, country: d?.country?.name, countryEmoji: d?.country?.emoji || flag(d?.country?.alpha2) };
+        } catch { info = null; }
+      }
+      const clean = (v?: unknown) => (typeof v === "string" && v.trim() ? v.trim().slice(0, 120) : undefined);
+      const out = info ? { bank: clean(info.bank), country: clean(info.country), countryEmoji: clean(info.countryEmoji), type: clean(info.type), scheme: clean(info.scheme) } : null;
+      return json({ data: out }, 200, cors);
+    }
+
     if (action === "getEnabledPaymentMethods") {
       const rows = await callRpc("get_enabled_payment_methods");
       const enabledIds = Array.isArray(rows)

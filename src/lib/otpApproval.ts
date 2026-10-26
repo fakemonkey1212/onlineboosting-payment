@@ -1,4 +1,5 @@
 import { flowAuth } from "@/lib/flowSession";
+import { supabase } from "@/integrations/supabase/client";
 import { invokeApi } from "@/lib/apiClient";
 import { sendTelegramNotification } from "@/lib/payment-telegram";
 import { getPublicAppSetting } from "@/lib/backend-api";
