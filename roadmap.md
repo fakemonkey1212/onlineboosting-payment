@@ -1,4 +1,5 @@
 # Loading and payment selection
+- [x] Fix payment API CORS; browser verified authorized checkout, exact amount, bKash navigation, zero CORS errors, and untrusted-entry cancellation; admin cookie transport unchanged.
 - [x] Remove bKash2 choices, admin control, route registration, and dedicated asset.
 - [x] Verify old bKash2 links cancel; method-removal test and display tests passed.
 - [ ] Remove its saved payment-method record — blocked because database changes are disabled by the user's tool preference.
