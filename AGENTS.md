@@ -8,3 +8,4 @@
 - Main payment selection starts its loader from the logo animation completion event, with a reduced-motion bypass. Why: synchronize feedback to the visible zoom rather than an unrelated delay.
 - The main payment background uses a non-interactive masked pseudo-element and a CDN asset pointer; the desktop payment sheet stays opaque. Why: show the body pattern without altering payment controls or method-page designs.
 - Public display reads share a 15-second per-opening memory snapshot; realtime remains primary with 30-second reconciliation and visibility checks. Why: avoid request storms without losing missed payment-method updates or weakening server authorization.
+- Public secure-api readers share a one-minute cooldown after HTTP 429; admin transport is unchanged. Why: prevent simultaneous retries from amplifying rate limiting.
