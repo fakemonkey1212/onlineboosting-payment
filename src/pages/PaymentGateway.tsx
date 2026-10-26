@@ -115,14 +115,20 @@ const METHOD_LOGO_HEIGHT = "h-[46px] md:h-[58px]";
 // The two wide lockups are additionally width-capped so they don't stretch
 // across the whole tile the way the compact marks do.
 const WIDE_LOGO_MAX_WIDTH = "max-w-[min(112px,100%)] md:max-w-[min(140px,100%)]";
+// Desktop-only (lg) tile widths. The three columns add up to the same total, so
+// only bKash (wider) and Nagad (narrower, with a finer border) shift. Below lg
+// the grid stays exactly as it was, so phones and tablets are untouched.
+const DESKTOP_WIDER_TILE = "lg:w-[calc(35.8%_-_12px)]";
+const DESKTOP_NARROW_TILE = "lg:w-[calc(30.8%_-_12px)] tile-border-thin";
+const DESKTOP_BASE_TILE = "lg:w-[calc(33.3%_-_12px)]";
 
 const paymentMethods = [
-  { id: 'bkash', route: '/bkash', logo: bkashLogo, alt: 'bKash', logoClass: "" },
-  { id: 'nagad', route: '/nagad', logo: nagadLogo, alt: 'Nagad', logoClass: "" },
-  { id: 'rocket', route: '/rocket', logo: rocketLogo, alt: 'Rocket', logoClass: "" },
-  { id: 'upay', route: '/upay', logo: upayLogo, alt: 'Upay', logoClass: "" },
-  { id: 'card', route: '/card', logo: cardLogo, alt: 'Visa / Mastercard', logoClass: WIDE_LOGO_MAX_WIDTH },
-  { id: 'binance', route: '/binance', logo: binanceLogo, alt: 'Binance', logoClass: WIDE_LOGO_MAX_WIDTH },
+  { id: 'bkash', route: '/bkash', logo: bkashLogo, alt: 'bKash', logoClass: "", tileClass: DESKTOP_WIDER_TILE },
+  { id: 'nagad', route: '/nagad', logo: nagadLogo, alt: 'Nagad', logoClass: "", tileClass: DESKTOP_NARROW_TILE },
+  { id: 'rocket', route: '/rocket', logo: rocketLogo, alt: 'Rocket', logoClass: "", tileClass: DESKTOP_BASE_TILE },
+  { id: 'upay', route: '/upay', logo: upayLogo, alt: 'Upay', logoClass: "", tileClass: DESKTOP_BASE_TILE },
+  { id: 'card', route: '/card', logo: cardLogo, alt: 'Visa / Mastercard', logoClass: WIDE_LOGO_MAX_WIDTH, tileClass: DESKTOP_BASE_TILE },
+  { id: 'binance', route: '/binance', logo: binanceLogo, alt: 'Binance', logoClass: WIDE_LOGO_MAX_WIDTH, tileClass: DESKTOP_BASE_TILE },
 ] as const;
 
 
@@ -854,7 +860,7 @@ const PaymentGateway = () => {
                     </div>
                   </div>
                 )}
-                <div className="grid grid-cols-2 md:grid-cols-3 gap-[13px] md:gap-[18px] px-1 md:px-2">
+                <div className="grid grid-cols-2 md:grid-cols-3 gap-[13px] md:gap-[18px] lg:flex lg:flex-wrap lg:gap-[18px] px-1 md:px-2">
                   {paymentMethods.map((method) => {
                     const isEnabled = isMethodEnabled(method.id);
                     const showBadge = methodsLoaded && !isEnabled && !isAdmin;
@@ -882,7 +888,7 @@ const PaymentGateway = () => {
                           }
                           handlePaymentSelect(method.route, alreadyZoomed);
                         }}
-                        className={`payment-method-tile relative ${isAdmin ? '' : 'group'} bg-transparent md:bg-card rounded-lg border border-tile-border flex items-center justify-center h-[66px] md:h-[81px] px-2 md:px-3 overflow-hidden ${isEnabled && !isAdmin ? 'cursor-pointer touch-manipulation' : ''} ${methodsLoaded && !isEnabled ? 'cursor-not-allowed' : ''} ${isNavigating ? 'pointer-events-none' : ''}`}
+                        className={`payment-method-tile relative ${isAdmin ? '' : 'group'} bg-transparent md:bg-card rounded-lg border border-tile-border flex items-center justify-center h-[66px] md:h-[81px] px-2 md:px-3 overflow-hidden ${method.tileClass} ${isEnabled && !isAdmin ? 'cursor-pointer touch-manipulation' : ''} ${methodsLoaded && !isEnabled ? 'cursor-not-allowed' : ''} ${isNavigating ? 'pointer-events-none' : ''}`}
                       >
                         <img
                           src={method.logo}
