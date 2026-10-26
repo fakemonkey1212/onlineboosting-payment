@@ -67,7 +67,10 @@ export const useGatewayBranding = (): GatewayBranding => {
 
     void refresh();
     const unsubscribeLocal = subscribeAppSettingsUpdate(applyValues);
-    const poll = window.setInterval(refresh, 3000);
+    const onVisibility = () => { if (document.visibilityState === "visible") void refresh(); };
+    document.addEventListener("visibilitychange", onVisibility);
+    // Low-frequency fallback keeps updates working if a broadcast is missed.
+    const poll = window.setInterval(refresh, 30000);
     const channel = supabase
       .channel("gateway_branding_sync")
       .on("broadcast", { event: "update" }, (message) => {
@@ -80,6 +83,7 @@ export const useGatewayBranding = (): GatewayBranding => {
       cancelled = true;
       unsubscribeLocal();
       window.clearInterval(poll);
+      document.removeEventListener("visibilitychange", onVisibility);
       supabase.removeChannel(channel);
     };
   }, []);

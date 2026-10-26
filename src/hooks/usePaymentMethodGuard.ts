@@ -50,7 +50,7 @@ export const usePaymentMethodGuard = (methodId: string) => {
 
     // Re-check regularly so an already-open payment flow is closed even if a
     // realtime broadcast is missed or the admin changed it from another device.
-    const poll = window.setInterval(check, 3000);
+    const poll = window.setInterval(check, 30000);
 
     const onVisibility = () => { if (document.visibilityState === "visible") check(); };
     document.addEventListener("visibilitychange", onVisibility);

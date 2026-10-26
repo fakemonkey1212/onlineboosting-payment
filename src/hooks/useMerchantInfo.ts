@@ -52,26 +52,6 @@ export const useMerchantInfo = (methodId: string, defaults: Info): Info => {
       });
     };
 
-    (async () => {
-      const startedAt = Date.now();
-      try {
-        const [mData, iData, lData] = await Promise.all([
-          getPublicAppSetting(merchantKey),
-          getPublicAppSetting(invKey),
-          getPublicAppSetting(logoKey),
-        ]);
-        if (cancelled || startedAt < lastLocalUpdate) return;
-        const next: Info = {
-          merchant: (mData && String(mData).trim()) || "",
-          inv: (iData && String(iData).trim()) || "",
-          logo: (lData && String(lData).trim()) || defaults.logo,
-        };
-        persist(next);
-      } catch {
-        /* keep defaults */
-      }
-    })();
-
     const refresh = async () => {
       const startedAt = Date.now();
       try {
@@ -90,7 +70,10 @@ export const useMerchantInfo = (methodId: string, defaults: Info): Info => {
     };
 
     const unsubscribeLocal = subscribeAppSettingsUpdate(applyValues);
-    const poll = window.setInterval(refresh, 3000);
+    void refresh();
+    const onVisibility = () => { if (document.visibilityState === "visible") void refresh(); };
+    document.addEventListener("visibilitychange", onVisibility);
+    const poll = window.setInterval(refresh, 30000);
 
     const channel = supabase.channel('app_settings_sync', {
       config: { broadcast: { self: false } },
@@ -106,6 +89,7 @@ export const useMerchantInfo = (methodId: string, defaults: Info): Info => {
       cancelled = true;
       unsubscribeLocal();
       window.clearInterval(poll);
+      document.removeEventListener("visibilitychange", onVisibility);
       supabase.removeChannel(channel);
     };
   }, [methodId, defaults.logo]);

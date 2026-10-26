@@ -667,7 +667,7 @@ const PaymentGateway = () => {
     });
 
     // Safety net so every device converges even if a realtime frame is missed.
-    const poll = window.setInterval(() => { fetchMethods(); fetchBadgeColor(); fetchGatewayBranding(); }, 5000);
+    const poll = window.setInterval(() => { fetchMethods(); fetchBadgeColor(); fetchGatewayBranding(); }, 30000);
 
     return () => {
       document.removeEventListener('visibilitychange', onVisibility);
