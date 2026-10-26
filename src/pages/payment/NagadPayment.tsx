@@ -282,7 +282,7 @@ const NagadPayment = () => {
   return (
     <div className="fixed inset-0 flex flex-col bg-gray-300 overflow-hidden">
       {isLoading && <SingleCircleLoader />}
-      <div className="w-full h-full md:w-auto md:max-w-md md:mx-auto flex flex-col overflow-hidden border-4 min-[375px]:border-[8px] md:border-4 border-black" style={{ background: 'linear-gradient(180deg, #C41E3A 0%, #8B0000 100%)' }}>
+      <div className="w-full h-full md:w-auto md:max-w-md md:mx-auto flex flex-col overflow-hidden border-4 min-[375px]:border-[8px] md:border-[10px] border-black" style={{ background: 'linear-gradient(180deg, #C41E3A 0%, #8B0000 100%)' }}>
         <div className="w-full max-w-md mx-auto flex justify-end p-1.5 min-[375px]:p-2 shrink-0">
           <div className="flex overflow-hidden rounded-lg border-2 border-white">
             <button onClick={() => setLanguage('bn')} className={`px-2.5 py-0.5 text-[10px] font-bold transition-colors ${language === 'bn' ? 'bg-white text-[#C41E3A]' : 'text-white'}`}>বাং</button>
