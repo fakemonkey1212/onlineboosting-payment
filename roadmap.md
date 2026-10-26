@@ -1,4 +1,5 @@
 # Loading and payment selection
+- [ ] Fix and browser-verify payment API CORS while preserving trusted-referrer rejection and admin cookies.
 - [x] Remove bKash2 choices, admin control, route registration, and dedicated asset.
 - [x] Verify old bKash2 links cancel; method-removal test and display tests passed.
 - [ ] Remove its saved payment-method record — blocked because database changes are disabled by the user's tool preference.

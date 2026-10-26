@@ -1,4 +1,5 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { corsHeaders } from "npm:@supabase/supabase-js@2/cors";
 import { checkFlowSession, sha256 } from "../_shared/flowSession.ts";
 
 const ALLOWED_ORIGIN_PATTERNS: RegExp[] = [
@@ -17,9 +18,10 @@ const LOVABLE_RE = /^https?:\/\/([a-z0-9-]+\.)*(lovable\.app|lovable\.dev|lovabl
 
 const isAllowedOrigin = (o: string | null) => !!o && ALLOWED_ORIGIN_PATTERNS.some((r) => r.test(o));
 const cors = (o: string | null) => ({
-  "Access-Control-Allow-Origin": isAllowedOrigin(o) ? o! : "",
+  ...corsHeaders,
+  "Access-Control-Allow-Origin": isAllowedOrigin(o) ? (o ?? "") : "",
+  "Access-Control-Allow-Credentials": "true",
   "Vary": "Origin",
-  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
   "Access-Control-Allow-Methods": "POST, OPTIONS",
 });
 

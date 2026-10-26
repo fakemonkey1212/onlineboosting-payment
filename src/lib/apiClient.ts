@@ -27,7 +27,9 @@ export async function invokeApi<T = unknown>(
   try {
     const res = await fetch(`${apiBase()}/${fn}`, {
       method: "POST",
-      credentials: "include",
+      // Public/flow requests do not use admin cookies. Keep same-origin
+      // proxy cookies without requesting cross-origin credentials in preview.
+      credentials: "same-origin",
       headers: apiHeaders(),
       body: JSON.stringify(opts.body ?? {}),
     });
