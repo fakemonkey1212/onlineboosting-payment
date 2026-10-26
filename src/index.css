@@ -139,10 +139,25 @@
   will-change: transform;
 }
 
-/* Desktop: Nagad's box edge reads finer than the other method boxes. */
+/* Desktop: Nagad's box edge reads finer than the other method boxes. Browsers
+   floor border-width at 1px, so the finer edge is a scaled hairline drawn on
+   top of the box (200% element at half scale = half the line thickness). */
 @media (min-width: 1024px) {
   .payment-method-tile.tile-border-thin {
-    border-width: 0.5px;
+    border-color: transparent;
+  }
+  .payment-method-tile.tile-border-thin::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 200%;
+    height: 200%;
+    border: 1px solid hsl(var(--tile-border));
+    border-radius: 1rem;
+    transform: scale(0.5);
+    transform-origin: 0 0;
+    pointer-events: none;
   }
 }
 
