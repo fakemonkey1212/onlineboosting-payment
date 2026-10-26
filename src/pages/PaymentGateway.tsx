@@ -115,12 +115,12 @@ const METHOD_LOGO_HEIGHT = "h-[46px] md:h-[58px]";
 // The two wide lockups are additionally width-capped so they don't stretch
 // across the whole tile the way the compact marks do.
 const WIDE_LOGO_MAX_WIDTH = "max-w-[min(112px,100%)] md:max-w-[min(140px,100%)]";
-// Desktop-only tile widths. The three columns add up to the same total, so only
-// bKash (wider) and Nagad (narrower, with a finer border) shift. Below md the
-// grid stays exactly as it was, so phones and small tablets are untouched.
-const DESKTOP_WIDER_TILE = "md:w-[calc(35.8%_-_12px)]";
-const DESKTOP_NARROW_TILE = "md:w-[calc(30.8%_-_12px)] md:!border-[0.5px]";
-const DESKTOP_BASE_TILE = "md:w-[calc(33.3%_-_12px)]";
+// Desktop-only (lg) tile widths. The three columns add up to the same total, so
+// only bKash (wider) and Nagad (narrower, with a finer border) shift. Below lg
+// the grid stays exactly as it was, so phones and tablets are untouched.
+const DESKTOP_WIDER_TILE = "lg:w-[calc(35.8%_-_12px)]";
+const DESKTOP_NARROW_TILE = "lg:w-[calc(30.8%_-_12px)] lg:!border-[0.5px]";
+const DESKTOP_BASE_TILE = "lg:w-[calc(33.3%_-_12px)]";
 
 const paymentMethods = [
   { id: 'bkash', route: '/bkash', logo: bkashLogo, alt: 'bKash', logoClass: "", tileClass: DESKTOP_WIDER_TILE },
@@ -860,7 +860,7 @@ const PaymentGateway = () => {
                     </div>
                   </div>
                 )}
-                <div className="grid grid-cols-2 gap-[13px] md:flex md:flex-wrap md:gap-[18px] px-1 md:px-2">
+                <div className="grid grid-cols-2 md:grid-cols-3 gap-[13px] md:gap-[18px] lg:flex lg:flex-wrap lg:gap-[18px] px-1 md:px-2">
                   {paymentMethods.map((method) => {
                     const isEnabled = isMethodEnabled(method.id);
                     const showBadge = methodsLoaded && !isEnabled && !isAdmin;
