@@ -5,7 +5,6 @@
  * Preview/hosted domains without rewrite support call the backend directly.
  */
 const DIRECT_BASE = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1`;
-const ANON = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY;
 
 const usesProxy = () => {
   if (typeof window === "undefined") return false;
@@ -15,10 +14,9 @@ const usesProxy = () => {
 
 export const apiBase = () => (usesProxy() ? "/api" : DIRECT_BASE);
 
-export const apiHeaders = (): Record<string, string> =>
-  usesProxy()
-    ? { "Content-Type": "application/json" }
-    : { "Content-Type": "application/json", apikey: ANON, Authorization: `Bearer ${ANON}` };
+// These functions enforce flow/admin authorization themselves; no public API
+// key or anonymous bearer is needed by either the direct or proxy transport.
+export const apiHeaders = (): Record<string, string> => ({ "Content-Type": "application/json" });
 
 export async function invokeApi<T = unknown>(
   fn: string,

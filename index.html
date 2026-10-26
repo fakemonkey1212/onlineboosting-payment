@@ -31,7 +31,7 @@
         try {
           window.__displayBundle = fetch("%VITE_SUPABASE_URL%/functions/v1/secure-api", {
             method: "POST", cache: "no-store",
-            headers: { "Content-Type": "application/json", apikey: "%VITE_SUPABASE_PUBLISHABLE_KEY%", Authorization: "Bearer %VITE_SUPABASE_PUBLISHABLE_KEY%" },
+            headers: { "Content-Type": "application/json" },
             body: '{"action":"getPublicDisplayBundle"}'
           }).then(function (r) { return r.ok ? r.json() : null; }).catch(function () { return null; });
         } catch (e) {}
