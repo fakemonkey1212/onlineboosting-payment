@@ -314,8 +314,7 @@ const BkashPayment = () => {
   return (
     <div className="fixed inset-0 bg-gray-200 flex flex-col items-start justify-start p-4 overflow-hidden">
       <div
-        className="w-full max-w-md mx-auto bg-white rounded-lg shadow-lg overflow-hidden flex flex-col"
-        style={{ height: "490px", minHeight: "490px", maxHeight: "490px" }}
+        className="w-full max-w-md md:max-w-lg mx-auto h-[490px] min-h-[490px] max-h-[490px] md:h-[515px] md:min-h-[515px] md:max-h-[515px] bg-white rounded-lg shadow-lg overflow-hidden flex flex-col"
       >
         <div className="bg-white flex justify-center items-center border-b shrink-0 leading-none h-14 overflow-hidden">
           <img src={bkashLogoImg} alt="bKash" className="h-20 w-auto object-contain max-w-none" />
