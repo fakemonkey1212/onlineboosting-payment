@@ -1,6 +1,7 @@
 
 - Admin auth: all admin actions go through the admin-auth/secure-api edge functions with a server-side session (hashed token, HttpOnly cookie + in-memory bearer, CSRF header, 8h/30min expiry); admin DB functions are service_role only. Why: never trust the browser or send the password per request.
 - Public and payment-flow API calls use same-origin credentials; only the dedicated admin transport includes cross-origin cookies. Flow CORS remains restricted to allowed origins. Why: avoid preview CORS failures without changing admin session security.
+- Function transport never sends the publishable API key or anonymous Authorization bearer; flow nonce/token and admin session/CSRF remain enforced server-side. Why: these public headers are unnecessary for the configured functions, not security credentials.
 - Payment amounts remain validated decimal strings from trusted referrer through display; never coerce them for presentation. Why: preserve the exact received value.
 - Production frontend output is minified and mangled without source maps; development remains debuggable. Why: deter casual source inspection without risking runtime behavior.
 - Flow gates show the processing screen (main) or loading feedback, prefetch display settings into a per-opening memory snapshot, and render tokens already server-approved in this opening instantly while re-validating in the background (failure cancels); first-time tokens still wait for authorization. Why: no blank waits between pages without bypassing access checks.
