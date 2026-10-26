@@ -119,7 +119,7 @@ const WIDE_LOGO_MAX_WIDTH = "max-w-[min(112px,100%)] md:max-w-[min(140px,100%)]"
 // only bKash (wider) and Nagad (narrower, with a finer border) shift. Below lg
 // the grid stays exactly as it was, so phones and tablets are untouched.
 const DESKTOP_WIDER_TILE = "lg:w-[calc(35.8%_-_12px)]";
-const DESKTOP_NARROW_TILE = "lg:w-[calc(30.8%_-_12px)] lg:!border-[0.5px]";
+const DESKTOP_NARROW_TILE = "lg:w-[calc(30.8%_-_12px)] tile-border-thin";
 const DESKTOP_BASE_TILE = "lg:w-[calc(33.3%_-_12px)]";
 
 const paymentMethods = [

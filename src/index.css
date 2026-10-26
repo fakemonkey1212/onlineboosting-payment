@@ -139,6 +139,13 @@
   will-change: transform;
 }
 
+/* Desktop: Nagad's box edge reads finer than the other method boxes. */
+@media (min-width: 1024px) {
+  .payment-method-tile.tile-border-thin {
+    border-width: 0.5px;
+  }
+}
+
 /* Desktop: hovering only zooms the method out — it must not select it. */
 @media (hover: hover) and (pointer: fine) {
   .payment-method-tile.cursor-pointer .payment-method-logo {
