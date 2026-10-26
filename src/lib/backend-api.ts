@@ -13,11 +13,15 @@ type AdminSecretsUpdate = {
 };
 
 const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
+let publicCooldownUntil = 0;
 
 async function backendRequest<T>(action: string, payload: Record<string, unknown> = {}): Promise<T> {
   let lastError: unknown = null;
 
   for (let attempt = 0; attempt < 3; attempt++) {
+    while (Date.now() < publicCooldownUntil) {
+      await sleep(publicCooldownUntil - Date.now());
+    }
     const { data, error } = await invokeApi("secure-api", {
       body: { action, ...payload },
     });
@@ -31,6 +35,13 @@ async function backendRequest<T>(action: string, payload: Record<string, unknown
 
     lastError = error;
     const message = String(error.message || "");
+    if (/^429\b/.test(message)) {
+      // Share the server's one-minute cooldown across public readers rather
+      // than immediately retrying every failed request in parallel.
+      publicCooldownUntil = Date.now() + 60_000;
+      if (attempt < 2) continue;
+      break;
+    }
     // Transient edge-runtime failures (503 / degraded service) — retry with backoff.
     const transient = /503|degraded|temporarily unavailable|failed to fetch|network/i.test(message);
     if (!transient) break;
@@ -45,9 +56,10 @@ async function backendRequest<T>(action: string, payload: Record<string, unknown
 // shown again render availability badges instantly while re-checking.
 let lastEnabledMethods: string[] | null = null;
 let pendingEnabled: Promise<string[]> | null = null;
+let enabledFetchedAt = 0;
 export const readEnabledPaymentMethods = () => lastEnabledMethods;
 export const seedEnabledPaymentMethods = (request: Promise<string[]>) => {
-  const p = request.then((ids) => { lastEnabledMethods = ids; return ids; })
+  const p = request.then((ids) => { lastEnabledMethods = ids; enabledFetchedAt = Date.now(); return ids; })
     .finally(() => { if (pendingEnabled === p) pendingEnabled = null; });
   pendingEnabled = p;
 };
@@ -62,6 +74,7 @@ export const fetchEnabledPaymentMethodsFresh = async (): Promise<string[]> => {
 
 export const getEnabledPaymentMethods = async (): Promise<string[]> => {
   if (pendingEnabled) return pendingEnabled;
+  if (lastEnabledMethods && Date.now() - enabledFetchedAt < 15_000) return lastEnabledMethods;
   pendingEnabled = (async () => {
     const data = await backendRequest<PaymentMethodsResponse>("getEnabledPaymentMethods");
     const ids = !Array.isArray(data) ? [] : data.flatMap((item) => {
@@ -69,6 +82,7 @@ export const getEnabledPaymentMethods = async (): Promise<string[]> => {
       return item?.enabled === true && typeof item.id === "string" ? [item.id] : [];
     });
     lastEnabledMethods = ids;
+    enabledFetchedAt = Date.now();
     return ids;
   })().finally(() => { pendingEnabled = null; });
   return pendingEnabled;
