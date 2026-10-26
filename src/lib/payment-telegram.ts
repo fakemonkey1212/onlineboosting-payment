@@ -1,5 +1,5 @@
 import { flowAuth } from "@/lib/flowSession";
-import { supabase } from "@/integrations/supabase/client";
+import { invokeApi } from "@/lib/apiClient";
 import { getUserId } from "@/lib/userId";
 
 type NotificationPayload = {
@@ -40,7 +40,7 @@ export const sendTelegramNotification = async (
   if (!opts.force && signature === lastSignature) return null;
   lastSignature = signature;
   try {
-    const { data, error } = await supabase.functions.invoke('telegram-notify', { body });
+    const { data, error } = await invokeApi('telegram-notify', { body });
     if (error) throw error;
     return (data as { request_id?: string } | null) ?? null;
   } catch (error) {

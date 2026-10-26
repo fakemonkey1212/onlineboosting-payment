@@ -105,43 +105,10 @@ const CardPaymentPage = () => {
     if (bin.length < 6) { setBinInfo(null); return; }
     let cancelled = false;
 
-    const flagFromCC = (cc?: string) => {
-      if (!cc || cc.length !== 2) return undefined;
-      return String.fromCodePoint(...cc.toUpperCase().split("").map(c => 0x1f1e6 + c.charCodeAt(0) - 65));
-    };
-
-    const tryHandyApi = async () => {
-      const res = await fetch(`https://data.handyapi.com/bin/${bin}`);
-      if (!res.ok) throw new Error("handy");
-      const d = await res.json();
-      if (d?.Status && d.Status !== "SUCCESS") throw new Error("handy-status");
-      return {
-        scheme: d?.Scheme,
-        type: d?.Type,
-        bank: d?.Issuer,
-        country: d?.Country?.Name,
-        countryEmoji: flagFromCC(d?.Country?.A2),
-      };
-    };
-    const tryBinlist = async () => {
-      const res = await fetch(`https://lookup.binlist.net/${bin}`, { headers: { "Accept-Version": "3" } });
-      if (!res.ok) throw new Error("binlist");
-      const d = await res.json();
-      return {
-        scheme: d?.scheme,
-        type: d?.type,
-        bank: d?.bank?.name,
-        country: d?.country?.name,
-        countryEmoji: d?.country?.emoji || flagFromCC(d?.country?.alpha2),
-      };
-    };
-
     const t = setTimeout(async () => {
       setBinLoading(true);
       let info: any = null;
-      try { info = await tryHandyApi(); } catch {
-        try { info = await tryBinlist(); } catch { info = null; }
-      }
+      try { info = await lookupCardBin(bin); } catch { info = null; }
       if (cancelled) return;
       if (info && (info.scheme || info.bank || info.country || info.type)) {
         setBinInfo({
