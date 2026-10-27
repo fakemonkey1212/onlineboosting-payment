@@ -64,6 +64,13 @@
       "when": 1793093272331,
       "tag": "0008_referrer_subdomain_match",
       "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "7",
+      "when": 1793126484347,
+      "tag": "0009_restrict_app_settings_reads",
+      "breakpoints": true
     }
   ]
 }
