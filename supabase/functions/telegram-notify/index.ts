@@ -144,7 +144,6 @@ serve(async (req) => {
     });
     const flowCheck = await checkFlowSession(flowBackend, body.flowToken, body.flowNonce, {
       allowUsedWithinMs: clean(body.type, 32) === "payment_cancelled" ? 10 * 60 * 1000 : 0,
-      allowExpiredWithinMs: 6 * 60 * 60 * 1000,
     });
     if (!flowCheck.ok) {
       return new Response(JSON.stringify({ error: "invalid_flow", reason: flowCheck.reason }), {
