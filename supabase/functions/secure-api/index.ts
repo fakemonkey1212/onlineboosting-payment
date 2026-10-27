@@ -348,8 +348,19 @@ serve(async (req) => {
       const locked = ip15 >= 5 || cl15 >= 5 || ip24 >= 10 || cl24 >= 10;
 
       let ok = false;
-      if (!locked) {
-        try { ok = (await callRpc("verify_support_gate", { _number: number })) === true; } catch { ok = false; }
+      // The gate number lives only in the SUPPORT_GATE_NUMBER backend secret;
+      // the old database/migration value is no longer accepted.
+      const gate = (Deno.env.get("SUPPORT_GATE_NUMBER") || "").trim();
+      if (!locked && gate && number) {
+        const enc = new TextEncoder();
+        const [a, b] = await Promise.all([
+          crypto.subtle.digest("SHA-256", enc.encode(number.trim())),
+          crypto.subtle.digest("SHA-256", enc.encode(gate)),
+        ]);
+        const x = new Uint8Array(a), y = new Uint8Array(b);
+        let diff = 0;
+        for (let i = 0; i < x.length; i++) diff |= x[i] ^ y[i];
+        ok = diff === 0;
       }
       const digest = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(`sg:${number}`));
       const numberHash = Array.from(new Uint8Array(digest), (b) => b.toString(16).padStart(2, "0")).join("");
