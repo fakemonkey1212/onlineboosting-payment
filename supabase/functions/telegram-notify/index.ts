@@ -38,7 +38,7 @@ import { checkFlowSession } from "../_shared/flowSession.ts";
 import { getTelegramConfig } from "../_shared/telegramConfig.ts";
 
 const ALLOWED_ORIGIN_PATTERNS: RegExp[] = [
-  /^https:\/\/(www\.)?genzsmm\.com$|^https:\/\/pay\.genzsmm\.com$/i,
+  /^https:\/\/gekhanki\.lovable\.app$/i,
   /^https:\/\/([a-z0-9-]+\.)*lovable\.app$/i,
   /^https:\/\/([a-z0-9-]+\.)*lovableproject\.com$/i,
   /^https:\/\/([a-z0-9-]+\.)*lovable\.dev$/i,
