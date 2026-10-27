@@ -11,6 +11,7 @@ export default defineConfig(() => ({
   plugins: react(),
   build: {
     sourcemap: false,
+    assetsInlineLimit: 200 * 1024,
     minify: "terser" as const,
     cssMinify: true,
     terserOptions: {
