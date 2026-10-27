@@ -77,9 +77,14 @@ Deno.serve(async (req) => {
         if (!allowed) {
           const { data: sites } = await backend.from("allowed_websites").select("url");
           const nRef = normalize(referrer);
+          const refHost = refUrl.hostname.toLowerCase();
           allowed = (sites ?? []).some((s: { url: string }) => {
             const n = normalize(s.url);
-            return n && nRef.startsWith(n);
+            if (!n) return false;
+            if (nRef.startsWith(n)) return true;
+            // Same domain or any subdomain of an allowed domain (www./*. ignored).
+            const host = n.split(/[/:?#]/)[0].replace(/^\*\./, "").replace(/^www\./, "");
+            return !!host && host.includes(".") && (refHost === host || refHost.endsWith(`.${host}`));
           });
         }
       }
