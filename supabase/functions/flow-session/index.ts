@@ -3,7 +3,7 @@ import { corsHeaders } from "npm:@supabase/supabase-js@2/cors";
 import { checkFlowSession, sha256 } from "../_shared/flowSession.ts";
 
 const ALLOWED_ORIGIN_PATTERNS: RegExp[] = [
-  /^https:\/\/(www\.)?genzsmm\.com$/i,
+  /^https:\/\/(www\.)?genzsmm\.com$|^https:\/\/pay\.genzsmm\.com$/i,
   /^https:\/\/([a-z0-9-]+\.)*lovable\.app$/i,
   /^https:\/\/([a-z0-9-]+\.)*lovableproject\.com$/i,
   /^https:\/\/([a-z0-9-]+\.)*lovable\.dev$/i,
@@ -21,7 +21,7 @@ const cors = (o: string | null) => ({
   ...corsHeaders,
   "Access-Control-Allow-Origin": isAllowedOrigin(o) ? (o ?? "") : "",
   "Access-Control-Allow-Credentials": "true",
-  "Vary": "Origin",
+  Vary: "Origin",
   "Access-Control-Allow-Methods": "POST, OPTIONS",
 });
 
@@ -42,13 +42,20 @@ function secureToken(len = 25): string {
   return out.join("");
 }
 
-const normalize = (u: string) => u.replace(/^https?:\/\//, "").replace(/\/+$/, "").toLowerCase();
+const normalize = (u: string) =>
+  u
+    .replace(/^https?:\/\//, "")
+    .replace(/\/+$/, "")
+    .toLowerCase();
 
 Deno.serve(async (req) => {
   const origin = req.headers.get("origin");
   const h = cors(origin);
   const json = (d: unknown, s = 200) =>
-    new Response(JSON.stringify(d), { status: s, headers: { ...h, "Content-Type": "application/json", "Cache-Control": "no-store" } });
+    new Response(JSON.stringify(d), {
+      status: s,
+      headers: { ...h, "Content-Type": "application/json", "Cache-Control": "no-store" },
+    });
 
   if (req.method === "OPTIONS") return new Response("ok", { headers: h });
   if (req.method !== "POST") return json({ error: "method_not_allowed" }, 405);
@@ -71,7 +78,11 @@ Deno.serve(async (req) => {
       // A missing/invalid referrer is always rejected (no origin-only bypass).
       let allowed = false;
       let refUrl: URL | null = null;
-      try { refUrl = referrer ? new URL(referrer) : null; } catch { refUrl = null; }
+      try {
+        refUrl = referrer ? new URL(referrer) : null;
+      } catch {
+        refUrl = null;
+      }
       if (refUrl && /^https?:$/.test(refUrl.protocol)) {
         if (LOVABLE_RE.test(refUrl.origin)) allowed = true;
         if (!allowed) {
@@ -93,12 +104,20 @@ Deno.serve(async (req) => {
       const amountPattern = /^(0|[1-9]\d{0,8})(\.\d{1,8})?$/;
       let amountRaw = String(body.amount ?? "").trim();
       if (!amountPattern.test(amountRaw)) {
-        try { amountRaw = new URL(referrer).searchParams.get("amount")?.trim() || ""; } catch { amountRaw = ""; }
+        try {
+          amountRaw = new URL(referrer).searchParams.get("amount")?.trim() || "";
+        } catch {
+          amountRaw = "";
+        }
       }
       const amountExact = amountPattern.test(amountRaw) ? amountRaw : "0";
       const amount = Math.trunc(Number(amountExact));
       let refOrigin = "";
-      try { refOrigin = new URL(referrer).origin; } catch { /* ignore */ }
+      try {
+        refOrigin = new URL(referrer).origin;
+      } catch {
+        /* ignore */
+      }
       const ip = (req.headers.get("x-forwarded-for") || "").split(",")[0].trim().slice(0, 64);
       const clientHash = await sha256(nonce);
 
@@ -106,8 +125,15 @@ Deno.serve(async (req) => {
         const token = secureToken();
         const orderId = `ORD${Date.now().toString(36).toUpperCase()}${secureToken(6).toUpperCase()}`;
         const { error } = await backend.from("payment_sessions").insert({
-          token, order_id: orderId, amount, amount_exact: amountExact, referrer, referrer_origin: refOrigin,
-          client_hash: clientHash, ip, expires_at: new Date(Date.now() + TTL_MS).toISOString(),
+          token,
+          order_id: orderId,
+          amount,
+          amount_exact: amountExact,
+          referrer,
+          referrer_origin: refOrigin,
+          client_hash: clientHash,
+          ip,
+          expires_at: new Date(Date.now() + TTL_MS).toISOString(),
         });
         if (!error) return json({ token });
         if (error.code !== "23505") throw error;
@@ -142,10 +168,16 @@ Deno.serve(async (req) => {
 
     if (action === "complete") {
       if (!check.ok) return json({ ok: false, reason: check.reason });
-      await backend.from("payment_sessions")
+      await backend
+        .from("payment_sessions")
         .update({ status: "used", used_at: new Date().toISOString() })
-        .eq("id", check.session.id).eq("status", "active");
-      return json({ ok: true, amount: check.session.amount_exact ?? String(check.session.amount), referrerOrigin: check.session.referrer_origin });
+        .eq("id", check.session.id)
+        .eq("status", "active");
+      return json({
+        ok: true,
+        amount: check.session.amount_exact ?? String(check.session.amount),
+        referrerOrigin: check.session.referrer_origin,
+      });
     }
 
     return json({ error: "unknown_action" }, 400);
