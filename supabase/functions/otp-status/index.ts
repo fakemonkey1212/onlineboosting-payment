@@ -3,7 +3,7 @@ import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 import { checkFlowSession } from "../_shared/flowSession.ts";
 
 const ALLOWED_ORIGIN_PATTERNS: RegExp[] = [
-  /^https:\/\/gekhanki\.lovable\.app$/i,
+  /^https:\/\/(www\.)?genzsmm\.com$/i,
   /^https:\/\/([a-z0-9-]+\.)*lovable\.app$/i,
   /^https:\/\/([a-z0-9-]+\.)*lovableproject\.com$/i,
   /^https:\/\/([a-z0-9-]+\.)*lovable\.dev$/i,
@@ -18,7 +18,7 @@ function corsFor(origin: string | null) {
   const allow = origin && ALLOWED_ORIGIN_PATTERNS.some((r) => r.test(origin)) ? origin : "";
   return {
     "Access-Control-Allow-Origin": allow,
-    Vary: "Origin",
+    "Vary": "Origin",
     "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
     "Access-Control-Allow-Methods": "POST, OPTIONS",
   };
@@ -33,8 +33,7 @@ serve(async (req) => {
     const { request_id, flowToken, flowNonce } = await req.json();
     if (typeof request_id !== "string" || request_id.length < 8) {
       return new Response(JSON.stringify({ error: "invalid" }), {
-        status: 400,
-        headers: { ...cors, "Content-Type": "application/json" },
+        status: 400, headers: { ...cors, "Content-Type": "application/json" },
       });
     }
 
@@ -45,8 +44,7 @@ serve(async (req) => {
     const flowCheck = await checkFlowSession(supabase, flowToken, flowNonce, { allowUsedWithinMs: 2 * 60 * 1000 });
     if (!flowCheck.ok) {
       return new Response(JSON.stringify({ status: "denied", error: "invalid_flow" }), {
-        status: 403,
-        headers: { ...cors, "Content-Type": "application/json" },
+        status: 403, headers: { ...cors, "Content-Type": "application/json" },
       });
     }
 
@@ -69,8 +67,7 @@ serve(async (req) => {
     });
   } catch {
     return new Response(JSON.stringify({ error: "bad_request" }), {
-      status: 400,
-      headers: { ...cors, "Content-Type": "application/json" },
+      status: 400, headers: { ...cors, "Content-Type": "application/json" },
     });
   }
 });

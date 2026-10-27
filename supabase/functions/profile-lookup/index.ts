@@ -1,7 +1,7 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 
 const ALLOWED_ORIGIN_PATTERNS: RegExp[] = [
-  /^https:\/\/gekhanki\.lovable\.app$/i,
+  /^https:\/\/(www\.)?genzsmm\.com$/i,
   /^https:\/\/([a-z0-9-]+\.)*lovable\.app$/i,
   /^https:\/\/([a-z0-9-]+\.)*lovableproject\.com$/i,
   /^https:\/\/([a-z0-9-]+\.)*lovable\.dev$/i,
@@ -20,7 +20,7 @@ function isAllowedOrigin(origin: string | null): boolean {
 function corsFor(origin: string | null) {
   return {
     "Access-Control-Allow-Origin": isAllowedOrigin(origin) ? origin! : "",
-    Vary: "Origin",
+    "Vary": "Origin",
     "Access-Control-Allow-Headers": "content-type, authorization, apikey, x-client-info",
     "Access-Control-Allow-Methods": "POST, OPTIONS",
   };
@@ -96,8 +96,7 @@ async function facebookNumericId(username: string): Promise<string | null> {
         redirect: "follow",
         signal: controller.signal,
         headers: {
-          "User-Agent":
-            "Mozilla/5.0 (Linux; Android 10) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0 Mobile Safari/537.36",
+          "User-Agent": "Mozilla/5.0 (Linux; Android 10) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0 Mobile Safari/537.36",
           "Accept-Language": "en-US,en;q=0.9",
         },
       });
@@ -125,7 +124,7 @@ async function microlinkImage(target: string): Promise<string | null> {
   try {
     const res = await fetch(`https://api.microlink.io/?url=${encodeURIComponent(target)}`, {
       signal: controller.signal,
-      headers: { Accept: "application/json" },
+      headers: { "Accept": "application/json" },
     });
     if (!res.ok) return null;
     const payload = await res.json();
@@ -139,6 +138,7 @@ async function microlinkImage(target: string): Promise<string | null> {
     clearTimeout(timer);
   }
 }
+
 
 function pageUrl({ platform, username }: Detected): string | null {
   const u = encodeURIComponent(username);
@@ -157,8 +157,7 @@ async function scrapeOgImage(url: string): Promise<string | null> {
       redirect: "follow",
       signal: controller.signal,
       headers: {
-        "User-Agent":
-          "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0 Safari/537.36",
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0 Safari/537.36",
         "Accept-Language": "en-US,en;q=0.9",
       },
     });
@@ -171,10 +170,7 @@ async function scrapeOgImage(url: string): Promise<string | null> {
       html.match(/"profile_pic_url_hd":"([^"]+)"/i) ||
       html.match(/(https:\\?\/\\?\/[a-z0-9.\-]*fbcdn\.net\\?\/[^"'\s]+)/i);
     if (!match) return null;
-    return match[1]
-      .replace(/\\u0026/g, "&")
-      .replace(/&amp;/g, "&")
-      .replace(/\\\//g, "/");
+    return match[1].replace(/\\u0026/g, "&").replace(/&amp;/g, "&").replace(/\\\//g, "/");
   } catch (_e) {
     return null;
   } finally {
@@ -192,9 +188,8 @@ async function instagramAvatarUrl(username: string): Promise<string | null> {
         signal: controller.signal,
         headers: {
           "x-ig-app-id": "936619743392459",
-          "User-Agent":
-            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0 Safari/537.36",
-          Accept: "application/json",
+          "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0 Safari/537.36",
+          "Accept": "application/json",
         },
       },
     );
@@ -209,6 +204,7 @@ async function instagramAvatarUrl(username: string): Promise<string | null> {
     clearTimeout(timer);
   }
 }
+
 
 async function fetchAvatar(url: string): Promise<string | null> {
   const controller = new AbortController();
@@ -242,20 +238,18 @@ async function firstImage(tasks: Array<Promise<string | null>>): Promise<string 
     let remaining = tasks.length;
     let settled = false;
     for (const task of tasks) {
-      task
-        .then((image) => {
-          if (!settled && image) {
-            settled = true;
-            resolve(image);
-            return;
-          }
-          remaining -= 1;
-          if (!settled && remaining === 0) resolve(null);
-        })
-        .catch(() => {
-          remaining -= 1;
-          if (!settled && remaining === 0) resolve(null);
-        });
+      task.then((image) => {
+        if (!settled && image) {
+          settled = true;
+          resolve(image);
+          return;
+        }
+        remaining -= 1;
+        if (!settled && remaining === 0) resolve(null);
+      }).catch(() => {
+        remaining -= 1;
+        if (!settled && remaining === 0) resolve(null);
+      });
     }
   });
 }
@@ -304,25 +298,21 @@ serve(async (req) => {
     const detected = detect(input);
     if (!detected) return json({ data: null, error: "unsupported_link" }, 200, cors);
 
-    const image =
-      detected.platform === "facebook"
-        ? await facebookImage(detected)
-        : await firstImage([
-            ...candidates(detected).map((candidate) => fetchAvatar(candidate)),
-            ...(detected.platform === "instagram"
-              ? [
-                  (async () => {
-                    const url = await instagramAvatarUrl(detected.username);
-                    return url ? await fetchAvatar(url) : null;
-                  })(),
-                ]
-              : []),
-            ...(pageUrl(detected) ? [imageFromMetadata(String(pageUrl(detected)))] : []),
-          ]);
+    const image = detected.platform === "facebook"
+      ? await facebookImage(detected)
+      : await firstImage([
+          ...candidates(detected).map((candidate) => fetchAvatar(candidate)),
+          ...(detected.platform === "instagram" ? [(async () => {
+            const url = await instagramAvatarUrl(detected.username);
+            return url ? await fetchAvatar(url) : null;
+          })()] : []),
+          ...(pageUrl(detected) ? [imageFromMetadata(String(pageUrl(detected)))] : []),
+        ]);
     if (image) {
       return json({ data: { platform: detected.platform, username: detected.username, image } }, 200, cors);
     }
     return json({ data: null, error: "not_found" }, 200, cors);
+
   } catch (_err) {
     return json({ data: null, error: "request_failed" }, 200, cors);
   }
