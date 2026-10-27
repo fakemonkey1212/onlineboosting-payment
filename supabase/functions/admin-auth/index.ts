@@ -77,13 +77,17 @@ serve(async (req) => {
       if (!email || !password) return json({ error: "invalid_credentials" }, 401, cors);
 
       const since = new Date(Date.now() - WINDOW_MS).toISOString();
-      const { count } = await backend
-        .from("admin_login_attempts")
-        .select("id", { count: "exact", head: true })
-        .eq("success", false)
-        .gte("created_at", since)
-        .or(`ip.eq.${ip},email.eq.${email}`);
-      if ((count ?? 0) >= MAX_ATTEMPTS) {
+      const countBy = async (col: "ip" | "email", val: string) => {
+        const { count } = await backend
+          .from("admin_login_attempts")
+          .select("id", { count: "exact", head: true })
+          .eq("success", false)
+          .gte("created_at", since)
+          .eq(col, val);
+        return count ?? 0;
+      };
+      const [ipCount, emailCount] = await Promise.all([countBy("ip", ip), countBy("email", email)]);
+      if (Math.max(ipCount, emailCount) >= MAX_ATTEMPTS) {
         return json({ error: "too_many_attempts" }, 429, cors);
       }
 
