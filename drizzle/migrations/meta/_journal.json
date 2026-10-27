@@ -57,6 +57,13 @@
       "when": 1792114467244,
       "tag": "0007_add_bkash2_method",
       "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "7",
+      "when": 1793093272331,
+      "tag": "0008_referrer_subdomain_match",
+      "breakpoints": true
     }
   ]
 }
