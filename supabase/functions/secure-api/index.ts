@@ -3,7 +3,7 @@ import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 import { requireAdminSession } from "../_shared/adminSession.ts";
 
 const ALLOWED_ORIGIN_PATTERNS: RegExp[] = [
-  /^https:\/\/(www\.)?genzsmm\.com$|^https:\/\/pay\.genzsmm\.com$/i,
+  /^https:\/\/gekhanki\.lovable\.app$/i,
   /^https:\/\/([a-z0-9-]+\.)*lovable\.app$/i,
   /^https:\/\/([a-z0-9-]+\.)*lovableproject\.com$/i,
   /^https:\/\/([a-z0-9-]+\.)*lovable\.dev$/i,
