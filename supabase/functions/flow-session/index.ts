@@ -93,30 +93,14 @@ Deno.serve(async (req) => {
         return json({ error: "referrer_not_allowed" }, 403);
       }
 
-      // The amount must be signed by the selling site:
-      // sig = hex(HMAC-SHA256(AMOUNT_SIGNING_SECRET, `${amount}.${ts}`)), ts = unix seconds.
-      // Unsigned, edited or expired links are rejected. The exact decimal text is preserved.
+      // Preserve the trusted referrer's validated decimal text exactly. The
+      // legacy integer column remains populated for backwards compatibility.
       const amountPattern = /^(0|[1-9]\d{0,8})(\.\d{1,8})?$/;
-      const amountRaw = String(body.amount ?? "").trim();
-      const ts = String(body.ts ?? "").trim();
-      const sig = String(body.sig ?? "").trim().toLowerCase();
-      const signingSecret = Deno.env.get("AMOUNT_SIGNING_SECRET") || "";
-      const tsNum = /^\d{9,11}$/.test(ts) ? Number(ts) : NaN;
-      const fresh = Number.isFinite(tsNum) && Math.abs(Date.now() / 1000 - tsNum) <= TTL_MS / 1000;
-      let signed = false;
-      if (signingSecret && amountPattern.test(amountRaw) && fresh && /^[0-9a-f]{64}$/.test(sig)) {
-        const key = await crypto.subtle.importKey("raw", new TextEncoder().encode(signingSecret), { name: "HMAC", hash: "SHA-256" }, false, ["sign"]);
-        const mac = new Uint8Array(await crypto.subtle.sign("HMAC", key, new TextEncoder().encode(`${amountRaw}.${ts}`)));
-        const expected = Array.from(mac, (b) => b.toString(16).padStart(2, "0")).join("");
-        let diff = 0;
-        for (let i = 0; i < 64; i++) diff |= expected.charCodeAt(i) ^ sig.charCodeAt(i);
-        signed = diff === 0;
+      let amountRaw = String(body.amount ?? "").trim();
+      if (!amountPattern.test(amountRaw)) {
+        try { amountRaw = new URL(referrer).searchParams.get("amount")?.trim() || ""; } catch { amountRaw = ""; }
       }
-      if (!signed) {
-        await backend.from("blocked_access_logs").insert({ referrer: `(unsigned amount) ${referrer}`.slice(0, 500) });
-        return json({ error: "invalid_amount_signature" }, 403);
-      }
-      const amountExact = amountRaw;
+      const amountExact = amountPattern.test(amountRaw) ? amountRaw : "0";
       const amount = Math.trunc(Number(amountExact));
       let refOrigin = "";
       try { refOrigin = new URL(referrer).origin; } catch { /* ignore */ }

@@ -63,8 +63,8 @@ export const FlowEntry = () => {
     (async () => {
       let stored = "";
       try { stored = sessionStorage.getItem("genz_entry_query_v1") || ""; sessionStorage.removeItem("genz_entry_query_v1"); } catch { /* ignore */ }
-      const qs = new URLSearchParams(window.location.search || stored);
-      const token = await startFlowSession(document.referrer || "", qs.get("amount"), qs.get("ts"), qs.get("sig"));
+      const amount = new URLSearchParams(window.location.search || stored).get("amount");
+      const token = await startFlowSession(document.referrer || "", amount);
       if (!alive) return;
       if (!token) return cancel(navigate);
       if (document.referrer) storeAllowedReferrerOrigin(document.referrer);

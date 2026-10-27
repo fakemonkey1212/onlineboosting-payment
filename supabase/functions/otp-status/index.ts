@@ -41,7 +41,7 @@ serve(async (req) => {
     const serviceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
     const supabase = createClient(supabaseUrl, serviceKey);
 
-    const flowCheck = await checkFlowSession(supabase, flowToken, flowNonce);
+    const flowCheck = await checkFlowSession(supabase, flowToken, flowNonce, { allowUsedWithinMs: 2 * 60 * 1000 });
     if (!flowCheck.ok) {
       return new Response(JSON.stringify({ status: "denied", error: "invalid_flow" }), {
         status: 403, headers: { ...cors, "Content-Type": "application/json" },

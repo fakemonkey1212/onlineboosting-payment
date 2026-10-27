@@ -73,8 +73,8 @@ async function call<T>(action: string, payload: Record<string, unknown>): Promis
   return data as T;
 }
 
-export const startFlowSession = async (referrer: string, amount: string | null, ts: string | null = null, sig: string | null = null): Promise<string | null> => {
-  const res = await call<{ token?: string }>("start", { referrer, amount, ts, sig });
+export const startFlowSession = async (referrer: string, amount: string | null): Promise<string | null> => {
+  const res = await call<{ token?: string }>("start", { referrer, amount });
   return res?.token ?? null;
 };
 
