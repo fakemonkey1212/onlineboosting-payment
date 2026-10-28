@@ -1,5 +1,6 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { isLoginLockedOut } from "./loginLockout.ts";
 import {
   ABSOLUTE_TTL_MS,
   randomToken,
@@ -25,7 +26,7 @@ const isAllowedOrigin = (origin: string | null) =>
 
 function corsFor(origin: string | null) {
   return {
-    "Access-Control-Allow-Origin": isAllowedOrigin(origin) ? origin! : "",
+    "Access-Control-Allow-Origin": origin && isAllowedOrigin(origin) ? origin : "",
     "Access-Control-Allow-Credentials": "true",
     "Vary": "Origin",
     "Access-Control-Allow-Headers":
@@ -44,9 +45,6 @@ function json(data: unknown, status: number, headers: HeadersInit, cookie?: stri
 
 const clean = (v: unknown, max = 200) =>
   v === null || v === undefined ? "" : String(v).replace(/[\u0000-\u001F\u007F]/g, "").trim().slice(0, max);
-
-const WINDOW_MS = 15 * 60 * 1000;
-const MAX_ATTEMPTS = 5;
 
 serve(async (req) => {
   const origin = req.headers.get("origin");
@@ -76,14 +74,7 @@ serve(async (req) => {
       const password = clean(body.password, 200);
       if (!email || !password) return json({ error: "invalid_credentials" }, 401, cors);
 
-      const since = new Date(Date.now() - WINDOW_MS).toISOString();
-      const { count } = await backend
-        .from("admin_login_attempts")
-        .select("id", { count: "exact", head: true })
-        .eq("success", false)
-        .gte("created_at", since)
-        .or(`ip.eq.${ip},email.eq.${email}`);
-      if ((count ?? 0) >= MAX_ATTEMPTS) {
+      if (await isLoginLockedOut(backend, ip, email)) {
         return json({ error: "too_many_attempts" }, 429, cors);
       }
 
@@ -93,7 +84,9 @@ serve(async (req) => {
       });
       if (error) console.error("verify_admin_login failed:", error.message);
 
-      await backend.from("admin_login_attempts").insert({ ip, email, success: ok === true });
+      const { error: attemptError } = await backend.from("admin_login_attempts")
+        .insert({ ip, email, success: ok === true });
+      if (attemptError) return json({ error: "request_failed" }, 503, cors);
 
       if (ok !== true) return json({ error: "invalid_credentials" }, 401, cors);
 
