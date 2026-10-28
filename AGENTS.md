@@ -9,3 +9,4 @@
 - The main payment background uses a non-interactive masked pseudo-element and a CDN asset pointer; the desktop payment sheet stays opaque. Why: show the body pattern without altering payment controls or method-page designs.
 - Public display reads share a 15-second per-opening memory snapshot; realtime remains primary with 30-second reconciliation and visibility checks. Why: avoid request storms without losing missed payment-method updates or weakening server authorization.
 - Public secure-api readers share a one-minute cooldown after HTTP 429; admin transport is unchanged. Why: prevent simultaneous retries from amplifying rate limiting.
+- Admin login lockout uses separate typed equality queries and a deduplicated bounded union, failing closed on attempt read/write errors. Why: caller input must never change filter syntax or bypass login protection.

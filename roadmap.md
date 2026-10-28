@@ -1,4 +1,5 @@
 # Loading and payment selection
+- [ ] Fix scanned admin login filter injection and verify lockout regressions.
 - [x] Reduce redundant public requests; authorized checkout and bKash navigation verified, 9/8 requests per 65-second observation with no secure-api errors; six tests passed including 429 cooldown. Existing realtime handlers retained; cross-device admin updates were not exercised.
 - [x] Fix payment API CORS; browser verified authorized checkout, exact amount, bKash navigation, zero CORS errors, and untrusted-entry cancellation; admin cookie transport unchanged.
 - [x] Remove bKash2 choices, admin control, route registration, and dedicated asset.
