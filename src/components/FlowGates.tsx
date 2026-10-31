@@ -1,4 +1,5 @@
-import { ReactNode, useEffect, useState } from "react";
+import { ReactNode, useEffect, useRef, useState } from "react";
+import { readRedirectAmount, removeRedirectRef } from "@/lib/redirectAmount";
 import { useNavigate, useParams } from "react-router-dom";
 import { startFlowSession, validateFlowSession, type FlowState } from "@/lib/flowSession";
 import FlowLoading from "@/components/FlowLoading";
@@ -53,6 +54,7 @@ export const prevalidateFlow = async (token: string, platform?: string) => !!(aw
 /** First entry: asks the server for a brand-new single-use token, then shows only the token in the URL. */
 export const FlowEntry = () => {
   const navigate = useNavigate();
+  const entryAmount = useRef<ReturnType<typeof readRedirectAmount> | null>(null);
   useEffect(() => {
     let alive = true;
     // After a cancel, this tab may only restart via a fresh visit from an external referrer.
@@ -63,8 +65,10 @@ export const FlowEntry = () => {
     (async () => {
       let stored = "";
       try { stored = sessionStorage.getItem("genz_entry_query_v1") || ""; sessionStorage.removeItem("genz_entry_query_v1"); } catch { /* ignore */ }
-      const amount = new URLSearchParams(window.location.search || stored).get("amount");
-      const token = await startFlowSession(document.referrer || "", amount);
+      if (!entryAmount.current) entryAmount.current = readRedirectAmount(window.location.search || stored);
+      removeRedirectRef();
+      if (entryAmount.current.invalid) return cancel(navigate);
+      const token = await startFlowSession(document.referrer || "", entryAmount.current.amount);
       if (!alive) return;
       if (!token) return cancel(navigate);
       if (document.referrer) storeAllowedReferrerOrigin(document.referrer);
