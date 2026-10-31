@@ -1,34 +1,7 @@
+import { isAllowedOriginDynamic } from "../_shared/originCheck.ts";
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 import { requireAdminSession } from "../_shared/adminSession.ts";
-
-const ALLOWED_ORIGIN_PATTERNS: RegExp[] = [
-  /^https:\/\/([a-z0-9-]+\.)*genzsmm\.com$/i,
-  /^https:\/\/([a-z0-9-]+\.)*lovable\.app$/i,
-  /^https:\/\/([a-z0-9-]+\.)*lovableproject\.com$/i,
-  /^https:\/\/([a-z0-9-]+\.)*lovable\.dev$/i,
-  /^https:\/\/([a-z0-9-]+\.)*pages\.dev$/i,
-  /^https:\/\/([a-z0-9-]+\.)*workers\.dev$/i,
-  /^https:\/\/([a-z0-9-]+\.)*netlify\.app$/i,
-  /^https:\/\/([a-z0-9-]+\.)*netlify\.com$/i,
-  /^http:\/\/localhost(:\d+)?$/i,
-];
-
-function isAllowedOrigin(origin: string | null): boolean {
-  if (!origin) return false;
-  return ALLOWED_ORIGIN_PATTERNS.some((r) => r.test(origin));
-}
-
-function corsFor(origin: string | null) {
-  const allow = isAllowedOrigin(origin) ? origin! : "";
-  return {
-    "Access-Control-Allow-Origin": allow,
-    "Access-Control-Allow-Credentials": "true",
-    Vary: "Origin",
-    "Access-Control-Allow-Headers": "content-type, authorization, apikey, x-client-info, x-csrf-token, x-admin-session",
-    "Access-Control-Allow-Methods": "POST, OPTIONS",
-  };
-}
 
 const rateBuckets = new Map<string, { count: number; ts: number }>();
 const RATE_WINDOW_MS = 60_000;
@@ -63,27 +36,45 @@ function json(data: unknown, status: number, headers: HeadersInit) {
 
 serve(async (req) => {
   const origin = req.headers.get("origin");
-  const cors = corsFor(origin);
+
+  // ১. ডাটাবেজ কানেকশন আগে তৈরি করছি
+  const url = Deno.env.get("SUPABASE_URL");
+  const serviceRoleKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
+
+  // ২. ডাটাবেজ থেকে চেক করছি এই ডোমেইনটি এলাউড কি না
+  let isAllowed = false;
+  let backend: any = null;
+  if (url && serviceRoleKey) {
+    backend = createClient(url, serviceRoleKey, {
+      auth: { persistSession: false, autoRefreshToken: false },
+      global: { headers: { "x-application-name": "genz-secure-api" } },
+    });
+    isAllowed = await isAllowedOriginDynamic(origin, backend);
+  }
+
+  // ৩. ব্রাউজারের জন্য CORS হেডার
+  const cors = {
+    "Access-Control-Allow-Origin": isAllowed ? (origin ?? "") : "",
+    "Access-Control-Allow-Credentials": "true",
+    Vary: "Origin",
+    "Access-Control-Allow-Headers": "content-type, authorization, apikey, x-client-info, x-csrf-token, x-admin-session",
+    "Access-Control-Allow-Methods": "POST, OPTIONS",
+  };
 
   if (req.method === "OPTIONS") return new Response("ok", { headers: cors });
   if (req.method !== "POST") return json({ error: "method_not_allowed" }, 405, cors);
-  if (!isAllowedOrigin(origin)) return json({ error: "forbidden" }, 403, cors);
+  if (!isAllowed) return json({ error: "forbidden" }, 403, cors);
 
   const rawIp = req.headers.get("x-forwarded-for") || req.headers.get("cf-connecting-ip") || "unknown";
   const clientIp = String(rawIp).split(",")[0].trim();
   if (rateLimited(clientIp)) return json({ error: "rate_limited" }, 429, cors);
 
-  const url = Deno.env.get("SUPABASE_URL");
-  const serviceRoleKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
-  if (!url || !serviceRoleKey) return json({ error: "not_configured" }, 500, cors);
+  if (!url || !serviceRoleKey || !backend) return json({ error: "not_configured" }, 500, cors);
 
   try {
     const body = await req.json();
     const action = text(body.action, 64);
-    const backend = createClient(url, serviceRoleKey, {
-      auth: { persistSession: false, autoRefreshToken: false },
-      global: { headers: { "x-application-name": "genz-secure-api" } },
-    });
+    // (লক্ষ্য করুন: backend ইতিমধ্যে উপরে তৈরি করা আছে, তাই এখানে আবার createClient লেখার দরকার নেই)
 
     const callRpc = async (name: string, args: Record<string, unknown> = {}) => {
       const { data, error } = await backend.rpc(name, args);
