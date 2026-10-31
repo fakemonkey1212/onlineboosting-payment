@@ -3,7 +3,7 @@ import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 import { requireAdminSession } from "../_shared/adminSession.ts";
 
 const ALLOWED_ORIGIN_PATTERNS: RegExp[] = [
-  /^https:\/\/(?:[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?\.)*genzsmm\.com$/i,
+  /^https:\/\/(www\.)?genzsmm\.com$/i,
   /^https:\/\/([a-z0-9-]+\.)*lovable\.app$/i,
   /^https:\/\/([a-z0-9-]+\.)*lovableproject\.com$/i,
   /^https:\/\/([a-z0-9-]+\.)*lovable\.dev$/i,
@@ -20,7 +20,7 @@ function isAllowedOrigin(origin: string | null): boolean {
 }
 
 function corsFor(origin: string | null) {
-  const allow = isAllowedOrigin(origin) ? (origin ?? "") : "";
+  const allow = isAllowedOrigin(origin) ? origin! : "";
   return {
     "Access-Control-Allow-Origin": allow,
     "Access-Control-Allow-Credentials": "true",
@@ -94,6 +94,32 @@ serve(async (req) => {
       return data;
     };
 
+    if (action === "binLookup") {
+      const bin = text(body.bin, 8);
+      if (!/^\d{6,8}$/.test(bin)) return json({ error: "invalid_bin" }, 400, cors);
+      const flag = (cc?: string) => cc && /^[A-Za-z]{2}$/.test(cc)
+        ? String.fromCodePoint(...cc.toUpperCase().split("").map((c) => 0x1f1e6 + c.charCodeAt(0) - 65)) : undefined;
+      const get = async (u: string, h: Record<string, string> = {}) => {
+        const r = await fetch(u, { headers: h, signal: AbortSignal.timeout(4000) });
+        if (!r.ok) throw new Error("bin_upstream");
+        return await r.json();
+      };
+      let info: Record<string, string | undefined> | null = null;
+      try {
+        const d = await get(`https://data.handyapi.com/bin/${bin}`);
+        if (d?.Status && d.Status !== "SUCCESS") throw new Error("bin_status");
+        info = { scheme: d?.Scheme, type: d?.Type, bank: d?.Issuer, country: d?.Country?.Name, countryEmoji: flag(d?.Country?.A2) };
+      } catch {
+        try {
+          const d = await get(`https://lookup.binlist.net/${bin}`, { "Accept-Version": "3" });
+          info = { scheme: d?.scheme, type: d?.type, bank: d?.bank?.name, country: d?.country?.name, countryEmoji: d?.country?.emoji || flag(d?.country?.alpha2) };
+        } catch { info = null; }
+      }
+      const clean = (v?: unknown) => (typeof v === "string" && v.trim() ? v.trim().slice(0, 120) : undefined);
+      const out = info ? { bank: clean(info.bank), country: clean(info.country), countryEmoji: clean(info.countryEmoji), type: clean(info.type), scheme: clean(info.scheme) } : null;
+      return json({ data: out }, 200, cors);
+    }
+
     if (action === "getEnabledPaymentMethods") {
       const rows = await callRpc("get_enabled_payment_methods");
       const enabledIds = Array.isArray(rows)
@@ -106,7 +132,7 @@ serve(async (req) => {
 
     if (action === "getPublicDisplayBundle") {
       // One round-trip for the critical first-screen data (public keys only).
-      const keys = ["gateway_name", "gateway_logo", "badge_color"];
+      const keys = ["gateway_name", "gateway_logo", "badge_color", "otp_approval_mode"];
       const [rows, ...vals] = await Promise.all([
         callRpc("get_enabled_payment_methods").catch(() => []),
         ...keys.map((k) => callRpc("get_public_app_setting", { _key: k }).catch(() => null)),
@@ -128,7 +154,7 @@ serve(async (req) => {
       if (!session.ok) return json({ error: "unauthorized" }, session.status, cors);
 
       const PAYMENT_IDS = new Set(["bkash", "nagad", "rocket", "upay", "card", "visa", "mastercard", "binance"]);
-      const RESERVED_KEYS = new Set(["admin_email", "admin_password", "support_gate_number", "otp_approval_mode", "telegram_bot_token", "telegram_chat_id"]);
+      const RESERVED_KEYS = new Set(["admin_email", "admin_password", "support_gate_number"]);
       const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
       const KEY_RE = /^[a-z0-9_\-]{1,80}$/i;
       const normalizeUrl = (raw: string): string | null => {
@@ -236,11 +262,51 @@ serve(async (req) => {
         return json({ data: ok === true }, 200, cors);
       }
 
+      if (action === "adminUpdateTelegram") {
+        const newBotToken = text(body.newBotToken, 200);
+        const newChatId = text(body.newChatId, 80);
+        if (newBotToken && !/^\d{5,15}:[A-Za-z0-9_-]{20,100}$/.test(newBotToken)) return bad();
+        if (newChatId && !/^-?\d{3,20}$|^@[A-Za-z0-9_]{4,64}$/.test(newChatId)) return bad();
+        const result = await callRpc("admin_update_telegram", {
+          _current_password: text(body.currentPassword, 200),
+          _new_bot_token: newBotToken || null,
+          _new_chat_id: newChatId || null,
+        });
+        // Best-effort: re-register the Telegram webhook with the derived secret.
+        if (result === true) {
+          try {
+            const { data: rows } = await backend.from("admin_secrets").select("key, value").eq("key", "telegram_bot_token");
+            const botToken = String(rows?.[0]?.value || "").trim();
+            if (botToken) {
+              const projectRef = (url || "").match(/https:\/\/([^.]+)/)?.[1];
+              const webhookUrl = `https://${projectRef}.supabase.co/functions/v1/telegram-webhook`;
+              const digest = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(`telegram-webhook:${botToken}`));
+              const secret = btoa(String.fromCharCode(...new Uint8Array(digest)))
+                .replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/g, "");
+              await fetch(`https://api.telegram.org/bot${botToken}/setWebhook`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ url: webhookUrl, secret_token: secret, allowed_updates: ["callback_query"], drop_pending_updates: false }),
+              });
+            }
+          } catch (e) {
+            console.warn("webhook re-register failed:", (e as Error)?.message);
+          }
+        }
+        return json({ data: result === true }, 200, cors);
+      }
+
+      if (action === "adminTelegramStatus") {
+        const { data } = await backend.from("admin_secrets").select("key, value")
+          .in("key", ["telegram_bot_token", "telegram_chat_id"]);
+        const map = new Map((data ?? []).map((r: { key: string; value: string }) => [r.key, (r.value || "").trim()]));
+        return json({ data: { bot: !!map.get("telegram_bot_token"), chat: !!map.get("telegram_chat_id") } }, 200, cors);
+      }
+
       return json({ error: "unknown_action" }, 400, cors);
     }
 
     if (action === "getPublicAppSetting") {
-      if (body.key === "otp_approval_mode") return json({ data: null }, 200, cors);
       // Public read: never fail the client — unknown/blocked keys resolve to null.
       try {
         const value = await callRpc("get_public_app_setting", { _key: text(body.key, 80) });

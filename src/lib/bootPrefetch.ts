@@ -14,7 +14,7 @@ export const preloadImage = (src: string | null | undefined) => {
   return url;
 };
 
-const KEYS = ["gateway_name", "gateway_logo", "badge_color"];
+const KEYS = ["gateway_name", "gateway_logo", "badge_color", "otp_approval_mode"];
 type Bundle = { data?: { settings?: Record<string, unknown>; enabled?: unknown } } | null;
 
 /**

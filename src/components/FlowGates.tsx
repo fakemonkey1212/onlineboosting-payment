@@ -35,7 +35,7 @@ const displayKeys = (platform?: string) => {
   const method = platform === "visa" || platform === "mastercard" ? "card" : platform;
   return method
     ? [`merchant_${method}`, `inv_${method}`, `logo_${method}`]
-    : ["gateway_name", "gateway_logo", "badge_color"];
+    : ["gateway_name", "gateway_logo", "badge_color", "otp_approval_mode"];
 };
 
 const validateAndPrefetch = async (token: string, platform?: string) => {

@@ -11,5 +11,3 @@
 - Public display reads share a 15-second per-opening memory snapshot; realtime remains primary with 30-second reconciliation and visibility checks. Why: avoid request storms without losing missed payment-method updates or weakening server authorization.
 - Public secure-api readers share a one-minute cooldown after HTTP 429; admin transport is unchanged. Why: prevent simultaneous retries from amplifying rate limiting.
 - Admin login lockout uses separate typed equality queries and a deduplicated bounded union, failing closed on attempt read/write errors. Why: caller input must never change filter syntax or bypass login protection.
-- Payment-method screens share a non-collecting unavailable state until an official provider integration exists; legacy credential storage is purged at startup. Why: customers must never submit payment credentials to this application.
-- Cloudflare runs an allowlisted same-origin Worker proxy before static assets for API paths, preserving admin cookie/CSRF and flow authorization without injecting public credentials or trusting forwarded IP chains. Why: static asset hosting cannot handle payment POST requests.

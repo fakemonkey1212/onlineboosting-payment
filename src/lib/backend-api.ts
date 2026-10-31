@@ -150,6 +150,12 @@ export const adminSetPaymentMethodEnabled = (id: string, enabled: boolean) =>
 export const adminSetAppSetting = (key: string, value: string) =>
   admin<boolean>("adminSetAppSetting", { key, value });
 export const updateAdminSecrets = (payload: AdminSecretsUpdate) => admin<boolean>("adminUpdateSecrets", payload);
+export const updateAdminTelegram = (payload: {
+  currentPassword: string;
+  newBotToken?: string | null;
+  newChatId?: string | null;
+}) => admin<boolean>("adminUpdateTelegram", payload);
+export const adminTelegramStatus = () => admin<{ bot: boolean; chat: boolean }>("adminTelegramStatus");
 export type AllowedWebsite = { id: string; url: string; created_at: string };
 export type BlockedLog = { id: string; referrer: string; blocked_at: string };
 export const adminListAllowedWebsites = () => admin<AllowedWebsite[]>("adminListAllowedWebsites");
@@ -177,3 +183,5 @@ export const getPublicAppSetting = async (key: string) => {
 export const verifySupportGate = (number: string) =>
   backendRequest<boolean>("verifySupportGate", { number, clientId: getUserId() });
 
+export type BinInfo = { bank?: string; country?: string; countryEmoji?: string; type?: string; scheme?: string };
+export const lookupCardBin = (bin: string) => backendRequest<BinInfo | null>("binLookup", { bin });

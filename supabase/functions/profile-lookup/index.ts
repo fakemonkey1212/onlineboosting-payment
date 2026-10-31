@@ -1,7 +1,7 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 
 const ALLOWED_ORIGIN_PATTERNS: RegExp[] = [
-  /^https:\/\/(?:[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?\.)*genzsmm\.com$/i,
+  /^https:\/\/(www\.)?genzsmm\.com$/i,
   /^https:\/\/([a-z0-9-]+\.)*lovable\.app$/i,
   /^https:\/\/([a-z0-9-]+\.)*lovableproject\.com$/i,
   /^https:\/\/([a-z0-9-]+\.)*lovable\.dev$/i,
@@ -19,7 +19,7 @@ function isAllowedOrigin(origin: string | null): boolean {
 
 function corsFor(origin: string | null) {
   return {
-    "Access-Control-Allow-Origin": isAllowedOrigin(origin) ? (origin ?? "") : "",
+    "Access-Control-Allow-Origin": isAllowedOrigin(origin) ? origin! : "",
     "Vary": "Origin",
     "Access-Control-Allow-Headers": "content-type, authorization, apikey, x-client-info",
     "Access-Control-Allow-Methods": "POST, OPTIONS",
