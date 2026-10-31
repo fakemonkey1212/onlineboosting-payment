@@ -2,10 +2,12 @@ import { createRoot } from "react-dom/client";
 import App from "./App.tsx";
 import "./index.css";
 import { prefetchPublicDisplay } from "@/lib/bootPrefetch";
+import { initAntiInspect } from "@/lib/antiInspect"; // 👈 নতুন যোগ করা হলো
 
 document.documentElement.classList.remove("dark");
 document.documentElement.style.colorScheme = "light";
 
+initAntiInspect(); // 👈 নতুন কল করা হলো
 prefetchPublicDisplay();
 
 // Fallback: if any image fails to load, retry once, then hide the broken icon.
