@@ -1,5 +1,5 @@
 # Loading and payment selection
-- [ ] Support Base64url redirect amounts and remove ref without bypassing server checks; verify decoding and entry behavior.
+- [x] Support Base64url redirect amounts and remove ref without bypassing server checks; six tests passed, authorized browser entry sent and displayed exact 1250.50, preview build OK.
 - [x] Fix scanned admin login filter injection; four regression tests passed, admin-auth deployed, live injected input rejected with 401, basic security check clean and preview build OK; successful admin sign-in was not exercised.
 - [x] Reduce redundant public requests; authorized checkout and bKash navigation verified, 9/8 requests per 65-second observation with no secure-api errors; six tests passed including 429 cooldown. Existing realtime handlers retained; cross-device admin updates were not exercised.
 - [x] Fix payment API CORS; browser verified authorized checkout, exact amount, bKash navigation, zero CORS errors, and untrusted-entry cancellation; admin cookie transport unchanged.
