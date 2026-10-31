@@ -1,5 +1,4 @@
-// Persistent short user identifier for correlating Telegram notifications
-// with a specific browser session.
+// Persistent short browser identifier for support-gate rate limiting.
 const KEY = "genz_user_id";
 
 export function getUserId(): string {
