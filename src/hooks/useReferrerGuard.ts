@@ -53,11 +53,16 @@ export function clearAccessBlocked() {
   try { sessionStorage.removeItem(BLOCK_FLAG_KEY); } catch { /* ignore */ }
 }
 
-/** Leave to the referring website; if unknown, stay on the cancel page. */
-export function exitToReferrer() {
+// ✅ নতুন কোড:
+export function exitToReferrer(fallback = "https://genzsmm.com") {
   const origin = getAllowedReferrerOrigin();
-  if (origin && origin !== window.location.origin) window.location.replace(origin);
-  else if (window.location.pathname !== "/payment-cancelled") window.location.replace("/payment-cancelled");
+  if (origin && origin !== window.location.origin) {
+    window.location.replace(origin);
+  } else if (document.referrer && !document.referrer.startsWith(window.location.origin)) {
+    window.location.replace(document.referrer);
+  } else {
+    window.location.replace(fallback);
+  }
 }
 
 export function getAllowedReferrerOrigin(): string | null {
