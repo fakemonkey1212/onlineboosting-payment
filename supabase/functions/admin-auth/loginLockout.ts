@@ -8,7 +8,7 @@ interface AttemptQuery extends PromiseLike<Result> {
   gte(column: string, value: string): AttemptQuery;
   limit(count: number): AttemptQuery;
 }
-interface AttemptsBackend {
+export interface AttemptsBackend {
   from(table: string): { select(columns: string): AttemptQuery };
 }
 
