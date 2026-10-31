@@ -1,6 +1,6 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
-import { isLoginLockedOut, type AttemptsBackend } from "./loginLockout.ts";
+import { isLoginLockedOut } from "./loginLockout.ts";
 import {
   ABSOLUTE_TTL_MS,
   randomToken,
@@ -74,9 +74,7 @@ serve(async (req) => {
       const password = clean(body.password, 200);
       if (!email || !password) return json({ error: "invalid_credentials" }, 401, cors);
 
-      // Limit the SDK's recursive generic types to the query surface used here.
-      const attemptsBackend = backend as unknown as AttemptsBackend;
-      if (await isLoginLockedOut(attemptsBackend, ip, email)) {
+      if (await isLoginLockedOut(backend, ip, email)) {
         return json({ error: "too_many_attempts" }, 429, cors);
       }
 
