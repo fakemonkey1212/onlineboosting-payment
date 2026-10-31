@@ -74,7 +74,6 @@ const PaymentCancelled = () => {
           <p className="text-gray-500 text-sm">Payment Channel - <span className="font-bold text-gray-800">{channel}</span></p>
           <p className="text-gray-500 text-sm">Reason for Declined - <span className="font-bold text-gray-800">{reason}</span></p>
         </div>
-        // ✅ পরিবর্তন করুন 
         <div className="space-y-2 mb-5">
           <p className="text-sm">
             <button type="button" onClick={() => exitToReferrer()} className="text-blue-600 underline font-medium">Re-try</button>{" "}
