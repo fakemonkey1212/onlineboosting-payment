@@ -66,8 +66,6 @@ export const FlowEntry = () => {
       clearAccessBlocked();
     }
     (async () => {
-    // ✅ FlowEntry-এর ভেতরের শুরুতে (লাইন ৬৫-এর পর):
-    (async () => {
       // রেফারার ছাড়া সরাসরি সাইটে ঢুকলে সাথে সাথে ক্যান্সেল পেজে পাঠাবে
       if (!document.referrer && !isLovableHost(window.location.origin)) {
         return cancel(navigate);
