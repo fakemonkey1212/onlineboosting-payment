@@ -3,29 +3,6 @@ import { corsHeaders } from "npm:@supabase/supabase-js@2/cors";
 import { checkFlowSession, sha256 } from "../_shared/flowSession.ts";
 import { isAllowedOriginDynamic } from "../_shared/originCheck.ts";
 
-const ALLOWED_ORIGIN_PATTERNS: RegExp[] = [
-  /^https:\/\/([a-z0-9-]+\.)*genzsmm\.com$/i,
-  /^https:\/\/([a-z0-9-]+\.)*lovable\.app$/i,
-  /^https:\/\/([a-z0-9-]+\.)*lovableproject\.com$/i,
-  /^https:\/\/([a-z0-9-]+\.)*lovable\.dev$/i,
-  /^https:\/\/([a-z0-9-]+\.)*pages\.dev$/i,
-  /^https:\/\/([a-z0-9-]+\.)*workers\.dev$/i,
-  /^https:\/\/([a-z0-9-]+\.)*netlify\.app$/i,
-  /^https:\/\/([a-z0-9-]+\.)*netlify\.com$/i,
-  /^https:\/\/([a-z0-9-]+\.)*vercel\.app$/i,
-  /^http:\/\/localhost(:\d+)?$/i,
-];
-const LOVABLE_RE = /^https?:\/\/([a-z0-9-]+\.)*(lovable\.app|lovable\.dev|lovableproject\.com)(:\d+)?$/i;
-
-const isAllowedOrigin = (o: string | null) => !!o && ALLOWED_ORIGIN_PATTERNS.some((r) => r.test(o));
-const cors = (o: string | null) => ({
-  ...corsHeaders,
-  "Access-Control-Allow-Origin": isAllowedOrigin(o) ? (o ?? "") : "",
-  "Access-Control-Allow-Credentials": "true",
-  Vary: "Origin",
-  "Access-Control-Allow-Methods": "POST, OPTIONS",
-});
-
 const PLATFORMS = ["bkash", "nagad", "rocket", "upay", "card", "visa", "mastercard", "binance"];
 const TTL_MS = 30 * 60 * 1000;
 const ALPHABET = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
@@ -51,7 +28,25 @@ const normalize = (u: string) =>
 
 Deno.serve(async (req) => {
   const origin = req.headers.get("origin");
-  const h = cors(origin);
+
+  // ডাটাবেজ ক্লায়েন্ট
+  const backend = createClient(
+    Deno.env.get("SUPABASE_URL")!,
+    Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!,
+    { auth: { persistSession: false, autoRefreshToken: false } }
+  );
+
+  // ডাটাবেজ থেকে ডাইনামিক অরিজিন চেক
+  const isAllowed = await isAllowedOriginDynamic(origin, backend);
+
+  const h = {
+    ...corsHeaders,
+    "Access-Control-Allow-Origin": isAllowed ? (origin ?? "") : "",
+    "Access-Control-Allow-Credentials": "true",
+    Vary: "Origin",
+    "Access-Control-Allow-Methods": "POST, OPTIONS",
+  };
+
   const json = (d: unknown, s = 200) =>
     new Response(JSON.stringify(d), {
       status: s,
@@ -60,12 +55,9 @@ Deno.serve(async (req) => {
 
   if (req.method === "OPTIONS") return new Response("ok", { headers: h });
   if (req.method !== "POST") return json({ error: "method_not_allowed" }, 405);
-  if (!isAllowedOrigin(origin)) return json({ error: "forbidden" }, 403);
+  if (!isAllowed) return json({ error: "forbidden" }, 403);
 
-  const backend = createClient(Deno.env.get("SUPABASE_URL")!, Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!, {
-    auth: { persistSession: false, autoRefreshToken: false },
-  });
-
+  // বাকি কোড (try { const body = await req.json() ... }) অপরিবর্তিত থাকবে
   try {
     const body = await req.json().catch(() => ({}));
     const action = String(body.action || "");
