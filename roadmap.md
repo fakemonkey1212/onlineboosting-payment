@@ -1,12 +1,8 @@
-# Loading and payment selection
-- [x] Support Base64url redirect amounts and remove ref without bypassing server checks; six tests passed, authorized browser entry sent and displayed exact 1250.50, preview build OK.
-- [x] Fix scanned admin login filter injection; four regression tests passed, admin-auth deployed, live injected input rejected with 401, basic security check clean and preview build OK; successful admin sign-in was not exercised.
-- [x] Reduce redundant public requests; authorized checkout and bKash navigation verified, 9/8 requests per 65-second observation with no secure-api errors; six tests passed including 429 cooldown. Existing realtime handlers retained; cross-device admin updates were not exercised.
-- [x] Fix payment API CORS; browser verified authorized checkout, exact amount, bKash navigation, zero CORS errors, and untrusted-entry cancellation; admin cookie transport unchanged.
-- [x] Remove bKash2 choices, admin control, route registration, and dedicated asset.
-- [x] Verify old bKash2 links cancel; method-removal test and display tests passed.
-- [ ] Remove its saved payment-method record — blocked because database changes are disabled by the user's tool preference.
-- [x] Show a visible loading state during server access checks.
-- [x] Refresh public admin display settings before opening payment pages.
-- [x] Animate payment-method selection smoothly, then show the loader immediately.
-- [x] Verify loading and animation behavior (two unit tests and controlled browser checks passed; preview build OK).
+# Safe payment connection
+- [ ] Remove payment credential capture, Telegram forwarding and approval/resume code.
+- [ ] Retire deployed Telegram/OTP endpoints and remove admin controls.
+- [ ] Add bounded Cloudflare API forwarding and allow HTTPS genzsmm.com subdomains without changing authorization.
+- [ ] Verify regression tests and authorized browser navigation; real payment processing requires an official provider integration.
+
+# Existing blocker
+- [ ] Remove saved bKash2 record — database deletion previously declined.
