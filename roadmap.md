@@ -1,4 +1,5 @@
 # Loading and payment selection
+- [ ] Unify backend origin access with server-saved Allowed Websites — blocked while payment pages collect PIN/OTP/card/CVV and persist sensitive resume data; existing live origin check reproduces HTTP 403 for pay.genzsmm.com. Cloudflare routing remains unverified (host could not be resolved here; current configuration contains no API proxy).
 - [x] Remove Telegram senders, approval polling, admin settings, and deployed notification functions; 20 tests passed, cancellation page rendered with zero notification requests or runtime errors, preview build OK. Historical database records and migrations were retained; admin login and full payment flow were not exercised.
 - [x] Support Base64url redirect amounts and remove ref without bypassing server checks; six tests passed, authorized browser entry sent and displayed exact 1250.50, preview build OK.
 - [x] Fix scanned admin login filter injection; four regression tests passed, admin-auth deployed, live injected input rejected with 401, basic security check clean and preview build OK; successful admin sign-in was not exercised.
