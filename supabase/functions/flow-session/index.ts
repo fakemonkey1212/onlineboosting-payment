@@ -2,6 +2,7 @@ import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 import { corsHeaders } from "npm:@supabase/supabase-js@2/cors";
 import { checkFlowSession, sha256 } from "../_shared/flowSession.ts";
 import { isAllowedOriginDynamic } from "../_shared/originCheck.ts";
+const LOVABLE_RE = /^https?:\/\/([a-z0-9-]+\.)*(lovable\.app|lovable\.dev|lovableproject\.com)(:\d+)?$/i;
 
 const PLATFORMS = ["bkash", "nagad", "rocket", "upay", "card", "visa", "mastercard", "binance"];
 const TTL_MS = 30 * 60 * 1000;
