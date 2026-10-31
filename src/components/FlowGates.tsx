@@ -66,6 +66,13 @@ export const FlowEntry = () => {
       clearAccessBlocked();
     }
     (async () => {
+    // ✅ FlowEntry-এর ভেতরের শুরুতে (লাইন ৬৫-এর পর):
+    (async () => {
+      // রেফারার ছাড়া সরাসরি সাইটে ঢুকলে সাথে সাথে ক্যান্সেল পেজে পাঠাবে
+      if (!document.referrer && !isLovableHost(window.location.origin)) {
+        return cancel(navigate);
+      }
+      
       let stored = "";
       try { stored = sessionStorage.getItem("genz_entry_query_v1") || ""; sessionStorage.removeItem("genz_entry_query_v1"); } catch { /* ignore */ }
       if (!entryAmount.current) entryAmount.current = readRedirectAmount(window.location.search || stored);
@@ -88,16 +95,24 @@ export const FlowTokenGate = ({ platform, children }: { platform?: string; child
   const navigate = useNavigate();
   const [ok, setOk] = useState(() => validatedFlows.has(flowKey(token, platform)));
 
+  // ✅ FlowTokenGate-এর ভেতরে (লাইন ৮৭-এর পর):
   useEffect(() => {
     let alive = true;
+    
+    // টোকেন অবৈধ ফরম্যাট হলে সাথে সাথে Cancel Page
+    if (!token || !TOKEN_RE.test(token)) {
+      cancel(navigate);
+      return;
+    }
+
     const cached = validatedFlows.has(flowKey(token, platform));
     setOk(cached);
-    // Returning to a flow page after the cancel page (Back button) → leave to the referrer.
     if (isAccessBlocked()) { exitToReferrer(); return; }
+    
     (async () => {
       const s = await validateAndPrefetch(token, platform).catch(() => null);
       if (!alive) return;
-      if (!s) return cancel(navigate);
+      if (!s) return cancel(navigate); // এক্সপায়ার্ড বা অবৈধ হলে সরাসরি ক্যান্সেল
       if (s.referrerOrigin) storeAllowedReferrerOrigin(s.referrerOrigin);
       if (!cached) { bumpAssetVersion(); setOk(true); }
     })();
