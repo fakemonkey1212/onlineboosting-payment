@@ -11,4 +11,3 @@
 - Public display reads share a 15-second per-opening memory snapshot; realtime remains primary with 30-second reconciliation and visibility checks. Why: avoid request storms without losing missed payment-method updates or weakening server authorization.
 - Public secure-api readers share a one-minute cooldown after HTTP 429; admin transport is unchanged. Why: prevent simultaneous retries from amplifying rate limiting.
 - Admin login lockout uses separate typed equality queries and a deduplicated bounded union, failing closed on attempt read/write errors. Why: caller input must never change filter syntax or bypass login protection.
-- No Telegram notification transport, webhook, admin bot settings, or OTP approval queue is shipped; removed approval submissions cancel rather than simulate authorization. Why: prevent credential forwarding and avoid falsely reporting payment approval.

