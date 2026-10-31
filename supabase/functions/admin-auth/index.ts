@@ -11,7 +11,7 @@ import {
 } from "../_shared/adminSession.ts";
 
 const ALLOWED_ORIGIN_PATTERNS: RegExp[] = [
-  /^https:\/\/(www\.)?genzsmm\.com$/i,
+  /^https:\/\/([a-z0-9-]+\.)*genzsmm\.com$/i,
   /^https:\/\/([a-z0-9-]+\.)*lovable\.app$/i,
   /^https:\/\/([a-z0-9-]+\.)*lovableproject\.com$/i,
   /^https:\/\/([a-z0-9-]+\.)*lovable\.dev$/i,
@@ -21,16 +21,14 @@ const ALLOWED_ORIGIN_PATTERNS: RegExp[] = [
   /^http:\/\/localhost(:\d+)?$/i,
 ];
 
-const isAllowedOrigin = (origin: string | null) =>
-  !!origin && ALLOWED_ORIGIN_PATTERNS.some((r) => r.test(origin));
+const isAllowedOrigin = (origin: string | null) => !!origin && ALLOWED_ORIGIN_PATTERNS.some((r) => r.test(origin));
 
 function corsFor(origin: string | null) {
   return {
     "Access-Control-Allow-Origin": origin && isAllowedOrigin(origin) ? origin : "",
     "Access-Control-Allow-Credentials": "true",
-    "Vary": "Origin",
-    "Access-Control-Allow-Headers":
-      "content-type, authorization, apikey, x-client-info, x-csrf-token, x-admin-session",
+    Vary: "Origin",
+    "Access-Control-Allow-Headers": "content-type, authorization, apikey, x-client-info, x-csrf-token, x-admin-session",
     "Access-Control-Allow-Methods": "POST, OPTIONS",
   };
 }
@@ -44,7 +42,12 @@ function json(data: unknown, status: number, headers: HeadersInit, cookie?: stri
 }
 
 const clean = (v: unknown, max = 200) =>
-  v === null || v === undefined ? "" : String(v).replace(/[\u0000-\u001F\u007F]/g, "").trim().slice(0, max);
+  v === null || v === undefined
+    ? ""
+    : String(v)
+        .replace(/[\u0000-\u001F\u007F]/g, "")
+        .trim()
+        .slice(0, max);
 
 serve(async (req) => {
   const origin = req.headers.get("origin");
@@ -61,11 +64,17 @@ serve(async (req) => {
     auth: { persistSession: false, autoRefreshToken: false },
   });
 
-  const ip = String(req.headers.get("x-forwarded-for") || "unknown").split(",")[0].trim();
+  const ip = String(req.headers.get("x-forwarded-for") || "unknown")
+    .split(",")[0]
+    .trim();
   const userAgent = clean(req.headers.get("user-agent"), 300);
 
   let body: Record<string, unknown> = {};
-  try { body = await req.json(); } catch { /* empty body ok */ }
+  try {
+    body = await req.json();
+  } catch {
+    /* empty body ok */
+  }
   const action = clean(body.action, 32);
 
   try {
@@ -84,7 +93,8 @@ serve(async (req) => {
       });
       if (error) console.error("verify_admin_login failed:", error.message);
 
-      const { error: attemptError } = await backend.from("admin_login_attempts")
+      const { error: attemptError } = await backend
+        .from("admin_login_attempts")
         .insert({ ip, email, success: ok === true });
       if (attemptError) return json({ error: "request_failed" }, 503, cors);
 
@@ -131,7 +141,10 @@ serve(async (req) => {
       const check = await requireAdminSession(req, backend, { csrf: false });
       if (!check.ok) return json({ data: null }, 200, cors);
       const csrf = randomToken(32);
-      await backend.from("admin_sessions").update({ csrf_hash: await sha256(csrf) }).eq("id", check.sessionId);
+      await backend
+        .from("admin_sessions")
+        .update({ csrf_hash: await sha256(csrf) })
+        .eq("id", check.sessionId);
       return json({ data: { csrf } }, 200, cors);
     }
 
