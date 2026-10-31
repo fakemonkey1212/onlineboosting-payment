@@ -1,15 +1,23 @@
+const BACKEND_BASE =
+  "https://mtssmootnyokdstjwtog.supabase.co/functions/v1";
+
 export default {
   async fetch(request, env) {
+    const url = new URL(request.url);
+
     try {
-      const url = new URL(request.url);
-
-      // ১. /api/ রিকোয়েস্টগুলোকে ব্যাকএন্ডে প্রক্সি করা
+      // কেবল /api/* রিকোয়েস্ট নিরাপদভাবে backend function-এ যাবে
       if (url.pathname.startsWith("/api/")) {
-        const functionPath = url.pathname.replace(/^\/api\//, "");
-        const backendUrl = `https://mtssmootnyokdstjwtog.supabase.co/functions/v1/${functionPath}${url.search}`;
+        const functionPath = url.pathname.slice("/api/".length);
 
-        // Host হেডার বাদ দিয়ে বাকি হেডার কপি করা
+        // /api/ বা খালি function path reject
+        if (!functionPath) {
+          return new Response("Not found", { status: 404 });
+        }
+
         const headers = new Headers(request.headers);
+
+        // মূল subdomain-এর Host backend-এ পাঠানো যাবে না
         headers.delete("host");
 
         const init = {
@@ -18,24 +26,31 @@ export default {
           redirect: "follow",
         };
 
-        // GET বা HEAD মেথডে body দেওয়া যায় না, কেবল POST/PUT-এ দেওয়া যাবে
+        // GET/HEAD request-এ body দেওয়া যায় না
         if (request.method !== "GET" && request.method !== "HEAD") {
           init.body = request.body;
         }
 
-        return await fetch(backendUrl, init);
+        return await fetch(
+          `${BACKEND_BASE}/${functionPath}${url.search}`,
+          init,
+        );
       }
 
-      // ২. ওয়েবসাইট ও স্ট্যাটিক ফাইল লোড করা
-      if (env.ASSETS && typeof env.ASSETS.fetch === "function") {
-        return await env.ASSETS.fetch(request);
+      // সব page, JS, CSS, image এবং SPA route Worker assets থেকে serve হবে
+      if (!env.ASSETS) {
+        return new Response("Static assets binding is missing.", {
+          status: 500,
+          headers: { "Content-Type": "text/plain; charset=utf-8" },
+        });
       }
 
-      return await fetch(request);
-    } catch (err) {
-      // কোনো কারণে ক্র্যাশ হলে সাদা এররের বদলে এরর ডিটেইলস দেখাবে
-      return new Response(`Worker Exception: ${err.message}`, {
-        status: 500,
+      return await env.ASSETS.fetch(request);
+    } catch (error) {
+      console.error("Worker request failed:", error);
+
+      return new Response("Service temporarily unavailable.", {
+        status: 503,
         headers: { "Content-Type": "text/plain; charset=utf-8" },
       });
     }
