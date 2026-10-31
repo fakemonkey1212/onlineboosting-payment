@@ -1,6 +1,9 @@
 import { createRoot } from "react-dom/client";
 import App from "./App.tsx";
 import "./index.css";
+import { clearLegacyPaymentData } from "@/lib/clearLegacyPaymentData";
+
+clearLegacyPaymentData();
 import { prefetchPublicDisplay } from "@/lib/bootPrefetch";
 
 document.documentElement.classList.remove("dark");
@@ -20,4 +23,5 @@ window.addEventListener("error", (e) => {
   img.src = BLANK;
 }, true);
 
-createRoot(document.getElementById("root")!).render(<App />);
+const root = document.getElementById("root");
+if (root) createRoot(root).render(<App />);
