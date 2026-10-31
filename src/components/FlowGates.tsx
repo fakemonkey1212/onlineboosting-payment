@@ -9,6 +9,9 @@ import { bumpAssetVersion } from "@/lib/assetVersion";
 import {
   markAccessBlocked, storeAllowedReferrerOrigin, isAccessBlocked, clearAccessBlocked, exitToReferrer,
 } from "@/hooks/useReferrerGuard";
+import { isLovableHost } from "@/hooks/useReferrerGuard";
+
+const TOKEN_RE = /^[A-Za-z0-9]{25}$/;
 
 const cancel = (navigate: ReturnType<typeof useNavigate>) => {
   markAccessBlocked();
