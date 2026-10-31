@@ -42,15 +42,21 @@ const PaymentCancelled = () => {
   }, [navigate]);
 
 
+// ✅ পরিবর্তন করুন 
   useEffect(() => {
     const timer = setInterval(() => {
       setCountdown((prev) => {
-        if (prev <= 1) { clearInterval(timer); return 0; }
+        if (prev <= 1) {
+          clearInterval(timer);
+          exitToReferrer();
+          return 0;
+        }
         return prev - 1;
       });
     }, 1000);
     return () => clearInterval(timer);
   }, []);
+
 
   return (
     <div className="fixed inset-0 h-[100dvh] bg-white flex flex-col items-center justify-start pt-[8dvh] px-4 overflow-hidden overscroll-none touch-none">
